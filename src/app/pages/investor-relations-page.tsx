@@ -8,15 +8,17 @@ import { IHighlight, IReport } from '../interfaces';
 
 export function InvestorRelationsPage() {
 
-  const downloadReport = (doc?: string) => {
+  const downloadReport = (doc?: string, fileName?: string) => {
     if (!doc) return;
-    const link = document.createElement('a');
+
+    const link = document.createElement("a");
     link.href = doc;
-    link.download = doc.substring(doc.lastIndexOf('/') + 1);
+    link.download = fileName ? `${fileName}.pdf` : "document.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+
 
   return (
     <div className="pt-24">
@@ -185,7 +187,7 @@ export function InvestorRelationsPage() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="p-3 bg-[#c89b3c] rounded-lg group-hover:bg-[#d4a84a] transition-colors"
-                    onClick={() => downloadReport(report.doc)}
+                    onClick={() => downloadReport(report.doc, report.title)}
                   >
                     <Download className="w-5 h-5 text-black" />
                   </motion.button>
