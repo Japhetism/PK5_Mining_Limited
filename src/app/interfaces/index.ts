@@ -1,0 +1,79 @@
+import type { LucideIcon } from "lucide-react";
+
+export interface IMineral {
+  name: string;
+  image: string;
+  use: string;
+  purity: string;
+}
+
+export interface ITimelineEvent {
+  year: string;
+  event: string;
+  description: string;
+}
+
+export interface ILeader {
+  name: string;
+  role: string;
+  experience: string;
+  image?: string;
+}
+
+export interface IJob {
+  title: string;
+  location: string;
+  type: string;
+  experience: string;
+  department: string;
+}
+
+export interface IBenefit {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+export interface IRevenueData {
+  year: string;
+  revenue: number;
+}
+
+export interface IProductionData {
+  mineral: string;
+  volume: number;
+}
+
+export interface IReport {
+  title: string;
+  type: string;
+  size: string;
+  date: string;
+  doc?: string;
+}
+
+export interface IHighlight {
+  icon: LucideIcon;
+  value: string;
+  label: string;
+  suffix?: string;
+  prefix?: string;
+}
+
+export interface IFeature {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+export interface IESGMetric {
+  icon: LucideIcon;
+  label: string;
+  value: number;
+}
+
+export interface IInitiative {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+}

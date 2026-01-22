@@ -1,0 +1,317 @@
+import {
+  Heart,
+  GraduationCap,
+  TrendingUp,
+  DollarSign,
+  Users,
+  BarChart3,
+  Shield,
+  Cpu,
+  Award,
+  Sun,
+  Droplet,
+  TreePine,
+  Recycle,
+  Wind,
+  Leaf,
+} from "lucide-react";
+import {
+  IBenefit,
+  IFeature,
+  IHighlight,
+  IInitiative,
+  IJob,
+  ILeader,
+  IMineral,
+  IProductionData,
+  IReport,
+  IRevenueData,
+  ITimelineEvent,
+} from "../interfaces";
+import CEOImg from "../../assets/images/CEO.png";
+import HOOImg from "../../assets/images/HOO.png";
+import HOPImg from "../../assets/images/HOP.png";
+import HITImg from "../../assets/images/HIT.png";
+import AnnualReport from "../../assets/documents/PK5_Annual_Report_2025.pdf";
+import Q4Report from "../../assets/documents/PK5_Q4_2025_Financial_Results.pdf";
+import SustainabilityReport from "../../assets/documents/PK5_Sustainability_Report_2025.pdf";
+import InvestorPresentation from "../../assets/documents/PK5_Investor_Presentation_2025.pdf";
+
+export const minerals: IMineral[] = [
+  {
+    name: "Iron Ore",
+    image:
+      "https://images.unsplash.com/photo-1696999504253-c9e8f16315ad?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8SXJvbiUyME9yZXxlbnwwfHwwfHx8MA%3D%3D",
+    use: "Construction, Steel Production, Manufacturing",
+    purity: "99.2%",
+  },
+  {
+    name: "Tin Ore",
+    image:
+      "https://images.unsplash.com/photo-1686828282201-858515e59322?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaW5lcmFsJTIwcm9ja3MlMjBzdG9uZXN8ZW58MXx8fHwxNzY5MDc3NTE0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    use: "Electronics, Soldering, Alloys",
+    purity: "99.85%",
+  },
+  {
+    name: "Copper",
+    image:
+      "https://images.unsplash.com/photo-1764022276404-85682f38ae35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3BwZXIlMjBvcmUlMjBtaW5lcmFsfGVufDF8fHx8MTc2OTA3NjkyOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    use: "Wiring, Construction, Electronics",
+    purity: "99.9%",
+  },
+];
+
+export const leadership: ILeader[] = [
+  {
+    name: "Prince Njoku",
+    role: "Chief Executive Officer",
+    experience: "25 years",
+    image: CEOImg,
+  },
+  {
+    name: "Gerald",
+    role: "Head of Operations",
+    experience: "18 years",
+    image: HOOImg,
+  },
+  {
+    name: "Peter Eziakor",
+    role: "Head of Productions",
+    experience: "20 years",
+    image: HOPImg,
+  },
+  {
+    name: "Alozie Okwukanma ",
+    role: "Head of IT",
+    experience: "15 years",
+    image: HITImg,
+  },
+];
+
+export const timeline: ITimelineEvent[] = [
+  {
+    year: "2001",
+    event: "Company Founded",
+    description: "PK5 Mining Limited established with first tin ore operation",
+  },
+  {
+    year: "2008",
+    event: "Expansion Phase",
+    description: "Added nickel and copper extraction capabilities",
+  },
+  {
+    year: "2015",
+    event: "Sustainability Initiative",
+    description: "Launched comprehensive environmental program",
+  },
+  {
+    year: "2020",
+    event: "Lithium Operations",
+    description: "Entered lithium market for EV battery supply",
+  },
+  {
+    year: "2024",
+    event: "Global Recognition",
+    description: "Awarded International Mining Excellence Certificate",
+  },
+];
+
+export const locations: string[] = [
+  "No. 5B Ikosi Road Oregun Ikeja Lagos.",
+  "2/5,Nza Street, Independence Layout Enugu, Enugu State.",
+];
+
+export const telephone: string = "+234 (080) 26133205";
+
+export const email: string = "info@pk5miningltd.com";
+
+export const benefits: IBenefit[] = [
+  {
+    icon: Heart,
+    title: "Health & Wellness",
+    description: "Comprehensive medical, dental, and mental health coverage",
+  },
+  {
+    icon: GraduationCap,
+    title: "Learning & Development",
+    description: "Continuous training and career advancement programs",
+  },
+  {
+    icon: TrendingUp,
+    title: "Career Growth",
+    description: "Clear pathways for professional development and promotion",
+  },
+  {
+    icon: DollarSign,
+    title: "Competitive Compensation",
+    description: "Industry-leading salaries and performance bonuses",
+  },
+];
+
+export const jobs: IJob[] = [
+  {
+    title: "Mining Engineer",
+    department: "Operations",
+    location: "Site A - Northern District",
+    type: "Full-time",
+    experience: "5+ years",
+  },
+  {
+    title: "Environmental Specialist",
+    department: "Sustainability",
+    location: "Site B - Eastern Region",
+    type: "Full-time",
+    experience: "3+ years",
+  },
+  {
+    title: "Safety Officer",
+    department: "Health & Safety",
+    location: "Multiple Sites",
+    type: "Full-time",
+    experience: "4+ years",
+  },
+  {
+    title: "Data Analyst",
+    department: "Operations",
+    location: "Head Office",
+    type: "Full-time",
+    experience: "2+ years",
+  },
+  {
+    title: "Mechanical Engineer",
+    department: "Maintenance",
+    location: "Site C - Western Zone",
+    type: "Full-time",
+    experience: "5+ years",
+  },
+  {
+    title: "Geologist",
+    department: "Exploration",
+    location: "Multiple Sites",
+    type: "Full-time",
+    experience: "3+ years",
+  },
+];
+
+export const revenueData: IRevenueData[] = [
+  { year: "2020", revenue: 245 },
+  { year: "2021", revenue: 298 },
+  { year: "2022", revenue: 342 },
+  { year: "2023", revenue: 389 },
+  { year: "2024", revenue: 425 },
+  { year: "2025", revenue: 478 },
+];
+
+export const productionData: IProductionData[] = [
+  { mineral: "Iron Ore", volume: 45000 },
+  { mineral: "Tin Ore", volume: 38000 },
+  { mineral: "Copper", volume: 52000 },
+];
+
+export const reports: IReport[] = [
+  {
+    title: "Annual Report 2025",
+    type: "PDF",
+    size: "4.2 MB",
+    date: "Jan 2026",
+    doc: AnnualReport,
+  },
+  {
+    title: "Q4 2025 Financial Results",
+    type: "PDF",
+    size: "2.1 MB",
+    date: "Jan 2026",
+    doc: Q4Report,
+  },
+  {
+    title: "Sustainability Report 2025",
+    type: "PDF",
+    size: "5.8 MB",
+    date: "Dec 2025",
+    doc: SustainabilityReport,
+  },
+  {
+    title: "Investor Presentation",
+    type: "PDF",
+    size: "3.5 MB",
+    date: "Nov 2025",
+    doc: InvestorPresentation,
+  },
+];
+
+export const highlights: IHighlight[] = [
+  {
+    label: "Market Cap",
+    value: "2.5",
+    suffix: "B",
+    prefix: "₦",
+    icon: DollarSign,
+  },
+  {
+    label: "Annual Revenue",
+    value: "478",
+    suffix: "M",
+    prefix: "₦",
+    icon: TrendingUp,
+  },
+  { label: "Employees", value: "3200", suffix: "+", icon: Users },
+  { label: "Operating Margin", value: "32", suffix: "%", icon: BarChart3 },
+];
+
+export const features: IFeature[] = [
+  {
+    icon: Shield,
+    title: "Sustainable Mining",
+    description: "Environmental responsibility at every stage of extraction",
+  },
+  {
+    icon: Cpu,
+    title: "Advanced Technology",
+    description: "State-of-the-art extraction and processing equipment",
+  },
+  {
+    icon: Users,
+    title: "Skilled Workforce",
+    description: "Highly trained professionals ensuring quality and safety",
+  },
+  {
+    icon: Award,
+    title: "Government Certified",
+    description: "Fully compliant with international mining standards",
+  },
+];
+
+export const esgMetrics = [
+  { label: "Renewable Energy Usage", value: 75, icon: Sun },
+  { label: "Water Recycling Rate", value: 85, icon: Droplet },
+  { label: "Land Reclamation Progress", value: 68, icon: TreePine },
+  { label: "Waste Reduction", value: 92, icon: Recycle },
+  { label: "Carbon Footprint Reduction", value: 60, icon: Wind },
+  { label: "Biodiversity Protection", value: 78, icon: Leaf },
+];
+
+export const initiatives: IInitiative[] = [
+  {
+    title: "Zero Waste Mining",
+    description:
+      "Implementing circular economy principles to minimize waste and maximize resource efficiency.",
+    icon: Recycle,
+  },
+  {
+    title: "Water Conservation",
+    description:
+      "Advanced water recycling systems reducing freshwater consumption by 85%.",
+    icon: Droplet,
+  },
+  {
+    title: "Renewable Energy",
+    description:
+      "Transitioning to solar and wind power for 75% of our energy needs.",
+    icon: Sun,
+  },
+  {
+    title: "Ecosystem Restoration",
+    description: "Active programs to restore and protect local biodiversity.",
+    icon: Leaf,
+  },
+];
