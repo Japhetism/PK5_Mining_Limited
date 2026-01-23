@@ -46,7 +46,6 @@ export function Header() {
           </motion.div>
           <div>
             <span className="text-2xl font-bold tracking-tight">PK5 Mining</span>
-            <span className="block text-xs text-gray-400 font-light">Limited</span>
           </div>
         </Link>
 

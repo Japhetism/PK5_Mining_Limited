@@ -63,13 +63,13 @@ export const minerals: IMineral[] = [
 
 export const leadership: ILeader[] = [
   {
-    name: "Prince Njoku",
-    role: "Chief Executive Officer",
+    name: "Prince Nnaemeka Njoku",
+    role: "Chairman",
     experience: "25 years",
     image: CEOImg,
   },
   {
-    name: "Gerald",
+    name: "Asogwa  Gerald Ugochukwu",
     role: "Head of Operations",
     experience: "18 years",
     image: HOOImg,
@@ -92,7 +92,7 @@ export const timeline: ITimelineEvent[] = [
   {
     year: "2001",
     event: "Company Founded",
-    description: "PK5 Mining Limited established with first tin ore operation",
+    description: "PK5 Mining established with first tin ore operation",
   },
   {
     year: "2008",

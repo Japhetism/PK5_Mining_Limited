@@ -44,7 +44,7 @@ export function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            PK5 Mining Limited delivers high-quality tin ore, nickel, and strategic minerals for global industries.
+            PK5 Mining delivers high-quality tin ore, nickel, and strategic minerals for global industries.
           </motion.p>
 
           <motion.div

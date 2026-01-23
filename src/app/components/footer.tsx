@@ -28,7 +28,6 @@ export function Footer() {
               <Mountain className="w-8 h-8 text-[#c89b3c]" />
               <div>
                 <span className="text-xl font-bold">PK5 Mining</span>
-                <span className="block text-xs text-gray-400">Limited</span>
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
@@ -112,7 +111,7 @@ export function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">
-            © 2026 PK5 Mining Limited. All rights reserved.
+            © 2026 PK5 Mining. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-gray-500">
             <a href="#" className="hover:text-[#c89b3c] transition-colors">Privacy Policy</a>

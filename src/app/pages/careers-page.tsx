@@ -89,7 +89,7 @@ export function CareersPage() {
                 Our <span className="text-[#c89b3c]">Culture</span>
               </h2>
               <p className="text-xl text-gray-400 mb-6">
-                At PK5 Mining Limited, we foster a culture of innovation, collaboration, and continuous improvement.
+                At PK5 Mining, we foster a culture of innovation, collaboration, and continuous improvement.
               </p>
               <div className="space-y-4">
                 {[
