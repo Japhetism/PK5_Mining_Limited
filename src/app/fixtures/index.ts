@@ -117,8 +117,8 @@ export const timeline: ITimelineEvent[] = [
 ];
 
 export const locations: string[] = [
-  "No. 5B Ikosi Road Oregun Ikeja Lagos.",
   "2/5,Nza Street, Independence Layout Enugu, Enugu State.",
+  "No. 5B Ikosi Road Oregun Ikeja Lagos.",
 ];
 
 export const telephone: string = "+234 (080) 26133205";
