@@ -97,7 +97,12 @@ export function Footer() {
               ))}
               <li className="flex items-center gap-3 text-gray-400 text-sm">
                 <Phone size={18} className="shrink-0 text-[#c89b3c]" />
-                <span>{telephone}</span>
+                <a
+                  href={`tel:${telephone}`}
+                  className="hover:text-[#c89b3c] transition-colors"
+                >
+                  {telephone}
+                </a>
               </li>
               <li className="flex items-center gap-3 text-gray-400 text-sm">
                 <Mail size={18} className="shrink-0 text-[#c89b3c]" />
