@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
-import { Mountain, Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { email, locations, minerals, telephone } from '../fixtures';
 import { IMineral } from '../interfaces';
+import Logo from '../../assets/images/logo.png';
 
 const footerLinks = [
   { name: 'About Us', path: '/about' },
@@ -25,10 +26,7 @@ export function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <Mountain className="w-8 h-8 text-[#c89b3c]" />
-              <div>
-                <span className="text-xl font-bold">PK5 Mining</span>
-              </div>
+              <img src={Logo} alt="PK5 Mining Logo" className="w-30 h-auto object-contain" />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               Powering industry through responsible mining of strategic minerals and natural resources.
