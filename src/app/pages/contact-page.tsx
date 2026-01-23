@@ -25,6 +25,8 @@ const contactInfo = [
 
 export function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,19 +37,31 @@ export function ContactPage() {
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        subject: "",
-        message: "",
+    setLoading(true);
+    setError("");
+    setSubmitted(false);
+    try {
+      const res = await fetch("https://pk5-api.vercel.app/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-    }, 3000);
+
+      if (!res.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      setSubmitted(true);
+      setFormData({ name: "", email: "", company: "", subject: "", message: "" });
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (
@@ -219,7 +233,7 @@ export function ContactPage() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="w-full px-8 py-4 bg-[#c89b3c] text-black font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-[#d4a84a] transition-colors"
-                  disabled={submitted}
+                  disabled={loading || submitted}
                 >
                   {submitted ? (
                     <>
