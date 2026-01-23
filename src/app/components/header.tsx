@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Menu, X, Mountain } from 'lucide-react';
+import Logo from '../../assets/images/logo/logo.png';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,11 +43,12 @@ export function Header() {
             whileHover={{ rotate: 180 }}
             transition={{ duration: 0.6 }}
           >
-            <Mountain className="w-10 h-10 text-[#c89b3c]" />
+            {/* <Mountain className="w-10 h-10 text-[#c89b3c]" /> */}
           </motion.div>
-          <div>
+          <img src={Logo} alt="PK5 Mining Logo" className="h-16 w-40" />
+          {/* <div>
             <span className="text-2xl font-bold tracking-tight">PK5 Mining</span>
-          </div>
+          </div> */}
         </Link>
 
         {/* Desktop Navigation */}

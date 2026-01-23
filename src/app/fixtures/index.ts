@@ -65,19 +65,19 @@ export const leadership: ILeader[] = [
   {
     name: "Prince Nnaemeka Njoku",
     role: "Chairman",
-    experience: "25 years",
+    experience: "20 years",
     image: CEOImg,
   },
   {
     name: "Asogwa  Gerald Ugochukwu",
     role: "Head of Operations",
-    experience: "18 years",
+    experience: "35 years",
     image: HOOImg,
   },
   {
     name: "Peter Eziakor",
     role: "Head of Productions",
-    experience: "20 years",
+    experience: "25 years",
     image: HOPImg,
   },
   {
