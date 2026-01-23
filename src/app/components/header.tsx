@@ -39,16 +39,7 @@ export function Header() {
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 group">
-          <motion.div
-            whileHover={{ rotate: 180 }}
-            transition={{ duration: 0.6 }}
-          >
-            {/* <Mountain className="w-10 h-10 text-[#c89b3c]" /> */}
-          </motion.div>
           <img src={Logo} alt="PK5 Mining Logo" className="h-16 w-40" />
-          {/* <div>
-            <span className="text-2xl font-bold tracking-tight">PK5 Mining</span>
-          </div> */}
         </Link>
 
         {/* Desktop Navigation */}
