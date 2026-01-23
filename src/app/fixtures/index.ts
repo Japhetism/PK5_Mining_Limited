@@ -121,7 +121,7 @@ export const locations: string[] = [
   "No. 5B Ikosi Road Oregun Ikeja Lagos.",
 ];
 
-export const telephone: string = "+234 (080) 26133205";
+export const telephone: string = "+2348081254905";
 
 export const email: string = "info@pk5miningltd.com";
 
