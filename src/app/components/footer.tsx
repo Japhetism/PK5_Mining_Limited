@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { email, locations, minerals, telephone } from '../fixtures';
-import { IMineral } from '../interfaces';
+import { ILocation, IMineral } from '../interfaces';
 import Logo from '../../assets/images/logo.png';
 
 const footerLinks = [
@@ -89,10 +89,12 @@ export function Footer() {
           <div>
             <h3 className="font-bold mb-4 text-lg">Contact Us</h3>
             <ul className="space-y-4">
-              {locations.map((location: string) => (
-                <li key={location} className="flex items-start gap-3 text-gray-400 text-sm">
+              {locations.map((location: ILocation) => (
+                <li key={location.displayAddress} className="flex items-start gap-3 text-gray-400 text-sm">
                   <MapPin size={18} className="mt-1 shrink-0 text-[#c89b3c]" />
-                  <span>{location}</span>
+                  <span>
+                    {location.type && `${location.type}: `}{location.displayAddress}
+                  </span>
                 </li>
               ))}
               <li className="flex items-center gap-3 text-gray-400 text-sm">

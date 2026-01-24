@@ -5,11 +5,14 @@ import { useState } from "react";
 import { email, locations, telephone } from "../fixtures";
 import LocationsMap from "../components/ui/locationsMap";
 
+const actualLocations = locations.map(loc => loc.actualAddress);
+const displayLocations = locations.map(loc => loc.displayAddress);
+
 const contactInfo = [
   {
     icon: MapPin,
     title: "Visit Us",
-    details: locations,
+    details: displayLocations,
   },
   {
     icon: Phone,
@@ -282,7 +285,7 @@ export function ContactPage() {
 
                 {/* Full-width map (outside the centered text block) */}
                 <div className="w-full h-[300px] rounded-lg overflow-hidden mt-6">
-                  <LocationsMap locations={locations} />
+                  <LocationsMap locations={actualLocations} />
                 </div>
               </motion.div>
             </AnimatedSection>

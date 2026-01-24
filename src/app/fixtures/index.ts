@@ -22,6 +22,7 @@ import {
   IInitiative,
   IJob,
   ILeader,
+  ILocation,
   IMineral,
   IProductionData,
   IReport,
@@ -116,11 +117,21 @@ export const timeline: ITimelineEvent[] = [
   },
 ];
 
-export const locations: string[] = [
-  "Head Office: 5901 Peachtree Dunwoody Road, Suite A310, Atlanta, GA 30328",
-  "2/5,Nza Street, Independence Layout Enugu, Enugu State.",
-  "No. 5B Ikosi Road Oregun Ikeja Lagos.",
-];
+export const locations: ILocation[] = [
+  {
+    "displayAddress": "5901 Peachtree Dunwoody Road, Suite A310, Atlanta, GA 30328, USA",
+    "actualAddress": "5901 Peachtree Dunwoody Rd, Atlanta, GA 30328, USA",
+    "type": "Head Office",
+  },
+  {
+    "displayAddress": "2/5,Nza Street, Independence Layout Enugu, Enugu State.",
+    "actualAddress": "2/5,Nza Street, Independence Layout Enugu, Enugu State.",
+  },
+  {
+    "displayAddress": "No. 5B Ikosi Road Oregun Ikeja Lagos.",
+    "actualAddress": "No. 5B Ikosi Road Oregun Ikeja Lagos.",
+  },
+]
 
 export const telephone: string = "+2348081254905";
 

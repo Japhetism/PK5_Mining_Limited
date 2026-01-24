@@ -77,3 +77,9 @@ export interface IInitiative {
   description: string;
   icon: LucideIcon;
 }
+
+export interface ILocation {
+  displayAddress: string;
+  actualAddress: string;
+  type?: string;
+}

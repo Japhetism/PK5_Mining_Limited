@@ -22,6 +22,8 @@ async function geocode(address: string): Promise<GeoLocation | null> {
     )}`
   );
 
+  console.log("GEOCODE", res.url, res.status, res);
+
   if (!res.ok) return null;
 
   const data: any[] = await res.json();
@@ -84,6 +86,7 @@ export default function LocationsMap({
       }
 
       if (!cancelled) {
+        console.log("Geocoded locations:", results, failedOnes);
         setPoints(results);
         setFailed(failedOnes);
       }
@@ -102,7 +105,8 @@ export default function LocationsMap({
       style={{ width: "100%", height: "100%", minHeight }}
     >
       <MapContainer
-        center={[9.082, 8.6753]} // fallback center (Nigeria)
+        // center={[9.082, 8.6753]} // fallback center (Nigeria)
+        center={[20, 0]} // fallback center (equatorial Atlantic)
         zoom={6}
         style={{ width: "100%", height: "100%" }}
         scrollWheelZoom={false}
