@@ -117,6 +117,7 @@ export const timeline: ITimelineEvent[] = [
 ];
 
 export const locations: string[] = [
+  "Head Office: 5901 Peachtree Dunwoody Road, Suite A310, Atlanta, GA 30328",
   "2/5,Nza Street, Independence Layout Enugu, Enugu State.",
   "No. 5B Ikosi Road Oregun Ikeja Lagos.",
 ];
