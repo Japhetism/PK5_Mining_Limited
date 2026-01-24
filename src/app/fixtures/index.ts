@@ -97,7 +97,7 @@ export const timeline: ITimelineEvent[] = [
   {
     year: "2008",
     event: "Expansion Phase",
-    description: "Added nickel and copper extraction capabilities",
+    description: "Added copper extraction capabilities",
   },
   {
     year: "2015",
