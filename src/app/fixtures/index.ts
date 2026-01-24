@@ -124,12 +124,12 @@ export const locations: ILocation[] = [
     "type": "Head Office",
   },
   {
-    "displayAddress": "2/5,Nza Street, Independence Layout Enugu, Enugu State.",
-    "actualAddress": "2/5,Nza Street, Independence Layout Enugu, Enugu State.",
+    "displayAddress": "2/5,Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
+    "actualAddress": "2/5,Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
   },
   {
-    "displayAddress": "No. 5B Ikosi Road Oregun Ikeja Lagos.",
-    "actualAddress": "No. 5B Ikosi Road Oregun Ikeja Lagos.",
+    "displayAddress": "No. 5B Ikosi Road Oregun Ikeja Lagos, Nigeria",
+    "actualAddress": "No. 5B Ikosi Road Oregun Ikeja Lagos, Nigeria",
   },
 ]
 
