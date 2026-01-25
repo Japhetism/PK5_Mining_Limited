@@ -132,7 +132,7 @@ export function AboutPage() {
             <p className="text-xl text-gray-400">Experience and expertise driving our success</p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {leadership.map((leader: ILeader, index: number) => (
               <AnimatedSection key={leader.name} delay={index * 0.1}>
                 <motion.div

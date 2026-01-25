@@ -70,12 +70,6 @@ export const leadership: ILeader[] = [
     image: CEOImg,
   },
   {
-    name: "Asogwa  Gerald Ugochukwu",
-    role: "Head of Operations",
-    experience: "26 years",
-    image: HOOImg,
-  },
-  {
     name: "Peter Eziakor",
     role: "Head of Facilities & Production",
     experience: "25 years",
