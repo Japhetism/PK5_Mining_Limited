@@ -77,7 +77,7 @@ export const leadership: ILeader[] = [
   },
   {
     name: "Peter Eziakor",
-    role: "Head of Productions",
+    role: "Head of Facilities & Production",
     experience: "25 years",
     image: HOPImg,
   },
