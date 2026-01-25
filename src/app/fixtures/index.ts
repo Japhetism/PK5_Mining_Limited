@@ -72,7 +72,7 @@ export const leadership: ILeader[] = [
   {
     name: "Asogwa  Gerald Ugochukwu",
     role: "Head of Operations",
-    experience: "35 years",
+    experience: "26 years",
     image: HOOImg,
   },
   {
@@ -91,22 +91,22 @@ export const leadership: ILeader[] = [
 
 export const timeline: ITimelineEvent[] = [
   {
-    year: "2001",
+    year: "2015",
     event: "Company Founded",
     description: "PK5 Mining established with first tin ore operation",
   },
   {
-    year: "2008",
+    year: "2018",
     event: "Expansion Phase",
     description: "Added copper extraction capabilities",
   },
   {
-    year: "2015",
+    year: "2020",
     event: "Sustainability Initiative",
     description: "Launched comprehensive environmental program",
   },
   {
-    year: "2020",
+    year: "2022",
     event: "Lithium Operations",
     description: "Entered lithium market for EV battery supply",
   },
@@ -133,7 +133,7 @@ export const locations: ILocation[] = [
   },
 ]
 
-export const telephone: string = "+2348081254905";
+export const telephone: string = "+2348026133205";
 
 export const email: string = "info@pk5miningltd.com";
 

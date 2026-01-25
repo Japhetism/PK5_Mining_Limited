@@ -164,11 +164,11 @@ export function SustainabilityPage() {
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <div className="text-4xl font-bold text-[#c89b3c] mb-2">500+</div>
+                  <div className="text-4xl font-bold text-[#c89b3c] mb-2">50+</div>
                   <div className="text-sm text-gray-400">Hectares Restored</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-bold text-[#c89b3c] mb-2">150k+</div>
+                  <div className="text-4xl font-bold text-[#c89b3c] mb-2">50k+</div>
                   <div className="text-sm text-gray-400">Trees Planted</div>
                 </div>
               </div>
