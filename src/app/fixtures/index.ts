@@ -266,7 +266,7 @@ export const highlights: IHighlight[] = [
     prefix: "₦",
     icon: TrendingUp,
   },
-  { label: "Employees", value: "3200", suffix: "+", icon: Users },
+  { label: "Employees", value: "50+", suffix: "+", icon: Users },
   { label: "Operating Margin", value: "32", suffix: "%", icon: BarChart3 },
 ];
 
