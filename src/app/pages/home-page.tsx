@@ -63,7 +63,7 @@ export function HomePage() {
                 <ArrowRight size={20} />
               </motion.button>
             </Link>
-            <Link to="/investor-relations">
+            {/* <Link to="/investor-relations">
               <motion.button
                 whileHover={{ scale: 1.05, borderColor: '#c89b3c', color: '#c89b3c' }}
                 whileTap={{ scale: 0.95 }}
@@ -71,7 +71,7 @@ export function HomePage() {
               >
                 Investor Relations
               </motion.button>
-            </Link>
+            </Link> */}
           </motion.div>
         </div>
 

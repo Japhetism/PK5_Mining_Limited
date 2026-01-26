@@ -87,7 +87,7 @@ export const timeline: ITimelineEvent[] = [
   {
     year: "2015",
     event: "Company Founded",
-    description: "PK5 Holdings established with first tin ore operation",
+    description: "PK5 Holdings established with first iron ore operation",
   },
   {
     year: "2018",
@@ -154,7 +154,9 @@ export const benefits: IBenefit[] = [
   },
 ];
 
-export const jobs: IJob[] = [
+export const jobs: IJob[] = [];
+
+export const jobs_new: IJob[] = [
   {
     title: "Mining Engineer",
     department: "Operations",

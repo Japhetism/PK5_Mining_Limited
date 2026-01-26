@@ -1,10 +1,10 @@
-import { motion } from 'motion/react';
-import { AnimatedSection } from '@/app/components/animated-section';
-import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import { Briefcase, MapPin, Clock, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
-import { benefits, jobs } from '../fixtures';
-import { IBenefit, IJob } from '../interfaces';
+import { motion } from "motion/react";
+import { AnimatedSection } from "@/app/components/animated-section";
+import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
+import { Briefcase, MapPin, Clock, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { benefits, jobs } from "../fixtures";
+import { IBenefit, IJob } from "../interfaces";
 
 export function CareersPage() {
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
@@ -50,7 +50,9 @@ export function CareersPage() {
       <section className="py-24 bg-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Work With Us?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Why Work With Us?
+            </h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
               We invest in our people because they are our greatest asset
             </p>
@@ -61,7 +63,7 @@ export function CareersPage() {
               <AnimatedSection key={benefit.title} delay={index * 0.1}>
                 <motion.div
                   className="p-8 bg-[#0f0f0f] rounded-lg border border-gray-800"
-                  whileHover={{ y: -10, borderColor: '#c89b3c', scale: 1.02 }}
+                  whileHover={{ y: -10, borderColor: "#c89b3c", scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                 >
                   <motion.div
@@ -72,7 +74,9 @@ export function CareersPage() {
                     <benefit.icon className="w-8 h-8 text-[#c89b3c]" />
                   </motion.div>
                   <h3 className="text-2xl font-bold mb-3">{benefit.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">{benefit.description}</p>
+                  <p className="text-gray-400 leading-relaxed">
+                    {benefit.description}
+                  </p>
                 </motion.div>
               </AnimatedSection>
             ))}
@@ -89,14 +93,15 @@ export function CareersPage() {
                 Our <span className="text-[#c89b3c]">Culture</span>
               </h2>
               <p className="text-xl text-gray-400 mb-6">
-                At PK5 Mining, we foster a culture of innovation, collaboration, and continuous improvement.
+                At PK5 Mining, we foster a culture of innovation, collaboration,
+                and continuous improvement.
               </p>
               <div className="space-y-4">
                 {[
-                  'Safety-first mindset in everything we do',
-                  'Diverse and inclusive work environment',
-                  'Work-life balance and flexible arrangements',
-                  'Recognition and reward programs',
+                  "Safety-first mindset in everything we do",
+                  "Diverse and inclusive work environment",
+                  "Work-life balance and flexible arrangements",
+                  "Recognition and reward programs",
                 ].map((item, index) => (
                   <motion.div
                     key={item}
@@ -127,6 +132,110 @@ export function CareersPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </motion.div>
             </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
+      {/* Open Positions */}
+      <section className="py-24 bg-[#1a1a1a]">
+        <div className="container mx-auto px-6">
+          <AnimatedSection className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Open Positions
+            </h2>
+            <p className="text-xl text-gray-400">
+              Find your next opportunity with KP5 Mining
+            </p>
+          </AnimatedSection>
+
+          <div className="max-w-4xl mx-auto">
+            {jobs.length === 0 ? (
+              <AnimatedSection>
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="flex flex-col items-center justify-center text-center py-16 px-6 bg-[#0f0f0f] border border-dashed border-gray-800 rounded-lg"
+                >
+                  <Briefcase className="w-10 h-10 text-[#c89b3c] mb-4 opacity-80" />
+
+                  <p className="text-gray-300 text-lg mb-2">
+                    No open roles at the moment
+                  </p>
+
+                  <p className="text-gray-500 max-w-md">
+                    We are not hiring right now, but new positions open up from
+                    time to time. Please check back soon.
+                  </p>
+                </motion.div>
+              </AnimatedSection>
+            ) : (
+              jobs.map((job, index) => (
+                <AnimatedSection key={job.title + index} delay={index * 0.05}>
+                  <motion.div
+                    className="mb-4 bg-[#0f0f0f] rounded-lg border border-gray-800 overflow-hidden"
+                    whileHover={{ borderColor: "#c89b3c" }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.button
+                      className="w-full p-6 flex items-center justify-between cursor-pointer"
+                      onClick={() =>
+                        setExpandedJob(expandedJob === index ? null : index)
+                      }
+                      whileHover={{ x: 5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="flex items-center gap-4 flex-1 text-left">
+                        <Briefcase className="w-6 h-6 text-[#c89b3c]" />
+                        <div>
+                          <h3 className="font-bold text-lg mb-1">
+                            {job.title}
+                          </h3>
+                          <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                            <span className="flex items-center gap-1">
+                              <MapPin size={14} /> {job.location}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Clock size={14} /> {job.type}
+                            </span>
+                            <span>{job.experience}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <motion.div
+                        animate={{ rotate: expandedJob === index ? 90 : 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ChevronRight className="w-6 h-6 text-[#c89b3c]" />
+                      </motion.div>
+                    </motion.button>
+
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: expandedJob === index ? "auto" : 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-6 pt-0 border-t border-gray-800">
+                        <p className="text-gray-400 mb-6">
+                          We are looking for a talented {job.title} to join our{" "}
+                          {job.department} team. This role requires{" "}
+                          {job.experience} of experience and offers competitive
+                          compensation and benefits.
+                        </p>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="px-6 py-3 bg-[#c89b3c] text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+                        >
+                          Apply Now
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </AnimatedSection>
+              ))
+            )}
           </div>
         </div>
       </section>

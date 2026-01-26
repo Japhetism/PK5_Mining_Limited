@@ -4,9 +4,10 @@ import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { email, locations, telephone } from "../fixtures";
 import LocationsMap from "../components/ui/locationsMap";
+import AnimatedDots from "../components/ui/animated-dots";
 
-const actualLocations = locations.map(loc => loc.actualAddress);
-const displayLocations = locations.map(loc => loc.displayAddress);
+const actualLocations = locations.map((loc) => loc.actualAddress);
+const displayLocations = locations.map((loc) => loc.displayAddress);
 
 const contactInfo = [
   {
@@ -59,7 +60,13 @@ export function ContactPage() {
       }
 
       setSubmitted(true);
-      setFormData({ name: "", email: "", company: "", subject: "", message: "" });
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        subject: "",
+        message: "",
+      });
     } catch (err: any) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -233,15 +240,26 @@ export function ContactPage() {
 
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full px-8 py-4 bg-[#c89b3c] text-black font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-[#d4a84a] transition-colors"
+                  whileHover={!loading ? { scale: 1.02 } : undefined}
+                  whileTap={!loading ? { scale: 0.98 } : undefined}
+                  animate={loading ? { scale: [1, 1.01, 1] } : { scale: 1 }}
+                  transition={
+                    loading
+                      ? { repeat: Infinity, duration: 1.2 }
+                      : { duration: 0.2 }
+                  }
+                  className="w-full px-8 py-4 bg-[#c89b3c] text-black font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-[#d4a84a] transition-colors disabled:opacity-70"
                   disabled={loading || submitted}
                 >
                   {submitted ? (
                     <>
                       <CheckCircle size={20} />
                       Message Sent!
+                    </>
+                  ) : loading ? (
+                    <>
+                      Sending
+                      <AnimatedDots />
                     </>
                   ) : (
                     <>
