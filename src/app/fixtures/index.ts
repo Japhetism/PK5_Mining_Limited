@@ -85,27 +85,27 @@ export const leadership: ILeader[] = [
 
 export const timeline: ITimelineEvent[] = [
   {
-    year: "2015",
+    year: "2021",
     event: "Company Founded",
     description: "PK5 Holdings established with first iron ore operation",
   },
   {
-    year: "2018",
+    year: "2022",
     event: "Expansion Phase",
     description: "Added copper extraction capabilities",
   },
   {
-    year: "2020",
+    year: "2023",
     event: "Sustainability Initiative",
     description: "Launched comprehensive environmental program",
   },
   {
-    year: "2022",
+    year: "2024",
     event: "Lithium Operations",
     description: "Entered lithium market for EV battery supply",
   },
   {
-    year: "2024",
+    year: "2025",
     event: "Global Recognition",
     description: "Awarded International Mining Excellence Certificate",
   },

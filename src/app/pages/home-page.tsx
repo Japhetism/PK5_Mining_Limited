@@ -155,19 +155,19 @@ export function HomePage() {
               <div className="grid grid-cols-3 gap-6 mb-8">
                 <div className="text-center">
                   <div className="text-4xl font-bold text-[#c89b3c] mb-2">
-                    <StatCounter end={10} suffix="+" />
+                    <StatCounter end={5} suffix="+" />
                   </div>
                   <div className="text-sm text-gray-400">Years Experience</div>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-[#c89b3c] mb-2">
-                    <StatCounter end={12} />
+                    <StatCounter end={2} />
                   </div>
                   <div className="text-sm text-gray-400">Active Sites</div>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-[#c89b3c] mb-2">
-                    <StatCounter end={500} suffix="k" />
+                    <StatCounter end={100} suffix="k" />
                   </div>
                   <div className="text-sm text-gray-400">Tons/Year</div>
                 </div>
