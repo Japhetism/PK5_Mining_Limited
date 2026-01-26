@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Header } from '@/app/components/header';
 import { Footer } from '@/app/components/footer';
 import { HomePage } from '@/app/pages/home-page';
@@ -21,6 +21,7 @@ export default function App() {
             {/* <Route path="/investor-relations" element={<InvestorRelationsPage />} /> */}
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
         <Footer />
