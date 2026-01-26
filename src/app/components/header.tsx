@@ -22,7 +22,7 @@ export function Header() {
     { path: '/', label: 'Home' },
     { path: '/about', label: 'About Us' },
     { path: '/sustainability', label: 'Sustainability' },
-    { path: '/investor-relations', label: 'Investors' },
+    // { path: '/investor-relations', label: 'Investors' },
     { path: '/careers', label: 'Careers' },
     { path: '/contact', label: 'Contact' },
   ];

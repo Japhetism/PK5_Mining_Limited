@@ -87,7 +87,7 @@ export const timeline: ITimelineEvent[] = [
   {
     year: "2015",
     event: "Company Founded",
-    description: "PK5 Mining established with first tin ore operation",
+    description: "PK5 Holdings established with first tin ore operation",
   },
   {
     year: "2018",
