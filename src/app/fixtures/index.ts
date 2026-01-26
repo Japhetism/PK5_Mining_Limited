@@ -87,28 +87,23 @@ export const timeline: ITimelineEvent[] = [
   {
     year: "2021",
     event: "Company Founded",
-    description: "PK5 Holdings established with first iron ore operation",
+    description: "PK5 Holdings Inc. established with first iron ore operation",
   },
   {
-    year: "2022",
+    year: "2023",
     event: "Expansion Phase",
     description: "Added copper extraction capabilities",
   },
   {
-    year: "2023",
+    year: "2024",
     event: "Sustainability Initiative",
     description: "Launched comprehensive environmental program",
   },
   {
-    year: "2024",
+    year: "2025",
     event: "Lithium Operations",
     description: "Entered lithium market for EV battery supply",
-  },
-  {
-    year: "2025",
-    event: "Global Recognition",
-    description: "Awarded International Mining Excellence Certificate",
-  },
+  }
 ];
 
 export const locations: ILocation[] = [
