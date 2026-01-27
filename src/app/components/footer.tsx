@@ -126,7 +126,7 @@ export function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">
-            © 2026 PK5 Mining. All rights reserved.
+            © 2026 PK5 Mining. A strategic mining brand of PK5 Holdings Inc., USA.<br/>Africa-focused | Initial operations in Nigeria.
           </p>
           <div className="flex gap-6 text-sm text-gray-500">
             <a href="#" className="hover:text-[#c89b3c] transition-colors">Privacy Policy</a>

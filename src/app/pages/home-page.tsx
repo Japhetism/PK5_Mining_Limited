@@ -1,4 +1,5 @@
-import { motion } from 'motion/react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { StatCounter } from '@/app/components/stat-counter';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
@@ -7,7 +8,16 @@ import { Link } from 'react-router-dom';
 import { features, minerals } from '../fixtures';
 import { IFeature, IMineral } from '../interfaces';
 
+const HERO_SLIDE_DURATION = 6000;
+
 export function HomePage() {
+  const [slide, setSlide] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setSlide((s) => (s + 1) % 2), HERO_SLIDE_DURATION);
+    return () => clearInterval(t);
+  }, []);
+
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
@@ -27,31 +37,69 @@ export function HomePage() {
         </motion.div>
 
         <div className="relative z-10 container mx-auto px-6 text-center">
-          <motion.h1
-            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            Powering Industry Through
-            <br />
-            <span className="text-[#c89b3c]">Responsible Mining</span>
-          </motion.h1>
+          <div className="relative min-h-[320px] md:min-h-[380px] flex flex-col items-center justify-center">
+            <AnimatePresence mode="wait">
+              {slide === 1 && (
+                <motion.div
+                  key="powering"
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -24 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0 flex flex-col items-center justify-center px-6"
+                >
+                  <h1 className="text-4xl md:text-6xl font-bold mb-2 leading-tight">
+                    Africa-Focused • Launching 
+                    <br />
+                    <span className="text-[#c89b3c]">Operations in Nigeria</span>
+                  </h1>
+                  <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                    PK5 Mining delivers high-quality iron ore, tin ore, copper, and strategic minerals for global industries.
+                  </p>
+                </motion.div>
+              )}
+              {slide === 0 && (
+                <motion.div
+                  key="strategic"
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -24 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0 flex flex-col items-center justify-center px-6"
+                >
+                  <h1 className="text-4xl md:text-6xl font-bold mb-2 leading-tight">
+                    A Strategic Mining Brand of
+                    <br />
+                    <span className="text-[#c89b3c]">PK5 Holdings Inc. (USA)</span>
+                  </h1>
+                  <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                    PK5 Mining is an Africa-focused mining company backed by PK5 Holdings Inc., USA, commencing operations in Nigeria with a long-term commitment to responsible resource development across the continent.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-          <motion.p
-            className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            PK5 Mining delivers high-quality iron ore, tin ore, copper, and strategic minerals for global industries.
-          </motion.p>
+          {/* Slide indicators */}
+          <div className="flex justify-center gap-2 mb-8">
+            {[0, 1].map((i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Go to slide ${i + 1}`}
+                onClick={() => setSlide(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === slide ? 'w-8 bg-[#c89b3c]' : 'w-2 bg-gray-500 hover:bg-gray-400'
+                }`}
+              />
+            ))}
+          </div>
 
           <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
             <Link to="/about">
               <motion.button

@@ -38,7 +38,8 @@ export function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            PK5 Mining Limited is an Africa-focused mineral exploration and development company operating under PK5 Holdings Inc. (USA)
+            <p>PK5 Mining is a strategic mining brand of PK5 Holdings Inc., USA , established to develop and operate responsible mining assets across Africa.</p><br/>
+            <p>The company is commencing operations in Nigeria as its entry market, aligning with national development priorities, local content participation, and international best practices in environmental, social, and governance (ESG) standards.</p>
           </motion.p>
         </div>
       </section>
