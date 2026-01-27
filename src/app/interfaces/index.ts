@@ -89,3 +89,9 @@ export interface ISocialLink {
   url: string;
   icon: LucideIcon;
 }
+
+export interface ISlideShowContent {
+  title: string;
+  subTitle: string;
+  description: string;
+}

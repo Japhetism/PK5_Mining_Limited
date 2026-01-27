@@ -31,6 +31,7 @@ import {
   IProductionData,
   IReport,
   IRevenueData,
+  ISlideShowContent,
   ISocialLink,
   ITimelineEvent,
 } from "../interfaces";
@@ -344,5 +345,23 @@ export const socialLinks: ISocialLink[] = [
     name: "Instagram",
     url: "https://www.instagram.com/pk5miningltd/",
     icon: Instagram,
+  }
+]
+
+export const slideShowContent: ISlideShowContent[] = [
+  {
+    title: "Powering Industry Through",
+    subTitle: "Responsible Mining",
+    description: "PK5 Mining delivers high-quality iron ore, tin ore, copper, and strategic minerals for global industries.",
+  },
+  {
+    title: "A Strategic Mining Brand of",
+    subTitle: "PK5 Holdings Inc. (USA)",
+    description: "PK5 Mining is an Africa-focused mining company backed by PK5 Holdings Inc., USA, commencing operations in Nigeria with a long-term commitment to responsible resource development across the continent.",
+  },
+  {
+    title: "Africa-Focused • Launching ",
+    subTitle: "Operations in Nigeria",
+    description: "Our journey begins in Nigeria, with a long-term vision to expand across key mineral-rich regions of the continent.",
   }
 ]

@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { AnimatedSection } from '@/app/components/animated-section';
-import { StatCounter } from '@/app/components/stat-counter';
-import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { features, minerals } from '../fixtures';
-import { IFeature, IMineral } from '../interfaces';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { AnimatedSection } from "@/app/components/animated-section";
+import { StatCounter } from "@/app/components/stat-counter";
+import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { features, minerals, slideShowContent } from "../fixtures";
+import { IFeature, IMineral } from "../interfaces";
 
 const HERO_SLIDE_DURATION = 6000;
 
@@ -14,9 +14,14 @@ export function HomePage() {
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setSlide((s) => (s + 1) % 2), HERO_SLIDE_DURATION);
+    const t = setInterval(() => {
+      setSlide((s) => (s + 1) % slideShowContent.length);
+    }, HERO_SLIDE_DURATION);
+
     return () => clearInterval(t);
   }, []);
+
+  const content = slideShowContent[slide];
 
   return (
     <div className="overflow-hidden">
@@ -26,7 +31,7 @@ export function HomePage() {
           className="absolute inset-0 z-0"
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
         >
           <ImageWithFallback
             src="https://images.unsplash.com/photo-1709489662983-3674d790b224?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcGVuJTIwcGl0JTIwbWluZXxlbnwxfHx8fDE3NjkwNTQyMDR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
@@ -39,57 +44,38 @@ export function HomePage() {
         <div className="relative z-10 container mx-auto px-6 text-center">
           <div className="relative min-h-[320px] md:min-h-[380px] flex flex-col items-center justify-center">
             <AnimatePresence mode="wait">
-              {slide === 1 && (
-                <motion.div
-                  key="powering"
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -24 }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute inset-0 flex flex-col items-center justify-center px-6"
-                >
-                  <h1 className="text-4xl md:text-6xl font-bold mb-2 leading-tight">
-                    Africa-Focused • Launching 
-                    <br />
-                    <span className="text-[#c89b3c]">Operations in Nigeria</span>
-                  </h1>
-                  <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
-                    PK5 Mining delivers high-quality iron ore, tin ore, copper, and strategic minerals for global industries.
-                  </p>
-                </motion.div>
-              )}
-              {slide === 0 && (
-                <motion.div
-                  key="strategic"
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -24 }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute inset-0 flex flex-col items-center justify-center px-6"
-                >
-                  <h1 className="text-4xl md:text-6xl font-bold mb-2 leading-tight">
-                    A Strategic Mining Brand of
-                    <br />
-                    <span className="text-[#c89b3c]">PK5 Holdings Inc. (USA)</span>
-                  </h1>
-                  <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
-                    PK5 Mining is an Africa-focused mining company backed by PK5 Holdings Inc., USA, commencing operations in Nigeria with a long-term commitment to responsible resource development across the continent.
-                  </p>
-                </motion.div>
-              )}
+              <motion.div
+                key={slide}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -24 }}
+                transition={{ duration: 0.5 }}
+                className="absolute inset-0 flex flex-col items-center justify-center px-6"
+              >
+                <h1 className="text-4xl md:text-6xl font-bold mb-2 leading-tight">
+                  {content.title} <br />
+                  <span className="text-[#c89b3c]">{content.subTitle}</span>
+                </h1>
+
+                <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                  {content.description}
+                </p>
+              </motion.div>
             </AnimatePresence>
           </div>
 
           {/* Slide indicators */}
           <div className="flex justify-center gap-2 mb-8">
-            {[0, 1].map((i) => (
+            {slideShowContent.map((_, i) => (
               <button
                 key={i}
                 type="button"
                 aria-label={`Go to slide ${i + 1}`}
                 onClick={() => setSlide(i)}
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  i === slide ? 'w-8 bg-[#c89b3c]' : 'w-2 bg-gray-500 hover:bg-gray-400'
+                  i === slide
+                    ? "w-8 bg-[#c89b3c]"
+                    : "w-2 bg-gray-500 hover:bg-gray-400"
                 }`}
               />
             ))}
@@ -103,7 +89,7 @@ export function HomePage() {
           >
             <Link to="/about">
               <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: '#d4a84a' }}
+                whileHover={{ scale: 1.05, backgroundColor: "#d4a84a" }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 bg-[#c89b3c] text-black font-bold rounded flex items-center gap-2 justify-center"
               >
@@ -139,7 +125,9 @@ export function HomePage() {
       <section className="py-24 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Minerals We Mine</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Minerals We Mine
+            </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               High-purity strategic minerals for the modern industrial age
             </p>
@@ -172,7 +160,9 @@ export function HomePage() {
                     whileHover={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <h3 className="text-2xl font-bold mb-2 text-white">{mineral.name}</h3>
+                    <h3 className="text-2xl font-bold mb-2 text-white">
+                      {mineral.name}
+                    </h3>
                     <p className="text-gray-300 text-sm mb-2">{mineral.use}</p>
                     <div className="flex items-center gap-2">
                       <span className="text-[#c89b3c] font-bold">Purity:</span>
@@ -195,9 +185,12 @@ export function HomePage() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <AnimatedSection>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Our Operations</h2>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Our Operations
+              </h2>
               <p className="text-xl text-gray-400 mb-8">
-                Strategically located mining sites with state-of-the-art infrastructure and advanced extraction technology.
+                Strategically located mining sites with state-of-the-art
+                infrastructure and advanced extraction technology.
               </p>
 
               <div className="grid grid-cols-3 gap-6 mb-8">
@@ -227,7 +220,10 @@ export function HomePage() {
                   className="flex items-center gap-2 text-[#c89b3c] font-bold group"
                 >
                   Learn More About Our Operations
-                  <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
+                  <ArrowRight
+                    className="group-hover:translate-x-2 transition-transform"
+                    size={20}
+                  />
                 </motion.button>
               </Link>
             </AnimatedSection>
@@ -254,7 +250,9 @@ export function HomePage() {
       <section className="py-24 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose PK5</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Why Choose PK5
+            </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               Industry-leading expertise combined with commitment to excellence
             </p>
@@ -288,9 +286,12 @@ export function HomePage() {
       <section className="py-24 bg-gradient-to-br from-[#c89b3c] to-[#9d7a2e] text-black">
         <div className="container mx-auto px-6 text-center">
           <AnimatedSection>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Partner With Us?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Ready to Partner With Us?
+            </h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-              Join industry leaders who trust PK5 Mining for their mineral supply needs
+              Join industry leaders who trust PK5 Mining for their mineral
+              supply needs
             </p>
             <Link to="/contact">
               <motion.button
