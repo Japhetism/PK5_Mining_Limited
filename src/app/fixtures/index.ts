@@ -14,6 +14,10 @@ import {
   Recycle,
   Wind,
   Leaf,
+  Linkedin,
+  Twitter,
+  Facebook,
+  Instagram,
 } from "lucide-react";
 import {
   IBenefit,
@@ -27,6 +31,7 @@ import {
   IProductionData,
   IReport,
   IRevenueData,
+  ISocialLink,
   ITimelineEvent,
 } from "../interfaces";
 import CEOImg from "../../assets/images/CEO.png";
@@ -318,3 +323,26 @@ export const initiatives: IInitiative[] = [
     icon: Leaf,
   },
 ];
+
+export const socialLinks: ISocialLink[] = [
+  {
+    name: "LinkedIn",
+    url: "https://linkedin.com/company/pk5-mining-limited",
+    icon: Linkedin,
+  },
+  {
+    name: "Twitter",
+    url: "https://x.com/PK5Mining",
+    icon: Twitter,
+  },
+  {
+    name: "Facebook",
+    url: "https://web.facebook.com/profile.php?id=61586817075708",
+    icon: Facebook,
+  },
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/pk5miningltd/",
+    icon: Instagram,
+  }
+]

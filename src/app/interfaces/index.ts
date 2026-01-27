@@ -83,3 +83,9 @@ export interface ILocation {
   actualAddress: string;
   type?: string;
 }
+
+export interface ISocialLink {
+  name: string;
+  url: string;
+  icon: LucideIcon;
+}
