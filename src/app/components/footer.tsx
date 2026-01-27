@@ -92,9 +92,14 @@ export function Footer() {
               {locations.map((location: ILocation) => (
                 <li key={location.displayAddress} className="flex items-start gap-3 text-gray-400 text-sm">
                   <MapPin size={18} className="mt-1 shrink-0 text-[#c89b3c]" />
-                  <span>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.actualAddress)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#c89b3c] transition-colors"
+                  >
                     {location.type && `${location.type}: `}{location.displayAddress}
-                  </span>
+                  </a>
                 </li>
               ))}
               <li className="flex items-center gap-3 text-gray-400 text-sm">
