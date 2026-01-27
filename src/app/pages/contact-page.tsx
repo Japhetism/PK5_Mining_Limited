@@ -137,11 +137,31 @@ export function ContactPage() {
                             {loc.displayAddress}
                           </a>
                         ))
-                      : info.details.map((detail) => (
-                          <p key={detail} className="text-gray-400">
-                            {detail}
-                          </p>
-                        ))}
+                      : info.title === "Call Us"
+                        ? info.details.map((detail) => (
+                            <a
+                              key={detail}
+                              href={`tel:${detail}`}
+                              className="text-gray-400 hover:text-[#c89b3c] transition-colors block"
+                            >
+                              {detail}
+                            </a>
+                          ))
+                        : info.title === "Email Us"
+                          ? info.details.map((detail) => (
+                              <a
+                                key={detail}
+                                href={`mailto:${detail}`}
+                                className="text-gray-400 hover:text-[#c89b3c] transition-colors block"
+                              >
+                                {detail}
+                              </a>
+                            ))
+                          : info.details.map((detail) => (
+                              <p key={detail} className="text-gray-400">
+                                {detail}
+                              </p>
+                            ))}
                   </div>
                 </motion.div>
               </AnimatedSection>
