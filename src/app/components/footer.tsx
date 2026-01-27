@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { email, locations, minerals, telephone } from '../fixtures';
 import { ILocation, IMineral } from '../interfaces';
@@ -33,25 +33,40 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <motion.a
-                href="#"
+                href="https://linkedin.com/company/pk5-mining-limited"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, color: '#c89b3c' }}
                 className="text-gray-400 transition-colors"
               >
                 <Linkedin size={20} />
               </motion.a>
               <motion.a
-                href="#"
+                href="https://x.com/PK5Mining"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, color: '#c89b3c' }}
                 className="text-gray-400 transition-colors"
               >
                 <Twitter size={20} />
               </motion.a>
               <motion.a
-                href="#"
+                href="https://web.facebook.com/profile.php?id=61586817075708"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, color: '#c89b3c' }}
                 className="text-gray-400 transition-colors"
               >
                 <Facebook size={20} />
+              </motion.a>
+              <motion.a
+                href="https://www.instagram.com/pk5miningltd/"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.1, color: '#c89b3c' }}
+                className="text-gray-400 transition-colors"
+              >
+                <Instagram size={20} />
               </motion.a>
             </div>
           </div>
