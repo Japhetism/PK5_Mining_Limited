@@ -360,8 +360,8 @@ export const slideShowContent: ISlideShowContent[] = [
     description: "PK5 Mining is an Africa-focused mining platform backed by PK5 Holdings Inc., USA, with initial operations in Tanzania and a strategic expansion focus on Nigeria as part of its long-term continental growth strategy.",
   },
   {
-    title: "Africa-Focused • Launching ",
-    subTitle: "Operations in Nigeria",
-    description: "Our journey begins in Nigeria, with a long-term vision to expand across key mineral-rich regions of the continent.",
+    title: "Africa-Focused • Expansion Focus",
+    subTitle: "on Nigeria",
+    description: "Our African journey began in Tanzania, with a strategic expansion focus on key mineral-rich regions of the continent, including Nigeria.",
   }
 ]
