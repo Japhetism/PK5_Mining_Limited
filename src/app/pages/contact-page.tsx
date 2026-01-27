@@ -360,8 +360,13 @@ export function ContactPage() {
               </div>
               <p className="mt-8 text-gray-400">
                 For urgent matters outside business hours, please contact our
-                24/7 emergency line:
-                <span className="text-[#c89b3c] font-bold"> {telephone}</span>
+                24/7 emergency line:{" "}
+                <a
+                  href={`tel:${telephone}`}
+                  className="text-[#c89b3c] font-bold hover:underline transition-colors"
+                >
+                  {telephone}
+                </a>
               </p>
             </div>
           </AnimatedSection>
