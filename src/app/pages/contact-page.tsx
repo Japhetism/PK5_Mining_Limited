@@ -124,11 +124,24 @@ export function ContactPage() {
                   </motion.div>
                   <h3 className="text-xl font-bold mb-4">{info.title}</h3>
                   <div className="space-y-2">
-                    {info.details.map((detail) => (
-                      <p key={detail} className="text-gray-400">
-                        {detail}
-                      </p>
-                    ))}
+                    {info.title === "Visit Us"
+                      ? locations.map((loc) => (
+                          <a
+                            key={loc.displayAddress}
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.actualAddress)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-[#c89b3c] transition-colors block"
+                          >
+                            {loc.type ? `${loc.type}: ` : ""}
+                            {loc.displayAddress}
+                          </a>
+                        ))
+                      : info.details.map((detail) => (
+                          <p key={detail} className="text-gray-400">
+                            {detail}
+                          </p>
+                        ))}
                   </div>
                 </motion.div>
               </AnimatedSection>
