@@ -208,7 +208,7 @@ export function HomePage() {
                 </div>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-[#c89b3c] mb-2">
-                    <StatCounter end={100} suffix="k" />
+                    <StatCounter end={900} suffix="k" />
                   </div>
                   <div className="text-sm text-gray-400">Tons/Year</div>
                 </div>
