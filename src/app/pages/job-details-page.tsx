@@ -68,9 +68,9 @@ export function JobDetailsPage() {
       return;
     }
 
-    const maxSizeBytes = 5 * 1024 * 1024; // 5MB
+    const maxSizeBytes = 2 * 1024 * 1024; // 2MB
     if (file.size > maxSizeBytes) {
-      setError("Resume file size must be 5MB or less.");
+      setError("Resume file size must be 2MB or less.");
       setResumeFile(null);
       return;
     }
@@ -319,21 +319,16 @@ export function JobDetailsPage() {
 
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Resume (PDF, DOC, DOCX, max 5MB)
+                      Resume (PDF, max 2MB)
                     </label>
                     <div className="flex items-center gap-3">
                       <motion.input
                         type="file"
-                        accept=".pdf,.doc,.docx"
+                        accept=".pdf"
                         onChange={handleFileChange}
                         className="block w-full text-sm text-gray-300 file:mr-4 file:rounded-md file:border-0 file:bg-[#c89b3c] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:bg-[#d4a84a]"
                       />
                     </div>
-                    {resumeFile && (
-                      <p className="mt-2 text-xs text-gray-400">
-                        Selected: {resumeFile.name}
-                      </p>
-                    )}
                   </div>
 
                   {error && (
