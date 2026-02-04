@@ -6,6 +6,7 @@ import { Briefcase, MapPin, Clock, ChevronRight, LocateIcon } from "lucide-react
 import { benefits, jobs } from "../fixtures";
 import { IBenefit, IJob } from "../interfaces";
 import { Link } from "react-router-dom";
+import { capitalizeFirstLetter } from "../utils/helper";
 
 export function CareersPage() {
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
@@ -224,10 +225,10 @@ export function CareersPage() {
                               <MapPin size={14} /> {job.location}
                             </span>
                             <span className="flex items-center gap-1">
-                              <Clock size={14} /> {job.jobType}
+                              <Clock size={14} /> {capitalizeFirstLetter(job.jobType)}
                             </span>
                             <span className="flex items-center gap-1">
-                              <LocateIcon size={14} /> {job.workArrangement}
+                              <LocateIcon size={14} /> {capitalizeFirstLetter(job.workArrangement)}
                             </span>
                             <span>{job.experience}</span>
                           </div>

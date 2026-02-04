@@ -17,6 +17,7 @@ import { jobs } from "../fixtures";
 import { IJob } from "../interfaces";
 import AnimatedDots from "../components/ui/animated-dots";
 import { Badge } from "../components/ui/badge";
+import { capitalizeFirstLetter } from "../utils/helper";
 
 const countries = [
   "Nigeria",
@@ -174,11 +175,11 @@ export function JobDetailsPage() {
                   <MapPin size={18} className="text-[#c89b3c]" /> {job.location}
                 </span>
                 <span className="flex items-center gap-2">
-                  <Clock size={18} className="text-[#c89b3c]" /> {job.jobType}
+                  <Clock size={18} className="text-[#c89b3c]" /> {capitalizeFirstLetter(job.jobType)}
                 </span>
                 <span className="flex items-center gap-1">
                   <LocateIcon size={18} className="text-[#c89b3c]" />{" "}
-                  {job.workArrangement}
+                  {capitalizeFirstLetter(job.workArrangement)}
                 </span>
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#c89b3c]" />
