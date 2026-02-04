@@ -152,7 +152,7 @@ export function JobDetailsPage() {
       {/* Hero / Job Summary */}
       <section className="py-16 bg-gradient-to-br from-[#1a1a1a] via-[#0f0f0f] to-[#1a1a1a]">
         <div className="container mx-auto px-6">
-          <Link to="/careers">
+          <Link to="/careers#open-positions">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

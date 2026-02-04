@@ -1,16 +1,17 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
 import { Briefcase, MapPin, Clock, ChevronRight, LocateIcon } from "lucide-react";
 import { benefits, jobs } from "../fixtures";
 import { IBenefit, IJob } from "../interfaces";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { capitalizeFirstLetter } from "../utils/helper";
 
 export function CareersPage() {
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const openPositionsRef = useRef<HTMLElement | null>(null);
+  const { hash } = useLocation();
 
   const scrollToOpenPositions = () => {
     openPositionsRef.current?.scrollIntoView({
@@ -18,6 +19,18 @@ export function CareersPage() {
       block: "start",
     });
   };
+
+  useEffect(() => {
+    if (hash === "#open-positions") {
+      // wait a tick so layout/sections mount first
+      requestAnimationFrame(() => {
+        openPositionsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    }
+  }, [hash]);
 
   return (
     <div className="pt-24">
@@ -163,6 +176,7 @@ export function CareersPage() {
 
       {/* Open Positions */}
       <section
+        id="open-positions"
         ref={(el) => {
           openPositionsRef.current = el;
         }}
