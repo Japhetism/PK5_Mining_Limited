@@ -8,6 +8,7 @@ import { InvestorRelationsPage } from '@/app/pages/investor-relations-page';
 import { CareersPage } from '@/app/pages/careers-page';
 import { ContactPage } from '@/app/pages/contact-page';
 import { JobDetailsPage } from './pages/job-details-page';
+import { ScrollToTop } from './components/scrollToTop';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
       <div className="min-h-screen bg-[#1a1a1a] text-white">
         <Header />
         <main>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
