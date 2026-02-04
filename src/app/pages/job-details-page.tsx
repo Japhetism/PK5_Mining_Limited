@@ -16,6 +16,7 @@ import { AnimatedSection } from "@/app/components/animated-section";
 import { jobs } from "../fixtures";
 import { IJob } from "../interfaces";
 import AnimatedDots from "../components/ui/animated-dots";
+import { addApplication } from "../admin/data";
 import { Badge } from "../components/ui/badge";
 import { capitalizeFirstLetter } from "../utils/helper";
 
@@ -129,6 +130,24 @@ export function JobDetailsPage() {
       if (!res.ok) {
         throw new Error("Failed to submit application. Please try again.");
       }
+
+      // Also persist into the local admin store so it appears on the admin portal
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const resumeDataUrl = typeof reader.result === "string" ? reader.result : "";
+        addApplication({
+          jobId: job.id,
+          jobTitle: job.title,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          country: formData.country,
+          phone: formData.phone,
+          linkedinUrl: formData.linkedinUrl,
+          resumeDataUrl,
+        });
+      };
+      reader.readAsDataURL(resumeFile);
 
       setSubmitted(true);
       setFormData({
