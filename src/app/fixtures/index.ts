@@ -321,7 +321,7 @@ export const slideShowContent: ISlideShowContent[] = [
 
 export const jobs: IJob[] = [
   {
-    id: "mining-engineer-001",
+    id: "65f1a9c2e4b0f7a3d91c0a01",
     title: "Mining Engineer",
     department: "Operations",
     location: "Site A - Northern District",
@@ -356,7 +356,7 @@ export const jobs: IJob[] = [
   },
 
   {
-    id: "environmental-specialist-002",
+    id: "65f1a9c2e4b0f7a3d91c0a02",
     title: "Environmental Specialist",
     department: "Sustainability",
     location: "Site B - Eastern Region",
@@ -390,7 +390,7 @@ export const jobs: IJob[] = [
   },
 
   {
-    id: "safety-officer-003",
+    id: "65f1a9c2e4b0f7a3d91c0a03",
     title: "Safety Officer",
     department: "Health & Safety",
     location: "Multiple Sites",
@@ -424,7 +424,7 @@ export const jobs: IJob[] = [
   },
 
   {
-    id: "data-analyst-004",
+    id: "65f1a9c2e4b0f7a3d91c0a04",
     title: "Data Analyst",
     department: "Operations",
     location: "Head Office",
@@ -464,7 +464,7 @@ export const jobs: IJob[] = [
   },
 
   {
-    id: "mechanical-engineer-005",
+    id: "65f1a9c2e4b0f7a3d91c0a05",
     title: "Mechanical Engineer",
     department: "Maintenance",
     location: "Site C - Western Zone",
@@ -498,7 +498,7 @@ export const jobs: IJob[] = [
   },
 
   {
-    id: "geologist-006",
+    id: "65f2b7d9a3c4e1f089ab3c10",
     title: "Geologist",
     department: "Exploration",
     location: "Multiple Sites",
