@@ -3,6 +3,7 @@ import { AnimatedSection } from "@/app/components/animated-section";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
 import { Briefcase, MapPin, Clock, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { benefits, jobs } from "../fixtures";
 import { IBenefit, IJob } from "../interfaces";
 
@@ -223,13 +224,15 @@ export function CareersPage() {
                           {job.experience} of experience and offers competitive
                           compensation and benefits.
                         </p>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="px-6 py-3 bg-[#c89b3c] text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
-                        >
-                          Apply Now
-                        </motion.button>
+                        <Link to={`/careers/job/${job.id}`}>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-6 py-3 bg-[#c89b3c] text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+                          >
+                            Apply Now
+                          </motion.button>
+                        </Link>
                       </div>
                     </motion.div>
                   </motion.div>

@@ -21,11 +21,13 @@ export interface ILeader {
 }
 
 export interface IJob {
+  id: string;
   title: string;
   location: string;
   type: string;
   experience: string;
   department: string;
+  description: string;
 }
 
 export interface IBenefit {

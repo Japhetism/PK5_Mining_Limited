@@ -7,6 +7,7 @@ import { SustainabilityPage } from '@/app/pages/sustainability-page';
 import { InvestorRelationsPage } from '@/app/pages/investor-relations-page';
 import { CareersPage } from '@/app/pages/careers-page';
 import { ContactPage } from '@/app/pages/contact-page';
+import { JobDetailsPage } from '@/app/pages/job-details-page';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="/sustainability" element={<SustainabilityPage />} />
             {/* <Route path="/investor-relations" element={<InvestorRelationsPage />} /> */}
             <Route path="/careers" element={<CareersPage />} />
+            <Route path="/careers/job/:jobId" element={<JobDetailsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -155,50 +155,66 @@ export const benefits: IBenefit[] = [
   },
 ];
 
-export const jobs: IJob[] = [];
-
-export const jobs_new: IJob[] = [
+export const jobs: IJob[] = [
   {
+    id: "mining-engineer",
     title: "Mining Engineer",
     department: "Operations",
     location: "Site A - Northern District",
     type: "Full-time",
     experience: "5+ years",
+    description:
+      "As a Mining Engineer at PK5 Mining, you will design, plan, and oversee mining operations to ensure safe, efficient, and sustainable extraction of mineral resources.",
   },
   {
+    id: "environmental-specialist",
     title: "Environmental Specialist",
     department: "Sustainability",
     location: "Site B - Eastern Region",
     type: "Full-time",
     experience: "3+ years",
+    description:
+      "The Environmental Specialist supports our ESG commitments by monitoring environmental impact, ensuring regulatory compliance, and driving continuous improvement in sustainability practices.",
   },
   {
+    id: "safety-officer",
     title: "Safety Officer",
     department: "Health & Safety",
     location: "Multiple Sites",
     type: "Full-time",
     experience: "4+ years",
+    description:
+      "The Safety Officer is responsible for implementing and enforcing safety standards across our operations, conducting training, and leading incident investigations.",
   },
   {
+    id: "data-analyst",
     title: "Data Analyst",
     department: "Operations",
     location: "Head Office",
     type: "Full-time",
     experience: "2+ years",
+    description:
+      "As a Data Analyst, you will work closely with operations teams to analyze production and performance data, generate insights, and support data-driven decision making.",
   },
   {
+    id: "mechanical-engineer",
     title: "Mechanical Engineer",
     department: "Maintenance",
     location: "Site C - Western Zone",
     type: "Full-time",
     experience: "5+ years",
+    description:
+      "The Mechanical Engineer will maintain and optimize heavy mining equipment, ensuring maximum uptime and reliability across our sites.",
   },
   {
+    id: "geologist",
     title: "Geologist",
     department: "Exploration",
     location: "Multiple Sites",
     type: "Full-time",
     experience: "3+ years",
+    description:
+      "The Geologist supports exploration activities by conducting field surveys, analyzing geological data, and identifying new resource opportunities.",
   },
 ];
 
