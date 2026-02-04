@@ -155,53 +155,6 @@ export const benefits: IBenefit[] = [
   },
 ];
 
-export const jobs: IJob[] = [];
-
-export const jobs_new: IJob[] = [
-  {
-    title: "Mining Engineer",
-    department: "Operations",
-    location: "Site A - Northern District",
-    type: "Full-time",
-    experience: "5+ years",
-  },
-  {
-    title: "Environmental Specialist",
-    department: "Sustainability",
-    location: "Site B - Eastern Region",
-    type: "Full-time",
-    experience: "3+ years",
-  },
-  {
-    title: "Safety Officer",
-    department: "Health & Safety",
-    location: "Multiple Sites",
-    type: "Full-time",
-    experience: "4+ years",
-  },
-  {
-    title: "Data Analyst",
-    department: "Operations",
-    location: "Head Office",
-    type: "Full-time",
-    experience: "2+ years",
-  },
-  {
-    title: "Mechanical Engineer",
-    department: "Maintenance",
-    location: "Site C - Western Zone",
-    type: "Full-time",
-    experience: "5+ years",
-  },
-  {
-    title: "Geologist",
-    department: "Exploration",
-    location: "Multiple Sites",
-    type: "Full-time",
-    experience: "3+ years",
-  },
-];
-
 export const revenueData: IRevenueData[] = [
   { year: "2020", revenue: 245 },
   { year: "2021", revenue: 298 },
@@ -365,3 +318,245 @@ export const slideShowContent: ISlideShowContent[] = [
     description: "Our African journey began in Tanzania, with a strategic expansion focus on key mineral-rich regions of the continent, including Nigeria.",
   }
 ]
+
+export const jobs: IJob[] = [
+  {
+    id: "mining-engineer-001",
+    title: "Mining Engineer",
+    department: "Operations",
+    location: "Site A - Northern District",
+    experience: "5+ years",
+    jobType: "full-time",
+    workArrangement: "onsite",
+    briefDescription:
+      "Own mine planning and production optimization while keeping safety and sustainability at the center.",
+    descriptionHtml: `
+      <p><strong>About the role</strong></p>
+      <p>
+        You will lead mine planning, drill & blast optimization, and day-to-day production improvements.
+        You’ll partner with operations and HSE to deliver safe, efficient output.
+      </p>
+
+      <p><strong>Job role</strong></p>
+      <ul>
+        <li>Develop short- and long-term mine plans and schedules.</li>
+        <li>Optimize production KPIs (cycle time, dilution, recovery, cost/ton).</li>
+        <li>Coordinate with geology and maintenance to reduce downtime.</li>
+        <li><span>Enforce safety standards and compliance on site.</span></li>
+      </ul>
+
+      <p><strong>Requirements (optional)</strong></p>
+      <ul>
+        <li>B.Eng / B.Sc in Mining Engineering (or related).</li>
+        <li>Strong understanding of drill & blast, haulage, and pit design.</li>
+        <li>Ability to communicate plans clearly across teams.</li>
+        <li>Mining Engineering degree or equivalent experience</li>
+        <li>Experience with pit design / production planning</li>
+        <li>Strong site coordination and reporting skills</li>
+      </ul>
+
+      <p><strong>Job Duties</strong></p>
+      <ul>
+        <li>Mine planning and scheduling</li>
+        <li>Production optimization</li>
+        <li>Safety-first execution</li>
+      </ul>
+    `
+  },
+
+  {
+    id: "environmental-specialist-002",
+    title: "Environmental Specialist",
+    department: "Sustainability",
+    location: "Site B - Eastern Region",
+    experience: "3+ years",
+    jobType: "full-time",
+    workArrangement: "hybrid",
+    briefDescription:
+      "Drive environmental compliance, monitoring, and sustainability initiatives across operations.",
+    descriptionHtml: `
+      <p><strong>About the role</strong></p>
+      <p>
+        You will ensure our sites meet environmental regulations and internal standards, while supporting
+        long-term sustainability programs.
+      </p>
+
+      <p><strong>Job role</strong></p>
+      <ul>
+        <li>Run environmental monitoring (water, air, noise, waste).</li>
+        <li>Prepare compliance reports and coordinate audits.</li>
+        <li>Support ESIA/ESMP activities and stakeholder engagement.</li>
+        <li><span>Partner with operations to reduce environmental impact.</span></li>
+        <li>Environmental monitoring and reporting</li>
+        <li>Audit readiness and compliance</li>
+        <li>Sustainability program support</li>
+      </ul>
+
+      <p><strong>Requirements (optional)</strong></p>
+      <ul>
+        <li>Degree in Environmental Science/Engineering (or related).</li>
+        <li>Knowledge of local environmental regulations and permitting.</li>
+        <li>Environmental background (degree or equivalent experience)</li>
+        <li>Experience with compliance reporting</li>
+        <li>Comfortable working with site teams</li>
+      </ul>
+
+      <p><strong>Tools (optional)</strong></p>
+      <ul>
+        <li>Reporting tools (Excel/Power BI) and field sampling tools.</li>
+      </ul>
+    `,
+  },
+
+  {
+    id: "safety-officer-003",
+    title: "Safety Officer",
+    department: "Health & Safety",
+    location: "Multiple Sites",
+    experience: "4+ years",
+    jobType: "full-time",
+    workArrangement: "onsite",
+    briefDescription:
+      "Own safety routines, training, and incident prevention to keep our people and sites protected.",
+    descriptionHtml: `
+      <p><strong>About the role</strong></p>
+      <p>
+        You’ll build a safety-first culture by leading toolbox talks, inspections, and corrective actions.
+        You’ll partner with supervisors to prevent incidents and improve safety performance.
+      </p>
+
+      <p><strong>Job role</strong></p>
+      <ul>
+        <li>Conduct daily/weekly safety inspections and risk assessments.</li>
+        <li>Lead incident reporting, investigation, and corrective actions.</li>
+        <li>Deliver safety training and enforce PPE/permit-to-work processes.</li>
+        <li><span>Track safety KPIs and recommend improvements.</span></li>
+        <li>Site inspections and risk assessments</li>
+        <li>Incident prevention and response</li>
+        <li>Training and safety coaching</li>
+      </ul>
+
+      <p><strong>Requirements (optional)</strong></p>
+      <ul>
+        <li>HSE certification is a plus (e.g., NEBOSH/IOSH).</li>
+        <li>Strong communication and coaching skills.</li>
+        <li>Relevant HSE experience</li>
+        <li>Comfortable working across multiple sites</li>
+        <li>Strong reporting and documentation skills</li>
+      </ul>
+    `,
+  },
+
+  {
+    id: "data-analyst-004",
+    title: "Data Analyst",
+    department: "Operations",
+    location: "Head Office",
+    experience: "2+ years",
+    jobType: "full-time",
+    workArrangement: "hybrid",
+    briefDescription:
+      "Turn operational data into insights—dashboards, KPIs, and reporting for better decisions.",
+    descriptionHtml: `
+      <p><strong>About the role</strong></p>
+      <p>
+        You’ll work with operations leaders to define KPIs, build dashboards, and improve data quality.
+      </p>
+
+      <p><strong>Job role</strong></p>
+      <ul>
+        <li>Build and maintain operational dashboards and weekly reports.</li>
+        <li>Analyze production, downtime, cost, and safety datasets.</li>
+        <li>Work with teams to define metric definitions and data sources.</li>
+        <li><span>Recommend process improvements based on insights.</span></li>
+        <li>Dashboards and reporting</li>
+        <li>Operational KPI analysis</li>
+        <li>Data quality</li>
+         <li>Strong Excel skills and reporting mindset</li>
+         <li>Comfortable with SQL or equivalent querying</li>
+         <li>Ability to explain insights to non-technical stakeholders</li>
+      </ul>
+
+      <p><strong>Tech stack (optional)</strong></p>
+      <ul>
+        <li>SQL, Excel, Power BI/Tableau.</li>
+        <li>Python (optional) for deeper analysis.</li>
+      </ul>
+    `,
+  },
+
+  {
+    id: "mechanical-engineer-005",
+    title: "Mechanical Engineer",
+    department: "Maintenance",
+    location: "Site C - Western Zone",
+    experience: "5+ years",
+    jobType: "full-time",
+    workArrangement: "onsite",
+    briefDescription:
+      "Maintain and improve equipment reliability—preventive maintenance, root cause analysis, and uptime.",
+    descriptionHtml: `
+      <p><strong>About the role</strong></p>
+      <p>
+        You’ll reduce downtime and improve reliability across heavy equipment and plant operations.
+      </p>
+
+      <p><strong>Job role</strong></p>
+      <ul>
+        <li>Plan and execute preventive and corrective maintenance schedules.</li>
+        <li>Perform root cause analysis for recurring equipment failures.</li>
+        <li>Coordinate spares, vendors, and maintenance documentation.</li>
+        <li><span>Ensure all maintenance is executed with safety compliance.</span></li>
+        <li>Preventive maintenance</li>
+        <li>Reliability improvement</li>
+        <li>Failure analysis</li>
+      </ul>
+
+      <p><strong>Requirements</strong></p>
+      <ul>
+        <li>CMMS tools, maintenance logs, and reporting via Excel.</li>
+        <li>Mechanical engineering background</li>
+        <li>Experience with heavy equipment/plant maintenance</li>
+        <li>Strong troubleshooting and documentation skills</li>
+      </ul>
+    `
+  },
+
+  {
+    id: "geologist-006",
+    title: "Geologist",
+    department: "Exploration",
+    location: "Multiple Sites",
+    experience: "3+ years",
+    jobType: "contract",
+    workArrangement: "onsite",
+    briefDescription:
+      "Support exploration and grade control with mapping, sampling, logging, and interpretation.",
+    descriptionHtml: `
+      <p><strong>About the role</strong></p>
+      <p>
+        You’ll work closely with mining and exploration teams on mapping, drilling programs, and
+        geological modeling to improve resource confidence.
+      </p>
+
+      <p><strong>Job role</strong></p>
+      <ul>
+        <li>Log core/RC samples and maintain sampling QA/QC.</li>
+        <li>Support grade control and ore/waste boundary decisions.</li>
+        <li>Interpret data and update geological models.</li>
+        <li><span>Prepare field reports and technical summaries.</span></li>
+        <li>Core logging and sampling</li>
+        <li>Geological interpretation</li>
+        <li>Field reporting</li>
+      </ul>
+
+      <p><strong>Requirements</strong></p>
+      <ul>
+        <li>GIS tools, modeling software, and Excel.</li>
+        <li>Geology background (degree or equivalent experience)</li>
+        <li>Fieldwork readiness across sites</li>
+        <li>Strong attention to detail for QA/QC</li>
+      </ul>
+    `
+  },
+];
