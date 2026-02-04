@@ -22,7 +22,7 @@ export default function App() {
             {/* <Route path="/investor-relations" element={<InvestorRelationsPage />} /> */}
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="job-details" element={<JobDetailsPage />} />
+            <Route path="/careers/job/:jobId" element={<JobDetailsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

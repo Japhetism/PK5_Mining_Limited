@@ -5,6 +5,7 @@ import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
 import { Briefcase, MapPin, Clock, ChevronRight, LocateIcon } from "lucide-react";
 import { benefits, jobs } from "../fixtures";
 import { IBenefit, IJob } from "../interfaces";
+import { Link } from "react-router-dom";
 
 export function CareersPage() {
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
@@ -232,14 +233,16 @@ export function CareersPage() {
                           </div>
                         </div>
                       </div>
-
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#c89b3c] text-xs text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
-                      >
-                        Apply Now
-                      </motion.button>
+                      
+                      <Link to={`/careers/job/${job.id}`}>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="px-4 py-2 bg-[#c89b3c] text-xs text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+                        >
+                          Apply Now
+                        </motion.button>
+                      </Link>
                     </motion.button>
                   </motion.div>
                 </AnimatedSection>
