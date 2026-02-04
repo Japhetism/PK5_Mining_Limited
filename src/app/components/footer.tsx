@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { email, locations, minerals, socialLinks, telephone } from '../fixtures';
 import { ILocation, IMineral, ISocialLink } from '../interfaces';
 import Logo from '../../assets/images/logo.png';
+import { useConsent } from "../consent/ConsentProvider";
 
 const footerLinks = [
   { name: 'About Us', path: '/about' },
@@ -13,6 +14,7 @@ const footerLinks = [
 ];
 
 export function Footer() {
+  const { openManager } = useConsent();
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -124,6 +126,13 @@ export function Footer() {
             <a href="#" className="hover:text-[#c89b3c] transition-colors">Terms of Service</a>
             <a href="#" className="hover:text-[#c89b3c] transition-colors">Cookie Policy</a>
           </div>
+           <button
+        onClick={openManager}
+        className="footer-link"
+        type="button"
+      >
+        Cookie settings
+      </button>
         </div>
       </div>
     </motion.footer>

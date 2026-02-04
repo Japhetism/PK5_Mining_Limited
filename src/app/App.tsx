@@ -9,6 +9,8 @@ import { CareersPage } from '@/app/pages/careers-page';
 import { ContactPage } from '@/app/pages/contact-page';
 import { JobDetailsPage } from './pages/job-details-page';
 import { ScrollToTop } from './components/scrollToTop';
+import { CookieManagerModal } from "./consent/CookieManagerModal";
+import { CookieBanner } from './consent/cookieBanner';
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
         <Header />
         <main>
           <ScrollToTop />
+          <CookieBanner />
+          <CookieManagerModal />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
