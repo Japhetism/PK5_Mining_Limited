@@ -1,0 +1,6 @@
+@Pk5Mining.Server_HostAddress = http://localhost:5195
+
+GET {{Pk5Mining.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
