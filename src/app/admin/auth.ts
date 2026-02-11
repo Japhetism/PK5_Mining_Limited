@@ -15,7 +15,7 @@ function getConfiguredCredentials(): AdminCredentials | null {
     return { username, password };
   }
 
-  return { username: "admin", password: "admin123" };
+  return { username: "", password: "" };
 }
 
 export function isAdminAuthed(): boolean {
