@@ -92,11 +92,6 @@ export function AdminLoginPage() {
           >
             {loading ? "Signing in..." : "Sign in"}
           </motion.button>
-
-          <p className="text-xs text-gray-500">
-            Tip: set <code>VITE_ADMIN_USERNAME</code> and{" "}
-            <code>VITE_ADMIN_PASSWORD</code> for production.
-          </p>
         </form>
       </motion.div>
     </div>
