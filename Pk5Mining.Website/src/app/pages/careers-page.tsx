@@ -20,8 +20,6 @@ export function CareersPage() {
     queryFn: getJobs,
   });
 
-  console.log("jobs are ", data);
-
   const jobs: JobDto[] = data ?? [];
 
   const scrollToOpenPositions = () => {
