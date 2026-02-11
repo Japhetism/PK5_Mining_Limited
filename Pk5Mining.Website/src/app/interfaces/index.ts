@@ -117,3 +117,54 @@ export interface IJob {
   postedAt?: string;
   isActive?: boolean;
 }
+
+export type IPaginated<T> = {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+export type Role = "user" | "admin";
+
+export interface IUser {
+  id: string;
+  email: string;
+  role: Role;
+  name?: string;
+};
+
+export type JobApplicationStatus = "submitted" | "reviewing" | "rejected" | "accepted";
+
+export interface IJobApplication {
+  id: string;
+  jobId: string;
+  jobTitle?: string;
+  applicantName: string;
+  applicantEmail: string;
+  resumeUrl?: string;
+  coverLetter?: string;
+  status?: JobApplicationStatus;
+  createdAt?: string;
+};
+
+export type ApiResponse<T> = {
+  responseMessage: string;
+  responseData: T;
+  responseStatus: "SUCCESS" | "FAILED" | string;
+};
+
+export type JobDto = {
+  id: number;
+  title: string;
+  description: string;
+  department: string;
+  location: string;
+  isActive: boolean;
+  dT_Created: string;
+  dT_Modified: string;
+  experience?: string;
+  jobType?: string;
+  workArrangement?: WorkArrangement;
+  briefDescription?: string;
+};

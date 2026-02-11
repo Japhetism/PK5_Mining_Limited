@@ -14,11 +14,13 @@ import {
 } from "lucide-react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { jobs } from "../fixtures";
-import { IJob } from "../interfaces";
+import { IJob, JobDto } from "../interfaces";
 import AnimatedDots from "../components/ui/animated-dots";
 import { addApplication } from "../admin/data";
 import { Badge } from "../components/ui/badge";
 import { capitalizeFirstLetter } from "../utils/helper";
+import { useQuery } from "@tanstack/react-query";
+import { getJobById } from "../api/jobs";
 
 const countries = [
   "Nigeria",
@@ -35,7 +37,14 @@ const countries = [
 
 export function JobDetailsPage() {
   const { jobId } = useParams<{ jobId: string }>();
-  const job: IJob | undefined = jobs.find((j) => j.id === jobId);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["jobs", jobId],
+    queryFn: () => getJobById(jobId as string),
+    enabled: !!jobId,
+  });
+
+  const job: JobDto | undefined = data;
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -51,9 +60,9 @@ export function JobDetailsPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  if (!job) {
-    return <Navigate to="/careers" replace />;
-  }
+  // if (!job) {
+  //   return <Navigate to="/careers" replace />;
+  // }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -95,6 +104,12 @@ export function JobDetailsPage() {
     setError("");
     setSubmitted(false);
 
+    // ✅ Guard: job must exist
+    if (!job?.id || !job?.title) {
+      setError("Job details are missing. Please refresh and try again.");
+      return;
+    }
+
     if (!resumeFile) {
       setError("Please upload your resume.");
       return;
@@ -106,7 +121,7 @@ export function JobDetailsPage() {
     }
 
     const form = new FormData();
-    form.append("jobId", job.id);
+    form.append("jobId", String(job.id)); // ✅ FormData expects string/blob
     form.append("jobTitle", job.title);
     form.append("firstName", formData.firstName);
     form.append("lastName", formData.lastName);
@@ -131,12 +146,12 @@ export function JobDetailsPage() {
         throw new Error("Failed to submit application. Please try again.");
       }
 
-      // Also persist into the local admin store so it appears on the admin portal
       const reader = new FileReader();
       reader.onloadend = () => {
-        const resumeDataUrl = typeof reader.result === "string" ? reader.result : "";
+        const resumeDataUrl =
+          typeof reader.result === "string" ? reader.result : "";
         addApplication({
-          jobId: job.id,
+          jobId: job.id?.toString(),
           jobTitle: job.title,
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -160,7 +175,7 @@ export function JobDetailsPage() {
       });
       setResumeFile(null);
     } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again.");
+      setError(err?.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -184,25 +199,26 @@ export function JobDetailsPage() {
           <AnimatedSection>
             <div className="max-w-3xl">
               <Badge variant="secondary" className="mb-4">
-                {job.department}
+                {job?.department}
               </Badge>
               <div className="flex items-center gap-3 mb-4">
-                <h1 className="text-4xl md:text-5xl font-bold">{job.title}</h1>
+                <h1 className="text-4xl md:text-5xl font-bold">{job?.title}</h1>
               </div>
               <div className="flex flex-wrap gap-4 text-gray-300 mb-6">
                 <span className="flex items-center gap-2">
-                  <MapPin size={18} className="text-[#c89b3c]" /> {job.location}
+                  <MapPin size={18} className="text-[#c89b3c]" /> {job?.location}
                 </span>
                 <span className="flex items-center gap-2">
-                  <Clock size={18} className="text-[#c89b3c]" /> {capitalizeFirstLetter(job.jobType)}
+                  <Clock size={18} className="text-[#c89b3c]" />{" "}
+                  {job?.jobType && capitalizeFirstLetter(job.jobType)}
                 </span>
                 <span className="flex items-center gap-1">
                   <LocateIcon size={18} className="text-[#c89b3c]" />{" "}
-                  {capitalizeFirstLetter(job.workArrangement)}
+                  {job?.workArrangement && capitalizeFirstLetter(job.workArrangement)}
                 </span>
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#c89b3c]" />
-                  {job.experience} experience
+                  {job?.experience} experience
                 </span>
               </div>
             </div>
@@ -228,7 +244,7 @@ export function JobDetailsPage() {
                     [&_p>strong]:text-white
                     [&_p>strong]:mb-3
                     [&_p>strong]:mt-6"
-                  dangerouslySetInnerHTML={{ __html: job.descriptionHtml }}
+                  dangerouslySetInnerHTML={{ __html: job?.description ?? "" }}
                 />
               </div>
             </AnimatedSection>

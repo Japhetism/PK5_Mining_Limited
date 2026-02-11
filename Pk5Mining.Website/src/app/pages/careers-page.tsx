@@ -3,15 +3,26 @@ import { motion } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
 import { Briefcase, MapPin, Clock, ChevronRight, LocateIcon } from "lucide-react";
-import { benefits, jobs } from "../fixtures";
-import { IBenefit, IJob } from "../interfaces";
+import { benefits } from "../fixtures";
+import { IBenefit, IJob, JobDto } from "../interfaces";
 import { Link, useLocation } from "react-router-dom";
 import { capitalizeFirstLetter } from "../utils/helper";
+import { useQuery } from "@tanstack/react-query";
+import { getJobs } from "../api/jobs";
 
 export function CareersPage() {
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const openPositionsRef = useRef<HTMLElement | null>(null);
   const { hash } = useLocation();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["jobs"],
+    queryFn: getJobs,
+  });
+
+  console.log("jobs are ", data);
+
+  const jobs: JobDto[] = data ?? [];
 
   const scrollToOpenPositions = () => {
     openPositionsRef.current?.scrollIntoView({
@@ -214,7 +225,7 @@ export function CareersPage() {
                 </motion.div>
               </AnimatedSection>
             ) : (
-              jobs.map((job: IJob, index: number) => (
+              jobs.map((job: JobDto, index: number) => (
                 <AnimatedSection key={job.title + index} delay={index * 0.05}>
                   <motion.div
                     className="mb-4 bg-[#0f0f0f] rounded-lg border border-gray-800 overflow-hidden"
@@ -239,10 +250,10 @@ export function CareersPage() {
                               <MapPin size={14} /> {job.location}
                             </span>
                             <span className="flex items-center gap-1">
-                              <Clock size={14} /> {capitalizeFirstLetter(job.jobType)}
+                              <Clock size={14} /> {job.jobType && capitalizeFirstLetter(job.jobType)}
                             </span>
                             <span className="flex items-center gap-1">
-                              <LocateIcon size={14} /> {capitalizeFirstLetter(job.workArrangement)}
+                              <LocateIcon size={14} /> {job.workArrangement && capitalizeFirstLetter(job.workArrangement)}
                             </span>
                             <span>{job.experience}</span>
                           </div>
