@@ -1,14 +1,36 @@
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
-import { Briefcase, MapPin, Clock, ChevronRight } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Briefcase, MapPin, Clock, ChevronRight, LocateIcon } from "lucide-react";
 import { benefits, jobs } from "../fixtures";
 import { IBenefit, IJob } from "../interfaces";
+import { Link, useLocation } from "react-router-dom";
+import { capitalizeFirstLetter } from "../utils/helper";
 
 export function CareersPage() {
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
+  const openPositionsRef = useRef<HTMLElement | null>(null);
+  const { hash } = useLocation();
+
+  const scrollToOpenPositions = () => {
+    openPositionsRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  useEffect(() => {
+    if (hash === "#open-positions") {
+      // wait a tick so layout/sections mount first
+      requestAnimationFrame(() => {
+        openPositionsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    }
+  }, [hash]);
 
   return (
     <div className="pt-24">
@@ -27,6 +49,7 @@ export function CareersPage() {
           />
           <div className="absolute inset-0 bg-black/70" />
         </motion.div>
+
         <div className="relative z-10 container mx-auto px-6 text-center">
           <motion.h1
             className="text-5xl md:text-6xl font-bold mb-4"
@@ -34,16 +57,27 @@ export function CareersPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            Build Your Career at <span className="text-[#c89b3c]">PK5</span>
+            Careers at <span className="text-[#c89b3c]">PK5</span>
           </motion.h1>
+
           <motion.p
             className="text-xl text-gray-300 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Join a team that's shaping the future of sustainable mining
+            Join our team and help <br /> shape the future of sustainable mining.
           </motion.p>
+
+          <motion.button
+            type="button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="mt-6 px-6 py-3 bg-[#c89b3c] text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+            onClick={scrollToOpenPositions}
+          >
+            See Job Openings
+          </motion.button>
         </div>
       </section>
 
@@ -74,6 +108,7 @@ export function CareersPage() {
                   >
                     <benefit.icon className="w-8 h-8 text-[#c89b3c]" />
                   </motion.div>
+
                   <h3 className="text-2xl font-bold mb-3">{benefit.title}</h3>
                   <p className="text-gray-400 leading-relaxed">
                     {benefit.description}
@@ -93,10 +128,12 @@ export function CareersPage() {
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 Our <span className="text-[#c89b3c]">Culture</span>
               </h2>
+
               <p className="text-xl text-gray-400 mb-6">
                 At PK5 Mining, we foster a culture of innovation, collaboration,
                 and continuous improvement.
               </p>
+
               <div className="space-y-4">
                 {[
                   "Safety-first mindset in everything we do",
@@ -138,7 +175,13 @@ export function CareersPage() {
       </section>
 
       {/* Open Positions */}
-      <section className="py-24 bg-[#1a1a1a]">
+      <section
+        id="open-positions"
+        ref={(el) => {
+          openPositionsRef.current = el;
+        }}
+        className="py-24 bg-[#1a1a1a]"
+      >
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -171,7 +214,7 @@ export function CareersPage() {
                 </motion.div>
               </AnimatedSection>
             ) : (
-              jobs.map((job, index) => (
+              jobs.map((job: IJob, index: number) => (
                 <AnimatedSection key={job.title + index} delay={index * 0.05}>
                   <motion.div
                     className="mb-4 bg-[#0f0f0f] rounded-lg border border-gray-800 overflow-hidden"
@@ -180,61 +223,42 @@ export function CareersPage() {
                   >
                     <motion.button
                       className="w-full p-6 flex items-center justify-between cursor-pointer"
-                      onClick={() =>
-                        setExpandedJob(expandedJob === index ? null : index)
-                      }
                       whileHover={{ x: 5 }}
                       transition={{ duration: 0.2 }}
                     >
                       <div className="flex items-center gap-4 flex-1 text-left">
-                        <Briefcase className="w-6 h-6 text-[#c89b3c]" />
                         <div>
-                          <h3 className="font-bold text-lg mb-1">
+                          <h3 className="font-bold text-lg mb-5">
                             {job.title}
                           </h3>
+                          <p className="font-normal text-sm mb-3 text-gray-400">
+                            {job.briefDescription}
+                          </p>
                           <div className="flex flex-wrap gap-4 text-sm text-gray-400">
                             <span className="flex items-center gap-1">
                               <MapPin size={14} /> {job.location}
                             </span>
                             <span className="flex items-center gap-1">
-                              <Clock size={14} /> {job.type}
+                              <Clock size={14} /> {capitalizeFirstLetter(job.jobType)}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <LocateIcon size={14} /> {capitalizeFirstLetter(job.workArrangement)}
                             </span>
                             <span>{job.experience}</span>
                           </div>
                         </div>
                       </div>
-                      <motion.div
-                        animate={{ rotate: expandedJob === index ? 90 : 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ChevronRight className="w-6 h-6 text-[#c89b3c]" />
-                      </motion.div>
+                      
+                      <Link to={`/careers/job/${job.id}`}>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="px-4 py-2 bg-[#c89b3c] text-xs text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+                        >
+                          Apply Now
+                        </motion.button>
+                      </Link>
                     </motion.button>
-
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: expandedJob === index ? "auto" : 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="p-6 pt-0 border-t border-gray-800">
-                        <p className="text-gray-400 mb-6">
-                          We are looking for a talented {job.title} to join our{" "}
-                          {job.department} team. This role requires{" "}
-                          {job.experience} of experience and offers competitive
-                          compensation and benefits.
-                        </p>
-                        <Link to={`/careers/job/${job.id}`}>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-6 py-3 bg-[#c89b3c] text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
-                          >
-                            Apply Now
-                          </motion.button>
-                        </Link>
-                      </div>
-                    </motion.div>
                   </motion.div>
                 </AnimatedSection>
               ))

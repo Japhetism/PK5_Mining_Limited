@@ -1,11 +1,24 @@
 import { useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { Briefcase, MapPin, Clock, Phone, Mail, Globe2, Linkedin } from "lucide-react";
+import {
+  Briefcase,
+  MapPin,
+  Clock,
+  Phone,
+  Mail,
+  Globe2,
+  Linkedin,
+  LocateIcon,
+  ArrowLeft,
+} from "lucide-react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { jobs } from "../fixtures";
 import { IJob } from "../interfaces";
 import AnimatedDots from "../components/ui/animated-dots";
+import { addApplication } from "../admin/data";
+import { Badge } from "../components/ui/badge";
+import { capitalizeFirstLetter } from "../utils/helper";
 
 const countries = [
   "Nigeria",
@@ -56,9 +69,9 @@ export function JobDetailsPage() {
       return;
     }
 
-    const maxSizeBytes = 5 * 1024 * 1024; // 5MB
+    const maxSizeBytes = 2 * 1024 * 1024; // 2MB
     if (file.size > maxSizeBytes) {
-      setError("Resume file size must be 5MB or less.");
+      setError("Resume file size must be 2MB or less.");
       setResumeFile(null);
       return;
     }
@@ -118,6 +131,24 @@ export function JobDetailsPage() {
         throw new Error("Failed to submit application. Please try again.");
       }
 
+      // Also persist into the local admin store so it appears on the admin portal
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const resumeDataUrl = typeof reader.result === "string" ? reader.result : "";
+        addApplication({
+          jobId: job.id,
+          jobTitle: job.title,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          country: formData.country,
+          phone: formData.phone,
+          linkedinUrl: formData.linkedinUrl,
+          resumeDataUrl,
+        });
+      };
+      reader.readAsDataURL(resumeFile);
+
       setSubmitted(true);
       setFormData({
         firstName: "",
@@ -140,31 +171,40 @@ export function JobDetailsPage() {
       {/* Hero / Job Summary */}
       <section className="py-16 bg-gradient-to-br from-[#1a1a1a] via-[#0f0f0f] to-[#1a1a1a]">
         <div className="container mx-auto px-6">
+          <Link to="/careers#open-positions">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-2 mb-5 bg-transparent text-xs text-white font-bold rounded hover:bg-transparents transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Careers
+            </motion.button>
+          </Link>
           <AnimatedSection>
             <div className="max-w-3xl">
+              <Badge variant="secondary" className="mb-4">
+                {job.department}
+              </Badge>
               <div className="flex items-center gap-3 mb-4">
-                <Briefcase className="w-8 h-8 text-[#c89b3c]" />
-                <h1 className="text-4xl md:text-5xl font-bold">
-                  {job.title}
-                </h1>
+                <h1 className="text-4xl md:text-5xl font-bold">{job.title}</h1>
               </div>
               <div className="flex flex-wrap gap-4 text-gray-300 mb-6">
                 <span className="flex items-center gap-2">
-                  <MapPin size={18} className="text-[#c89b3c]" />{" "}
-                  {job.location}
+                  <MapPin size={18} className="text-[#c89b3c]" /> {job.location}
                 </span>
                 <span className="flex items-center gap-2">
-                  <Clock size={18} className="text-[#c89b3c]" /> {job.type}
+                  <Clock size={18} className="text-[#c89b3c]" /> {capitalizeFirstLetter(job.jobType)}
+                </span>
+                <span className="flex items-center gap-1">
+                  <LocateIcon size={18} className="text-[#c89b3c]" />{" "}
+                  {capitalizeFirstLetter(job.workArrangement)}
                 </span>
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#c89b3c]" />
                   {job.experience} experience
                 </span>
               </div>
-              <p className="text-lg text-gray-400">
-                {job.description ||
-                  `We are looking for a talented ${job.title} to join our ${job.department} team at PK5 Mining.`}
-              </p>
             </div>
           </AnimatedSection>
         </div>
@@ -177,16 +217,19 @@ export function JobDetailsPage() {
             {/* Job Description (can be expanded later with responsibilities/requirements) */}
             <AnimatedSection>
               <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-8">
-                <h2 className="text-2xl font-bold mb-4">About the Role</h2>
-                <p className="text-gray-300 leading-relaxed mb-6">
-                  {job.description}
-                </p>
-                <p className="text-gray-400 text-sm">
-                  PK5 Mining is committed to fostering a safe, inclusive, and
-                  high-performing workplace. We encourage applications from
-                  candidates who are passionate about sustainable mining and
-                  operational excellence.
-                </p>
+                <div
+                  className="text-gray-300 leading-relaxed mb-6
+                    [&_p]:mb-4
+                    [&_ul]:mb-6 [&_ul]:pl-6 [&_ul]:list-disc
+                    [&_li]:mb-2
+                    [&_p>strong]:block
+                    [&_p>strong]:text-xl
+                    [&_p>strong]:font-semibold
+                    [&_p>strong]:text-white
+                    [&_p>strong]:mb-3
+                    [&_p>strong]:mt-6"
+                  dangerouslySetInnerHTML={{ __html: job.descriptionHtml }}
+                />
               </div>
             </AnimatedSection>
 
@@ -295,21 +338,16 @@ export function JobDetailsPage() {
 
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Resume (PDF, DOC, DOCX, max 5MB)
+                      Resume (PDF, max 2MB)
                     </label>
                     <div className="flex items-center gap-3">
                       <motion.input
                         type="file"
-                        accept=".pdf,.doc,.docx"
+                        accept=".pdf"
                         onChange={handleFileChange}
                         className="block w-full text-sm text-gray-300 file:mr-4 file:rounded-md file:border-0 file:bg-[#c89b3c] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:bg-[#d4a84a]"
                       />
                     </div>
-                    {resumeFile && (
-                      <p className="mt-2 text-xs text-gray-400">
-                        Selected: {resumeFile.name}
-                      </p>
-                    )}
                   </div>
 
                   {error && (
@@ -332,18 +370,14 @@ export function JobDetailsPage() {
                     disabled={loading || submitted}
                   >
                     {submitted ? (
-                      <>
-                        Application Submitted
-                      </>
+                      <>Application Submitted</>
                     ) : loading ? (
                       <>
                         Submitting
                         <AnimatedDots />
                       </>
                     ) : (
-                      <>
-                        Submit Application
-                      </>
+                      <>Submit Application</>
                     )}
                   </motion.button>
 
@@ -362,4 +396,3 @@ export function JobDetailsPage() {
     </div>
   );
 }
-

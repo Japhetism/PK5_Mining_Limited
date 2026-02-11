@@ -1,5 +1,16 @@
 import type { LucideIcon } from "lucide-react";
 
+export type JobType =
+  | "full-time"
+  | "part-time"
+  | "contract"
+  | "freelance";
+
+export type WorkArrangement =
+  | "onsite"
+  | "hybrid"
+  | "remote";
+
 export interface IMineral {
   name: string;
   image: string;
@@ -18,16 +29,6 @@ export interface ILeader {
   role: string;
   experience: string;
   image?: string;
-}
-
-export interface IJob {
-  id: string;
-  title: string;
-  location: string;
-  type: string;
-  experience: string;
-  department: string;
-  description: string;
 }
 
 export interface IBenefit {
@@ -96,4 +97,23 @@ export interface ISlideShowContent {
   title: string;
   subTitle: string;
   description: string;
+}
+
+export interface IJob {
+  id: string;
+  title: string;
+  jobRole?: string;
+  department?: string;
+  location?: string;
+  experience?: string;
+  jobType: JobType;
+  workArrangement: WorkArrangement;
+  briefDescription: string;
+  descriptionHtml: string;
+  role?: string[];
+  requirements?: string[];
+  techStack?: string[];
+  salaryRange?: string;
+  postedAt?: string;
+  isActive?: boolean;
 }
