@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Job;
+using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
 
 namespace Pk5Mining.Server.Controllers.Job
@@ -20,7 +21,7 @@ namespace Pk5Mining.Server.Controllers.Job
         public async Task<ActionResult<IEnumerable<IJobs>>> Get()
         {
             var jobs = await _jobRepo.GetRepoItems();
-            return Ok((jobs, "Job retrieved successfully."));
+            return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
 
         [HttpGet("{id}")]
@@ -30,10 +31,9 @@ namespace Pk5Mining.Server.Controllers.Job
 
             if (job == null)
             {
-                return NotFound("Job Not Found");
+                return NotFound(ApiResponse.NotFoundException(null, error ?? $"Job with ID {id} not found."));
             }
-
-            return Ok((job, "Job retrieved successfully."));
+            return Ok(ApiResponse.SuccessMessage(job, "Job retrieved successfully."));
         }
 
         [HttpPost]
@@ -52,7 +52,7 @@ namespace Pk5Mining.Server.Controllers.Job
                 }
 
                 return CreatedAtAction(nameof(Get), new { id = job?.Id },
-                (job, "Job created successfully."));
+                ApiResponse.SuccessMessage(job, "Job created successfully."));
 
             }
             catch (Exception)
@@ -67,6 +67,5 @@ namespace Pk5Mining.Server.Controllers.Job
                 }
             }
         }
-
     }
 }
