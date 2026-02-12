@@ -11,14 +11,12 @@ export async function applyToJob(payload: IJobApplication) {
   return data.responseData;
 }
 
-// client: my applications
-export async function getMyApplications() {
-  const { data } = await http.get<IJobApplication[]>("/applications/mine");
-  return data;
-}
+export async function getApplications() {
+  const { data } = await http.get<ApiResponse<JobApplicationDto[]>>("/JobApplication");
+  
+  if (data.responseStatus !== "SUCCESS") {
+    throw new Error(data.responseMessage || "Failed to fetch job application");
+  }
 
-// admin: all applications
-export async function getAllApplications() {
-  const { data } = await http.get<IJobApplication[]>("/applications");
-  return data;
+  return data.responseData;
 }

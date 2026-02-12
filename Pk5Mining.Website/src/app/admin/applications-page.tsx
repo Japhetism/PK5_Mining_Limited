@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { Filter, Users } from "lucide-react";
-import { getApplications } from "./data";
+import { useQuery } from "@tanstack/react-query";
+import { getApplications } from "../api/applications";
+import { JobApplicationDto } from "../interfaces";
 
 export function AdminApplicationsPage() {
-  const apps = getApplications();
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["applications"],
+    queryFn: getApplications,
+  });
 
+  const apps: JobApplicationDto[] | undefined = data ?? [];
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
@@ -35,7 +42,7 @@ export function AdminApplicationsPage() {
               </tr>
             </thead>
             <tbody>
-              {apps.length === 0 ? (
+              {apps?.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
@@ -46,7 +53,7 @@ export function AdminApplicationsPage() {
                   </td>
                 </tr>
               ) : (
-                apps.map((app) => (
+                apps?.map((app: JobApplicationDto) => (
                   <tr
                     key={app.id}
                     className="border-t border-gray-800 hover:bg-white/5"
@@ -60,7 +67,7 @@ export function AdminApplicationsPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3 align-top text-gray-300">
-                      {app.jobTitle}
+                      {app?.job?.title}
                     </td>
                     <td className="px-4 py-3 align-top text-gray-300">
                       {app.country}
@@ -69,7 +76,7 @@ export function AdminApplicationsPage() {
                       <ApplicationStatusPill status={app.status} />
                     </td>
                     <td className="px-4 py-3 align-top text-gray-300">
-                      {new Date(app.createdAt).toLocaleDateString()}
+                      {new Date(app.dT_Created).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3 align-top text-right">
                       <Link to={`/admin/applications/${app.id}`}>

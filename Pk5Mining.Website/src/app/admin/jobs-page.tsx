@@ -3,10 +3,19 @@ import { motion } from "motion/react";
 import { Plus, Edit2, Eye, XCircle, CheckCircle2 } from "lucide-react";
 import { getAdminJobs, setJobActive } from "./data";
 import { capitalizeFirstLetter } from "../utils/helper";
+import { useQuery } from "@tanstack/react-query";
+import { getJobs } from "../api/jobs";
+import { JobDto } from "../interfaces";
 
 export function AdminJobsPage() {
   const navigate = useNavigate();
-  const jobs = getAdminJobs();
+  
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["jobs"],
+    queryFn: getJobs,
+  });
+
+  const jobs: JobDto[] = data ?? [];
 
   const toggleJob = (id: string, current: boolean) => {
     setJobActive(id, !current);
