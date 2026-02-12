@@ -1,15 +1,8 @@
 import type { LucideIcon } from "lucide-react";
 
-export type JobType =
-  | "full-time"
-  | "part-time"
-  | "contract"
-  | "freelance";
+export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 
-export type WorkArrangement =
-  | "onsite"
-  | "hybrid"
-  | "remote";
+export type WorkArrangement = "onsite" | "hybrid" | "remote";
 
 export interface IMineral {
   name: string;
@@ -132,21 +125,25 @@ export interface IUser {
   email: string;
   role: Role;
   name?: string;
-};
+}
 
-export type JobApplicationStatus = "submitted" | "reviewing" | "rejected" | "accepted";
+export type JobApplicationStatus =
+  | "submitted"
+  | "reviewing"
+  | "rejected"
+  | "accepted";
 
 export interface IJobApplication {
-  id: string;
-  jobId: string;
-  jobTitle?: string;
-  applicantName: string;
-  applicantEmail: string;
-  resumeUrl?: string;
-  coverLetter?: string;
-  status?: JobApplicationStatus;
-  createdAt?: string;
-};
+  jobId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  country: string;
+  resume: string;
+  status?: string;
+  linkedIn?: string;
+}
 
 export type ApiResponse<T> = {
   responseMessage: string;
@@ -168,3 +165,19 @@ export type JobDto = {
   workArrangement?: WorkArrangement;
   briefDescription?: string;
 };
+
+export interface JobApplicationDto {
+  id: number;
+  jobId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  country: string;
+  resume: string;
+  status: string;
+  linkedIn: string;
+  dT_Created: string;
+  dT_Modified: string;
+  job: JobDto | null;
+}

@@ -19,8 +19,9 @@ import AnimatedDots from "../components/ui/animated-dots";
 import { addApplication } from "../admin/data";
 import { Badge } from "../components/ui/badge";
 import { capitalizeFirstLetter } from "../utils/helper";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getJobById } from "../api/jobs";
+import { applyToJob } from "../api/applications";
 
 const countries = [
   "Nigeria",
@@ -35,6 +36,15 @@ const countries = [
   "Other",
 ];
 
+const defaultFormData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  country: "",
+  phone: "",
+  linkedinUrl: "",
+};
+
 export function JobDetailsPage() {
   const { jobId } = useParams<{ jobId: string }>();
 
@@ -46,23 +56,26 @@ export function JobDetailsPage() {
 
   const job: JobDto | undefined = data;
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    country: "",
-    phone: "",
-    linkedinUrl: "",
-  });
+  const [formData, setFormData] = useState(defaultFormData);
 
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-
-  // if (!job) {
-  //   return <Navigate to="/careers" replace />;
-  // }
+  
+  const mutation = useMutation({
+    mutationFn: applyToJob,
+    onSuccess: () => {
+      console.log("Application submitted");
+      setFormData(defaultFormData);
+      setSubmitted(true);
+      setLoading(false);
+    },
+    onError: (error) => {
+      console.error(error);
+      setLoading(false);
+    },
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -120,65 +133,18 @@ export function JobDetailsPage() {
       return;
     }
 
-    const form = new FormData();
-    form.append("jobId", String(job.id)); // ✅ FormData expects string/blob
-    form.append("jobTitle", job.title);
-    form.append("firstName", formData.firstName);
-    form.append("lastName", formData.lastName);
-    form.append("email", formData.email);
-    form.append("country", formData.country);
-    form.append("phone", formData.phone);
-    form.append("linkedinUrl", formData.linkedinUrl);
-    form.append("resume", resumeFile);
+    setLoading(true);
 
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        "https://pk5-api.vercel.app/api/job-application",
-        {
-          method: "POST",
-          body: form,
-        },
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to submit application. Please try again.");
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const resumeDataUrl =
-          typeof reader.result === "string" ? reader.result : "";
-        addApplication({
-          jobId: job.id?.toString(),
-          jobTitle: job.title,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          country: formData.country,
-          phone: formData.phone,
-          linkedinUrl: formData.linkedinUrl,
-          resumeDataUrl,
-        });
-      };
-      reader.readAsDataURL(resumeFile);
-
-      setSubmitted(true);
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        country: "",
-        phone: "",
-        linkedinUrl: "",
-      });
-      setResumeFile(null);
-    } catch (err: any) {
-      setError(err?.message || "Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    mutation.mutate({
+      jobId: job.id,
+      firstName: formData?.firstName,
+      lastName: formData?.lastName,
+      email: formData?.email,
+      phoneNumber: formData?.phone,
+      country: formData?.country,
+      resume: "",
+      linkedIn: formData.linkedinUrl,
+    });
   };
 
   return (
@@ -206,7 +172,8 @@ export function JobDetailsPage() {
               </div>
               <div className="flex flex-wrap gap-4 text-gray-300 mb-6">
                 <span className="flex items-center gap-2">
-                  <MapPin size={18} className="text-[#c89b3c]" /> {job?.location}
+                  <MapPin size={18} className="text-[#c89b3c]" />{" "}
+                  {job?.location}
                 </span>
                 <span className="flex items-center gap-2">
                   <Clock size={18} className="text-[#c89b3c]" />{" "}
@@ -214,7 +181,8 @@ export function JobDetailsPage() {
                 </span>
                 <span className="flex items-center gap-1">
                   <LocateIcon size={18} className="text-[#c89b3c]" />{" "}
-                  {job?.workArrangement && capitalizeFirstLetter(job.workArrangement)}
+                  {job?.workArrangement &&
+                    capitalizeFirstLetter(job.workArrangement)}
                 </span>
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#c89b3c]" />

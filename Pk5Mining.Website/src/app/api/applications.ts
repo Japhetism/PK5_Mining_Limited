@@ -1,17 +1,14 @@
-import { IJobApplication } from "../interfaces";
+import { ApiResponse, IJobApplication, JobApplicationDto } from "../interfaces";
 import { http } from "./http";
 
-export type ApplyPayload = {
-  jobId: string;
-  applicantName: string;
-  applicantEmail: string;
-  resumeUrl?: string;
-  coverLetter?: string;
-};
+export async function applyToJob(payload: IJobApplication) {
+  const { data } = await http.post<ApiResponse<JobApplicationDto>>("/JobApplication", payload);
+  
+  if (data.responseStatus !== "SUCCESS") {
+    throw new Error(data.responseMessage || "Failed to create job application");
+  }
 
-export async function applyToJob(payload: ApplyPayload) {
-  const { data } = await http.post<IJobApplication>("/applications", payload);
-  return data;
+  return data.responseData;
 }
 
 // client: my applications
