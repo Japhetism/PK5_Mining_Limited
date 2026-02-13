@@ -327,7 +327,7 @@ export function AdminApplicationDetailPage() {
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleUpdateStatus}
-        title="Update application status"
+        title="Update Application Status"
         description={`Are you sure you want to update the job application status to ${selectedStatus || "Unknown"}?`}
         confirmText="Yes, update"
         cancelText="No"
