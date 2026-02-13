@@ -2,13 +2,20 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
-import { Briefcase, MapPin, Clock, ChevronRight, LocateIcon } from "lucide-react";
+import {
+  Briefcase,
+  MapPin,
+  Clock,
+  ChevronRight,
+  LocateIcon,
+} from "lucide-react";
 import { benefits } from "../fixtures";
 import { IBenefit, IJob, JobDto } from "../interfaces";
 import { Link, useLocation } from "react-router-dom";
 import { capitalizeFirstLetter } from "../utils/helper";
 import { useQuery } from "@tanstack/react-query";
 import { getJobs } from "../api/jobs";
+import { JobCardLoader } from "../components/ui/job-card-loader";
 
 export function CareersPage() {
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
@@ -75,7 +82,8 @@ export function CareersPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Join our team and help <br /> shape the future of sustainable mining.
+            Join our team and help <br /> shape the future of sustainable
+            mining.
           </motion.p>
 
           <motion.button
@@ -199,10 +207,13 @@ export function CareersPage() {
             <p className="text-xl text-gray-400">
               Find your next opportunity with KP5 Mining
             </p>
+            :
           </AnimatedSection>
 
           <div className="max-w-4xl mx-auto">
-            {jobs.length === 0 ? (
+            {isLoading ? (
+              <JobCardLoader records={6} />
+            ) : jobs.length === 0 ? (
               <AnimatedSection>
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
@@ -248,16 +259,20 @@ export function CareersPage() {
                               <MapPin size={14} /> {job.location}
                             </span>
                             <span className="flex items-center gap-1">
-                              <Clock size={14} /> {job.jobType && capitalizeFirstLetter(job.jobType)}
+                              <Clock size={14} />{" "}
+                              {job.jobType &&
+                                capitalizeFirstLetter(job.jobType)}
                             </span>
                             <span className="flex items-center gap-1">
-                              <LocateIcon size={14} /> {job.workArrangement && capitalizeFirstLetter(job.workArrangement)}
+                              <LocateIcon size={14} />{" "}
+                              {job.workArrangement &&
+                                capitalizeFirstLetter(job.workArrangement)}
                             </span>
                             <span>{job.experience}</span>
                           </div>
                         </div>
                       </div>
-                      
+
                       <Link to={`/careers/job/${job.id}`}>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
