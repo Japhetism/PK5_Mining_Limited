@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Lock, User } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "../auth/AuthContext";
+import { ApiError } from "../interfaces";
 
 export function AdminLoginPage() {
   const navigate = useNavigate();
@@ -22,9 +23,16 @@ export function AdminLoginPage() {
       setLoading(false);
       navigate(redirectTo, { replace: true });
     },
-    onError: (error) => {
-      console.error("Login failed", error);
+    onError: (err) => {
+      console.error("Login failed", err);
       setLoading(false);
+
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error ? err.message : undefined) ??
+        "An error occurred while logging in. Please try again.";
+
+      setError(message);
     },
   });
 
@@ -103,4 +111,3 @@ export function AdminLoginPage() {
     </div>
   );
 }
-

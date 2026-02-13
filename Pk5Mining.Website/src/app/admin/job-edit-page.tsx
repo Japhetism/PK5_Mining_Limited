@@ -74,7 +74,7 @@ export function AdminJobEditPage() {
       const message =
         (err as ApiError)?.message ??
         (err instanceof Error ? err.message : undefined) ??
-        "An error occurred while saving the job. Please try again.";
+        "An error occurred while updating the job. Please try again.";
 
       setError(message);
     },
