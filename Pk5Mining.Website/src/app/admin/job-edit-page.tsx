@@ -3,9 +3,16 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { Save, ArrowLeft } from "lucide-react";
 import { RichTextEditor } from "./rich-text-editor";
-import { useMutation } from "@tanstack/react-query";
-import { createJob } from "../api/jobs";
-import { CreateJobPayload, IJob, JobErrors } from "../interfaces";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createJob, getJobById, updateJob } from "../api/jobs";
+import {
+  ApiError,
+  CreateJobPayload,
+  IJob,
+  JobDto,
+  JobErrors,
+  UpdateJobPayload,
+} from "../interfaces";
 import { isValidName, validateJob } from "../utils/validator";
 import { jobTypes, workArrangements } from "../constants";
 
@@ -13,24 +20,67 @@ export function AdminJobEditPage() {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
 
-  const mutation = useMutation({
-    mutationFn: createJob,
-    onSuccess: () => {
-      console.log("Job created");
+  const {
+    data,
+    isLoading,
+    isError,
+    error: fetchError,
+  } = useQuery({
+    queryKey: ["jobs", jobId],
+    queryFn: () => getJobById(jobId as string),
+    enabled: !!jobId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const existing = useMemo<JobDto | CreateJobPayload | undefined>(
+    () => (jobId ? data : undefined),
+    [jobId, data],
+  );
+
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateJobPayload) => createJob(payload),
+    onSuccess: (data) => {
       setLoading(false);
-      navigate(`/admin/jobs`);
+      navigate(`/admin/jobs/${data.id}`);
     },
-    onError: (error) => {
-      console.error(error);
+    onError: (err: unknown) => {
+      console.error(err);
       setLoading(false);
-      setError(error.message ?? "An error occurred while saving the job. Please try again.");
+
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error ? err.message : undefined) ??
+        "An error occurred while saving the job. Please try again.";
+
+      setError(message);
     },
   });
 
-  const existing = useMemo<IJob | CreateJobPayload | undefined>(
-    () => (jobId ? {} : undefined),
-    [jobId],
-  );
+  const updateMutation = useMutation({
+    mutationFn: (payload: UpdateJobPayload) => {
+      if (!existing || !("id" in existing)) {
+        throw new Error("Cannot update: missing existing job id");
+      }
+      return updateJob(existing.id, payload);
+    },
+    onSuccess: () => {
+      setLoading(false);
+      navigate(`/admin/jobs/${jobId}`);
+    },
+    onError: (err: unknown) => {
+      console.error(err);
+      setLoading(false);
+
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error ? err.message : undefined) ??
+        "An error occurred while saving the job. Please try again.";
+
+      setError(message);
+    },
+  });
+
+  const mutation = existing ? updateMutation : createMutation;
 
   const [form, setForm] = useState({
     title: existing?.title ?? "",
@@ -92,7 +142,7 @@ export function AdminJobEditPage() {
             Back
           </button>
           <h1 className="text-2xl font-bold">
-            {existing ? "Edit job" : "Create job"}
+            {existing ? "Edit Job" : "Create Job"}
           </h1>
           <p className="text-sm text-gray-400">
             Configure how this role appears on the public careers page.
@@ -404,7 +454,13 @@ export function AdminJobEditPage() {
             disabled={loading}
           >
             <Save className="w-4 h-4" />
-            {loading ? "Saving…" : "Save job"}
+            {existing
+              ? loading
+                ? "Updating..."
+                : "Update Job"
+              : loading
+                ? "Saving..."
+                : "Save Job"}
           </motion.button>
         </div>
         {error && <p className="text-xs text-red-500 mt-2">{error}</p>}

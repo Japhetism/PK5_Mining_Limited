@@ -65,7 +65,7 @@ export async function createJob(payload: CreateJobPayload) {
   }
 }
 
-export async function updateJob(id: string, payload: UpdateJobPayload) {
+export async function updateJob(id: number, payload: UpdateJobPayload) {
   try {
     const { data } = await http.patch<ApiResponse<JobDto>>(`/Job/${id}`, payload);
   

@@ -4,6 +4,8 @@ export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 
 export type WorkArrangement = "onsite" | "hybrid" | "remote";
 
+export type ApiError = { message?: string };
+
 export interface IMineral {
   name: string;
   image: string;
@@ -154,7 +156,7 @@ export type JobDto = {
   dT_Created: string;
   dT_Modified: string;
   experience?: string;
-  jobType?: string;
+  jobType?: JobType;
   workArrangement?: WorkArrangement;
   briefDescription?: string;
 };
