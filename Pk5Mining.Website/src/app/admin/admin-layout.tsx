@@ -34,10 +34,8 @@ export function AdminLayout() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <p>
-                <span>{getGreeting()},&nbsp;</span>
-                <span className="font-bold">{user?.firstName} {user?.lastName}</span>
-              </p>
+              <span>{getGreeting()},&nbsp;</span>
+              <span className="font-bold">{user?.firstName} {user?.lastName}</span>
             </motion.p>
             <motion.button
               whileHover={{ scale: 1.02 }}
