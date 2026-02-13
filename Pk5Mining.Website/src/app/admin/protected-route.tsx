@@ -9,7 +9,7 @@ export function AdminProtectedRoute() {
     return <Navigate to="/admin/login" replace state={{ from: location }} />;
   }
 
-  if (!isAdmin) {
+  if (!isLoading && !isAdmin) {
     return <Navigate to="/" replace />;
   }
 

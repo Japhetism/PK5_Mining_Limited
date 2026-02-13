@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { login as loginApi, loginMock } from "../api/auth";
 import { IUser } from "../interfaces";
-import { AUTH_KEY } from "../constants";
+import { adminRoles, AUTH_KEY } from "../constants";
 
 const useMock = import.meta.env.VITE_USE_MOCK === "true";
 
@@ -37,10 +37,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const parsed = JSON.parse(raw) as {
         user: IUser;
-        accessToken: string;
       };
 
-      if (!parsed?.accessToken || !parsed?.user) {
+      if (!parsed?.user) {
         // Corrupt storage → logout
         sessionStorage.removeItem(AUTH_KEY);
         setUser(null);
@@ -58,17 +57,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function login(username: string, password: string) {
-
     if (useMock) {
       const user = await loginMock({ username, password });
       setUser(user);
+      sessionStorage.setItem(AUTH_KEY, JSON.stringify({ user }));
       return;
     }
 
-    const user = await loginApi({ username, password }); 
-    
+    const user = await loginApi({ username, password });
+
     setUser(user);
-    
+
     sessionStorage.setItem(AUTH_KEY, JSON.stringify({ user }));
   }
 
@@ -83,7 +82,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       login,
       logout,
-      isAdmin: (user?.role ?? "").toLowerCase().includes("admin"),
+      isAdmin: adminRoles.includes(
+        String(user?.role ?? "")
+          .trim()
+          .toLowerCase(),
+      ),
     };
   }, [user, isLoading]);
 
