@@ -19,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getApplicationById } from "../api/applications";
 import { ApplicationDetailsSkeleton } from "../components/ui/application-details-loader";
 import { downloadFile } from "../utils/helper";
+import { ConfirmModal } from "../components/ui/confirm-modal";
 
 const statuses = [
   { value: "new", label: "New" },
@@ -45,6 +46,9 @@ export function AdminApplicationDetailPage() {
   // loader for iframe
   const [resumeLoading, setResumeLoading] = useState(false);
   const [editStatus, setEditStatus] = useState<boolean>(false);
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [updating, setUpdating] = useState<boolean>(false);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
   const resumeUrl = useMemo(() => {
     const url = app?.resume?.trim();
@@ -77,8 +81,9 @@ export function AdminApplicationDetailPage() {
   }, [isViewerOpen, resumeUrl]);
 
   const handleUpdateStatus = () => {
+    setConfirmOpen(false);
     setEditStatus(false);
-  }
+  };
 
   if (!app && !isLoading) {
     return <Navigate to="/admin/applications" replace />;
@@ -110,7 +115,7 @@ export function AdminApplicationDetailPage() {
         <div className="flex items-center gap-2">
           <motion.select
             defaultValue={app?.status}
-            // onChange={onStatusChange}
+            onChange={(e) => setSelectedStatus(e.target.value)}
             disabled={!editStatus}
             className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
           >
@@ -134,7 +139,7 @@ export function AdminApplicationDetailPage() {
           {editStatus && (
             <div className="flex gap-2">
               <motion.button
-                onClick={() => handleUpdateStatus()}
+                onClick={() => setConfirmOpen(true)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
@@ -317,6 +322,17 @@ export function AdminApplicationDetailPage() {
           </motion.div>
         </div>
       )}
+
+      <ConfirmModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleUpdateStatus}
+        title="Update application status"
+        description={`Are you sure you want to update the job application status to ${selectedStatus || "Unknown"}?`}
+        confirmText="Yes, update"
+        cancelText="No"
+        loading={updating}
+      />
     </div>
   );
 }
