@@ -76,6 +76,10 @@ export function AdminApplicationDetailPage() {
     if (isViewerOpen && resumeUrl) setResumeLoading(true);
   }, [isViewerOpen, resumeUrl]);
 
+  const handleUpdateStatus = () => {
+    setEditStatus(false);
+  }
+
   if (!app && !isLoading) {
     return <Navigate to="/admin/applications" replace />;
   }
@@ -130,7 +134,7 @@ export function AdminApplicationDetailPage() {
           {editStatus && (
             <div className="flex gap-2">
               <motion.button
-                onClick={() => setEditStatus(true)}
+                onClick={() => handleUpdateStatus()}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
