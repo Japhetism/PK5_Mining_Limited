@@ -1,6 +1,15 @@
 import { Navigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowLeft, Download, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import {
+  ArrowLeft,
+  Download,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getApplicationById } from "../api/applications";
 
 const statuses = [
   { value: "new", label: "New" },
@@ -12,9 +21,31 @@ const statuses = [
 
 export function AdminApplicationDetailPage() {
   const { applicationId } = useParams<{ applicationId: string }>();
-  
-  if (!applicationId) {
+
+  const {
+    data,
+    isLoading,
+    isError,
+    error: fetchError,
+  } = useQuery({
+    queryKey: ["applications", applicationId],
+    queryFn: () => getApplicationById(applicationId as string),
+    enabled: !!applicationId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const app = data ?? undefined;
+
+  if (!app && !isLoading) {
     return <Navigate to="/admin/applications" replace />;
+  }
+
+  if (isError) {
+    return (
+      <div className="space-y-4 mt-6">
+        <p className="text-red-400">Failed to load job application details.</p>
+      </div>
+    );
   }
 
   return (
@@ -48,34 +79,42 @@ export function AdminApplicationDetailPage() {
         <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5 space-y-4 text-sm text-gray-200">
           <div>
             <h1 className="text-xl font-semibold mb-1">
-              {app.firstName} {app.lastName}
+              {app?.firstName} {app?.lastName}
             </h1>
-            <p className="text-xs text-gray-400">
-              Applied for <span className="font-semibold">{app.jobTitle}</span>{" "}
-              on {new Date(app.createdAt).toLocaleString()}
-            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-            <InfoRow icon={Mail} label="Email" value={app.email} href={`mailto:${app.email}`} />
-            <InfoRow icon={Phone} label="Phone" value={app.phone} href={`tel:${app.phone}`} />
-            <InfoRow icon={MapPin} label="Country" value={app.country} />
+            <InfoRow
+              icon={Mail}
+              label="Email"
+              value={app?.email ?? ""}
+              href={`mailto:${app?.email}`}
+            />
+            <InfoRow
+              icon={Phone}
+              label="Phone"
+              value={app?.phoneNumber ?? ""}
+              href={`tel:${app?.phoneNumber}`}
+            />
+            <InfoRow icon={MapPin} label="Country" value={app?.country ?? ""} />
             <InfoRow
               icon={Linkedin}
               label="LinkedIn"
-              value={app.linkedinUrl}
-              href={app.linkedinUrl}
+              value={app?.linkedIn ?? ""}
+              href={
+                app?.linkedIn?.startsWith("http")
+                  ? app.linkedIn
+                  : `https://${app.linkedIn}`
+              }
             />
           </div>
         </div>
 
         <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5 text-sm text-gray-200">
-          <p className="text-xs font-semibold text-gray-400 mb-2">
-            Resume
-          </p>
-          {app.resumeDataUrl ? (
+          <p className="text-xs font-semibold text-white mb-2">Resume</p>
+          {app?.resume ? (
             <motion.a
-              href={app.resumeDataUrl}
+              href={app?.resume}
               download={`${app.firstName}-${app.lastName}-resume.pdf`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -89,6 +128,28 @@ export function AdminApplicationDetailPage() {
               No resume file stored for this application.
             </p>
           )}
+        </div>
+
+        <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5 text-sm text-gray-200">
+          <p className="text-xs font-semibold text-white mb-2">
+            Other Information
+          </p>
+          <p className="flex flex-col gap-2 text-xs text-gray-400">
+            <span>
+              Job applied for{" "}
+              <span className="font-semibold">
+                {app?.job?.title ?? "-"}
+              </span>{" "}
+            </span>
+            <span>
+              Submitted on{" "}
+              {app?.dT_Created && new Date(app?.dT_Created).toLocaleString()}
+            </span>
+            <span>
+              Updated on{" "}
+              {app?.dT_Modified && new Date(app?.dT_Modified).toLocaleString()}
+            </span>
+          </p>
         </div>
       </div>
     </div>
@@ -129,4 +190,3 @@ function InfoRow({ icon: Icon, label, value, href }: InfoRowProps) {
 
   return inner;
 }
-

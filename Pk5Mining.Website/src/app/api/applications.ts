@@ -43,3 +43,24 @@ export async function getApplications() {
     throw err;
   }
 }
+
+export async function getApplicationById(id: string) {
+  try {
+    const { data } = await http.get<ApiResponse<JobApplicationDto>>(`/JobApplication/${id}`);
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(data.responseMessage || "Failed to fetch job application details");
+    }
+
+    return data.responseData;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      const backendMsg =
+        (err.response?.data as ApiResponse<unknown> | undefined)?.responseMessage;
+
+      throw new Error(backendMsg || err.message || "Failed to fetch job application details");
+    }
+
+    throw err;
+  }
+}

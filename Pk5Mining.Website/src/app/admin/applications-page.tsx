@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { Filter, Users } from "lucide-react";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApplications } from "../api/applications";
 import { JobApplicationDto } from "../interfaces";
-import { PaginatedTable, PaginatedTableColumn } from "../components/ui/paginated-table";
+import {
+  PaginatedTable,
+  PaginatedTableColumn,
+} from "../components/ui/paginated-table";
 
 type StatusFilter =
   | "all"
@@ -15,6 +18,7 @@ type StatusFilter =
   | "hired";
 
 export function AdminApplicationsPage() {
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
 
@@ -69,7 +73,16 @@ export function AdminApplicationsPage() {
       headerClassName: "text-right",
       className: "text-right",
       render: (app) => (
-        <Link to={`/admin/applications/${app.id}`}>
+        <Link
+          to={`/admin/applications/${app.id}`}
+          title="View application details"
+          onClick={() => {
+            queryClient.setQueryData(
+              ["applications", String(app.id)],
+              app,
+            );
+          }}
+        >
           <button className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-700 text-xs text-gray-100 hover:border-[#c89b3c]">
             <Users className="w-3 h-3" />
             View
@@ -136,7 +149,8 @@ export function AdminApplicationsPage() {
                 .filter(Boolean)
                 .some((v) => String(v).toLowerCase().includes(q));
 
-            const matchesStatus = statusVal === "all" || app.status === statusVal;
+            const matchesStatus =
+              statusVal === "all" || app.status === statusVal;
 
             return matchesSearch && matchesStatus;
           }}
@@ -153,8 +167,14 @@ type StatusProps = {
 export function ApplicationStatusPill({ status }: StatusProps) {
   const map: Record<string, { label: string; className: string }> = {
     new: { label: "New", className: "bg-blue-500/10 text-blue-400" },
-    in_review: { label: "In review", className: "bg-amber-500/10 text-amber-400" },
-    shortlisted: { label: "Shortlisted", className: "bg-emerald-500/10 text-emerald-400" },
+    in_review: {
+      label: "In review",
+      className: "bg-amber-500/10 text-amber-400",
+    },
+    shortlisted: {
+      label: "Shortlisted",
+      className: "bg-emerald-500/10 text-emerald-400",
+    },
     rejected: { label: "Rejected", className: "bg-red-500/10 text-red-400" },
     hired: { label: "Hired", className: "bg-purple-500/10 text-purple-400" },
   };

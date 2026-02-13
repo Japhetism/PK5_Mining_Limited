@@ -54,10 +54,10 @@ function AppShell() {
               <Route path="jobs/:jobId" element={<AdminJobDetailPage />} />
               <Route path="jobs/:jobId/edit" element={<AdminJobEditPage />} />
               <Route path="applications" element={<AdminApplicationsPage />} />
-              {/* <Route
+              <Route
                 path="applications/:applicationId"
                 element={<AdminApplicationDetailPage />}
-              /> */}
+              />
             </Route>
           </Route>
 
