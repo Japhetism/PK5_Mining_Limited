@@ -10,6 +10,7 @@ import {
   PaginatedTable,
   PaginatedTableColumn,
 } from "../components/ui/paginated-table";
+import { ConfirmModal } from "../components/ui/confirm-modal";
 
 type StatusFilter = "all" | "open" | "closed";
 
@@ -19,6 +20,9 @@ export function AdminJobsPage() {
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [updating, setUpdating] = useState<boolean>(false);
+  const [selectedJob, setSelectedJob] = useState<JobDto | null>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["jobs"],
@@ -29,6 +33,10 @@ export function AdminJobsPage() {
 
   const toggleJob = (id: number, isActive: boolean) => {
     // navigate(`/admin/jobs/${id}/edit`);
+  };
+
+  const handleUpdateStatus = () => {
+    setConfirmOpen(false);
   };
 
   const columns: PaginatedTableColumn<JobDto>[] = [
@@ -99,17 +107,17 @@ export function AdminJobsPage() {
             to={`/admin/jobs/${job.id}`}
             title="View job details"
             onClick={() => {
-              queryClient.setQueryData(
-                ["job", String(job.id)],
-                job,
-              );
+              queryClient.setQueryData(["job", String(job.id)], job);
             }}
           >
             <Eye className="w-4 h-4 inline text-gray-300" />
           </Link>
           <button
             type="button"
-            onClick={() => toggleJob(job.id, job.isActive)}
+            onClick={() => {
+              setSelectedJob(job);
+              setConfirmOpen(true);
+            }}
             className="p-1.5 rounded-md hover:bg-white/10 text-gray-300"
             title={job.isActive ? "Close job" : "Reopen job"}
           >
@@ -193,6 +201,17 @@ export function AdminJobsPage() {
           }}
         />
       )}
+
+      <ConfirmModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleUpdateStatus}
+        title={selectedJob?.isActive ? "Close Job Opening" : "Reopen Job Opening"}
+        description={`Are you sure you want to ${selectedJob?.isActive ? "close" : "reopen"} the job opening for "${selectedJob?.title}"?`}
+        confirmText={`Yes, ${selectedJob?.isActive ? "close" : "reopen"}`}
+        cancelText="No"
+        loading={updating}
+      />
     </div>
   );
 }
