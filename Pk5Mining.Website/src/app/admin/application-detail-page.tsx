@@ -4,11 +4,15 @@ import { motion } from "motion/react";
 import {
   ArrowLeft,
   Download,
+  Edit,
+  Edit2,
   Eye,
   Linkedin,
   Mail,
   MapPin,
   Phone,
+  Save,
+  SaveOff,
   X,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -40,6 +44,7 @@ export function AdminApplicationDetailPage() {
 
   // loader for iframe
   const [resumeLoading, setResumeLoading] = useState(false);
+  const [editStatus, setEditStatus] = useState<boolean>(false);
 
   const resumeUrl = useMemo(() => {
     const url = app?.resume?.trim();
@@ -99,9 +104,10 @@ export function AdminApplicationDetailPage() {
         </button>
 
         <div className="flex items-center gap-2">
-          <select
+          <motion.select
             defaultValue={app?.status}
             // onChange={onStatusChange}
+            disabled={!editStatus}
             className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
           >
             {statuses.map((s) => (
@@ -109,7 +115,40 @@ export function AdminApplicationDetailPage() {
                 {s.label}
               </option>
             ))}
-          </select>
+          </motion.select>
+          {!editStatus && (
+            <motion.button
+              onClick={() => setEditStatus(true)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
+            >
+              <Edit2 className="w-3 h-3 text-gray-300" />
+              Edit Status
+            </motion.button>
+          )}
+          {editStatus && (
+            <div className="flex gap-2">
+              <motion.button
+                onClick={() => setEditStatus(true)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
+              >
+                <Save className="w-3 h-3 text-gray-300" />
+                Update Status
+              </motion.button>
+              <motion.button
+                onClick={() => setEditStatus(false)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
+              >
+                <SaveOff className="w-3 h-3 text-gray-300" />
+                Cancel
+              </motion.button>
+            </div>
+          )}
         </div>
       </div>
 
