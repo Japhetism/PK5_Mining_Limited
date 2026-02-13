@@ -99,8 +99,8 @@ export interface IJob {
   department?: string;
   location?: string;
   experience?: string;
-  jobType: JobType;
-  workArrangement: WorkArrangement;
+  jobType: JobType | undefined;
+  workArrangement: WorkArrangement | undefined;
   briefDescription: string;
   description: string;
   role?: string[];
@@ -118,14 +118,7 @@ export type IPaginated<T> = {
   pageSize: number;
 };
 
-export type Role = "user" | "admin";
-
-export interface IUser {
-  id: string;
-  email: string;
-  role: Role;
-  name?: string;
-}
+export type Role = "super admin" | "admin";
 
 export type JobApplicationStatus =
   | "submitted"
@@ -191,6 +184,24 @@ export interface IApplicantBioData {
   linkedinUrl?: string;
 }
 
-export type ApplicationErrors = Partial<Record<keyof IApplicantBioData, string>> & {
+export type ApplicationErrors = Partial<
+  Record<keyof IApplicantBioData, string>
+> & {
   resume?: string;
 };
+
+export interface IUser {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isActive: boolean;
+  role: Role;
+  token?: string;
+}
+
+export interface ILoginPayload {
+  username: string;
+  password: string;
+}

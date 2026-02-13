@@ -2,16 +2,31 @@ import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { Lock, User } from "lucide-react";
-import { adminLogin } from "./auth";
+import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "../auth/AuthContext";
 
 export function AdminLoginPage() {
   const navigate = useNavigate();
   const location = useLocation() as any;
+  const { login: authLogin } = useAuth();
 
   const redirectTo = useMemo(() => {
     const from = location?.state?.from?.pathname as string | undefined;
     return from && from.startsWith("/admin") ? from : "/admin";
   }, [location?.state?.from?.pathname]);
+
+  const mutation = useMutation({
+    mutationFn: (payload: { username: string; password: string }) =>
+      authLogin(payload.username, payload.password),
+    onSuccess: () => {
+      setLoading(false);
+      navigate(redirectTo, { replace: true });
+    },
+    onError: (error) => {
+      console.error("Login failed", error);
+      setLoading(false);
+    },
+  });
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,16 +38,7 @@ export function AdminLoginPage() {
     setError("");
     setLoading(true);
 
-    try {
-      const ok = adminLogin({ username, password });
-      if (!ok) {
-        setError("Invalid username or password.");
-        return;
-      }
-      navigate(redirectTo, { replace: true });
-    } finally {
-      setLoading(false);
-    }
+    mutation.mutate({ username, password });
   };
 
   return (

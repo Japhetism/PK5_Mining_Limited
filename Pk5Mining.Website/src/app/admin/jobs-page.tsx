@@ -1,9 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { Plus, Edit2, Eye, XCircle, CheckCircle2, Table } from "lucide-react";
-import { getAdminJobs, setJobActive } from "./data";
+import { Plus, Edit2, Eye, XCircle, CheckCircle2 } from "lucide-react";
 import { capitalizeFirstLetter } from "../utils/helper";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs } from "../api/jobs";
 import { JobDto } from "../interfaces";
 import { TableSkeleton } from "../components/ui/table-loader";
@@ -20,6 +19,7 @@ const tableHeaders = [
 
 export function AdminJobsPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["jobs"],
@@ -28,9 +28,7 @@ export function AdminJobsPage() {
 
   const jobs: JobDto[] = data ?? [];
 
-  const toggleJob = (id: string, current: boolean) => {
-    setJobActive(id, !current);
-    // simple reload for now to reflect changes
+  const toggleJob = (id: number, current: boolean) => {
     navigate(0);
   };
 
@@ -108,10 +106,10 @@ export function AdminJobsPage() {
                         {job.location ?? "-"}
                       </td>
                       <td className="px-4 py-3 align-top text-gray-300">
-                        {capitalizeFirstLetter(job.jobType)}
+                        {job.jobType && capitalizeFirstLetter(job.jobType)}
                       </td>
                       <td className="px-4 py-3 align-top text-gray-300">
-                        {capitalizeFirstLetter(job.workArrangement)}
+                        {job.workArrangement && capitalizeFirstLetter(job.workArrangement)}
                       </td>
                       <td className="px-4 py-3 align-top">
                         <span

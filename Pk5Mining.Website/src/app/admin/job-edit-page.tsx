@@ -2,14 +2,10 @@ import { useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { Save, ArrowLeft } from "lucide-react";
-import {
-  AdminJob,
-  getAdminJobById,
-  upsertAdminJob,
-} from "./data";
 import { RichTextEditor } from "./rich-text-editor";
 import { useMutation } from "@tanstack/react-query";
-import { createJob } from "../api/jobs";
+import { createJob, CreateJobPayload } from "../api/jobs";
+import { IJob } from "../interfaces";
 
 const jobTypes = [
   { value: "full-time", label: "Full-time" },
@@ -28,7 +24,7 @@ export function AdminJobEditPage() {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
 
-   const mutation = useMutation({
+  const mutation = useMutation({
     mutationFn: createJob,
     onSuccess: () => {
       console.log("Job created");
@@ -42,8 +38,8 @@ export function AdminJobEditPage() {
     },
   });
 
-  const existing = useMemo<AdminJob | undefined>(
-    () => (jobId ? getAdminJobById(jobId) : undefined),
+  const existing = useMemo<IJob | CreateJobPayload | undefined>(
+    () => (jobId ? {} : undefined),
     [jobId],
   );
 
@@ -52,8 +48,8 @@ export function AdminJobEditPage() {
     department: existing?.department ?? "",
     location: existing?.location ?? "",
     experience: existing?.experience ?? "",
-    jobType: existing?.jobType ?? "",
-    workArrangement: existing?.workArrangement ?? "",
+    jobType: existing?.jobType ?? undefined,
+    workArrangement: existing?.workArrangement ?? undefined,
     briefDescription: existing?.briefDescription ?? "",
     description:
       existing?.description ?? "",
@@ -217,8 +213,8 @@ export function AdminJobEditPage() {
             Full description (rich text)
           </label>
           <RichTextEditor
-            value={form.descriptionHtml}
-            onChange={(html) => setForm((prev) => ({ ...prev, descriptionHtml: html }))}
+            value={form.description}
+            onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
           />
           <p className="mt-1 text-[11px] text-gray-500">
             You can use bold, italics, and bullet points. The HTML produced here

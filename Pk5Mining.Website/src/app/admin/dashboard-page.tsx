@@ -1,15 +1,14 @@
 import { motion } from "motion/react";
 import { BarChart3, Briefcase, FileText, PieChart } from "lucide-react";
-import { getAdminJobs, getApplications } from "./data";
 
 export function AdminDashboardPage() {
-  const jobs = getAdminJobs();
-  const apps = getApplications();
+  const jobs: any[] = [];
+  const apps: any[] = [];
 
-  const openJobs = jobs.filter((j) => j.isActive).length;
-  const closedJobs = jobs.length - openJobs;
-  const totalApps = apps.length;
-  const newApps = apps.filter((a) => a.status === "new").length;
+  const openJobs = jobs?.filter((j) => j.isActive).length;
+  const closedJobs = jobs?.length - openJobs;
+  const totalApps = apps?.length;
+  const newApps = apps?.filter((a) => a.status === "new").length;
 
   const byJob = jobs.map((job) => ({
     title: job.title,

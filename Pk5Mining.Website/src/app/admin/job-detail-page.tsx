@@ -1,12 +1,11 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { ArrowLeft, MapPin, Clock, LocateIcon } from "lucide-react";
-import { getAdminJobById } from "./data";
 import { capitalizeFirstLetter } from "../utils/helper";
 
 export function AdminJobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();
-  const job = jobId ? getAdminJobById(jobId) : undefined;
+  const job = undefined;
 
   if (!job) {
     return <Navigate to="/admin/jobs" replace />;

@@ -1,7 +1,6 @@
 import { Navigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { ArrowLeft, Download, Linkedin, Mail, MapPin, Phone } from "lucide-react";
-import { getApplicationById, updateApplicationStatus } from "./data";
 
 const statuses = [
   { value: "new", label: "New" },
@@ -13,15 +12,10 @@ const statuses = [
 
 export function AdminApplicationDetailPage() {
   const { applicationId } = useParams<{ applicationId: string }>();
-  const app = applicationId ? getApplicationById(applicationId) : undefined;
-
-  if (!app) {
+  
+  if (!applicationId) {
     return <Navigate to="/admin/applications" replace />;
   }
-
-  const onStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateApplicationStatus(app.id, e.target.value as any);
-  };
 
   return (
     <div className="space-y-6">
@@ -37,8 +31,8 @@ export function AdminApplicationDetailPage() {
 
         <div className="flex items-center gap-2">
           <select
-            defaultValue={app.status}
-            onChange={onStatusChange}
+            defaultValue={app?.status}
+            // onChange={onStatusChange}
             className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
           >
             {statuses.map((s) => (

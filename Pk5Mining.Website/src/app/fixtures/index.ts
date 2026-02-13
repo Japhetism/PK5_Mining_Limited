@@ -34,6 +34,7 @@ import {
   ISlideShowContent,
   ISocialLink,
   ITimelineEvent,
+  IUser,
 } from "../interfaces";
 import CEOImg from "../../assets/images/CEO.png";
 import HOOImg from "../../assets/images/HOO.png";
@@ -531,4 +532,15 @@ export const jobs: IJob[] = [
     `,
   },
 ];
+
+export const authUser: IUser = {
+  id: "b27a5a58-5a5f-4c2d-b4e0-8d7a3e2d5e9c",
+  username: "admin",
+  firstName: "Babatunde",
+  lastName: "Ojo",
+  email: "babatunde.ojo@pk5miningltd.com",
+  isActive: true,
+  role: "super admin",
+  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+}
 
