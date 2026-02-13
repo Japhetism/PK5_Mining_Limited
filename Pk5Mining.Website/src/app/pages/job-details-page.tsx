@@ -262,6 +262,7 @@ export function JobDetailsPage() {
                       <div>
                         <label className="block text-sm font-medium mb-2">
                           First Name
+                          <span className="ml-1 text-red-500">*</span>
                         </label>
                         <motion.input
                           type="text"
@@ -275,6 +276,7 @@ export function JobDetailsPage() {
                       <div>
                         <label className="block text-sm font-medium mb-2">
                           Last Name
+                          <span className="ml-1 text-red-500">*</span>
                         </label>
                         <motion.input
                           type="text"
@@ -291,6 +293,7 @@ export function JobDetailsPage() {
                       <div>
                         <label className="block text-sm font-medium mb-2">
                           Email
+                          <span className="ml-1 text-red-500">*</span>
                         </label>
                         <motion.input
                           type="email"
@@ -304,6 +307,7 @@ export function JobDetailsPage() {
                       <div>
                         <label className="block text-sm font-medium mb-2">
                           Country
+                          <span className="ml-1 text-red-500">*</span>
                         </label>
                         <motion.select
                           name="country"
@@ -326,6 +330,7 @@ export function JobDetailsPage() {
                       <div>
                         <label className="block text-sm font-medium mb-2">
                           Phone Number
+                          <span className="ml-1 text-red-500">*</span>
                         </label>
                         <motion.input
                           type="tel"
@@ -356,6 +361,7 @@ export function JobDetailsPage() {
                     <div>
                       <label className="block text-sm font-medium mb-2">
                         Resume (PDF, max 2MB)
+                        <span className="ml-1 text-red-500">*</span>
                       </label>
                       <div className="flex items-center gap-3">
                         <motion.input
