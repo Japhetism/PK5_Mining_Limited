@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import {
-  MapPin,
-  Clock,
-  Linkedin,
-  LocateIcon,
-  ArrowLeft,
-} from "lucide-react";
+import { MapPin, Clock, Linkedin, LocateIcon, ArrowLeft } from "lucide-react";
 import { AnimatedSection } from "@/app/components/animated-section";
-import { JobDto } from "../interfaces";
+import { ApplicationErrors, JobDto } from "../interfaces";
 import AnimatedDots from "../components/ui/animated-dots";
 import { Badge } from "../components/ui/badge";
 import { capitalizeFirstLetter } from "../utils/helper";
@@ -17,6 +11,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getJobById } from "../api/jobs";
 import { applyToJob } from "../api/applications";
 import { JobDetailsLoader } from "../components/ui/job-details-loader";
+import {
+  isValidEmail,
+  isValidLinkedIn,
+  isValidName,
+  isValidPhone,
+  validateApplication,
+} from "../utils/validator";
 
 const countries = [
   "Nigeria",
@@ -71,9 +72,8 @@ export function JobDetailsPage() {
 
   const job: JobDto | undefined = data;
 
-  console.log("fetch job details error", isError, fetchError?.message);
-
   const [formData, setFormData] = useState(defaultFormData);
+  const [fieldErrors, setFieldErrors] = useState<ApplicationErrors>({});
 
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -105,16 +105,6 @@ export function JobDetailsPage() {
     setResumeFile(file);
   };
 
-  const validateLinkedIn = (url: string) => {
-    if (!url) return true;
-    try {
-      const parsed = new URL(url.startsWith("http") ? url : `https://${url}`);
-      return parsed.hostname.includes("linkedin.com");
-    } catch {
-      return false;
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -125,16 +115,14 @@ export function JobDetailsPage() {
       return;
     }
 
-    if (!resumeFile) {
-      setError("Please upload your resume.");
+    const errors = validateApplication(formData, resumeFile);
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       return;
     }
 
-    if (!validateLinkedIn(formData.linkedinUrl)) {
-      setError("Please provide a valid LinkedIn profile URL.");
-      return;
-    }
-
+    setFieldErrors({});
     setLoading(true);
 
     mutation.mutate({
@@ -267,11 +255,31 @@ export function JobDetailsPage() {
                         <motion.input
                           type="text"
                           name="firstName"
-                          required
                           value={formData.firstName}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-800 rounded-lg focus:border-[#c89b3c] focus:outline-none transition-colors"
+                          onBlur={() => {
+                            if (!isValidName(formData.firstName)) {
+                              setFieldErrors((prev) => ({
+                                ...prev,
+                                firstName: "Invalid first name",
+                              }));
+                            } else {
+                              setFieldErrors((prev) => {
+                                const updated = { ...prev };
+                                delete updated.firstName;
+                                return updated;
+                              });
+                            }
+                          }}
+                          className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                          ${fieldErrors.firstName ? "border-red-500" : "border-gray-800"}
+                          focus:border-[#c89b3c]`}
                         />
+                        {fieldErrors.firstName && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {fieldErrors.firstName}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">
@@ -281,11 +289,31 @@ export function JobDetailsPage() {
                         <motion.input
                           type="text"
                           name="lastName"
-                          required
                           value={formData.lastName}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-800 rounded-lg focus:border-[#c89b3c] focus:outline-none transition-colors"
+                          onBlur={() => {
+                            if (!isValidName(formData.lastName)) {
+                              setFieldErrors((prev) => ({
+                                ...prev,
+                                lastName: "Invalid last name",
+                              }));
+                            } else {
+                              setFieldErrors((prev) => {
+                                const updated = { ...prev };
+                                delete updated.lastName;
+                                return updated;
+                              });
+                            }
+                          }}
+                          className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                            ${fieldErrors.lastName ? "border-red-500" : "border-gray-800"}
+                            focus:border-[#c89b3c]`}
                         />
+                        {fieldErrors.lastName && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {fieldErrors.lastName}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -298,11 +326,31 @@ export function JobDetailsPage() {
                         <motion.input
                           type="email"
                           name="email"
-                          required
                           value={formData.email}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-800 rounded-lg focus:border-[#c89b3c] focus:outline-none transition-colors"
+                          onBlur={() => {
+                            if (!isValidEmail(formData.email)) {
+                              setFieldErrors((prev) => ({
+                                ...prev,
+                                email: "Invalid email",
+                              }));
+                            } else {
+                              setFieldErrors((prev) => {
+                                const updated = { ...prev };
+                                delete updated.email;
+                                return updated;
+                              });
+                            }
+                          }}
+                          className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                          ${fieldErrors.email ? "border-red-500" : "border-gray-800"}
+                          focus:border-[#c89b3c]`}
                         />
+                        {fieldErrors.email && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {fieldErrors.email}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">
@@ -311,10 +359,25 @@ export function JobDetailsPage() {
                         </label>
                         <motion.select
                           name="country"
-                          required
                           value={formData.country}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-800 rounded-lg focus:border-[#c89b3c] focus:outline-none transition-colors"
+                          onBlur={() => {
+                            if (!formData.country) {
+                              setFieldErrors((prev) => ({
+                                ...prev,
+                                country: "Country is required",
+                              }));
+                            } else {
+                              setFieldErrors((prev) => {
+                                const updated = { ...prev };
+                                delete updated.country;
+                                return updated;
+                              });
+                            }
+                          }}
+                          className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                            ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
+                            focus:border-[#c89b3c]`}
                         >
                           <option value="">Select Country</option>
                           {countries.map((country) => (
@@ -323,6 +386,11 @@ export function JobDetailsPage() {
                             </option>
                           ))}
                         </motion.select>
+                        {fieldErrors.country && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {fieldErrors.country}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -335,11 +403,31 @@ export function JobDetailsPage() {
                         <motion.input
                           type="tel"
                           name="phone"
-                          required
                           value={formData.phone}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-800 rounded-lg focus:border-[#c89b3c] focus:outline-none transition-colors"
+                          onBlur={() => {
+                            if (!isValidPhone(formData.phone)) {
+                              setFieldErrors((prev) => ({
+                                ...prev,
+                                phone: "Invalid phone number",
+                              }));
+                            } else {
+                              setFieldErrors((prev) => {
+                                const updated = { ...prev };
+                                delete updated.phone;
+                                return updated;
+                              });
+                            }
+                          }}
+                          className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                            ${fieldErrors.phone ? "border-red-500" : "border-gray-800"}
+                            focus:border-[#c89b3c]`}
                         />
+                        {fieldErrors.phone && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {fieldErrors.phone}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2 flex items-center gap-2">
@@ -350,11 +438,31 @@ export function JobDetailsPage() {
                           type="url"
                           name="linkedinUrl"
                           placeholder="https://linkedin.com/in/your-profile"
-                          required
                           value={formData.linkedinUrl}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-800 rounded-lg focus:border-[#c89b3c] focus:outline-none transition-colors"
+                          onBlur={() => {
+                            if (!isValidLinkedIn(formData.linkedinUrl)) {
+                              setFieldErrors((prev) => ({
+                                ...prev,
+                                linkedinUrl: "Invalid LinkedIn URL",
+                              }));
+                            } else {
+                              setFieldErrors((prev) => {
+                                const updated = { ...prev };
+                                delete updated.linkedinUrl;
+                                return updated;
+                              });
+                            }
+                          }}
+                          className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                            ${fieldErrors.linkedinUrl ? "border-red-500" : "border-gray-800"}
+                            focus:border-[#c89b3c]`}
                         />
+                        {fieldErrors.linkedinUrl && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {fieldErrors.linkedinUrl}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -371,6 +479,11 @@ export function JobDetailsPage() {
                           className="block w-full text-sm text-gray-300 file:mr-4 file:rounded-md file:border-0 file:bg-[#c89b3c] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:bg-[#d4a84a]"
                         />
                       </div>
+                      {fieldErrors.resume && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {fieldErrors.resume}
+                        </p>
+                      )}
                     </div>
 
                     {error && (

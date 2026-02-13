@@ -181,3 +181,16 @@ export interface JobApplicationDto {
   dT_Modified: string;
   job: JobDto | null;
 }
+
+export interface IApplicantBioData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: string;
+  linkedinUrl?: string;
+}
+
+export type ApplicationErrors = Partial<Record<keyof IApplicantBioData, string>> & {
+  resume?: string;
+};
