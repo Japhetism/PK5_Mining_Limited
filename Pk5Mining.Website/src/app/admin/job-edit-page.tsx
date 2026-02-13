@@ -4,22 +4,10 @@ import { motion } from "motion/react";
 import { Save, ArrowLeft } from "lucide-react";
 import { RichTextEditor } from "./rich-text-editor";
 import { useMutation } from "@tanstack/react-query";
-import { createJob, CreateJobPayload } from "../api/jobs";
-import { IJob, JobErrors } from "../interfaces";
+import { createJob } from "../api/jobs";
+import { CreateJobPayload, IJob, JobErrors } from "../interfaces";
 import { isValidName, validateJob } from "../utils/validator";
-
-const jobTypes = [
-  { value: "full-time", label: "Full-time" },
-  { value: "part-time", label: "Part-time" },
-  { value: "contract", label: "Contract" },
-  { value: "freelance", label: "Freelance" },
-] as const;
-
-const workArrangements = [
-  { value: "onsite", label: "On-site" },
-  { value: "hybrid", label: "Hybrid" },
-  { value: "remote", label: "Remote" },
-] as const;
+import { jobTypes, workArrangements } from "../constants";
 
 export function AdminJobEditPage() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -29,13 +17,13 @@ export function AdminJobEditPage() {
     mutationFn: createJob,
     onSuccess: () => {
       console.log("Job created");
-      setSubmitted(true);
       setLoading(false);
       navigate(`/admin/jobs`);
     },
     onError: (error) => {
       console.error(error);
       setLoading(false);
+      setError(error.message ?? "An error occurred while saving the job. Please try again.");
     },
   });
 
@@ -54,11 +42,9 @@ export function AdminJobEditPage() {
     briefDescription: existing?.briefDescription ?? "",
     description: existing?.description ?? "",
   });
-  const [saving, setSaving] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<JobErrors>({});
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   if (jobId && !existing) {
     return <Navigate to="/admin/jobs" replace />;
@@ -412,15 +398,16 @@ export function AdminJobEditPage() {
         <div className="flex justify-end">
           <motion.button
             type="submit"
-            whileHover={!saving ? { scale: 1.02 } : undefined}
-            whileTap={!saving ? { scale: 0.98 } : undefined}
+            whileHover={!loading ? { scale: 1.02 } : undefined}
+            whileTap={!loading ? { scale: 0.98 } : undefined}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#c89b3c] text-black text-sm font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
-            disabled={saving}
+            disabled={loading}
           >
             <Save className="w-4 h-4" />
-            {saving ? "Saving…" : "Save job"}
+            {loading ? "Saving…" : "Save job"}
           </motion.button>
         </div>
+        {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
       </form>
     </div>
   );

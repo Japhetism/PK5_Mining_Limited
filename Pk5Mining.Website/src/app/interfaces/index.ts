@@ -221,8 +221,8 @@ export type CreateJobPayload = Omit<
   department: string;
   location: string;
   experience: string;
-  jobType: JobType;
-  workArrangement: WorkArrangement;
+  jobType: JobType | undefined;
+  workArrangement: WorkArrangement | undefined;
   briefDescription: string;
 };
 export type UpdateJobPayload = Partial<CreateJobPayload>;
