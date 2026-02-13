@@ -4,7 +4,9 @@ using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Repositories;
 using Pk5Mining.Server.Repositories.Job;
+using Pk5Mining.Server.Repositories.Job.Job_Specific_Repo;
 using Pk5Mining.Server.Repositories.Job_Application;
+using Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_Repo;
 using System.IO;
 
 namespace Pk5Mining.Server.Extensions
@@ -18,6 +20,8 @@ namespace Pk5Mining.Server.Extensions
 
             services.AddScoped<Abs_Pk5Repo<IJobs, IJobsDTO>, JobRepo>();
             services.AddScoped<Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>, JobApplicationRepo>();
+            services.AddScoped<IJobSpecificRepo, JobSpecificRepo>();
+            services.AddScoped<IJobApplicationSpecificRepo, JobApplicationSpecificRepo>();
 
             services.AddCors(options =>
             {

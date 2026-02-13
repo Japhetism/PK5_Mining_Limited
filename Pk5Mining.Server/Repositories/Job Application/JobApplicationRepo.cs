@@ -17,7 +17,7 @@ namespace Pk5Mining.Server.Repositories.Job_Application
 
         public async override Task<(IJobApplication?, string?)> GetRepoItem(long Id)
         {
-            JobApplication? jobApplication = await DbContext.JobApplications.FirstOrDefaultAsync(c => c.Id == Id);
+            JobApplication? jobApplication = await DbContext.JobApplications.Include(j => j.Job).FirstOrDefaultAsync(c => c.Id == Id);
             if (jobApplication == null)
             {
                 return (null, "Job Application not found");
@@ -27,7 +27,7 @@ namespace Pk5Mining.Server.Repositories.Job_Application
 
         public async override Task<IEnumerable<IJobApplication>> GetRepoItems()
         {
-            return await DbContext.JobApplications.ToListAsync();
+            return await DbContext.JobApplications.Include(j=> j.Job).ToListAsync();
         }
 
         public async override Task<(IJobApplication?, string?, bool)> PostRepoItem(IJobApplicationDTO item)

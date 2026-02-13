@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
+using Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_Repo;
 
 namespace Pk5Mining.Server.Controllers.Job_Application
 {
@@ -12,10 +12,14 @@ namespace Pk5Mining.Server.Controllers.Job_Application
     public class JobApplicationController : ControllerBase
     {
         private readonly Abs_Pk5Repo<IJobApplication, IJobApplicationDTO> _jobApplicationRepo;
+        private readonly IMapper _mapper;
+        private readonly IJobApplicationSpecificRepo _specificRepo;
 
-        public JobApplicationController(Abs_Pk5Repo<IJobApplication, IJobApplicationDTO> jobApplicationRepo)
+        public JobApplicationController(Abs_Pk5Repo<IJobApplication, IJobApplicationDTO> jobApplicationRepo, IMapper mapper, IJobApplicationSpecificRepo specificRepo)
         {
             _jobApplicationRepo = jobApplicationRepo;
+            _mapper = mapper;
+            _specificRepo = specificRepo;
         }
 
         [HttpGet]
@@ -35,6 +39,24 @@ namespace Pk5Mining.Server.Controllers.Job_Application
                 return NotFound(ApiResponse.NotFoundException(null, error ?? $"Job Application with ID {id} not found."));
             }
             return Ok(ApiResponse.SuccessMessage(jobApplication, "Job Application retrieved successfully."));
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetJobs( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? email = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var (jobApplication, totalCount) = await _specificRepo.GetJobsAsync( pageNumber, pageSize, email);
+            var response = new
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+                Data = jobApplication
+            };
+            return Ok(ApiResponse.SuccessMessage(response, "Jobs retrieved successfully."));
         }
 
         [HttpPost]
@@ -69,5 +91,39 @@ namespace Pk5Mining.Server.Controllers.Job_Application
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<IJobApplication>> Put(long id, [FromBody] JobApplicationDTO value)
+        {
+            string? error = null;
+            bool isInternalError = false;
+
+            try
+            {
+                if (value == null)
+                    return BadRequest("Invalid job application data.");
+
+                value.Id = id;
+
+                var jobApplicationEntity = _mapper.Map<JobApplication>(value);
+
+                (IJobApplication? jobApplication, error, isInternalError) =await _jobApplicationRepo.UpdateRepoItem(jobApplicationEntity);
+
+                if (error != null)
+                {
+                    if (isInternalError)
+                        return StatusCode(500, error);
+
+                    return BadRequest(error);
+                }
+                return Ok(ApiResponse.SuccessMessage(jobApplication, "Job application updated successfully."));
+            }
+            catch (Exception)
+            {
+                if (isInternalError)
+                    return StatusCode(500, "Internal server error.");
+
+                return BadRequest("Failed to update Job application.");
+            }
+        }
     }
 }

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
+using Pk5Mining.Server.Repositories.Job.Job_Specific_Repo;
 
 namespace Pk5Mining.Server.Controllers.Job
 {
@@ -11,10 +13,14 @@ namespace Pk5Mining.Server.Controllers.Job
     public class JobController : ControllerBase
     {
         private readonly Abs_Pk5Repo<IJobs, IJobsDTO> _jobRepo;
+        private readonly IJobSpecificRepo _jobSpecificRepo;
+        private readonly IMapper _mapper;
 
-        public JobController(Abs_Pk5Repo<IJobs, IJobsDTO> jobRepo)
+        public JobController(Abs_Pk5Repo<IJobs, IJobsDTO> jobRepo, IJobSpecificRepo jobSpecificRepo, IMapper mapper)
         {
             _jobRepo = jobRepo;
+            _jobSpecificRepo = jobSpecificRepo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -67,5 +73,74 @@ namespace Pk5Mining.Server.Controllers.Job
                 }
             }
         }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetJobs(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] bool? isActive = null,
+            [FromQuery] string? department = null,
+            [FromQuery] string? location = null,
+            [FromQuery] string? jobType = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var (jobs, totalCount) = await _jobSpecificRepo.GetJobsAsync(
+                pageNumber,
+                pageSize,
+                isActive,
+                department,
+                location,
+                jobType);
+
+            var response = new
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+                Data = jobs
+            };
+            return Ok(ApiResponse.SuccessMessage(response, "Jobs retrieved successfully."));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<IJobs>> Put(long id, [FromBody] JobsDTO value)
+        {
+            string? error = null;
+            bool isInternalError = false;
+
+            try
+            {
+                if (value == null)
+                    return BadRequest("Invalid job data.");
+
+                value.Id = id;
+
+                var jobEntity = _mapper.Map<Jobs>(value);
+
+                (IJobs? job, error, isInternalError) =
+                    await _jobRepo.UpdateRepoItem(jobEntity);
+
+                if (error != null)
+                {
+                    if (isInternalError)
+                        return StatusCode(500, error);
+
+                    return BadRequest(error);
+                }
+
+                return Ok(ApiResponse.SuccessMessage(job, "Job updated successfully."));
+            }
+            catch (Exception)
+            {
+                if (isInternalError)
+                    return StatusCode(500, "Internal server error.");
+
+                return BadRequest("Failed to update Job.");
+            }
+        }
+
     }
 }
