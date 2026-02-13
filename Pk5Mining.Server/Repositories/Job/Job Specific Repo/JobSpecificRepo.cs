@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Pk5Mining.Server.Models.Job;
+using Pk5Mining.Server.Services;
 
 namespace Pk5Mining.Server.Repositories.Job.Job_Specific_Repo
 {
@@ -41,6 +42,40 @@ namespace Pk5Mining.Server.Repositories.Job.Job_Specific_Repo
                 .ProjectTo<JobsDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
             return (jobs, totalCount);
+        }
+
+        public async Task<(IJobs?, string?, bool)> UpdateRepoItem(long id, JobsDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
+                    return (null, "Invalid  data.", true);
+                }
+
+                Jobs? existingJob = await _dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == id);
+                if (existingJob == null)
+                {
+                    return (null, "Job not found.", true);
+                }
+                existingJob.Title = dto.Title;
+                existingJob.Description = dto.Description;
+                existingJob.Location = dto.Location;
+                existingJob.Experience = dto.Experience;
+                existingJob.DT_Modified = DateTime.UtcNow;
+                existingJob.Department = dto.Department;
+                existingJob.WorkArrangement = dto.WorkArrangement;
+                existingJob.JobType = dto.JobType;
+                existingJob.BriefDescription = dto.BriefDescription;
+                existingJob.IsActive = dto.IsActive;
+
+                await _dbContext.SaveChangesAsync();
+                return (existingJob, null, false);
+            }
+            catch (Exception ex)
+            {
+                return ( null, ex.Message, true);
+            }
         }
     }
 }

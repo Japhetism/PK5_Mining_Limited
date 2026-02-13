@@ -106,40 +106,17 @@ namespace Pk5Mining.Server.Controllers.Job
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<IJobs>> Put(long id, [FromBody] JobsDTO value)
+        public async Task<IActionResult> Put(long id, [FromBody] JobsDTO value)
         {
-            string? error = null;
-            bool isInternalError = false;
-
-            try
-            {
-                if (value == null)
-                    return BadRequest("Invalid job data.");
-
-                value.Id = id;
-
-                var jobEntity = _mapper.Map<Jobs>(value);
-
-                (IJobs? job, error, isInternalError) =
-                    await _jobRepo.UpdateRepoItem(jobEntity);
-
-                if (error != null)
-                {
-                    if (isInternalError)
-                        return StatusCode(500, error);
-
-                    return BadRequest(error);
-                }
-
-                return Ok(ApiResponse.SuccessMessage(job, "Job updated successfully."));
-            }
-            catch (Exception)
+            var (job, error, isInternalError) = await _jobSpecificRepo.UpdateRepoItem(id, value);
+            if (job == null)
             {
                 if (isInternalError)
-                    return StatusCode(500, "Internal server error.");
+                    return StatusCode(500, ApiResponse.UnknownException(null, error ?? "Internal Server Error"));
 
-                return BadRequest("Failed to update Job.");
+                return NotFound(ApiResponse.NotFoundException(null, error ?? $"Job with ID {id} not found."));
             }
+            return Ok(ApiResponse.SuccessMessage(job, "Job updated successfully."));
         }
 
     }

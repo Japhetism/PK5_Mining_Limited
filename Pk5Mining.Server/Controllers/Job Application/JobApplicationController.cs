@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
@@ -104,38 +105,17 @@ namespace Pk5Mining.Server.Controllers.Job_Application
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<IJobApplication>> Put(long id, [FromBody] JobApplicationDTO value)
+        public async Task<IActionResult> Put(long id, [FromBody] JobApplicationUpdateDTO value)
         {
-            string? error = null;
-            bool isInternalError = false;
-
-            try
-            {
-                if (value == null)
-                    return BadRequest("Invalid job application data.");
-
-                value.Id = id;
-
-                var jobApplicationEntity = _mapper.Map<JobApplication>(value);
-
-                (IJobApplication? jobApplication, error, isInternalError) =await _jobApplicationRepo.UpdateRepoItem(jobApplicationEntity);
-
-                if (error != null)
-                {
-                    if (isInternalError)
-                        return StatusCode(500, error);
-
-                    return BadRequest(error);
-                }
-                return Ok(ApiResponse.SuccessMessage(jobApplication, "Job application updated successfully."));
-            }
-            catch (Exception)
+            var (jobApplication, error, isInternalError) = await _specificRepo.UpdateRepoItem(id, value);
+            if (jobApplication == null)
             {
                 if (isInternalError)
-                    return StatusCode(500, "Internal server error.");
+                    return StatusCode(500, ApiResponse.UnknownException(null, error ?? "Internal Server Error"));
 
-                return BadRequest("Failed to update Job application.");
+                return NotFound(ApiResponse.NotFoundException(null, error ?? $"Job Application with ID {id} not found."));
             }
+            return Ok(ApiResponse.SuccessMessage(jobApplication, "Job  Application updated successfully."));
         }
     }
 }

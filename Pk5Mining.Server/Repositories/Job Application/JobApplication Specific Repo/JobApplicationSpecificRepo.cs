@@ -30,5 +30,31 @@ namespace Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_
                 .ToListAsync();
             return (jobsApplication, totalCount);
         }
+
+        public async Task<(IJobApplication?, string?, bool)> UpdateRepoItem(long id, JobApplicationUpdateDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
+                    return (null, "Invalid data.", true);
+                }
+
+                JobApplication? existingJobApplication = await _dbContext.JobApplications.FirstOrDefaultAsync(j => j.Id == id);
+                if (existingJobApplication == null)
+                {
+                    return (null, "Job Application not found.", true);
+                }
+                existingJobApplication.Status = dto.Status;
+                existingJobApplication.DT_Modified = DateTime.UtcNow;
+
+                await _dbContext.SaveChangesAsync();
+                return (existingJobApplication, null, false);
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message, true);
+            }
+        }
     }
 }

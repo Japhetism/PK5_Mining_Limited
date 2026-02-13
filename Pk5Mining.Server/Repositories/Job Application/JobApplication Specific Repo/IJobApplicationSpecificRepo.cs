@@ -5,5 +5,6 @@ namespace Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_
     public interface IJobApplicationSpecificRepo
     {
         Task<(IEnumerable<JobApplicationDTO> JobApplication, int TotalCount)> GetJobsAsync(int pageNumber, int pageSize, string? email);
+        Task<(IJobApplication?, string?, bool)> UpdateRepoItem(long id, JobApplicationUpdateDTO dto);
     }
 }
