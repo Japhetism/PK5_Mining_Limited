@@ -1,9 +1,6 @@
 import axios from "axios";
-import { ApiResponse, IJob, JobDto } from "../interfaces";
+import { ApiResponse, CreateJobPayload, JobDto, UpdateJobPayload } from "../interfaces";
 import { http } from "./http";
-
-export type CreateJobPayload = Omit<IJob, "id" | "createdAt" | "updatedAt">;
-export type UpdateJobPayload = Partial<CreateJobPayload>;
 
 export async function getJobs() {
   try {

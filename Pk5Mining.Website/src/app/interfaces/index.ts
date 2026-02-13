@@ -205,3 +205,28 @@ export interface ILoginPayload {
   username: string;
   password: string;
 }
+
+export type CreateJobPayload = Omit<
+  IJob,
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "department"
+  | "location"
+  | "experience"
+  | "jobType"
+  | "workArrangement"
+  | "briefDescription"
+> & {
+  department: string;
+  location: string;
+  experience: string;
+  jobType: JobType;
+  workArrangement: WorkArrangement;
+  briefDescription: string;
+};
+export type UpdateJobPayload = Partial<CreateJobPayload>;
+
+export type JobErrors = {
+  [K in keyof CreateJobPayload]?: string;
+};
