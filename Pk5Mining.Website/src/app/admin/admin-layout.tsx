@@ -1,7 +1,7 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { BarChart3, Briefcase, FileText, LogOut, Shield } from "lucide-react";
-import { adminLogout } from "./auth";
+import { useAuth } from "../auth/AuthContext";
 
 const nav = [
   { to: "/admin", label: "Dashboard", icon: BarChart3, end: true },
@@ -10,10 +10,11 @@ const nav = [
 ];
 
 export function AdminLayout() {
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const onLogout = () => {
-    adminLogout();
+    logout();
     navigate("/admin/login", { replace: true });
   };
 
