@@ -14,6 +14,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getApplicationById } from "../api/applications";
 import { ApplicationDetailsSkeleton } from "../components/ui/application-details-loader";
+import { downloadFile } from "../utils/helper";
 
 const statuses = [
   { value: "new", label: "New" },
@@ -167,9 +168,8 @@ export function AdminApplicationDetailPage() {
                 View resume
               </motion.button>
 
-              <motion.a
-                href={resumeUrl}
-                download={resumeFileName}
+              <motion.button
+                onClick={() => downloadFile(resumeUrl, resumeFileName)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
@@ -177,7 +177,7 @@ export function AdminApplicationDetailPage() {
               >
                 <Download className="w-4 h-4" />
                 Download
-              </motion.a>
+              </motion.button>
             </div>
           ) : (
             <p className="text-xs text-gray-500">
