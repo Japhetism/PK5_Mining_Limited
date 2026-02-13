@@ -1,3 +1,4 @@
+import axios from "axios";
 import { ApiResponse, IJob, JobDto } from "../interfaces";
 import { http } from "./http";
 
@@ -5,41 +6,85 @@ export type CreateJobPayload = Omit<IJob, "id" | "createdAt" | "updatedAt">;
 export type UpdateJobPayload = Partial<CreateJobPayload>;
 
 export async function getJobs() {
-  const { data } = await http.get<ApiResponse<JobDto[]>>("/Job");
+  try {
+    const { data } = await http.get<ApiResponse<JobDto[]>>("/Job");
 
-  if (data.responseStatus !== "SUCCESS") {
-    throw new Error(data.responseMessage || "Failed to fetch jobs");
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(data.responseMessage || "Failed to fetch jobs");
+    }
+
+    return data.responseData;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      const backendMsg =
+        (err.response?.data as ApiResponse<unknown> | undefined)?.responseMessage;
+
+      throw new Error(backendMsg || err.message || "Failed to fetch jobs");
+    }
+
+    throw err;
   }
-
-  return data.responseData;
 }
 
 export async function getJobById(id: string) {
-  const { data } = await http.get<ApiResponse<JobDto>>(`/Job/${id}`);
+  try {
+    const { data } = await http.get<ApiResponse<JobDto>>(`/Job/${id}`);
 
-  if (data.responseStatus !== "SUCCESS") {
-    throw new Error(data.responseMessage || "Failed to fetch job");
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(data.responseMessage || "Failed to fetch job details");
+    }
+
+    return data.responseData;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      const backendMsg =
+        (err.response?.data as ApiResponse<unknown> | undefined)?.responseMessage;
+
+      throw new Error(backendMsg || err.message || "Failed to fetch job details");
+    }
+
+    throw err;
   }
-
-  return data.responseData;
 }
 
 export async function createJob(payload: CreateJobPayload) {
-  const { data } = await http.post<ApiResponse<JobDto>>("/Job", payload);
+  try {
+    const { data } = await http.post<ApiResponse<JobDto>>("/Job", payload);
   
-  if (data.responseStatus !== "SUCCESS") {
-    throw new Error(data.responseMessage || "Failed to add job");
-  }
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(data.responseMessage || "Failed to add job");
+    }
 
-  return data.responseData;
+    return data.responseData;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      const backendMsg =
+        (err.response?.data as ApiResponse<unknown> | undefined)?.responseMessage;
+
+      throw new Error(backendMsg || err.message || "Failed to add job");
+    }
+
+    throw err;
+  }
 }
 
 export async function updateJob(id: string, payload: UpdateJobPayload) {
-  const { data } = await http.patch<ApiResponse<JobDto>>(`/Job/${id}`, payload);
+  try {
+    const { data } = await http.patch<ApiResponse<JobDto>>(`/Job/${id}`, payload);
   
-  if (data.responseStatus !== "SUCCESS") {
-    throw new Error(data.responseMessage || "Failed to update job");
-  }
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(data.responseMessage || "Failed to update job");
+    }
 
-  return data.responseData;
+    return data.responseData;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      const backendMsg =
+        (err.response?.data as ApiResponse<unknown> | undefined)?.responseMessage;
+
+      throw new Error(backendMsg || err.message || "Failed to update job");
+    }
+
+    throw err;
+  }
 }
