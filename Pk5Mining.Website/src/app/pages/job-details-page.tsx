@@ -18,6 +18,7 @@ import {
   isValidPhone,
   validateApplication,
 } from "../utils/validator";
+import { ApplicationSubmitted } from "../components/ui/application-submitted";
 
 const countries = [
   "Nigeria",
@@ -139,6 +140,10 @@ export function JobDetailsPage() {
 
   if (isLoading) {
     return <JobDetailsLoader />;
+  }
+
+  if (submitted) {
+    return <ApplicationSubmitted jobTitle={job?.title} />;
   }
 
   return (
