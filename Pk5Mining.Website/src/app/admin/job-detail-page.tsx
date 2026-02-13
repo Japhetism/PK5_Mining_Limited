@@ -5,6 +5,7 @@ import { capitalizeFirstLetter } from "../utils/helper";
 import { useQuery } from "@tanstack/react-query";
 import { getJobById } from "../api/jobs";
 import { Badge } from "../components/ui/badge";
+import { JobDetailsSkeleton } from "../components/ui/job-details-skeleton";
 
 export function AdminJobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -25,6 +26,16 @@ export function AdminJobDetailPage() {
 
   if (!job  && !isLoading) {
     return <Navigate to="/admin/jobs" replace />;
+  }
+
+  if (isLoading) return <JobDetailsSkeleton className="mt-6" />;
+
+  if (isError) {
+    return (
+      <div className="space-y-4 mt-6">
+        <p className="text-red-400">Failed to load job details.</p>
+      </div>
+    );
   }
 
   return (
