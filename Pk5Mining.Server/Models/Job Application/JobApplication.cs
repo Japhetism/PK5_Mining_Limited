@@ -21,6 +21,6 @@ namespace Pk5Mining.Server.Models.Job_Application
         public DateTime DT_Modified { get; set; }
 
         [ForeignKey(nameof(JobId))]
-        public virtual Jobs Job { get; set; }
+        public virtual Jobs Jobs { get; set; }
     }
 }

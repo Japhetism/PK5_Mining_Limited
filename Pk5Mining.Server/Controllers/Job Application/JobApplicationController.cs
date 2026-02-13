@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
+using Pk5Mining.Server.Repositories.Job_Application;
 using Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_Repo;
+using Pk5Mining.Server.Services.Cloud_Service;
 
 namespace Pk5Mining.Server.Controllers.Job_Application
 {
@@ -14,12 +16,14 @@ namespace Pk5Mining.Server.Controllers.Job_Application
         private readonly Abs_Pk5Repo<IJobApplication, IJobApplicationDTO> _jobApplicationRepo;
         private readonly IMapper _mapper;
         private readonly IJobApplicationSpecificRepo _specificRepo;
+        private readonly IFileAccessor _fileAccessor;
 
-        public JobApplicationController(Abs_Pk5Repo<IJobApplication, IJobApplicationDTO> jobApplicationRepo, IMapper mapper, IJobApplicationSpecificRepo specificRepo)
+        public JobApplicationController(Abs_Pk5Repo<IJobApplication, IJobApplicationDTO> jobApplicationRepo, IMapper mapper, IJobApplicationSpecificRepo specificRepo, IFileAccessor fileAccessor)
         {
             _jobApplicationRepo = jobApplicationRepo;
             _mapper = mapper;
             _specificRepo = specificRepo;
+            _fileAccessor = fileAccessor;
         }
 
         [HttpGet]
@@ -60,13 +64,21 @@ namespace Pk5Mining.Server.Controllers.Job_Application
         }
 
         [HttpPost]
-        public async Task<ActionResult<IJobApplication>> Post([FromBody] JobApplicationDTO value)
+        public async Task<ActionResult<IJobApplication>> Post([FromForm] JobApplicationDTO value)
         {
             string? error = null;
             bool isInternalError = false;
 
             try
             {
+                string? resumeUrl = null;
+                if (value.ResumeFile != null)
+                {
+                    var uploadResult = await _fileAccessor.AddFile(value.ResumeFile);
+                    resumeUrl = uploadResult?.Url;
+                }
+                value.Resume = resumeUrl;
+
                 (IJobApplication? jobApplication, error, isInternalError) = await _jobApplicationRepo.PostRepoItem(value);
 
                 if (error != null)
