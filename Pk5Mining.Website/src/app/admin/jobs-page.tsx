@@ -6,7 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getJobs } from "../api/jobs";
 import { JobDto } from "../interfaces";
 import { capitalizeFirstLetter } from "../utils/helper";
-import { PaginatedTable, PaginatedTableColumn } from "../components/ui/paginated-table";
+import {
+  PaginatedTable,
+  PaginatedTableColumn,
+} from "../components/ui/paginated-table";
 
 type StatusFilter = "all" | "open" | "closed";
 
@@ -25,7 +28,7 @@ export function AdminJobsPage() {
 
   const toggleJob = (id: number, isActive: boolean) => {
     // navigate(`/admin/jobs/${id}/edit`);
-  }
+  };
 
   const columns: PaginatedTableColumn<JobDto>[] = [
     {
@@ -33,7 +36,14 @@ export function AdminJobsPage() {
       header: "Title",
       render: (job) => (
         <div>
-          <div className="font-semibold text-gray-100">{job.title}</div>
+          <Link
+            to={`/careers/job/${job.id}`}
+            className="flex-1"
+            target="_blank"
+            title="View public page"
+          >
+            <div className="font-semibold text-[#c89b3c]">{job.title}</div>
+          </Link>
           <div className="text-xs text-gray-500 line-clamp-2">
             {job.briefDescription}
           </div>
@@ -75,7 +85,7 @@ export function AdminJobsPage() {
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
           {job.isActive ? "Open" : "Closed"}
         </span>
-      )
+      ),
     },
     {
       key: "actions",
@@ -84,18 +94,14 @@ export function AdminJobsPage() {
       className: "text-right",
       render: (job) => (
         <div className="inline-flex items-center gap-1">
-          <Link to={`/admin/jobs/${job.id}`}>
+          <Link to={`/admin/jobs/${job.id}`} title="View job details">
             <Eye className="w-4 h-4 inline text-gray-300" />
-          </Link>
-          <Link to={`/admin/jobs/${job.id}/edit`}>
-            <button className="p-1.5 rounded-md hover:bg-white/10 text-gray-300">
-              <Edit2 className="w-4 h-4" />
-            </button>
           </Link>
           <button
             type="button"
             onClick={() => toggleJob(job.id, job.isActive)}
             className="p-1.5 rounded-md hover:bg-white/10 text-gray-300"
+            title={job.isActive ? "Close job" : "Reopen job"}
           >
             {job.isActive ? (
               <XCircle className="w-4 h-4 text-red-400" />
@@ -152,7 +158,7 @@ export function AdminJobsPage() {
             setSearch("");
             setStatus("all");
           }}
-          emptyTitle='No job openings yet. Click “New job” to create one.'
+          emptyTitle="No job openings yet. Click “New job” to create one."
           noResultsTitle="No results found. Try changing your filters."
           filterFn={(job, q, statusVal) => {
             const matchesSearch =
