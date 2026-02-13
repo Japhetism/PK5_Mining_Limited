@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { Plus, Eye, Edit2, XCircle, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs } from "../api/jobs";
 import { JobDto } from "../interfaces";
 import { capitalizeFirstLetter } from "../utils/helper";
@@ -15,6 +15,7 @@ type StatusFilter = "all" | "open" | "closed";
 
 export function AdminJobsPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
@@ -94,7 +95,16 @@ export function AdminJobsPage() {
       className: "text-right",
       render: (job) => (
         <div className="inline-flex items-center gap-1">
-          <Link to={`/admin/jobs/${job.id}`} title="View job details">
+          <Link
+            to={`/admin/jobs/${job.id}`}
+            title="View job details"
+            onClick={() => {
+              queryClient.setQueryData(
+                ["job", String(job.id)],
+                job,
+              );
+            }}
+          >
             <Eye className="w-4 h-4 inline text-gray-300" />
           </Link>
           <button
