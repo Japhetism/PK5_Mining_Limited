@@ -8,6 +8,8 @@ import {
   upsertAdminJob,
 } from "./data";
 import { RichTextEditor } from "./rich-text-editor";
+import { useMutation } from "@tanstack/react-query";
+import { createJob } from "../api/jobs";
 
 const jobTypes = [
   { value: "full-time", label: "Full-time" },
@@ -26,6 +28,20 @@ export function AdminJobEditPage() {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
 
+   const mutation = useMutation({
+    mutationFn: createJob,
+    onSuccess: () => {
+      console.log("Job created");
+      setSubmitted(true);
+      setLoading(false);
+      navigate(`/admin/jobs`);
+    },
+    onError: (error) => {
+      console.error(error);
+      setLoading(false);
+    },
+  });
+
   const existing = useMemo<AdminJob | undefined>(
     () => (jobId ? getAdminJobById(jobId) : undefined),
     [jobId],
@@ -39,10 +55,12 @@ export function AdminJobEditPage() {
     jobType: existing?.jobType ?? "full-time",
     workArrangement: existing?.workArrangement ?? "onsite",
     briefDescription: existing?.briefDescription ?? "",
-    descriptionHtml:
-      existing?.descriptionHtml ?? "<p>Describe the role, responsibilities, and requirements.</p>",
+    description:
+      existing?.description ?? "",
   });
   const [saving, setSaving] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (jobId && !existing) {
     return <Navigate to="/admin/jobs" replace />;
@@ -57,14 +75,19 @@ export function AdminJobEditPage() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
-    const saved = upsertAdminJob({
-      ...(existing ?? {}),
+    console.log("Form submitted:", form);
+    mutation.mutate({
       ...form,
-      id: existing?.id,
+      isActive: existing?.isActive ?? true,
     });
-    setSaving(false);
-    navigate(`/admin/jobs/${saved.id}`, { replace: true });
+    // setSaving(true);
+    // const saved = upsertAdminJob({
+    //   ...(existing ?? {}),
+    //   ...form,
+    //   id: existing?.id,
+    // });
+    // setSaving(false);
+    // navigate(`/admin/jobs/${saved.id}`, { replace: true });
   };
 
   return (

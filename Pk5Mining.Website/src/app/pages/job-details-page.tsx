@@ -16,6 +16,7 @@ import {
   isValidLinkedIn,
   isValidName,
   isValidPhone,
+  isValidPhoneForCountry,
   validateApplication,
 } from "../utils/validator";
 import { ApplicationSubmitted } from "../components/ui/application-submitted";
@@ -411,10 +412,10 @@ export function JobDetailsPage() {
                           value={formData.phone}
                           onChange={handleChange}
                           onBlur={() => {
-                            if (!isValidPhone(formData.phone)) {
+                            if (!isValidPhoneForCountry(formData.phone, formData.country)) {
                               setFieldErrors((prev) => ({
                                 ...prev,
-                                phone: "Invalid phone number",
+                                phone: "Invalid phone number for selected country",
                               }));
                             } else {
                               setFieldErrors((prev) => {

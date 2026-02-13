@@ -102,7 +102,7 @@ export interface IJob {
   jobType: JobType;
   workArrangement: WorkArrangement;
   briefDescription: string;
-  descriptionHtml: string;
+  description: string;
   role?: string[];
   requirements?: string[];
   techStack?: string[];

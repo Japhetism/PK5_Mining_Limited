@@ -1,5 +1,6 @@
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { ApplicationErrors, IApplicantBioData } from "../interfaces";
-import { normalizeLinkedInUrl } from "./helper";
+import { countryToIso, normalizeLinkedInUrl } from "./helper";
 
 export const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -27,6 +28,21 @@ export const isValidLinkedIn = (url: string) => {
   } catch {
     return false;
   }
+};
+
+export const isValidPhoneForCountry = (phone: string, country: string) => {
+  const trimmed = phone.trim();
+  if (!trimmed) return false;
+
+  const iso = countryToIso[country];
+  if (!iso) {
+    // "Other" or unknown country: basic fallback
+    const digits = trimmed.replace(/\D/g, "");
+    return digits.length >= 7 && digits.length <= 15;
+  }
+
+  const parsed = parsePhoneNumberFromString(trimmed, iso);
+  return !!parsed && parsed.isValid();
 };
 
 export const validateApplication = (
@@ -61,8 +77,8 @@ export const validateApplication = (
 
   if (!data.phone.trim()) {
     errors.phone = "Phone number is required.";
-  } else if (!isValidPhone(data.phone)) {
-    errors.phone = "Please enter a valid phone number.";
+  } else if (!isValidPhoneForCountry(data.phone, data.country)) {
+    errors.phone = "Please enter a valid phone number for the selected country.";
   }
 
   if (!resumeFile) {
