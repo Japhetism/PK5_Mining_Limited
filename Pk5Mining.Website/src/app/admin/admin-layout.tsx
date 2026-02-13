@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { BarChart3, Briefcase, FileText, LogOut, Shield } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
+import { getGreeting } from "../utils/helper";
 
 const nav = [
   { to: "/admin", label: "Dashboard", icon: BarChart3, end: true },
@@ -10,7 +11,7 @@ const nav = [
 ];
 
 export function AdminLayout() {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
 
   const onLogout = () => {
@@ -26,15 +27,27 @@ export function AdminLayout() {
             <Shield className="w-5 h-5 text-[#c89b3c]" />
             <span className="font-bold">PK5 Admin</span>
           </Link>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onLogout}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-800 rounded-lg text-sm text-gray-200 hover:border-[#c89b3c] hover:text-white transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            Logout
-          </motion.button>
+          <div className="flex items-center justify-between gap-2">
+            <motion.p
+              className="text-sm text-white-300"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <p>
+                <span>{getGreeting()},&nbsp;</span>
+                <span className="font-bold">{user?.firstName} {user?.lastName}</span>
+              </p>
+            </motion.p>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onLogout}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm text-gray-200"
+            >
+              <LogOut className="w-4 h-4" />
+            </motion.button>
+          </div>
         </div>
       </div>
 
