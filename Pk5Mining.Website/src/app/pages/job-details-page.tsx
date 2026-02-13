@@ -52,17 +52,9 @@ export function JobDetailsPage() {
     queryKey: ["jobs", jobId],
     queryFn: () => getJobById(jobId as string),
     enabled: !!jobId,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const job: JobDto | undefined = data;
-
-  const [formData, setFormData] = useState(defaultFormData);
-
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
-  
   const mutation = useMutation({
     mutationFn: applyToJob,
     onSuccess: () => {
@@ -77,6 +69,15 @@ export function JobDetailsPage() {
     },
   });
 
+  const job: JobDto | undefined = data;
+
+  const [formData, setFormData] = useState(defaultFormData);
+
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {

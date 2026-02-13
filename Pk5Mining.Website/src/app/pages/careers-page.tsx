@@ -13,11 +13,12 @@ import { benefits } from "../fixtures";
 import { IBenefit, IJob, JobDto } from "../interfaces";
 import { Link, useLocation } from "react-router-dom";
 import { capitalizeFirstLetter } from "../utils/helper";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs } from "../api/jobs";
 import { JobCardLoader } from "../components/ui/job-card-loader";
 
 export function CareersPage() {
+  const queryClient = useQueryClient();
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const openPositionsRef = useRef<HTMLElement | null>(null);
   const { hash } = useLocation();
@@ -273,7 +274,15 @@ export function CareersPage() {
                         </div>
                       </div>
 
-                      <Link to={`/careers/job/${job.id}`}>
+                      <Link
+                        to={`/careers/job/${job.id}`}
+                        onClick={() => {
+                          queryClient.setQueryData(
+                            ["job", String(job.id)],
+                            job,
+                          );
+                        }}
+                      >
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
