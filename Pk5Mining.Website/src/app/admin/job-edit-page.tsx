@@ -52,8 +52,8 @@ export function AdminJobEditPage() {
     department: existing?.department ?? "",
     location: existing?.location ?? "",
     experience: existing?.experience ?? "",
-    jobType: existing?.jobType ?? "full-time",
-    workArrangement: existing?.workArrangement ?? "onsite",
+    jobType: existing?.jobType ?? "",
+    workArrangement: existing?.workArrangement ?? "",
     briefDescription: existing?.briefDescription ?? "",
     description:
       existing?.description ?? "",
@@ -75,19 +75,10 @@ export function AdminJobEditPage() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", form);
     mutation.mutate({
       ...form,
       isActive: existing?.isActive ?? true,
     });
-    // setSaving(true);
-    // const saved = upsertAdminJob({
-    //   ...(existing ?? {}),
-    //   ...form,
-    //   id: existing?.id,
-    // });
-    // setSaving(false);
-    // navigate(`/admin/jobs/${saved.id}`, { replace: true });
   };
 
   return (
@@ -176,6 +167,7 @@ export function AdminJobEditPage() {
                 onChange={onChange}
                 className="w-full rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-2 text-sm outline-none focus:border-[#c89b3c]"
               >
+                <option value="">Select</option>
                 {jobTypes.map((t) => (
                   <option key={t.value} value={t.value}>
                     {t.label}
@@ -193,6 +185,7 @@ export function AdminJobEditPage() {
                 onChange={onChange}
                 className="w-full rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-2 text-sm outline-none focus:border-[#c89b3c]"
               >
+                <option value="">Select</option>
                 {workArrangements.map((w) => (
                   <option key={w.value} value={w.value}>
                     {w.label}
