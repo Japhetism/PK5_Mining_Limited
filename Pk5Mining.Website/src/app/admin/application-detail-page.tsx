@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getApplicationById } from "../api/applications";
+import { ApplicationDetailsSkeleton } from "../components/ui/application-details-loader";
 
 const statuses = [
   { value: "new", label: "New" },
@@ -39,6 +40,8 @@ export function AdminApplicationDetailPage() {
   if (!app && !isLoading) {
     return <Navigate to="/admin/applications" replace />;
   }
+
+  if (isLoading) return <ApplicationDetailsSkeleton />;
 
   if (isError) {
     return (
@@ -104,7 +107,7 @@ export function AdminApplicationDetailPage() {
               href={
                 app?.linkedIn?.startsWith("http")
                   ? app.linkedIn
-                  : `https://${app.linkedIn}`
+                  : `https://${app?.linkedIn}`
               }
             />
           </div>
