@@ -1,6 +1,7 @@
 // src/components/ui/admin-table.tsx
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { TableSkeleton } from "./table-loader";
 
 export type PaginatedTableColumn<T> = {
   key: string;
@@ -98,40 +99,44 @@ export function PaginatedTable<T>({
       {/* Optional Filters Row */}
       {(onSearchChange || onStatusChange || onClearFilters) && (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          {onSearchChange && (
-            <div className="w-full sm:w-[360px]">
-              <input
-                value={searchValue ?? ""}
-                onChange={(e) => onSearchChange(e.target.value)}
-                placeholder={searchPlaceholder}
-                className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-              />
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            {onSearchChange && (
+              <div className="w-full sm:w-[360px]">
+                <input
+                  value={searchValue ?? ""}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  placeholder={searchPlaceholder}
+                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+                />
+              </div>
+            )}
 
-          {onStatusChange && statusOptions?.length ? (
-            <select
-              value={statusValue ?? "all"}
-              onChange={(e) => onStatusChange(e.target.value)}
-              className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-            >
-              {statusOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          ) : null}
+            {onStatusChange && statusOptions?.length ? (
+              <select
+                value={statusValue ?? "all"}
+                onChange={(e) => onStatusChange(e.target.value)}
+                className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+              >
+                {statusOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : null}
+          </div>
 
-          {onClearFilters && (
-            <button
-              type="button"
-              onClick={onClearFilters}
-              className="px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5"
-            >
-              Clear
-            </button>
-          )}
+          <div className="flex-1 text-right">
+            {onClearFilters && (
+              <button
+                type="button"
+                onClick={onClearFilters}
+                className="px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -139,7 +144,7 @@ export function PaginatedTable<T>({
       <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           {isLoading ? (
-            <div className="p-4 text-sm text-gray-400">Loading...</div>
+            <TableSkeleton cols={columns.length} />
           ) : (
             <table className="min-w-full text-sm">
               <thead className="bg-black/40 text-gray-300">
@@ -162,12 +167,17 @@ export function PaginatedTable<T>({
                       colSpan={columns.length}
                       className="px-4 py-6 text-center text-sm text-gray-500"
                     >
-                      {data.length === 0 && !isFiltered ? emptyTitle : noResultsTitle}
+                      {data.length === 0 && !isFiltered
+                        ? emptyTitle
+                        : noResultsTitle}
                     </td>
                   </tr>
                 ) : (
                   paged.map((row, i) => (
-                    <tr key={i} className="border-t border-gray-800 hover:bg-white/5">
+                    <tr
+                      key={i}
+                      className="border-t border-gray-800 hover:bg-white/5"
+                    >
                       {columns.map((col) => (
                         <td
                           key={col.key}

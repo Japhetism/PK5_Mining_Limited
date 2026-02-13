@@ -26,7 +26,7 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
           // nicer default variety
           if (i === 0) return "w-44";
           if (i === cols - 1) return "w-20 ml-auto";
-          return i % 3 === 0 ? "w-28" : i % 3 === 1 ? "w-24" : "w-28";
+          return i % 3 === 0 ? "w-22" : i % 3 === 1 ? "w-20" : "w-18";
         });
 
   return (
@@ -54,8 +54,8 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
                 <td key={`c-${r}-${c}`} className="px-4 py-3 align-top">
                   {c === 0 ? (
                     <div className="space-y-2">
-                      <CellSkeleton className="w-56" />
-                      <CellSkeleton className="w-72 h-3" />
+                      <CellSkeleton className="w-32" />
+                      <CellSkeleton className="w-48 h-3" />
                     </div>
                   ) : c === cols - 1 ? (
                     <div className="flex justify-end gap-2">
