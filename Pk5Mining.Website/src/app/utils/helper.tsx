@@ -28,8 +28,8 @@ export const getGreeting = (date: Date = new Date()): string => {
 
   if (hour >= 5 && hour < 12) return "Good morning";
   if (hour >= 12 && hour < 17) return "Good afternoon";
-  if (hour >= 17 && hour < 21) return "Good evening";
-  return "Good night";
+  if (hour >= 17 && hour < 24) return "Good evening";
+  return "Good day";
 };
 
 export const downloadFile = async (url: string, fileName: string) => {
