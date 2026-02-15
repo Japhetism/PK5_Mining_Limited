@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { BarChart3, Briefcase, FileText, LogOut, Shield } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { getGreeting } from "../utils/helper";
+import Logo from '../../assets/images/logo.png';
 
 const nav = [
   { to: "/admin", label: "Dashboard", icon: BarChart3, end: true },
@@ -24,8 +25,8 @@ export function AdminLayout() {
       <div className="border-b border-gray-800 bg-[#0f0f0f]/95 backdrop-blur">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/admin" className="flex items-center gap-2">
-            <Shield className="w-5 h-5 text-[#c89b3c]" />
-            <span className="font-bold">PK5 Admin</span>
+            <img src={Logo} alt="PK5 Mining Logo" className="w-20 h-auto object-contain" />
+            <span className="font-bold">Admin Portal</span>
           </Link>
           <div className="flex items-center justify-between gap-2">
             <motion.p
