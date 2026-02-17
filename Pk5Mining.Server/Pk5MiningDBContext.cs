@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 
@@ -20,6 +21,7 @@ namespace Pk5Mining.Server
         #region DBsets - Linking our Model classes to the Database table Objects
         public virtual DbSet<JobApplication> JobApplications { get; set; }
         public virtual DbSet<Jobs> Jobs { get; set; }
+        public virtual DbSet<Admins> Admins { get; set; }
 
 
         #endregion
@@ -75,6 +77,12 @@ namespace Pk5Mining.Server
             modelBuilder.Entity<JobApplication>(entity =>
             {
                 entity.ToTable("JobApplications", schema: "pk5");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever();
+            });
+            modelBuilder.Entity<Admins>(entity =>
+            {
+                entity.ToTable("Admins", schema: "pk5");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedNever();
             });

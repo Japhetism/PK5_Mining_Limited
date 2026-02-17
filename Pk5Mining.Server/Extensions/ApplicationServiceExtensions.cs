@@ -3,8 +3,12 @@ using Pk5Mining.Server.Configuration.Mapper;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Repositories;
+using Pk5Mining.Server.Repositories.Admin;
 using Pk5Mining.Server.Repositories.Job;
+using Pk5Mining.Server.Repositories.Job.Job_Specific_Repo;
 using Pk5Mining.Server.Repositories.Job_Application;
+using Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_Repo;
+using Pk5Mining.Server.Services.Cloud_Service;
 using System.IO;
 
 namespace Pk5Mining.Server.Extensions
@@ -16,8 +20,14 @@ namespace Pk5Mining.Server.Extensions
             services.AddAutoMapper(typeof(MapperProfiles));
             services.AddDbContext<Pk5MiningDBContext>();
 
+            services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+            services.AddScoped<IFileAccessor, FileAccessor>();
+
             services.AddScoped<Abs_Pk5Repo<IJobs, IJobsDTO>, JobRepo>();
             services.AddScoped<Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>, JobApplicationRepo>();
+            services.AddScoped<IJobSpecificRepo, JobSpecificRepo>();
+            services.AddScoped<IJobApplicationSpecificRepo, JobApplicationSpecificRepo>();
+            services.AddScoped<IAdminRepo,  AdminRepo>();
 
             services.AddCors(options =>
             {
