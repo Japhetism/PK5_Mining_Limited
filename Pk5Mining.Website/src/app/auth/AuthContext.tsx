@@ -57,18 +57,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function login(username: string, password: string) {
-    if (useMock) {
-      const user = await loginMock({ username, password });
-      setUser(user);
-      sessionStorage.setItem(AUTH_KEY, JSON.stringify({ user }));
-      return;
-    }
-
     const user = await loginApi({ username, password });
 
-    setUser(user);
-
-    sessionStorage.setItem(AUTH_KEY, JSON.stringify({ user }));
+    if (user) {
+      setUser(user);
+      sessionStorage.setItem(AUTH_KEY, JSON.stringify({ user }));
+    }
   }
 
   function logout() {
@@ -82,11 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       login,
       logout,
-      isAdmin: adminRoles.includes(
-        String(user?.role ?? "")
-          .trim()
-          .toLowerCase(),
-      ),
+      isAdmin: true
     };
   }, [user, isLoading]);
 

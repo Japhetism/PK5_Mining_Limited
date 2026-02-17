@@ -142,7 +142,8 @@ export interface IJobApplication {
 
 export type ApiResponse<T> = {
   responseMessage: string;
-  responseData: T;
+  responseData?: T;
+  data?: T;
   responseStatus: "SUCCESS" | "FAILED" | string;
 };
 
@@ -197,10 +198,7 @@ export interface IUser {
   username: string;
   firstName: string;
   lastName: string;
-  email: string;
-  isActive: boolean;
-  role: Role;
-  token?: string;
+  password: string;
 }
 
 export interface ILoginPayload {

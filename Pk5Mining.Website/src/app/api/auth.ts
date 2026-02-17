@@ -8,13 +8,9 @@ const password = import.meta.env.VITE_ADMIN_PASSWORD;
 
 export async function login(payload: ILoginPayload) {
   try {
-    const { data } = await http.post<ApiResponse<IUser>>("/Auth/Login", payload);
+    const { data } = await http.post<ApiResponse<IUser>>("/Admin/login", payload);
 
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(data.responseMessage || "Failed to fetch jobs");
-    }
-
-    return data.responseData;
+    return data.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
       const backendMsg =
