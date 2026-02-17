@@ -5,9 +5,9 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { login as loginApi, loginMock } from "../api/auth";
+import { login as loginApi } from "../api/auth";
 import { IUser } from "../interfaces";
-import { adminRoles, AUTH_KEY } from "../constants";
+import { AUTH_KEY } from "../constants";
 
 const useMock = import.meta.env.VITE_USE_MOCK === "true";
 

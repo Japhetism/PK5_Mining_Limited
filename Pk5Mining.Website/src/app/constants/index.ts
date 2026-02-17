@@ -1,7 +1,5 @@
 export const AUTH_KEY = "auth_state";
 
-export const adminRoles = ["admin", "superadmin", "super admin"];
-
 export const jobTypes = [
   { value: "full-time", label: "Full-time" },
   { value: "part-time", label: "Part-time" },
