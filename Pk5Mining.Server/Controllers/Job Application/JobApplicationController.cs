@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
-using Pk5Mining.Server.Repositories.Job_Application;
 using Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_Repo;
 using Pk5Mining.Server.Services.Cloud_Service;
 
@@ -42,6 +40,18 @@ namespace Pk5Mining.Server.Controllers.Job_Application
             if (jobApplication == null)
             {
                 return NotFound(ApiResponse.NotFoundException(null, error ?? $"Job Application with ID {id} not found."));
+            }
+            return Ok(ApiResponse.SuccessMessage(jobApplication, "Job Application retrieved successfully."));
+        }
+
+        [HttpGet("ByJobId/{id}")]
+        public async Task<ActionResult<IJobApplication>> GetByJobId(long id)
+        {
+            (IJobApplication? jobApplication, string? error, _) = await _specificRepo.GetByJobId(id);
+
+            if (jobApplication == null)
+            {
+                return NotFound(ApiResponse.NotFoundException(null, error ?? $"Job Application with Job ID {id} not found."));
             }
             return Ok(ApiResponse.SuccessMessage(jobApplication, "Job Application retrieved successfully."));
         }

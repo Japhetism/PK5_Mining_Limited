@@ -56,5 +56,22 @@ namespace Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_
                 return (null, ex.Message, true);
             }
         }
+
+        public async Task<(IJobApplication?, string?, bool?)> GetByJobId(long id)         
+        {
+            try
+            {
+                JobApplication? jobApplication = await _dbContext.JobApplications.FirstOrDefaultAsync(j => j.JobId == id);
+                if (jobApplication == null)
+                {
+                    return (null, "Job Application not found.", true);
+                }
+                return (jobApplication, null, false);
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message, true);
+            }
+        }
     }
 }
