@@ -1,5 +1,3 @@
-// src/components/ui/admin-table.tsx
-import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TableSkeleton } from "./table-loader";
 
@@ -15,6 +13,7 @@ type PaginatedTableProps<T> = {
   data: T[];
   columns: PaginatedTableColumn<T>[];
   isLoading?: boolean;
+  isFilter: boolean;
 
   // empty states
   emptyTitle?: string; // when data is empty
@@ -36,12 +35,20 @@ type PaginatedTableProps<T> = {
   // pagination
   initialPageSize?: number;
   pageSizeOptions?: number[];
+  pageNumber: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+
+  setPageNumber: (pageNumber: number) => void;
+  setPageSize: (pageSize: number) => void;
 };
 
 export function PaginatedTable<T>({
   data,
   columns,
   isLoading = false,
+  isFilter,
 
   emptyTitle = "No records found.",
   noResultsTitle = "No results found. Try changing your filters.",
@@ -57,43 +64,26 @@ export function PaginatedTable<T>({
   onClearFilters,
   filterFn,
 
-  initialPageSize = 10,
   pageSizeOptions = [5, 10, 20, 50],
+  pageNumber,
+  pageSize,
+  totalCount,
+  totalPages,
+
+  setPageNumber,
+  setPageSize,
 }: PaginatedTableProps<T>) {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(initialPageSize);
 
-  const q = (searchValue ?? "").trim().toLowerCase();
-  const status = statusValue ?? "all";
+  const from =
+  totalCount === 0
+    ? 0
+    : (pageNumber - 1) * pageSize + 1;
 
-  const filtered = useMemo(() => {
-    if (!filterFn) return data;
-    return data.filter((row) => filterFn(row, q, status));
-  }, [data, filterFn, q, status]);
-
-  // Reset page when filters change
-  useEffect(() => {
-    setPage(1);
-  }, [q, status]);
-
-  const totalItems = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-
-  // Clamp page when result set shrinks
-  useEffect(() => {
-    setPage((p) => Math.min(p, totalPages));
-  }, [totalPages]);
-
-  const paged = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return filtered.slice(start, start + pageSize);
-  }, [filtered, page, pageSize]);
-
-  const from = totalItems === 0 ? 0 : (page - 1) * pageSize + 1;
-  const to = Math.min(page * pageSize, totalItems);
-
-  const isFiltered = (searchValue ?? "").trim().length > 0 || status !== "all";
-
+const to =
+  totalCount === 0
+    ? 0
+    : Math.min(pageNumber * pageSize, totalCount);
+  
   return (
     <div className="space-y-4">
       {/* Optional Filters Row */}
@@ -161,19 +151,19 @@ export function PaginatedTable<T>({
               </thead>
 
               <tbody>
-                {paged.length === 0 ? (
+                {data.length === 0 ? (
                   <tr>
                     <td
                       colSpan={columns.length}
                       className="px-4 py-6 text-center text-sm text-gray-500"
                     >
-                      {data.length === 0 && !isFiltered
+                      {data.length === 0 && !isFilter
                         ? emptyTitle
                         : noResultsTitle}
                     </td>
                   </tr>
                 ) : (
-                  paged.map((row, i) => (
+                  data.map((row, i) => (
                     <tr
                       key={i}
                       className="border-t border-gray-800 hover:bg-white/5"
@@ -196,10 +186,10 @@ export function PaginatedTable<T>({
 
         {/* Pagination Footer */}
         {/* {!isLoading && totalItems > 0 && totalPages > 1 && ( */}
-        {!isLoading && (
+        {(!isLoading && data.length > 0) && (
           <div className="flex items-center justify-between px-4 py-3 border-t border-gray-800 bg-black/20">
             <div className="text-xs text-gray-400">
-              Showing {from}–{to} of {totalItems}
+              Showing {from}–{to} of {totalCount}
             </div>
 
             <div className="flex items-center gap-3">
@@ -207,7 +197,7 @@ export function PaginatedTable<T>({
                 value={pageSize}
                 onChange={(e) => {
                   setPageSize(Number(e.target.value));
-                  setPage(1);
+                  setPageNumber(1);
                 }}
                 className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
               >
@@ -219,8 +209,8 @@ export function PaginatedTable<T>({
               </select>
 
               <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
+                onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
+                disabled={pageNumber === 1}
                 className="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 aria-label="Previous page"
               >
@@ -228,8 +218,8 @@ export function PaginatedTable<T>({
               </button>
 
               <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
+                onClick={() => setPageNumber(Math.min(totalPages, pageNumber + 1))}
+                disabled={pageNumber === totalPages}
                 className="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 aria-label="Next page"
               >

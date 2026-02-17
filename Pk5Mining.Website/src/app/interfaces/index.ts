@@ -154,12 +154,12 @@ export type JobDto = {
   department: string;
   location: string;
   isActive: boolean;
+  experience?: string;
+  jobType: JobType | null;
+  workArrangement: WorkArrangement | null;
+  briefDescription: string | null;
   dT_Created: string;
   dT_Modified: string;
-  experience?: string;
-  jobType?: JobType;
-  workArrangement?: WorkArrangement;
-  briefDescription?: string;
 };
 
 export interface JobApplicationDto {
@@ -229,4 +229,24 @@ export type UpdateJobPayload = Partial<CreateJobPayload>;
 
 export type JobErrors = {
   [K in keyof CreateJobPayload]?: string;
+};
+
+export type PaginationInfo = {
+  pageNumber: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
+
+export type JobResponsePayload = {
+  data: JobDto[];
+} & PaginationInfo;
+
+export type JobsQuery = {
+  pageNumber: number;
+  pageSize: number;
+  department?: string;
+  location?: string;
+  isActive?: boolean | string;
+  jobType?: string;
 };

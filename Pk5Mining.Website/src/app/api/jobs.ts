@@ -1,10 +1,10 @@
 import axios from "axios";
-import { ApiResponse, CreateJobPayload, JobDto, UpdateJobPayload } from "../interfaces";
+import { ApiResponse, CreateJobPayload, JobDto, JobResponsePayload, JobsQuery, UpdateJobPayload } from "../interfaces";
 import { http } from "./http";
 
-export async function getJobs() {
+export async function getJobs(params: JobsQuery) {
   try {
-    const { data } = await http.get<ApiResponse<JobDto[]>>("/Job");
+    const { data } = await http.get<ApiResponse<JobResponsePayload>>("/Job/filter", { params });
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(data.responseMessage || "Failed to fetch jobs");

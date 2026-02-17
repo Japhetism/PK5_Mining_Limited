@@ -1,16 +1,17 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { Plus, Eye, Edit2, XCircle, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs } from "../api/jobs";
-import { JobDto } from "../interfaces";
-import { capitalizeFirstLetter } from "../utils/helper";
+import { JobDto, JobsQuery } from "../interfaces";
+import { capitalizeFirstLetter, cleanParams, toNumber } from "../utils/helper";
 import {
   PaginatedTable,
   PaginatedTableColumn,
 } from "../components/ui/paginated-table";
 import { ConfirmModal } from "../components/ui/confirm-modal";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 
 type StatusFilter = "all" | "open" | "closed";
 
@@ -18,19 +19,77 @@ export function AdminJobsPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState<StatusFilter>("all");
+  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
+  const [filterJobType, setFilterJobType] = useState<string>("");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [selectedJob, setSelectedJob] = useState<JobDto | null>(null);
+  const [isFilter, setIsFilter] = useState<boolean>(false);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["jobs"],
-    queryFn: getJobs,
+  const [pageNumber, setPageNumber] = useState(() =>
+    toNumber(searchParams.get("pageNumber"), 1),
+  );
+  const [pageSize, setPageSize] = useState(() =>
+    toNumber(searchParams.get("pageSize"), 10),
+  );
+
+  const [filters, setFilters] = useState({
+    department: searchParams.get("department") ?? "",
+    location: searchParams.get("location") ?? "",
   });
 
-  const jobs: JobDto[] = data ?? [];
+  const debouncedFilters = useDebouncedValue(filters, 400);
 
+  useEffect(() => {
+    setPageNumber(1);
+  }, [debouncedFilters.department, debouncedFilters.location]);
+
+  const queryParams: JobsQuery = useMemo(() => {
+    const raw: JobsQuery = {
+      pageNumber,
+      pageSize,
+      isActive:
+        filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
+      jobType: filterJobType,
+      department: debouncedFilters.department,
+      location: debouncedFilters.location,
+    };
+
+    // clean out empty strings
+    return cleanParams(raw) as JobsQuery;
+  }, [pageNumber, pageSize, debouncedFilters]);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: [
+      "jobs",
+      queryParams.pageNumber,
+      queryParams.pageSize,
+      queryParams.department ?? "",
+      queryParams.location ?? "",
+      queryParams.isActive ?? "",
+      queryParams.jobType ?? "",
+    ],
+    queryFn: () => getJobs(queryParams),
+    staleTime: 30_000,
+  });
+
+  const onChangePage = (next: number) => setPageNumber(next);
+
+  const onChangePageSize = (size: number) => {
+    setPageSize(size);
+    setPageNumber(1);
+  };
+
+  const updateFilter = (key: keyof typeof filters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const jobs: JobDto[] = data?.data ?? [];
+  const totalCount: number = data?.totalCount ?? 0;
+  const totalPages: number = data?.totalPages ?? 0;
+  
   const toggleJob = (id: number, isActive: boolean) => {
     // navigate(`/admin/jobs/${id}/edit`);
   };
@@ -163,42 +222,19 @@ export function AdminJobsPage() {
           columns={columns}
           isLoading={isLoading}
           searchValue={search}
+          isFilter={isFilter}
           onSearchChange={setSearch}
           searchPlaceholder="Search title, dept, location..."
-          statusValue={status}
-          onStatusChange={(v) => setStatus(v as StatusFilter)}
-          statusOptions={[
-            { value: "all", label: "All statuses" },
-            { value: "open", label: "Open" },
-            { value: "closed", label: "Closed" },
-          ]}
-          onClearFilters={() => {
-            setSearch("");
-            setStatus("all");
-          }}
+          statusValue={filterStatus}
+          onStatusChange={(v) => setFilterStatus(v as StatusFilter)}
           emptyTitle="No job openings yet. Click “New job” to create one."
           noResultsTitle="No results found. Try changing your filters."
-          filterFn={(job, q, statusVal) => {
-            const matchesSearch =
-              !q ||
-              [
-                job.title,
-                job.briefDescription,
-                job.department,
-                job.location,
-                job.jobType,
-                job.workArrangement,
-              ]
-                .filter(Boolean)
-                .some((v) => String(v).toLowerCase().includes(q));
-
-            const matchesStatus =
-              statusVal === "all" ||
-              (statusVal === "open" && job.isActive) ||
-              (statusVal === "closed" && !job.isActive);
-
-            return matchesSearch && matchesStatus;
-          }}
+          setPageNumber={setPageNumber}
+          setPageSize={setPageSize}
+          pageNumber={pageNumber}
+          pageSize={pageSize}
+          totalCount={totalCount}
+          totalPages={totalPages}
         />
       )}
 
@@ -206,7 +242,9 @@ export function AdminJobsPage() {
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleUpdateStatus}
-        title={selectedJob?.isActive ? "Close Job Opening" : "Reopen Job Opening"}
+        title={
+          selectedJob?.isActive ? "Close Job Opening" : "Reopen Job Opening"
+        }
         description={`Are you sure you want to ${selectedJob?.isActive ? "close" : "reopen"} the job opening for "${selectedJob?.title}"?`}
         confirmText={`Yes, ${selectedJob?.isActive ? "close" : "reopen"}`}
         cancelText="No"

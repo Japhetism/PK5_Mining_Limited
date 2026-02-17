@@ -56,3 +56,18 @@ export const downloadFile = async (url: string, fileName: string) => {
     throw new Error("Failed to download file");
   }
 };
+
+export function cleanParams<T extends Record<string, any>>(obj: T) {
+  // removes "", undefined, null
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([, v]) => v !== "" && v !== undefined && v !== null
+    )
+  ) as Partial<T>;
+}
+
+
+export function toNumber(v: string | null, fallback: number) {
+  const n = Number(v);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
