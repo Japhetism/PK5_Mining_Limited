@@ -24,7 +24,7 @@ export function AdminJobDetailPage() {
 
   const job = data ?? undefined;
 
-  if (!job  && !isLoading) {
+  if (!job && !isLoading) {
     return <Navigate to="/admin/jobs" replace />;
   }
 
@@ -146,6 +146,26 @@ export function AdminJobDetailPage() {
                 </p>
               </>
             )}
+
+            {job?.dT_Expiry &&
+              (() => {
+                const expiryDate = new Date(job.dT_Expiry);
+                const now = new Date();
+
+                const isExpired = expiryDate.getTime() < now.getTime();
+
+                return (
+                  <>
+                    <p className="text-xs font-semibold text-gray-400 mb-1">
+                      {isExpired ? "Closed" : "Closing on"}
+                    </p>
+
+                    {!isExpired && (
+                      <p className="mb-3">{expiryDate.toLocaleDateString()}</p>
+                    )}
+                  </>
+                );
+              })()}
 
             <div className="flex gap-2 mt-4">
               <Link to={`/admin/jobs/${job?.id}/edit`} className="flex-1">

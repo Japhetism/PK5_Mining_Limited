@@ -161,6 +161,7 @@ export type JobDto = {
   dT_Created: string;
   dT_Modified: string;
   applicationsCount: number;
+  dT_Expiry?: string;
 };
 
 export interface JobApplicationDto {
@@ -225,6 +226,7 @@ export type CreateJobPayload = Omit<
   jobType: JobType | undefined;
   workArrangement: WorkArrangement | undefined;
   briefDescription: string;
+  dT_Expiry?: string;
 };
 export type UpdateJobPayload = Partial<CreateJobPayload>;
 

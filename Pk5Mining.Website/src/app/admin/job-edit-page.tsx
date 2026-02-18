@@ -91,6 +91,7 @@ export function AdminJobEditPage() {
     workArrangement: existing?.workArrangement ?? undefined,
     briefDescription: existing?.briefDescription ?? "",
     description: existing?.description ?? "",
+    dT_Expiry: existing?.dT_Expiry ?? "",
   });
   const [fieldErrors, setFieldErrors] = useState<JobErrors>({});
   const [error, setError] = useState<string>("");
@@ -154,7 +155,7 @@ export function AdminJobEditPage() {
         onSubmit={onSubmit}
         className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 space-y-6"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-semibold text-gray-300 mb-2">
               Job title
@@ -219,9 +220,7 @@ export function AdminJobEditPage() {
               </p>
             )}
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-semibold text-gray-300 mb-2">
               Location
@@ -252,6 +251,43 @@ export function AdminJobEditPage() {
             {fieldErrors.location && (
               <p className="text-xs text-red-500 mt-1">
                 {fieldErrors.location}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Close Date
+              <span className="ml-1 text-red-500">*</span>
+            </label>
+            <motion.input
+              name="dT_Expiry"
+              type="date"
+              value={form.dT_Expiry}
+              onChange={onChange}
+              onBlur={() => {
+                if (!form.dT_Expiry) {
+                  setFieldErrors((prev) => ({
+                    ...prev,
+                    dT_Expiry: "Invalid close date",
+                  }));
+                } else {
+                  setFieldErrors((prev) => {
+                    const updated = { ...prev };
+                    delete updated.dT_Expiry;
+                    return updated;
+                  });
+                }
+              }}
+              className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                ${fieldErrors.location ? "border-red-500" : "border-gray-800"}
+                focus:border-[#c89b3c]`}
+            />
+            {fieldErrors.dT_Expiry && (
+              <p className="text-xs text-red-500 mt-1">
+                {fieldErrors.dT_Expiry}
               </p>
             )}
           </div>
