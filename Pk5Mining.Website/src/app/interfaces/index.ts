@@ -251,3 +251,13 @@ export type JobsQuery = {
   isActive?: boolean | string;
   jobType?: string;
 };
+
+export type ApplicationsQuery = {
+  pageNumber: number;
+  pageSize: number;
+  email?: string;
+}
+
+export type ApplicationResponsePayload = {
+  data: JobApplicationDto[];
+} & PaginationInfo;

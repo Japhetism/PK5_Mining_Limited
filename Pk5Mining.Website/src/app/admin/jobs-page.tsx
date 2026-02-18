@@ -269,18 +269,22 @@ export function AdminJobsPage() {
         <div className="flex items-center gap-3">
           <div className="w-full sm:w-[200px]">
             <input
-              value={filterDepartment}
-              onChange={(e) => setFilterDepartment(e.target.value)}
-              placeholder="Search Department"
+              name="department"
+              type="text"
+              value={filters.department}
+              onChange={(e) => updateFilter("department", e.target.value)}
+              placeholder="Search by department"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
             />
           </div>
 
           <div className="w-full sm:w-[200px]">
             <input
-              value={filterLocation}
-              onChange={(e) => setFilterLocation(e.target.value)}
-              placeholder="Search Location"
+              name="location"
+              type="text"
+              value={filters.location}
+              onChange={(e) => updateFilter("location", e.target.value)}
+              placeholder="Search by location"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
             />
           </div>

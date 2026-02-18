@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Filter, Users } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApplications } from "../api/applications";
-import { JobApplicationDto } from "../interfaces";
+import { ApplicationsQuery, JobApplicationDto } from "../interfaces";
 import {
   PaginatedTable,
   PaginatedTableColumn,
 } from "../components/ui/paginated-table";
+import { cleanParams, toNumber } from "../utils/helper";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 
 type StatusFilter =
   | "all"
@@ -18,20 +20,63 @@ type StatusFilter =
   | "hired";
 
 export function AdminApplicationsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
+  const [isFilter, setIsFilter] = useState<boolean>(false);
+  const [filterEmail, setFilterEmail] = useState<string>("");
+  const [pageNumber, setPageNumber] = useState(() =>
+    toNumber(searchParams.get("pageNumber"), 1),
+  );
+  const [pageSize, setPageSize] = useState(() =>
+    toNumber(searchParams.get("pageSize"), 10),
+  );
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["applications"],
-    queryFn: getApplications,
+  const [filters, setFilters] = useState({
+    email: searchParams.get("email") ?? "",
   });
 
-  const apps: JobApplicationDto[] = (data ?? []) as JobApplicationDto[];
+  const debouncedFilters = useDebouncedValue(filters, 400);
+
+  useEffect(() => {
+    setPageNumber(1);
+  }, [debouncedFilters.email]);
+
+  const queryParams: ApplicationsQuery = useMemo(() => {
+      const raw: ApplicationsQuery = {
+        pageNumber,
+        pageSize,
+        email: debouncedFilters.email,
+      };
+  
+      // clean out empty strings
+      return cleanParams(raw) as ApplicationsQuery;
+    }, [pageNumber, pageSize, debouncedFilters]);
+  
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: [
+      "applications",
+      queryParams.pageNumber,
+      queryParams.pageSize,
+      queryParams.email ?? "",
+    ],
+    queryFn: () => getApplications(queryParams),
+    staleTime: 30_000,
+  });
+
+  const apps: JobApplicationDto[] = data?.data ?? [];
+  const totalCount: number = data?.totalCount ?? 0;
+  const totalPages: number = data?.totalPages ?? 0;
 
   const clearFilters = () => {
     setSearch("");
     setStatus("all");
+  };
+
+  const updateFilter = (key: keyof typeof filters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const columns: PaginatedTableColumn<JobApplicationDto>[] = [
@@ -102,14 +147,21 @@ export function AdminApplicationsPage() {
             Review incoming applications, update status, and download resumes.
           </p>
         </div>
+      </div>
 
-        <button
-          onClick={clearFilters}
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-800 text-xs text-gray-300 hover:border-[#c89b3c]"
-        >
-          <Filter className="w-3 h-3" />
-          Clear filters
-        </button>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex items-center gap-3">
+          <div className="w-full sm:w-[360px]">
+            <input
+              name="email"
+              type="email"
+              value={filters.email}
+              onChange={(e) => updateFilter("email", e.target.value)}
+              placeholder="Search by email"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+            />
+          </div>
+        </div>
       </div>
 
       {error ? (
@@ -124,36 +176,15 @@ export function AdminApplicationsPage() {
           searchPlaceholder="Search name, email, role, country..."
           statusValue={status}
           onStatusChange={(v) => setStatus(v as StatusFilter)}
-          statusOptions={[
-            { value: "all", label: "All statuses" },
-            { value: "new", label: "New" },
-            { value: "in_review", label: "In review" },
-            { value: "shortlisted", label: "Shortlisted" },
-            { value: "rejected", label: "Rejected" },
-            { value: "hired", label: "Hired" },
-          ]}
-          onClearFilters={clearFilters}
           emptyTitle="No applications yet. Once candidates apply, they will appear here."
           noResultsTitle="No results found. Try changing your filters."
-          filterFn={(app, q, statusVal) => {
-            const matchesSearch =
-              !q ||
-              [
-                app.firstName,
-                app.lastName,
-                app.email,
-                app.country,
-                app.status,
-                app?.job?.title,
-              ]
-                .filter(Boolean)
-                .some((v) => String(v).toLowerCase().includes(q));
-
-            const matchesStatus =
-              statusVal === "all" || app.status === statusVal;
-
-            return matchesSearch && matchesStatus;
-          }}
+          setPageNumber={setPageNumber}
+          setPageSize={setPageSize}
+          pageNumber={pageNumber}
+          pageSize={pageSize}
+          totalCount={totalCount}
+          totalPages={totalPages}
+          isFilter={isFilter}
         />
       )}
     </div>

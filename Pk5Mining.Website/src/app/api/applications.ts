@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ApiResponse, IJobApplication, JobApplicationDto } from "../interfaces";
+import { ApiResponse, ApplicationResponsePayload, ApplicationsQuery, IJobApplication, JobApplicationDto } from "../interfaces";
 import { http } from "./http";
 
 export async function applyToJob(payload: IJobApplication) {
@@ -23,9 +23,9 @@ export async function applyToJob(payload: IJobApplication) {
   }
 }
 
-export async function getApplications() {
+export async function getApplications(params: ApplicationsQuery) {
   try {
-    const { data } = await http.get<ApiResponse<JobApplicationDto[]>>("/JobApplication");
+    const { data } = await http.get<ApiResponse<ApplicationResponsePayload>>("/JobApplication/filter", { params });
   
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(data.responseMessage || "Failed to fetch job application");
