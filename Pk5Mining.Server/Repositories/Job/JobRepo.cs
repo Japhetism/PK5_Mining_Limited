@@ -21,12 +21,16 @@ namespace Pk5Mining.Server.Repositories.Job
             {
                 return (null, "Job not found");
             }
+            if (job.DT_Expiry.HasValue && job.DT_Expiry.Value < DateTime.UtcNow)
+            {
+                return (null, "Job has expired");
+            }
             return (job, null);
         }
 
         public async override Task<IEnumerable<IJobs>> GetRepoItems()
         {
-            return await DbContext.Jobs.Where(j => j.IsActive == true).ToListAsync();
+            return await DbContext.Jobs.Where(j =>j.IsActive == true &&(!j.DT_Expiry.HasValue || j.DT_Expiry >= DateTime.UtcNow)).ToListAsync();
         }
 
         public async override Task<(IJobs?, string?, bool)> PostRepoItem(IJobsDTO item)
@@ -39,9 +43,10 @@ namespace Pk5Mining.Server.Repositories.Job
                     throw new ArgumentNullException(nameof(job));
                 }
                 job.Id = IdGenerator.GenerateUniqueId();
+                job.DT_Created = DateTime.UtcNow;
+                job.DT_Expiry = job.DT_Created?.AddMonths(3);
                 (IJobs? savedJob, string? error) = await base.PostRepoItemAsync(job);
                 return (savedJob, error, false);
-
             }
             catch (Exception ex)
             {

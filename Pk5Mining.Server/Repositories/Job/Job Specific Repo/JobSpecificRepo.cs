@@ -25,7 +25,7 @@ namespace Pk5Mining.Server.Repositories.Job.Job_Specific_Repo
              string? location,
              string? jobType)
         {
-            IQueryable<Jobs> query = _dbContext.Jobs.AsQueryable();
+           IQueryable<Jobs> query = _dbContext.Jobs.Where(j => j.IsActive == true &&(j.DT_Expiry >= DateTime.UtcNow));
             if (isActive.HasValue)
                 query = query.Where(j => j.IsActive == isActive.Value);
             if (!string.IsNullOrWhiteSpace(department))
@@ -74,7 +74,24 @@ namespace Pk5Mining.Server.Repositories.Job.Job_Specific_Repo
             }
             catch (Exception ex)
             {
-                return ( null, ex.Message, true);
+                return (null, ex.Message, true);
+            }
+        }
+        public async Task<(JobLightResponseDTO?, string?)> GetJob()
+        {
+            try
+            {
+                var job = await _dbContext.Jobs.Where(j =>j.IsActive == true &&(j.DT_Expiry >= DateTime.UtcNow))
+                   .Select(j => new JobLightResponseDTO
+                    {
+                        Id = j.Id,
+                        Title = j.Title,
+                    }).FirstOrDefaultAsync();
+                return (job, null);
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message);
             }
         }
     }

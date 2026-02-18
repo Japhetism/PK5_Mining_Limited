@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Admin;
+using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories.Admin;
 
 namespace Pk5Mining.Server.Controllers.Admin
@@ -21,18 +22,12 @@ namespace Pk5Mining.Server.Controllers.Admin
         {
             try
             {
-                var (admin, error) = await _adminRepo.LoginAsync(dto);
-
+                (AdminResponseDTO? admin, string? error) = await _adminRepo.LoginAsync(dto);
                 if (error != null)
                 {
-                    return BadRequest(error);
+                    return BadRequest(ApiResponse.AuthenticationException(null, error));
                 }
-
-                return Ok(new
-                {
-                    Message = "Login successful",
-                    Data = admin
-                });
+                return Ok(ApiResponse.SuccessMessage(admin, "Login successful."));
             }
             catch (Exception)
             {
