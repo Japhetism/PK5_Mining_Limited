@@ -266,7 +266,7 @@ export function AdminJobEditPage() {
               onChange={onChange}
               placeholder="e.g. 3+ years"
               onBlur={() => {
-                if (!isValidName(form.experience)) {
+                if (!form.experience) {
                   setFieldErrors((prev) => ({
                     ...prev,
                     experience: "Invalid experience value",

@@ -160,6 +160,7 @@ export type JobDto = {
   briefDescription: string | null;
   dT_Created: string;
   dT_Modified: string;
+  applicationsCount: number;
 };
 
 export interface JobApplicationDto {

@@ -156,6 +156,11 @@ export function AdminJobsPage() {
       ),
     },
     {
+      key: "applicationsCount",
+      header: "Applications",
+       render: (job) => job.applicantionsCount ?? "0",
+    },
+    {
       key: "actions",
       header: "Actions",
       headerClassName: "text-right",

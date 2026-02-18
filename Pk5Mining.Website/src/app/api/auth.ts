@@ -6,7 +6,7 @@ export async function login(payload: ILoginPayload) {
   try {
     const { data } = await http.post<ApiResponse<IUser>>("/Admin/login", payload);
 
-    return data.data;
+    return data.responseData;
   } catch (err) {
     if (axios.isAxiosError(err)) {
       const backendMsg =
