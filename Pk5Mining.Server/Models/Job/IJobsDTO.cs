@@ -15,5 +15,7 @@ namespace Pk5Mining.Server.Models.Job
         public bool IsActive { get; set; }
         public DateTime DT_Created { get; set; }
         public DateTime DT_Modified { get; set; }
+        public DateTime? DT_Expiry { get; set; }
+        public int ApplicationsCount { get; set; }
     }
 }
