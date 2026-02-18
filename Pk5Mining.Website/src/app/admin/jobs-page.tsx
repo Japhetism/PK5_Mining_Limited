@@ -12,8 +12,14 @@ import {
 } from "../components/ui/paginated-table";
 import { ConfirmModal } from "../components/ui/confirm-modal";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
+import { jobTypes } from "../constants";
 
 type StatusFilter = "all" | "open" | "closed";
+
+const statusOptions = [
+  { label: "Open", value: "open" },
+  { label: "Closed", value: "closed" }
+]
 
 export function AdminJobsPage() {
   const navigate = useNavigate();
@@ -23,12 +29,13 @@ export function AdminJobsPage() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [filterJobType, setFilterJobType] = useState<string>("");
+  const [filterDepartment, setFilterDepartment] = useState<string>("");
+  const [filterLocation, setFilterLocation] = useState<string>("");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-  const [updating, setUpdating] = useState<boolean>(false);
   const [selectedJob, setSelectedJob] = useState<JobDto | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
-  const[isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -61,7 +68,7 @@ export function AdminJobsPage() {
 
     // clean out empty strings
     return cleanParams(raw) as JobsQuery;
-  }, [pageNumber, pageSize, debouncedFilters]);
+  }, [pageNumber, pageSize, debouncedFilters, filterStatus, filterJobType]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
@@ -258,6 +265,67 @@ export function AdminJobsPage() {
         </Link>
       </div>
 
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex items-center gap-3">
+          <div className="w-full sm:w-[200px]">
+            <input
+              value={filterDepartment}
+              onChange={(e) => setFilterDepartment(e.target.value)}
+              placeholder="Search Department"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+            />
+          </div>
+
+          <div className="w-full sm:w-[200px]">
+            <input
+              value={filterLocation}
+              onChange={(e) => setFilterLocation(e.target.value)}
+              placeholder="Search Location"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+            />
+          </div>
+
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
+            className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+          >
+            <option value="">All Statuses</option>
+            {statusOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={filterJobType}
+            onChange={(e) => setFilterJobType(e.target.value)}
+            className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+          >
+            <option value="">All Job Type</option>
+            {jobTypes.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+            
+          </div>
+
+          {/* <div className="flex-1 text-right">
+            {onClearFilters && (
+              <button
+                type="button"
+                onClick={onClearFilters}
+                className="px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5"
+              >
+                Clear
+              </button>
+            )}
+          </div> */}
+        </div>
+
       {error ? (
         <div className="text-sm text-red-400">Failed to load jobs.</div>
       ) : (
@@ -292,7 +360,7 @@ export function AdminJobsPage() {
         description={`Are you sure you want to ${selectedJob?.isActive ? "close" : "reopen"} the job opening for "${selectedJob?.title}"?`}
         confirmText={`Yes, ${selectedJob?.isActive ? "close" : "reopen"}`}
         cancelText="No"
-        loading={updating}
+        loading={isUpdating}
       />
     </div>
   );

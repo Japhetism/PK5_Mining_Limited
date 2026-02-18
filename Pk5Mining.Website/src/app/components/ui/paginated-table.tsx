@@ -86,50 +86,6 @@ const to =
   
   return (
     <div className="space-y-4">
-      {/* Optional Filters Row */}
-      {(onSearchChange || onStatusChange || onClearFilters) && (
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="flex items-center gap-3">
-            {onSearchChange && (
-              <div className="w-full sm:w-[360px]">
-                <input
-                  value={searchValue ?? ""}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  placeholder={searchPlaceholder}
-                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-                />
-              </div>
-            )}
-
-            {onStatusChange && statusOptions?.length ? (
-              <select
-                value={statusValue ?? "all"}
-                onChange={(e) => onStatusChange(e.target.value)}
-                className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-              >
-                {statusOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            ) : null}
-          </div>
-
-          <div className="flex-1 text-right">
-            {onClearFilters && (
-              <button
-                type="button"
-                onClick={onClearFilters}
-                className="px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Table */}
       <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
