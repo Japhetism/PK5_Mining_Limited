@@ -67,7 +67,7 @@ export async function createJob(payload: CreateJobPayload) {
 
 export async function updateJob(id: number, payload: UpdateJobPayload) {
   try {
-    const { data } = await http.patch<ApiResponse<JobDto>>(`/Job/${id}`, payload);
+    const { data } = await http.put<ApiResponse<JobDto>>(`/Job/${id}`, payload);
   
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(data.responseMessage || "Failed to update job");

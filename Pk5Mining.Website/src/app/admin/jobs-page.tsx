@@ -2,9 +2,9 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { Plus, Eye, Edit2, XCircle, CheckCircle2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getJobs } from "../api/jobs";
-import { JobDto, JobsQuery } from "../interfaces";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getJobs, updateJob } from "../api/jobs";
+import { ApiError, JobDto, JobsQuery, UpdateJobPayload } from "../interfaces";
 import { capitalizeFirstLetter, cleanParams, toNumber } from "../utils/helper";
 import {
   PaginatedTable,
@@ -27,6 +27,8 @@ export function AdminJobsPage() {
   const [updating, setUpdating] = useState<boolean>(false);
   const [selectedJob, setSelectedJob] = useState<JobDto | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
+  const [updateError, setUpdateError] = useState<string>("");
+  const[isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -75,6 +77,32 @@ export function AdminJobsPage() {
     staleTime: 30_000,
   });
 
+  const updateMutation = useMutation({
+    mutationFn: (payload: UpdateJobPayload) => {
+      if (!selectedJob || !("id" in selectedJob)) {
+        throw new Error("Cannot update: missing job id");
+      }
+      return updateJob(selectedJob.id, payload);
+    },
+    onSuccess: async () => {
+      setIsUpdating(false);
+      setConfirmOpen(false);
+      setSelectedJob(null);
+
+      await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+    },
+    onError: (err: unknown) => {
+      console.error(err);
+      setIsUpdating(false);
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error ? err.message : undefined) ??
+        "An error occurred while updating the job. Please try again.";
+
+      setUpdateError(message);
+    },
+  });
+
   const onChangePage = (next: number) => setPageNumber(next);
 
   const onChangePageSize = (size: number) => {
@@ -95,7 +123,18 @@ export function AdminJobsPage() {
   };
 
   const handleUpdateStatus = () => {
-    setConfirmOpen(false);
+    if (!selectedJob) return;
+
+    setUpdateError("");
+    setIsUpdating(true);
+
+    updateMutation.mutate({
+      ...selectedJob,
+      isActive: !selectedJob.isActive,
+      jobType: selectedJob.jobType ?? undefined,
+      workArrangement: selectedJob.workArrangement ?? undefined,
+      briefDescription: selectedJob.briefDescription ?? undefined,
+    });
   };
 
   const columns: PaginatedTableColumn<JobDto>[] = [
@@ -158,7 +197,7 @@ export function AdminJobsPage() {
     {
       key: "applicationsCount",
       header: "Applications",
-       render: (job) => job.applicantionsCount ?? "0",
+       render: (job) => job.applicationsCount ?? "0",
     },
     {
       key: "actions",

@@ -41,7 +41,7 @@ export function AdminJobEditPage() {
     mutationFn: (payload: CreateJobPayload) => createJob(payload),
     onSuccess: (data) => {
       setLoading(false);
-      navigate(`/admin/jobs/${data.id}`);
+      navigate(`/admin/jobs/${data?.id}`);
     },
     onError: (err: unknown) => {
       console.error(err);
