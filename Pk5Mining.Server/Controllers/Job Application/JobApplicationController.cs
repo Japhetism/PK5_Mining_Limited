@@ -45,15 +45,21 @@ namespace Pk5Mining.Server.Controllers.Job_Application
         }
 
         [HttpGet("ByJobId/{id}")]
-        public async Task<ActionResult<IJobApplication>> GetByJobId(long id)
+        public async Task<ActionResult> GetByJobId(long id, int pageNumber = 1, int pageSize = 10)
         {
-            (IJobApplication? jobApplication, string? error, _) = await _specificRepo.GetByJobId(id);
+            var (data, totalCount, error) = await _specificRepo.GetByJobIdAsync(id, pageNumber, pageSize);
 
-            if (jobApplication == null)
+            if (error != null)
             {
-                return NotFound(ApiResponse.NotFoundException(null, error ?? $"Job Application with Job ID {id} not found."));
+                return NotFound(ApiResponse.NotFoundException(null, error));
             }
-            return Ok(ApiResponse.SuccessMessage(jobApplication, "Job Application retrieved successfully."));
+            return Ok(ApiResponse.SuccessMessage(new
+            {
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Data = data
+            }, "Job Applications retrieved successfully."));
         }
 
         [HttpGet("filter")]
