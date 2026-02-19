@@ -59,7 +59,7 @@ export function JobDetailsPage() {
   });
 
   const mutation = useMutation({
-    mutationFn: applyToJob,
+    mutationFn: (fd: FormData) => applyToJob(fd),
     onSuccess: () => {
       console.log("Application submitted");
       setFormData(defaultFormData);
@@ -103,6 +103,8 @@ export function JobDetailsPage() {
       return;
     }
 
+    console.log("file is ", file);
+
     setError("");
     setResumeFile(file);
   };
@@ -127,16 +129,19 @@ export function JobDetailsPage() {
     setFieldErrors({});
     setLoading(true);
 
-    mutation.mutate({
-      jobId: job.id,
-      firstName: formData?.firstName,
-      lastName: formData?.lastName,
-      email: formData?.email,
-      phoneNumber: formData?.phone,
-      country: formData?.country,
-      resume: "",
-      linkedIn: formData.linkedinUrl,
-    });
+    if (resumeFile) {
+      const fd = new FormData();
+      fd.append("JobId", String(job.id));
+      fd.append("FirstName", formData.firstName);
+      fd.append("LastName", formData.lastName);
+      fd.append("Email", formData.email);
+      fd.append("PhoneNumber", formData.phone);
+      fd.append("Country", formData.country);
+      fd.append("LinkedIn", formData.linkedinUrl);
+      fd.append("ResumeFile", resumeFile, resumeFile.name);
+
+      mutation.mutate(fd);
+    }
   };
 
   if (isLoading) {

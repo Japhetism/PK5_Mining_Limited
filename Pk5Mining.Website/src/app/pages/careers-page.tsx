@@ -14,7 +14,7 @@ import { IBenefit, IJob, JobDto } from "../interfaces";
 import { Link, useLocation } from "react-router-dom";
 import { capitalizeFirstLetter } from "../utils/helper";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getJobs } from "../api/jobs";
+import { getActiveJobs, getJobs } from "../api/jobs";
 import { JobCardLoader } from "../components/ui/job-card-loader";
 
 export function CareersPage() {
@@ -25,7 +25,7 @@ export function CareersPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["jobs"],
-    queryFn: getJobs,
+    queryFn: getActiveJobs,
   });
 
   const jobs: JobDto[] = data ?? [];
