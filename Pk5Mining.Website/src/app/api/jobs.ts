@@ -49,7 +49,7 @@ export async function getJobsForDropdown() {
     const { data } = await http.get<ApiResponse<JobDto[]>>("/Job/light");
 
     if (data.responseStatus !== "SUCCESS") {
-      throw new Error(data.responseMessage || "Failed to fetch jobs");
+      throw new Error(data.responseMessage || "Failed to fetch jobs for dropdown");
     }
 
     return data.responseData;

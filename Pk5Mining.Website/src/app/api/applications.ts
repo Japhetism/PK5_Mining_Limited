@@ -64,3 +64,46 @@ export async function getApplicationById(id: string) {
     throw err;
   }
 }
+
+export async function updateJobApplicationStatus(payload: { id: number, status: string }) {
+  try {
+    const { id } = payload;
+    const { data } = await http.put<ApiResponse<JobApplicationDto>>(`/JobApplication/${id}`, payload);
+  
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(data.responseMessage || "Failed to update job application status");
+    }
+
+    return data.responseData;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      const backendMsg =
+        (err.response?.data as ApiResponse<unknown> | undefined)?.responseMessage;
+
+      throw new Error(backendMsg || err.message || "Failed to update job application status");
+    }
+
+    throw err;
+  }
+}
+
+export async function getJobApplicationsByJobId(jobId: number) {
+  try {
+    const { data } = await http.get<ApiResponse<JobApplicationDto>>(`/JobApplication/ByJobId/${jobId}`);
+  
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(data.responseMessage || "Failed to get job applications by job id");
+    }
+
+    return data.responseData;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      const backendMsg =
+        (err.response?.data as ApiResponse<unknown> | undefined)?.responseMessage;
+
+      throw new Error(backendMsg || err.message || "Failed to get job applications by job id");
+    }
+
+    throw err;
+  }
+}
