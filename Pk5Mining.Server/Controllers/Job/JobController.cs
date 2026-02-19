@@ -30,9 +30,13 @@ namespace Pk5Mining.Server.Controllers.Job
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
         [HttpGet("light")]
-        public async Task<ActionResult<IEnumerable<IJobs>>> GetLight()
+        public async Task<ActionResult<IEnumerable<JobLightResponseDTO>>> GetLight()
         {
-            var jobs = await _jobSpecificRepo.GetJob();
+            var (jobs, error) = await _jobSpecificRepo.GetJob();
+
+            if (error != null)
+                return BadRequest(error);
+
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
         [HttpGet("{id}")]
