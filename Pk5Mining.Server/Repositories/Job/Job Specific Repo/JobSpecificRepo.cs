@@ -77,17 +77,19 @@ namespace Pk5Mining.Server.Repositories.Job.Job_Specific_Repo
                 return (null, ex.Message, true);
             }
         }
-        public async Task<(JobLightResponseDTO?, string?)> GetJob()
+        public async Task<(List<JobLightResponseDTO>?, string?)> GetJob()
         {
             try
             {
-                var job = await _dbContext.Jobs.Where(j =>j.IsActive == true &&(j.DT_Expiry >= DateTime.UtcNow))
-                   .Select(j => new JobLightResponseDTO
+                List<JobLightResponseDTO> jobs = await _dbContext.Jobs
+                    .Select(j => new JobLightResponseDTO
                     {
                         Id = j.Id,
                         Title = j.Title,
-                    }).FirstOrDefaultAsync();
-                return (job, null);
+                    })
+                    .ToListAsync();
+
+                return (jobs, null);
             }
             catch (Exception ex)
             {
