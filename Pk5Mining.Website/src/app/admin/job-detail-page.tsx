@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getJobById } from "../api/jobs";
 import { Badge } from "../components/ui/badge";
 import { JobDetailsSkeleton } from "../components/ui/job-details-skeleton";
+import { getJobApplicationsByJobId } from "../api/applications";
 
 export function AdminJobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -22,7 +23,22 @@ export function AdminJobDetailPage() {
     staleTime: 5 * 60 * 1000,
   });
 
+  const {
+    data: jobApplications,
+    isLoading: jobApplicationsLoading,
+    isError: jobApplicationsHasError,
+    error: jobApplicationsFetchError,
+  } = useQuery({
+    queryKey: ["jobApplications", jobId],
+    queryFn: () => getJobApplicationsByJobId(jobId as string),
+    enabled: !!jobId,
+    staleTime: 5 * 60 * 1000,
+  });
+
   const job = data ?? undefined;
+  const applications = jobApplications ?? [];
+
+  console.log("job applications ", applications);
 
   if (!job && !isLoading) {
     return <Navigate to="/admin/jobs" replace />;

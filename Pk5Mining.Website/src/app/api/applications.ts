@@ -5,6 +5,7 @@ import {
   ApplicationsQuery,
   IJobApplication,
   JobApplicationDto,
+  JobDto,
 } from "../interfaces";
 import { http } from "./http";
 
@@ -126,9 +127,9 @@ export async function updateJobApplicationStatus(payload: {
   }
 }
 
-export async function getJobApplicationsByJobId(jobId: number) {
+export async function getJobApplicationsByJobId(jobId: string) {
   try {
-    const { data } = await http.get<ApiResponse<JobApplicationDto>>(
+    const { data } = await http.get<ApiResponse<JobDto[]>>(
       `/JobApplication/ByJobId/${jobId}`,
     );
 
