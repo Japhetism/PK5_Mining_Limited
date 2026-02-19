@@ -25,7 +25,7 @@ namespace Pk5Mining.Server.Repositories.Job.Job_Specific_Repo
              string? location,
              string? jobType)
         {
-           IQueryable<Jobs> query = _dbContext.Jobs.Where(j => j.IsActive == true &&(j.DT_Expiry >= DateTime.UtcNow));
+           IQueryable<Jobs> query = _dbContext.Jobs.AsQueryable();
             if (isActive.HasValue)
                 query = query.Where(j => j.IsActive == isActive.Value);
             if (!string.IsNullOrWhiteSpace(department))
