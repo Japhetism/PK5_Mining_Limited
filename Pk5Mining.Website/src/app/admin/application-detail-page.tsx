@@ -279,16 +279,6 @@ export function AdminApplicationDetailPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <a
-                  href={resumeUrl}
-                  download={resumeFileName}
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
-                  title="Download resume"
-                >
-                  <Download className="w-4 h-4" />
-                  Download
-                </a>
-
                 <button
                   type="button"
                   onClick={() => setIsViewerOpen(false)}
