@@ -10,6 +10,7 @@ import {
   Phone,
   FileText,
   Eye,
+  Linkedin,
 } from "lucide-react";
 import { capitalizeFirstLetter, cleanParams, formatDate } from "../utils/helper";
 import { useQuery } from "@tanstack/react-query";
@@ -22,6 +23,7 @@ import {
   StatusPill,
 } from "../components/ui/applicant-details-card";
 import { ApplicationsByJobIdQuery, JobApplicationDto } from "../interfaces";
+import { ApplicationStatusPill } from "./applications-page";
 
 export function AdminJobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -157,7 +159,7 @@ export function AdminJobDetailPage() {
                 className={
                   job?.isActive
                     ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
-                    : "inline-flex items-center gap-1 rounded-full bg-gray-600/10 px-2 py-0.5 text-xs text-gray-400"
+                    : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
                 }
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -272,7 +274,7 @@ export function AdminJobDetailPage() {
                   Applicant ID: {a.id}
                 </div>
               </div>
-              <StatusPill text={a.status} />
+              <ApplicationStatusPill status={a.status} />
 
               {/* Contact */}
               <div className="space-y-2">
@@ -284,6 +286,11 @@ export function AdminJobDetailPage() {
                 <div className="flex items-center gap-2 text-sm text-gray-200">
                   <Phone className="w-4 h-4 text-gray-400" />
                   <span className="truncate">{a.phoneNumber ?? "-"}</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-gray-200">
+                  <Linkedin className="w-4 h-4 text-gray-400" />
+                  <span className="truncate">{a.linkedIn ?? "-"}</span>
                 </div>
               </div>
 
