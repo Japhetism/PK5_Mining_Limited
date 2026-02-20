@@ -1,15 +1,40 @@
+import { useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowLeft, MapPin, Clock, LocateIcon } from "lucide-react";
-import { capitalizeFirstLetter } from "../utils/helper";
+import {
+  ArrowLeft,
+  MapPin,
+  Clock,
+  LocateIcon,
+  Mail,
+  Phone,
+  FileText,
+  Eye,
+} from "lucide-react";
+import { capitalizeFirstLetter, cleanParams } from "../utils/helper";
 import { useQuery } from "@tanstack/react-query";
 import { getJobById } from "../api/jobs";
 import { Badge } from "../components/ui/badge";
 import { JobDetailsSkeleton } from "../components/ui/job-details-skeleton";
 import { getJobApplicationsByJobId } from "../api/applications";
+import {
+  PaginatedCard,
+  StatusPill,
+} from "../components/ui/applicant-details-card";
+import { ApplicationsByJobIdQuery, JobApplicationDto } from "../interfaces";
 
 export function AdminJobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  const queryParams: ApplicationsByJobIdQuery = useMemo(() => {
+    const raw: ApplicationsByJobIdQuery = {
+      pageNumber,
+      pageSize,
+    };
+    return cleanParams(raw) as ApplicationsByJobIdQuery;
+  }, [pageNumber, pageSize, jobId]);
 
   const {
     data,
@@ -29,16 +54,24 @@ export function AdminJobDetailPage() {
     isError: jobApplicationsHasError,
     error: jobApplicationsFetchError,
   } = useQuery({
-    queryKey: ["jobApplications", jobId],
-    queryFn: () => getJobApplicationsByJobId(jobId as string),
+    queryKey: ["jobApplications", jobId, queryParams],
+    queryFn: () => getJobApplicationsByJobId(jobId as string, queryParams),
     enabled: !!jobId,
     staleTime: 5 * 60 * 1000,
   });
 
-  const job = data ?? undefined;
-  const applications = jobApplications ?? [];
+  const onChangePage = (next: number) => setPageNumber(next);
 
-  console.log("job applications ", applications);
+  const onChangePageSize = (size: number) => {
+    setPageSize(size);
+    setPageNumber(1);
+  };
+
+  const job = data ?? undefined;
+  const applications: JobApplicationDto[] = jobApplications?.data ?? [];
+  const totalCount = jobApplications?.totalCount ?? 0;
+  const totalPages: number =
+    jobApplications?.totalPages ?? Math.ceil((totalCount ?? 0) / (pageSize || 1));
 
   if (!job && !isLoading) {
     return <Navigate to="/admin/jobs" replace />;
@@ -209,6 +242,76 @@ export function AdminJobDetailPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div>
+        <PaginatedCard<JobApplicationDto>
+          data={applications}
+          isLoading={jobApplicationsLoading}
+          isFilter={false}
+          pageNumber={pageNumber}
+          pageSize={pageSize}
+          totalCount={totalCount}
+          totalPages={totalPages}
+          setPageNumber={onChangePage}
+          setPageSize={onChangePageSize}
+          pageSizeOptions={[6, 9, 12, 24]}
+          renderCard={(a) => (
+            <div className="space-y-4">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-gray-100 truncate">
+                    {a.firstName} {a.lastName}
+                  </div>
+                  <div className="text-xs text-gray-400 truncate">
+                    {a.email}
+                  </div>
+                </div>
+                <div className="text-xs text-gray-400 truncate">
+                  Applicant ID: {a.id}
+                </div>
+              </div>
+              <StatusPill text={a.status} />
+
+              {/* Contact */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-gray-200">
+                  <Mail className="w-4 h-4 text-gray-400" />
+                  <span className="truncate">{a.email}</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-gray-200">
+                  <Phone className="w-4 h-4 text-gray-400" />
+                  <span className="truncate">{a.phoneNumber ?? "-"}</span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-2">
+                <button
+                  // onClick={() => onViewApplicant(a.id)}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-200 hover:bg-white/5"
+                >
+                  <Eye className="w-4 h-4" />
+                  View
+                </button>
+
+                <button
+                  // onClick={() => {
+                  //   if (!a.resumeUrl) return;
+                  //   onViewResume?.(a.resumeUrl);
+                  // }}
+                  // disabled={!a.resumeUrl}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-200 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <FileText className="w-4 h-4" />
+                  Resume
+                </button>
+              </div>
+            </div>
+          )}
+        />
       </div>
     </div>
   );

@@ -254,6 +254,11 @@ export type JobsQuery = {
   jobType?: string;
 };
 
+export type ApplicationsByJobIdQuery = {
+  pageNumber: number;
+  pageSize: number;
+}
+
 export type ApplicationsQuery = {
   pageNumber: number;
   pageSize: number;

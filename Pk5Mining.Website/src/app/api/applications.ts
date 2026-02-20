@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   ApiResponse,
   ApplicationResponsePayload,
+  ApplicationsByJobIdQuery,
   ApplicationsQuery,
   IJobApplication,
   JobApplicationDto,
@@ -127,10 +128,11 @@ export async function updateJobApplicationStatus(payload: {
   }
 }
 
-export async function getJobApplicationsByJobId(jobId: string) {
+export async function getJobApplicationsByJobId(jobId: string, params: ApplicationsByJobIdQuery) {
   try {
-    const { data } = await http.get<ApiResponse<JobDto[]>>(
+    const { data } = await http.get<ApiResponse<ApplicationResponsePayload>>(
       `/JobApplication/ByJobId/${jobId}`,
+      { params },
     );
 
     if (data.responseStatus !== "SUCCESS") {
