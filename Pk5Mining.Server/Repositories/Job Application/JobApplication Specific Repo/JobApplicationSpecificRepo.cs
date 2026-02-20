@@ -16,7 +16,7 @@ namespace Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public async Task<(IEnumerable<JobApplicationDTO> JobApplication, int TotalCount)> GetJobsAsync(int pageNumber, int pageSize, string? email)
+        public async Task<(IEnumerable<JobApplicationResponseDTO> JobApplication, int TotalCount)> GetJobsAsync(int pageNumber, int pageSize, string? email)
         {
             IQueryable<JobApplication> query = _dbContext.JobApplications.AsQueryable();
             if (!string.IsNullOrWhiteSpace(email))
@@ -26,7 +26,7 @@ namespace Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_
                 .OrderByDescending(j => j.DT_Created)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ProjectTo<JobApplicationDTO>(_mapper.ConfigurationProvider)
+                .ProjectTo<JobApplicationResponseDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
             return (jobsApplication, totalCount);
         }
@@ -57,21 +57,25 @@ namespace Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_
             }
         }
 
-        public async Task<(IJobApplication?, string?, bool?)> GetByJobId(long id)         
+        public async Task<(IEnumerable<JobApplicationDTO> Data, int TotalCount, string? Error)>GetByJobIdAsync(long jobId, int pageNumber, int pageSize)
         {
             try
             {
-                JobApplication? jobApplication = await _dbContext.JobApplications.FirstOrDefaultAsync(j => j.JobId == id);
-                if (jobApplication == null)
-                {
-                    return (null, "Job Application not found.", true);
-                }
-                return (jobApplication, null, false);
+                IQueryable<JobApplication> query = _dbContext.JobApplications.Where(j => j.JobId == jobId);
+                int totalCount = await query.CountAsync();
+                List<JobApplicationDTO> applications = await query
+                    .OrderByDescending(j => j.DT_Created)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ProjectTo<JobApplicationDTO>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
+                return (applications, totalCount, null);
             }
             catch (Exception ex)
             {
-                return (null, ex.Message, true);
+                return (Enumerable.Empty<JobApplicationDTO>(), 0, ex.Message);
             }
         }
+
     }
 }
