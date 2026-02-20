@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs, updateJob } from "../api/jobs";
 import { ApiError, JobDto, JobsQuery, UpdateJobPayload } from "../interfaces";
-import { capitalizeFirstLetter, cleanParams, toNumber } from "../utils/helper";
+import { capitalizeFirstLetter, cleanParams, formatDate, toNumber } from "../utils/helper";
 import {
   PaginatedTable,
   PaginatedTableColumn,
@@ -194,7 +194,7 @@ export function AdminJobsPage() {
           className={
             job.isActive
               ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
-              : "inline-flex items-center gap-1 rounded-full bg-gray-600/10 px-2 py-0.5 text-xs text-gray-400"
+              : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
           }
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -206,6 +206,16 @@ export function AdminJobsPage() {
       key: "applicationsCount",
       header: "Applications",
        render: (job) => job.applicationsCount ?? "0",
+    },
+    {
+      key: "applicationsCount",
+      header: "Date Added",
+       render: (job) => job.dT_Created ? formatDate(job.dT_Created) : "-",
+    },
+    {
+      key: "Close Date",
+      header: "Close Date",
+       render: (job) => job.dT_Expiry ? formatDate(job.dT_Expiry) : "-",
     },
     {
       key: "actions",
