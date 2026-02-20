@@ -219,6 +219,18 @@ export function JobDetailsPage() {
                     {job?.experience} experience
                   </span>
                 </div>
+                {job.dT_Expiry && (
+                  <div>
+                    <span className="text-gray-300">
+                      Closes{" "}
+                      {new Date(job.dT_Expiry).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                )}
               </div>
             </AnimatedSection>
           )}
@@ -417,10 +429,16 @@ export function JobDetailsPage() {
                           value={formData.phone}
                           onChange={handleChange}
                           onBlur={() => {
-                            if (!isValidPhoneForCountry(formData.phone, formData.country)) {
+                            if (
+                              !isValidPhoneForCountry(
+                                formData.phone,
+                                formData.country,
+                              )
+                            ) {
                               setFieldErrors((prev) => ({
                                 ...prev,
-                                phone: "Invalid phone number for selected country",
+                                phone:
+                                  "Invalid phone number for selected country",
                               }));
                             } else {
                               setFieldErrors((prev) => {
