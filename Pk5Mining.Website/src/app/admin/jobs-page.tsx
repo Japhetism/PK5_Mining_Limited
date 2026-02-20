@@ -119,6 +119,7 @@ export function AdminJobsPage() {
 
   const updateFilter = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+    setIsFilter(true);
   };
 
   const jobs: JobDto[] = data?.data ?? [];
@@ -291,7 +292,10 @@ export function AdminJobsPage() {
 
           <select
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
+            onChange={(e) => {
+              setFilterStatus(e.target.value as StatusFilter);
+              setIsFilter(true);
+            }}
             className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
           >
             <option value="">All Statuses</option>
@@ -304,7 +308,10 @@ export function AdminJobsPage() {
 
           <select
             value={filterJobType}
-            onChange={(e) => setFilterJobType(e.target.value)}
+            onChange={(e) => {
+              setFilterJobType(e.target.value);
+              setIsFilter(true);
+            }}
             className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
           >
             <option value="">All Job Type</option>
