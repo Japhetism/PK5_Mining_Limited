@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 import {
   getApplicationById,
   updateJobApplicationStatus,
@@ -29,6 +30,7 @@ function useApplicationDetailsViewModel() {
   const updateMutation = useMutation({
     mutationFn: (newStatus: string) => {
       if (!applicationId) {
+        toast.error("Invalid application ID");
         throw new Error("Invalid application ID");
       }
       const payload = {
@@ -55,6 +57,7 @@ function useApplicationDetailsViewModel() {
         "An error occurred while updating the job. Please try again.";
 
       setError(message);
+      toast.error(message);
     },
   });
 
