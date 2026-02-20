@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { toast } from "sonner";
 
 function useContactViewModel() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,7 +17,6 @@ function useContactViewModel() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
     setSubmitted(false);
     try {
       const res = await fetch("https://pk5-api.vercel.app/api/contact", {
@@ -41,7 +40,8 @@ function useContactViewModel() {
         message: "",
       });
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      const errorMessage = err.message || "Failed to send message";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,6 @@ function useContactViewModel() {
     formData,
     submitted,
     loading,
-    error,
     focusedField,
     setFocusedField,
     setFormData,

@@ -32,7 +32,6 @@ export function Contact() {
     formData,
     submitted,
     loading,
-    error,
     focusedField,
     handleChange,
     handleSubmit,
