@@ -6,7 +6,7 @@ import { AnimatedSection } from "@/app/components/animated-section";
 import { ApplicationErrors, JobDto } from "../interfaces";
 import AnimatedDots from "../components/ui/animated-dots";
 import { Badge } from "../components/ui/badge";
-import { capitalizeFirstLetter } from "../utils/helper";
+import { capitalizeFirstLetter, formatDate } from "../utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getJobById } from "../api/jobs";
 import { applyToJob } from "../api/applications";
@@ -223,11 +223,7 @@ export function JobDetailsPage() {
                   <div>
                     <span className="text-gray-300">
                       Closes{" "}
-                      {new Date(job.dT_Expiry).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
+                      {formatDate(job.dT_Expiry)}
                     </span>
                   </div>
                 )}

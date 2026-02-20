@@ -61,13 +61,19 @@ export function cleanParams<T extends Record<string, any>>(obj: T) {
   // removes "", undefined, null
   return Object.fromEntries(
     Object.entries(obj).filter(
-      ([, v]) => v !== "" && v !== undefined && v !== null
-    )
+      ([, v]) => v !== "" && v !== undefined && v !== null,
+    ),
   ) as Partial<T>;
 }
-
 
 export function toNumber(v: string | null, fallback: number) {
   const n = Number(v);
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
+
+export const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
