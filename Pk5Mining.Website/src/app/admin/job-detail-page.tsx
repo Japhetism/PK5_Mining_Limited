@@ -339,8 +339,8 @@ export function AdminJobDetailPage() {
         isOpen={isViewerOpen}
         onClose={() => setIsViewerOpen(false)}
         resume={selectedApplicant?.resume ?? ""}
-        firstName={selectedApplicant?.firstName}
-        lastName={selectedApplicant?.lastName}
+        firstName={selectedApplicant?.firstName ?? ""}
+        lastName={selectedApplicant?.lastName ?? ""}
       />
     </div>
   );

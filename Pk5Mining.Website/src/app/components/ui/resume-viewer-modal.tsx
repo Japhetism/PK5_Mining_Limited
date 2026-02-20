@@ -5,25 +5,17 @@ import { X } from "lucide-react";
 type ResumeViewerModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
-  subtitle?: string;
   resume: string;
-  firstName?: string;
-  lastName?: string;
-  maxWidth?: string; // e.g. "max-w-5xl"
-  heightClass?: string; // e.g. "h-[85vh]"
+  firstName: string;
+  lastName: string;
 };
 
 export function ResumeViewerModal({
   isOpen,
   onClose,
-  title,
-  subtitle,
   resume,
   firstName,
   lastName,
-  maxWidth = "max-w-3xl",
-  heightClass = "h-auto",
 }: ResumeViewerModalProps) {
   const [resumeLoading, setResumeLoading] = useState(true);
 
@@ -33,12 +25,6 @@ export function ResumeViewerModal({
     if (url.startsWith("http://") || url.startsWith("https://")) return url;
     return `https://${url}`;
   }, [resume]);
-
-  const resumeFileName = useMemo(() => {
-    const first = firstName ?? "candidate";
-    const last = lastName ?? "resume";
-    return `${first}-${last}-resume.pdf`;
-  }, [firstName, lastName]);
 
   // ESC to close
   useEffect(() => {

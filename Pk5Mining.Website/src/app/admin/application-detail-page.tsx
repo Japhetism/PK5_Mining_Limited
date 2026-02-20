@@ -20,6 +20,7 @@ import { getApplicationById } from "../api/applications";
 import { ApplicationDetailsSkeleton } from "../components/ui/application-details-loader";
 import { downloadFile } from "../utils/helper";
 import { ConfirmModal } from "../components/ui/confirm-modal";
+import { ResumeViewerModal } from "../components/ui/resume-viewer-modal";
 
 const statuses = [
   { value: "new", label: "New" },
@@ -246,72 +247,24 @@ export function AdminApplicationDetailPage() {
             </span>
             <span>
               Submitted on{" "}
-              {app?.dT_Created && new Date(app?.dT_Created).toLocaleString()}
+              {app?.dT_Created && new Date(app?.dT_Created).toLocaleString("en-GB")}
             </span>
             <span>
               Updated on{" "}
-              {app?.dT_Modified && new Date(app?.dT_Modified).toLocaleString()}
+              {app?.dT_Modified && new Date(app?.dT_Modified).toLocaleString("en-GB")}
             </span>
           </p>
         </div>
       </div>
 
       {/* Resume Viewer Modal (in-app) */}
-      {isViewerOpen && resumeUrl && (
-        <div
-          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 sm:p-6"
-          onMouseDown={() => setIsViewerOpen(false)}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.15 }}
-            className="relative w-full max-w-5xl h-[85vh] bg-[#0f0f0f] rounded-xl border border-gray-800 shadow-xl overflow-hidden"
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            {/* Modal header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-gray-200 truncate">
-                  {app?.firstName} {app?.lastName} — Resume
-                </p>
-                <p className="text-xs text-gray-500">Press ESC to close</p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsViewerOpen(false)}
-                  className="p-2 rounded-md hover:bg-white/10 text-gray-300"
-                  title="Close"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Viewer */}
-            <div className="relative w-full h-[calc(85vh-56px)]">
-              {/* Loader overlay */}
-              {resumeLoading && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="h-9 w-9 rounded-full border-2 border-gray-500 border-t-transparent animate-spin" />
-                    <p className="text-xs text-gray-300">Loading resume...</p>
-                  </div>
-                </div>
-              )}
-
-              <iframe
-                src={resumeUrl}
-                title="Resume Viewer"
-                className="w-full h-full bg-black"
-                onLoad={() => setResumeLoading(false)}
-              />
-            </div>
-          </motion.div>
-        </div>
-      )}
+      <ResumeViewerModal
+        isOpen={isViewerOpen}
+        onClose={() => setIsViewerOpen(false)}
+        resume={app?.resume ?? ""}
+        firstName={app?.firstName ?? ""}
+        lastName={app?.lastName ?? ""}
+      />
 
       <ConfirmModal
         open={confirmOpen}
