@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
@@ -7,47 +6,26 @@ import {
   Briefcase,
   MapPin,
   Clock,
-  ChevronRight,
   LocateIcon,
 } from "lucide-react";
 import { benefits } from "@/app/fixtures";
-import { IBenefit, IJob, JobDto } from "@/app/interfaces";
+import { IBenefit, JobDto } from "@/app/interfaces";
 import { capitalizeFirstLetter } from "@/app/utils/helper";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getActiveJobs, getJobs } from "@/app/api/jobs";
 import { JobCardLoader } from "@/app/components/ui/job-card-loader";
+import useCareersViewModel from "./viewmodel";
 
 export function Careers() {
-  const queryClient = useQueryClient();
-  const [expandedJob, setExpandedJob] = useState<number | null>(null);
-  const openPositionsRef = useRef<HTMLElement | null>(null);
-  const { hash } = useLocation();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["jobs"],
-    queryFn: getActiveJobs,
-  });
-
-  const jobs: JobDto[] = data ?? [];
-
-  const scrollToOpenPositions = () => {
-    openPositionsRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
-
-  useEffect(() => {
-    if (hash === "#open-positions") {
-      // wait a tick so layout/sections mount first
-      requestAnimationFrame(() => {
-        openPositionsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      });
-    }
-  }, [hash]);
+  const {
+    jobs,
+    isLoading,
+    error,
+    expandedJob,
+    queryClient,
+    openPositionsRef,
+    scrollToOpenPositions,
+    setExpandedJob,
+  } = useCareersViewModel();
 
   return (
     <div className="pt-24">

@@ -1,149 +1,38 @@
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { MapPin, Clock, Linkedin, LocateIcon, ArrowLeft } from "lucide-react";
 import { AnimatedSection } from "@/app/components/animated-section";
-import { ApplicationErrors, JobDto } from "@/app/interfaces";
 import AnimatedDots from "@/app/components/ui/animated-dots";
 import { Badge } from "@/app/components/ui/badge";
 import { capitalizeFirstLetter, formatDate } from "@/app/utils/helper";
-import { getJobById } from "@/app/api/jobs";
-import { applyToJob } from "@/app/api/applications";
 import { JobDetailsLoader } from "@/app/components/ui/job-details-loader";
 import {
   isValidEmail,
   isValidLinkedIn,
   isValidName,
-  isValidPhone,
   isValidPhoneForCountry,
-  validateApplication,
 } from "@/app/utils/validator";
 import { ApplicationSubmitted } from "@/app/components/ui/application-submitted";
-
-const countries = [
-  "Nigeria",
-  "United States",
-  "United Kingdom",
-  "Canada",
-  "South Africa",
-  "Tanzania",
-  "Ghana",
-  "Kenya",
-  "United Arab Emirates",
-  "Other",
-];
-
-const defaultFormData = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  country: "",
-  phone: "",
-  linkedinUrl: "",
-};
+import { countries } from "@/app/constants";
+import useJobDetailsViewModel from "./viewmodel";
 
 export function JobDetails() {
-  const { jobId } = useParams<{ jobId: string }>();
-
   const {
-    data,
+    job,
     isLoading,
     isError,
-    error: fetchError,
-  } = useQuery({
-    queryKey: ["jobs", jobId],
-    queryFn: () => getJobById(jobId as string),
-    enabled: !!jobId,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const mutation = useMutation({
-    mutationFn: (fd: FormData) => applyToJob(fd),
-    onSuccess: () => {
-      console.log("Application submitted");
-      setFormData(defaultFormData);
-      setSubmitted(true);
-      setLoading(false);
-    },
-    onError: (error) => {
-      console.error(error);
-      setLoading(false);
-    },
-  });
-
-  const job: JobDto | undefined = data;
-
-  const [formData, setFormData] = useState(defaultFormData);
-  const [fieldErrors, setFieldErrors] = useState<ApplicationErrors>({});
-
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      setResumeFile(null);
-      return;
-    }
-
-    const maxSizeBytes = 2 * 1024 * 1024; // 2MB
-    if (file.size > maxSizeBytes) {
-      setError("Resume file size must be 2MB or less.");
-      setResumeFile(null);
-      return;
-    }
-
-    console.log("file is ", file);
-
-    setError("");
-    setResumeFile(file);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSubmitted(false);
-
-    if (!job?.id || !job?.title) {
-      setError("Job details are missing. Please refresh and try again.");
-      return;
-    }
-
-    const errors = validateApplication(formData, resumeFile);
-
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
-      return;
-    }
-
-    setFieldErrors({});
-    setLoading(true);
-
-    if (resumeFile) {
-      const fd = new FormData();
-      fd.append("JobId", String(job.id));
-      fd.append("FirstName", formData.firstName);
-      fd.append("LastName", formData.lastName);
-      fd.append("Email", formData.email);
-      fd.append("PhoneNumber", formData.phone);
-      fd.append("Country", formData.country);
-      fd.append("LinkedIn", formData.linkedinUrl);
-      fd.append("ResumeFile", resumeFile, resumeFile.name);
-      fd.append("status", "new");
-
-      mutation.mutate(fd);
-    }
-  };
+    fetchError,
+    formData,
+    fieldErrors,
+    loading,
+    submitted,
+    error,
+    handleChange,
+    handleFileChange,
+    handleSubmit,
+    setFormData,
+    setFieldErrors,
+  } = useJobDetailsViewModel();
 
   if (isLoading) {
     return <JobDetailsLoader />;
@@ -223,8 +112,7 @@ export function JobDetails() {
                 {job.dT_Expiry && (
                   <div>
                     <span className="text-gray-300">
-                      Closes{" "}
-                      {formatDate(job.dT_Expiry)}
+                      Closes {formatDate(job.dT_Expiry)}
                     </span>
                   </div>
                 )}

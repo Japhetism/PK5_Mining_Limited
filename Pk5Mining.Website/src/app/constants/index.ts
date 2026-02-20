@@ -17,3 +17,25 @@ export const statusOptions = [
   { label: "Open", value: "open" },
   { label: "Closed", value: "closed" },
 ] as const;
+
+export const countries = [
+  "Nigeria",
+  "United States",
+  "United Kingdom",
+  "Canada",
+  "South Africa",
+  "Tanzania",
+  "Ghana",
+  "Kenya",
+  "United Arab Emirates",
+  "Other",
+] as const;
+
+export const defaultFormData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  country: "",
+  phone: "",
+  linkedinUrl: "",
+} as const;

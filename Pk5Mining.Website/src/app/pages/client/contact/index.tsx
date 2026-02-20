@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { motion } from "motion/react";
 import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import LocationsMap from "@/app/components/ui/locationsMap";
 import AnimatedDots from "@/app/components/ui/animated-dots";
 import { email, locations, telephone } from "@/app/fixtures";
+import useContactViewModel from "./viewmodel";
 
 const actualLocations = locations.map((loc) => loc.actualAddress);
 const displayLocations = locations.map((loc) => loc.displayAddress);
@@ -28,60 +28,16 @@ const contactInfo = [
 ];
 
 export function Contact() {
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    subject: "",
-    message: "",
-  });
-
-  const [focusedField, setFocusedField] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSubmitted(false);
-    try {
-      const res = await fetch("https://pk5-api.vercel.app/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to send message");
-      }
-
-      setSubmitted(true);
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        subject: "",
-        message: "",
-      });
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
+  const {
+    formData,
+    submitted,
+    loading,
+    error,
+    focusedField,
+    handleChange,
+    handleSubmit,
+    setFocusedField,
+  } = useContactViewModel();
   return (
     <div className="pt-24">
       {/* Hero */}
