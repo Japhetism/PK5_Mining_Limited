@@ -15,12 +15,14 @@ import {
   SaveOff,
   X,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { getApplicationById } from "../api/applications";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getApplicationById, updateJobApplicationStatus } from "../api/applications";
 import { ApplicationDetailsSkeleton } from "../components/ui/application-details-loader";
 import { downloadFile } from "../utils/helper";
 import { ConfirmModal } from "../components/ui/confirm-modal";
 import { ResumeViewerModal } from "../components/ui/resume-viewer-modal";
+import { ApplicationStatusPill } from "./applications-page";
+import { ApiError } from "../interfaces";
 
 const statuses = [
   { value: "new", label: "New" },
@@ -31,13 +33,45 @@ const statuses = [
 ] as const;
 
 export function AdminApplicationDetailPage() {
+  const queryClient = useQueryClient();
   const { applicationId } = useParams<{ applicationId: string }>();
-
+  const [error, setError] = useState<string | null>(null);
+  
   const { data, isLoading, isError } = useQuery({
     queryKey: ["applications", applicationId],
     queryFn: () => getApplicationById(applicationId as string),
     enabled: !!applicationId,
     staleTime: 5 * 60 * 1000,
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (newStatus: string) => {
+      if (!applicationId) {
+        throw new Error("Invalid application ID");
+      }
+      const payload = {
+        id: parseInt(applicationId, 10),
+        status: newStatus,
+      }
+      return updateJobApplicationStatus(payload);
+    },
+    onSuccess: () => {
+      setUpdating(false);
+      setEditStatus(false);
+      setConfirmOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["applications", applicationId] });
+    },
+    onError: (err: unknown) => {
+      console.error(err);
+      setUpdating(false);
+
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error ? err.message : undefined) ??
+        "An error occurred while updating the job. Please try again.";
+
+      setError(message);
+    },
   });
 
   const app = data ?? undefined;
@@ -82,8 +116,13 @@ export function AdminApplicationDetailPage() {
   }, [isViewerOpen, resumeUrl]);
 
   const handleUpdateStatus = () => {
-    setConfirmOpen(false);
-    setEditStatus(false);
+    if (!selectedStatus) {
+      setError("Please select a status");
+      return;
+    }
+
+    setUpdating(true);
+    updateMutation.mutate(selectedStatus);
   };
 
   if (!app && !isLoading) {
@@ -114,27 +153,32 @@ export function AdminApplicationDetailPage() {
         </button>
 
         <div className="flex items-center gap-2">
-          <motion.select
-            defaultValue={app?.status}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            disabled={!editStatus}
-            className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
-          >
-            {statuses.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
-            ))}
-          </motion.select>
+          {editStatus ? (
+            <motion.select
+              value={selectedStatus ?? app?.status}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
+            >
+              {statuses.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
+            </motion.select>
+          ) : (
+            <span className="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-gray-800">
+              <ApplicationStatusPill status={app?.status ?? "new"} />
+            </span>
+          )}
           {!editStatus && (
             <motion.button
               onClick={() => setEditStatus(true)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
+              title="Edit"
             >
               <Edit2 className="w-3 h-3 text-gray-300" />
-              Edit Status
             </motion.button>
           )}
           {editStatus && (
@@ -144,18 +188,18 @@ export function AdminApplicationDetailPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
+                title="Save"
               >
                 <Save className="w-3 h-3 text-gray-300" />
-                Update Status
               </motion.button>
               <motion.button
                 onClick={() => setEditStatus(false)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-black text-xs font-semibold hover:bg-red-700"
+                title="Cancel"
               >
                 <SaveOff className="w-3 h-3 text-gray-300" />
-                Cancel
               </motion.button>
             </div>
           )}
@@ -247,11 +291,13 @@ export function AdminApplicationDetailPage() {
             </span>
             <span>
               Submitted on{" "}
-              {app?.dT_Created && new Date(app?.dT_Created).toLocaleString("en-GB")}
+              {app?.dT_Created &&
+                new Date(app?.dT_Created).toLocaleString("en-GB")}
             </span>
             <span>
               Updated on{" "}
-              {app?.dT_Modified && new Date(app?.dT_Modified).toLocaleString("en-GB")}
+              {app?.dT_Modified &&
+                new Date(app?.dT_Modified).toLocaleString("en-GB")}
             </span>
           </p>
         </div>
