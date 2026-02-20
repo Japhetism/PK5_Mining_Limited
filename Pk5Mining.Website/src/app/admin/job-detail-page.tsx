@@ -11,7 +11,7 @@ import {
   FileText,
   Eye,
 } from "lucide-react";
-import { capitalizeFirstLetter, cleanParams } from "../utils/helper";
+import { capitalizeFirstLetter, cleanParams, formatDate } from "../utils/helper";
 import { useQuery } from "@tanstack/react-query";
 import { getJobById } from "../api/jobs";
 import { Badge } from "../components/ui/badge";
@@ -180,7 +180,7 @@ export function AdminJobDetailPage() {
                   Posted
                 </p>
                 <p className="mb-3">
-                  {new Date(job.dT_Created).toLocaleDateString()}
+                  {formatDate(job.dT_Created)}
                 </p>
               </>
             )}
@@ -191,7 +191,7 @@ export function AdminJobDetailPage() {
                   Updated
                 </p>
                 <p className="mb-3">
-                  {new Date(job.dT_Modified).toLocaleDateString()}
+                  {formatDate(job.dT_Modified)}
                 </p>
               </>
             )}
@@ -205,12 +205,12 @@ export function AdminJobDetailPage() {
 
                 return (
                   <>
-                    <p className="text-xs font-semibold text-gray-400 mb-1">
+                    <p title={isExpired ? formatDate(job.dT_Expiry) : ''} className="text-xs font-semibold text-gray-400 mb-1">
                       {isExpired ? "Closed" : "Closing on"}
                     </p>
 
                     {!isExpired && (
-                      <p className="mb-3">{expiryDate.toLocaleDateString()}</p>
+                      <p className="mb-3">{formatDate(job.dT_Expiry)}</p>
                     )}
                   </>
                 );

@@ -218,7 +218,7 @@ export function AdminJobsPage() {
             to={`/admin/jobs/${job.id}`}
             title="View job details"
             onClick={() => {
-              queryClient.setQueryData(["job", String(job.id)], job);
+              queryClient.setQueryData(["jobs", String(job.id)], job);
             }}
           >
             <Eye className="w-4 h-4 inline text-gray-300" />

@@ -3,7 +3,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { Save, ArrowLeft } from "lucide-react";
 import { RichTextEditor } from "./rich-text-editor";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createJob, getJobById, updateJob } from "../api/jobs";
 import {
   ApiError,
@@ -18,6 +18,7 @@ import { jobTypes, workArrangements } from "../constants";
 
 export function AdminJobEditPage() {
   const { jobId } = useParams<{ jobId: string }>();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const {
@@ -63,9 +64,10 @@ export function AdminJobEditPage() {
       }
       return updateJob(existing.id, payload);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setLoading(false);
-      navigate(`/admin/jobs/${jobId}`);
+      queryClient.setQueryData(["jobs", String(data?.id)], data);
+      navigate(`/admin/jobs/${data?.id}`);
     },
     onError: (err: unknown) => {
       console.error(err);

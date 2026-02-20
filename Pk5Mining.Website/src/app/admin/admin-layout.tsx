@@ -24,7 +24,7 @@ export function AdminLayout() {
     <div className="h-screen bg-[#0f0f0f] text-white flex flex-col overflow-hidden">
       {/* HEADER */}
       <div className="border-b border-gray-800 bg-[#0f0f0f]/95 backdrop-blur shrink-0">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="w-full px-6 py-4 flex items-center justify-between">
           <Link to="/admin" className="flex items-center gap-2">
             <img
               src={Logo}
@@ -50,49 +50,51 @@ export function AdminLayout() {
 
       {/* BODY */}
       <div className="flex-1 overflow-hidden">
-        <div className="container mx-auto px-6 py-6 h-full grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
-          {/* SIDEBAR */}
-          <aside className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4 h-full flex flex-col justify-between">
-            {/* TOP NAV LINKS */}
-            <nav className="space-y-1">
-              {nav.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={(item as any).end}
-                  className={({ isActive }) =>
-                    [
-                      "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                      isActive
-                        ? "bg-[#c89b3c]/10 text-[#c89b3c] border border-[#c89b3c]/30"
-                        : "text-gray-300 hover:bg-white/5",
-                    ].join(" ")
-                  }
+        <div className="w-full h-full">
+          <div className="h-full grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 overflow-hidden">
+            {/* SIDEBAR (scrollable) */}
+            <aside className="h-full bg-[#1a1a1a] border-r border-gray-800 p-4 flex flex-col overflow-hidden">
+              {/* NAV scrolls when it grows */}
+              <nav className="flex-1 overflow-y-auto space-y-1 pr-1">
+                {nav.map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={(item as any).end}
+                    className={({ isActive }) =>
+                      [
+                        "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                        isActive
+                          ? "bg-[#c89b3c]/10 text-[#c89b3c] border border-[#c89b3c]/30"
+                          : "text-gray-300 hover:bg-white/5",
+                      ].join(" ")
+                    }
+                  >
+                    <item.icon className="w-4 h-4" />
+                    {item.label}
+                  </NavLink>
+                ))}
+              </nav>
+
+              {/* LOGOUT pinned at bottom */}
+              <div className="mt-4 pt-4 border-t border-gray-800">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={onLogout}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-red-500/10 hover:text-red-400 transition-colors"
                 >
-                  <item.icon className="w-4 h-4" />
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </motion.button>
+              </div>
+            </aside>
 
-            {/* LOGOUT AT BOTTOM */}
-            <div className="pt-6 border-t border-gray-800">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={onLogout}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-red-500/10 hover:text-red-400 transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </motion.button>
-            </div>
-          </aside>
-
-          {/* MAIN CONTENT (ONLY THIS SCROLLS) */}
-          <main className="min-w-0 h-full overflow-y-auto">
-            <Outlet />
-          </main>
+            {/* MAIN CONTENT (only this scrolls) */}
+            <main className="min-w-0 h-full overflow-y-auto px-6 py-6 ">
+              <Outlet />
+            </main>
+          </div>
         </div>
       </div>
     </div>
