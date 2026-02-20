@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { StatCounter } from "@/app/components/stat-counter";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
-import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { features, minerals, slideShowContent } from "../fixtures";
-import { IFeature, IMineral } from "../interfaces";
+import { features, minerals, slideShowContent } from "@/app/fixtures";
+import { IFeature, IMineral } from "@/app/interfaces";
 
 const HERO_SLIDE_DURATION = 6000;
 
-export function HomePage() {
+export function Home() {
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {

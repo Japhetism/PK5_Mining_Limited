@@ -1,12 +1,12 @@
 import { motion } from 'motion/react';
-import { AnimatedSection } from '@/app/components/animated-section';
-import { StatCounter } from '@/app/components/stat-counter';
 import { TrendingUp, Download, FileText } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { highlights, productionData, reports, revenueData } from '../fixtures';
-import { IHighlight, IReport } from '../interfaces';
+import { AnimatedSection } from '@/app/components/animated-section';
+import { StatCounter } from '@/app/components/stat-counter';
+import { highlights, productionData, reports, revenueData } from '@/app/fixtures';
+import { IHighlight, IReport } from '@/app/interfaces';
 
-export function InvestorRelationsPage() {
+export function InvestorRelations() {
 
   const downloadReport = (doc?: string, fileName?: string) => {
     if (!doc) return;

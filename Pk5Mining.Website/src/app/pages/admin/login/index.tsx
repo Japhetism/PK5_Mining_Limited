@@ -1,53 +1,17 @@
-import { useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { Lock, User } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "../auth/AuthContext";
-import { ApiError } from "../interfaces";
+import useLoginViewModel from "./viewmodel";
 
-export function AdminLoginPage() {
-  const navigate = useNavigate();
-  const location = useLocation() as any;
-  const { login: authLogin } = useAuth();
-
-  const redirectTo = useMemo(() => {
-    const from = location?.state?.from?.pathname as string | undefined;
-    return from && from.startsWith("/admin") ? from : "/admin";
-  }, [location?.state?.from?.pathname]);
-
-  const mutation = useMutation({
-    mutationFn: (payload: { username: string; password: string }) =>
-      authLogin(payload.username, payload.password),
-    onSuccess: () => {
-      setLoading(false);
-      navigate(redirectTo, { replace: true });
-    },
-    onError: (err) => {
-      console.error("Login failed", err);
-      setLoading(false);
-
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error ? err.message : undefined) ??
-        "An error occurred while logging in. Please try again.";
-
-      setError(message);
-    },
-  });
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    mutation.mutate({ username, password });
-  };
+export function Login() {
+  const {
+    username,
+    password,
+    error,
+    loading,
+    setUsername,
+    setPassword,
+    onSubmit,
+  } = useLoginViewModel();
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center px-6">

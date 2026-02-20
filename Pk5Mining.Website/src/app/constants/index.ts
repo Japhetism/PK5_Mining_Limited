@@ -12,3 +12,8 @@ export const workArrangements = [
   { value: "hybrid", label: "Hybrid" },
   { value: "remote", label: "Remote" },
 ] as const;
+
+export const statusOptions = [
+  { label: "Open", value: "open" },
+  { label: "Closed", value: "closed" },
+] as const;

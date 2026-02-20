@@ -269,3 +269,13 @@ export type ApplicationsQuery = {
 export type ApplicationResponsePayload = {
   data: JobApplicationDto[];
 } & PaginationInfo;
+
+export type StatusFilter = "all" | "open" | "closed";
+
+export type ApplicationStatusFilter =
+  | "all"
+  | "new"
+  | "in_review"
+  | "shortlisted"
+  | "rejected"
+  | "hired";

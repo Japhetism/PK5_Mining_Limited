@@ -1,11 +1,11 @@
+import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'motion/react';
+import { Leaf } from 'lucide-react';
+import * as Progress from '@radix-ui/react-progress';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import { Leaf } from 'lucide-react';
-import { useRef, useEffect, useState } from 'react';
-import * as Progress from '@radix-ui/react-progress';
-import { esgMetrics, initiatives } from '../fixtures';
-import { IESGMetric, IInitiative } from '../interfaces';
+import { esgMetrics, initiatives } from '@/app/fixtures';
+import { IESGMetric, IInitiative } from '@/app/interfaces';
 
 function AnimatedProgressBar({ value, delay = 0 }: { value: number; delay?: number }) {
   const [progress, setProgress] = useState(0);
@@ -34,7 +34,7 @@ function AnimatedProgressBar({ value, delay = 0 }: { value: number; delay?: numb
   );
 }
 
-export function SustainabilityPage() {
+export function Sustainability() {
   return (
     <div className="pt-24">
       {/* Hero */}

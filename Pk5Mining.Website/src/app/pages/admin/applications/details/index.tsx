@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import React from "react";
+import { Navigate } from "react-router-dom";
 import { motion } from "motion/react";
 import {
   ArrowLeft,
@@ -15,14 +15,12 @@ import {
   SaveOff,
   X,
 } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getApplicationById, updateJobApplicationStatus } from "../api/applications";
-import { ApplicationDetailsSkeleton } from "../components/ui/application-details-loader";
-import { downloadFile } from "../utils/helper";
-import { ConfirmModal } from "../components/ui/confirm-modal";
-import { ResumeViewerModal } from "../components/ui/resume-viewer-modal";
-import { ApplicationStatusPill } from "./applications-page";
-import { ApiError } from "../interfaces";
+import { ApplicationDetailsSkeleton } from "@/app/components/ui/application-details-loader";
+import { downloadFile } from "@/app/utils/helper";
+import { ConfirmModal } from "@/app/components/ui/confirm-modal";
+import { ResumeViewerModal } from "@/app/components/ui/resume-viewer-modal";
+import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
+import useApplicationDetailsViewModel from "./viewmodel";
 
 const statuses = [
   { value: "new", label: "New" },
@@ -32,99 +30,27 @@ const statuses = [
   { value: "hired", label: "Hired" },
 ] as const;
 
-export function AdminApplicationDetailPage() {
-  const queryClient = useQueryClient();
-  const { applicationId } = useParams<{ applicationId: string }>();
-  const [error, setError] = useState<string | null>(null);
-  
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["applications", applicationId],
-    queryFn: () => getApplicationById(applicationId as string),
-    enabled: !!applicationId,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: (newStatus: string) => {
-      if (!applicationId) {
-        throw new Error("Invalid application ID");
-      }
-      const payload = {
-        id: parseInt(applicationId, 10),
-        status: newStatus,
-      }
-      return updateJobApplicationStatus(payload);
-    },
-    onSuccess: () => {
-      setUpdating(false);
-      setEditStatus(false);
-      setConfirmOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["applications", applicationId] });
-    },
-    onError: (err: unknown) => {
-      console.error(err);
-      setUpdating(false);
-
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error ? err.message : undefined) ??
-        "An error occurred while updating the job. Please try again.";
-
-      setError(message);
-    },
-  });
-
-  const app = data ?? undefined;
-
-  const [isViewerOpen, setIsViewerOpen] = useState(false);
-
-  // loader for iframe
-  const [resumeLoading, setResumeLoading] = useState(false);
-  const [editStatus, setEditStatus] = useState<boolean>(false);
-  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-  const [updating, setUpdating] = useState<boolean>(false);
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-
-  const resumeUrl = useMemo(() => {
-    const url = app?.resume?.trim();
-    if (!url) return null;
-    if (url.startsWith("http://") || url.startsWith("https://")) return url;
-    return `https://${url}`;
-  }, [app?.resume]);
-
-  const resumeFileName = useMemo(() => {
-    const first = app?.firstName ?? "candidate";
-    const last = app?.lastName ?? "resume";
-    return `${first}-${last}-resume.pdf`;
-  }, [app?.firstName, app?.lastName]);
-
-  // Close modal on ESC
-  useEffect(() => {
-    if (!isViewerOpen) return;
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsViewerOpen(false);
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isViewerOpen]);
-
-  // whenever modal opens, show loader until iframe fires onLoad
-  useEffect(() => {
-    if (isViewerOpen && resumeUrl) setResumeLoading(true);
-  }, [isViewerOpen, resumeUrl]);
-
-  const handleUpdateStatus = () => {
-    if (!selectedStatus) {
-      setError("Please select a status");
-      return;
-    }
-
-    setUpdating(true);
-    updateMutation.mutate(selectedStatus);
-  };
-
+export function ApplicationDetail() {
+  const {
+    app,
+    isLoading,
+    isError,
+    editStatus,
+    setEditStatus,
+    selectedStatus,
+    setSelectedStatus,
+    confirmOpen,
+    setConfirmOpen,
+    resumeUrl,
+    resumeFileName,
+    isViewerOpen,
+    setIsViewerOpen,
+    resumeLoading,
+    setResumeLoading,
+    error,
+    handleUpdateStatus,
+    updating,
+  } = useApplicationDetailsViewModel();
   if (!app && !isLoading) {
     return <Navigate to="/admin/applications" replace />;
   }

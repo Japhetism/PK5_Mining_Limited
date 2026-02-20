@@ -2,10 +2,10 @@ import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
 import { Target, Eye, Award, Users } from 'lucide-react';
-import { leadership, timeline } from '../fixtures';
-import { ILeader, ITimelineEvent } from '../interfaces';
+import { leadership, timeline } from '@/app/fixtures';
+import { ILeader, ITimelineEvent } from '@/app/interfaces';
 
-export function AboutPage() {
+export function About() {
   return (
     <div className="pt-24">
       {/* Hero */}

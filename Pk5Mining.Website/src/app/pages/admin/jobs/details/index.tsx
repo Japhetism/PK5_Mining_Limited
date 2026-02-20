@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { motion } from "motion/react";
 import {
   ArrowLeft,
@@ -12,77 +11,35 @@ import {
   Eye,
   Linkedin,
 } from "lucide-react";
-import {
-  capitalizeFirstLetter,
-  cleanParams,
-  formatDate,
-} from "../utils/helper";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getJobById } from "../api/jobs";
-import { Badge } from "../components/ui/badge";
-import { JobDetailsSkeleton } from "../components/ui/job-details-skeleton";
-import { getJobApplicationsByJobId } from "../api/applications";
-import {
-  PaginatedCard,
-  StatusPill,
-} from "../components/ui/applicant-details-card";
-import { ApplicationsByJobIdQuery, JobApplicationDto } from "../interfaces";
-import { ApplicationStatusPill } from "./applications-page";
-import { ResumeViewerModal } from "../components/ui/resume-viewer-modal";
+import { capitalizeFirstLetter, formatDate } from "@/app/utils/helper";
+import { Badge } from "@/app/components/ui/badge";
+import { JobDetailsSkeleton } from "@/app/components/ui/job-details-skeleton";
+import { PaginatedCard } from "@/app/components/ui/applicant-details-card";
+import { JobApplicationDto } from "@/app/interfaces";
+import { ResumeViewerModal } from "@/app/components/ui/resume-viewer-modal";
+import useJobDetailsViewModel from "./viewmodel";
+import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
 
-export function AdminJobDetailPage() {
-  const queryClient = useQueryClient();
-  const { jobId } = useParams<{ jobId: string }>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
-  const [isViewerOpen, setIsViewerOpen] = useState(false);
-  const [selectedApplicant, setSelectedApplicant] = useState<JobApplicationDto | null>(null);
-
-  const queryParams: ApplicationsByJobIdQuery = useMemo(() => {
-    const raw: ApplicationsByJobIdQuery = {
-      pageNumber,
-      pageSize,
-    };
-    return cleanParams(raw) as ApplicationsByJobIdQuery;
-  }, [pageNumber, pageSize, jobId]);
-
+export function JobDetail() {
   const {
-    data,
+    job,
     isLoading,
     isError,
-    error: fetchError,
-  } = useQuery({
-    queryKey: ["jobs", jobId],
-    queryFn: () => getJobById(jobId as string),
-    enabled: !!jobId,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const {
-    data: jobApplications,
-    isLoading: jobApplicationsLoading,
-    isError: jobApplicationsHasError,
-    error: jobApplicationsFetchError,
-  } = useQuery({
-    queryKey: ["jobApplications", jobId, queryParams],
-    queryFn: () => getJobApplicationsByJobId(jobId as string, queryParams),
-    enabled: !!jobId,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const onChangePage = (next: number) => setPageNumber(next);
-
-  const onChangePageSize = (size: number) => {
-    setPageSize(size);
-    setPageNumber(1);
-  };
-
-  const job = data ?? undefined;
-  const applications: JobApplicationDto[] = jobApplications?.data ?? [];
-  const totalCount = jobApplications?.totalCount ?? 0;
-  const totalPages: number =
-    jobApplications?.totalPages ??
-    Math.ceil((totalCount ?? 0) / (pageSize || 1));
+    applications,
+    jobApplicationsLoading,
+    jobApplicationsHasError,
+    totalCount,
+    pageNumber,
+    pageSize,
+    totalPages,
+    selectedApplicant,
+    queryClient,
+    isViewerOpen,
+    onChangePage,
+    onChangePageSize,
+    setIsViewerOpen,
+    setSelectedApplicant,
+  } = useJobDetailsViewModel();
 
   if (!job && !isLoading) {
     return <Navigate to="/admin/jobs" replace />;

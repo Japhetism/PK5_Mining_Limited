@@ -1,9 +1,9 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { BarChart3, Briefcase, FileText, LogOut } from "lucide-react";
-import { useAuth } from "../auth/AuthContext";
-import { getGreeting } from "../utils/helper";
-import Logo from "../../assets/images/logo.png";
+import { useAuth } from "@/app/context/AuthContext";
+import { getGreeting } from "@/app/utils/helper";
+import Logo from "../../../assets/images/logo.png";
 
 const nav = [
   { to: "/admin", label: "Dashboard", icon: BarChart3, end: true },

@@ -1,20 +1,10 @@
 import { motion } from "motion/react";
 import { BarChart3, Briefcase, FileText, PieChart } from "lucide-react";
+import useDashboardViewModel from "./viewmodel";
 
-export function AdminDashboardPage() {
-  const jobs: any[] = [];
-  const apps: any[] = [];
-
-  const openJobs = jobs?.filter((j) => j.isActive).length;
-  const closedJobs = jobs?.length - openJobs;
-  const totalApps = apps?.length;
-  const newApps = apps?.filter((a) => a.status === "new").length;
-
-  const byJob = jobs.map((job) => ({
-    title: job.title,
-    count: apps.filter((a) => a.jobId === job.id).length,
-  }));
-
+export function Dashboard() {
+  const { openJobs, closedJobs, totalApps, newApps, byJob, jobs, apps } =
+    useDashboardViewModel();
   return (
     <div className="space-y-6">
       <div>
@@ -130,7 +120,9 @@ function StatCard({ icon: Icon, label, value, subtitle, suffix }: StatProps) {
         <p className="text-xs text-gray-400">{label}</p>
         <p className="text-lg font-semibold">
           {value}
-          {suffix ? <span className="text-xs text-gray-400 ml-1">{suffix}</span> : null}
+          {suffix ? (
+            <span className="text-xs text-gray-400 ml-1">{suffix}</span>
+          ) : null}
         </p>
         {subtitle && (
           <p className="text-[11px] text-gray-500 truncate">{subtitle}</p>
@@ -139,4 +131,3 @@ function StatCard({ icon: Icon, label, value, subtitle, suffix }: StatProps) {
     </motion.div>
   );
 }
-

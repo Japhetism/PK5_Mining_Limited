@@ -1,149 +1,43 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { Plus, Eye, Edit2, XCircle, CheckCircle2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getJobs, updateJob } from "../api/jobs";
-import { ApiError, JobDto, JobsQuery, UpdateJobPayload } from "../interfaces";
-import { capitalizeFirstLetter, cleanParams, formatDate, toNumber } from "../utils/helper";
+import { Plus, Eye, XCircle, CheckCircle2 } from "lucide-react";
+import { JobDto, StatusFilter } from "@/app/interfaces";
+import { capitalizeFirstLetter, formatDate } from "@/app/utils/helper";
 import {
   PaginatedTable,
   PaginatedTableColumn,
-} from "../components/ui/paginated-table";
-import { ConfirmModal } from "../components/ui/confirm-modal";
-import { useDebouncedValue } from "../hooks/useDebouncedValue";
-import { jobTypes } from "../constants";
+} from "@/app/components/ui/paginated-table";
+import { ConfirmModal } from "@/app/components/ui/confirm-modal";
+import { jobTypes, statusOptions } from "@/app/constants";
+import useJobListViewModel from "./viewmodel";
 
-type StatusFilter = "all" | "open" | "closed";
-
-const statusOptions = [
-  { label: "Open", value: "open" },
-  { label: "Closed", value: "closed" }
-]
-
-export function AdminJobsPage() {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
-  const [filterJobType, setFilterJobType] = useState<string>("");
-  const [filterDepartment, setFilterDepartment] = useState<string>("");
-  const [filterLocation, setFilterLocation] = useState<string>("");
-  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-  const [selectedJob, setSelectedJob] = useState<JobDto | null>(null);
-  const [isFilter, setIsFilter] = useState<boolean>(false);
-  const [updateError, setUpdateError] = useState<string>("");
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-
-  const [pageNumber, setPageNumber] = useState(() =>
-    toNumber(searchParams.get("pageNumber"), 1),
-  );
-  const [pageSize, setPageSize] = useState(() =>
-    toNumber(searchParams.get("pageSize"), 10),
-  );
-
-  const [filters, setFilters] = useState({
-    department: searchParams.get("department") ?? "",
-    location: searchParams.get("location") ?? "",
-  });
-
-  const debouncedFilters = useDebouncedValue(filters, 400);
-
-  useEffect(() => {
-    setPageNumber(1);
-  }, [debouncedFilters.department, debouncedFilters.location]);
-
-  const queryParams: JobsQuery = useMemo(() => {
-    const raw: JobsQuery = {
-      pageNumber,
-      pageSize,
-      isActive:
-        filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
-      jobType: filterJobType,
-      department: debouncedFilters.department,
-      location: debouncedFilters.location,
-    };
-
-    // clean out empty strings
-    return cleanParams(raw) as JobsQuery;
-  }, [pageNumber, pageSize, debouncedFilters, filterStatus, filterJobType]);
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: [
-      "jobs",
-      queryParams.pageNumber,
-      queryParams.pageSize,
-      queryParams.department ?? "",
-      queryParams.location ?? "",
-      queryParams.isActive ?? "",
-      queryParams.jobType ?? "",
-    ],
-    queryFn: () => getJobs(queryParams),
-    staleTime: 30_000,
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: (payload: UpdateJobPayload) => {
-      if (!selectedJob || !("id" in selectedJob)) {
-        throw new Error("Cannot update: missing job id");
-      }
-      return updateJob(selectedJob.id, payload);
-    },
-    onSuccess: async () => {
-      setIsUpdating(false);
-      setConfirmOpen(false);
-      setSelectedJob(null);
-
-      await queryClient.invalidateQueries({ queryKey: ["jobs"] });
-    },
-    onError: (err: unknown) => {
-      console.error(err);
-      setIsUpdating(false);
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error ? err.message : undefined) ??
-        "An error occurred while updating the job. Please try again.";
-
-      setUpdateError(message);
-    },
-  });
-
-  const onChangePage = (next: number) => setPageNumber(next);
-
-  const onChangePageSize = (size: number) => {
-    setPageSize(size);
-    setPageNumber(1);
-  };
-
-  const updateFilter = (key: keyof typeof filters, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-    setIsFilter(true);
-  };
-
-  const jobs: JobDto[] = data?.data ?? [];
-  const totalCount: number = data?.totalCount ?? 0;
-  const totalPages: number = data?.totalPages ?? 0;
-  
-  const toggleJob = (id: number, isActive: boolean) => {
-    // navigate(`/admin/jobs/${id}/edit`);
-  };
-
-  const handleUpdateStatus = () => {
-    if (!selectedJob) return;
-
-    setUpdateError("");
-    setIsUpdating(true);
-
-    updateMutation.mutate({
-      ...selectedJob,
-      isActive: !selectedJob.isActive,
-      jobType: selectedJob.jobType ?? undefined,
-      workArrangement: selectedJob.workArrangement ?? undefined,
-      briefDescription: selectedJob.briefDescription ?? undefined,
-    });
-  };
+export function JobList() {
+  const {
+    jobs,
+    filters,
+    filterStatus,
+    filterJobType,
+    isLoading,
+    isFilter,
+    pageNumber,
+    pageSize,
+    totalCount,
+    totalPages,
+    error,
+    confirmOpen,
+    selectedJob,
+    isUpdating,
+    queryClient,
+    setConfirmOpen,
+    setSelectedJob,
+    updateFilter,
+    setIsFilter,
+    setFilterStatus,
+    setFilterJobType,
+    onChangePage,
+    onChangePageSize,
+    handleUpdateStatus,
+  } = useJobListViewModel();
 
   const columns: PaginatedTableColumn<JobDto>[] = [
     {
@@ -159,9 +53,7 @@ export function AdminJobsPage() {
           >
             <div className="font-semibold text-[#c89b3c]">{job.title}</div>
           </Link>
-          <div className="text-xs text-gray-500 line-clamp-2">
-            {job.id}
-          </div>
+          <div className="text-xs text-gray-500 line-clamp-2">{job.id}</div>
         </div>
       ),
     },
@@ -205,17 +97,17 @@ export function AdminJobsPage() {
     {
       key: "applicationsCount",
       header: "Applications",
-       render: (job) => job.applicationsCount ?? "0",
+      render: (job) => job.applicationsCount ?? "0",
     },
     {
       key: "applicationsCount",
       header: "Date Added",
-       render: (job) => job.dT_Created ? formatDate(job.dT_Created) : "-",
+      render: (job) => (job.dT_Created ? formatDate(job.dT_Created) : "-"),
     },
     {
       key: "Close Date",
       header: "Close Date",
-       render: (job) => job.dT_Expiry ? formatDate(job.dT_Expiry) : "-",
+      render: (job) => (job.dT_Expiry ? formatDate(job.dT_Expiry) : "-"),
     },
     {
       key: "actions",
@@ -252,7 +144,6 @@ export function AdminJobsPage() {
       ),
     },
   ];
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -331,21 +222,8 @@ export function AdminJobsPage() {
               </option>
             ))}
           </select>
-            
-          </div>
-
-          {/* <div className="flex-1 text-right">
-            {onClearFilters && (
-              <button
-                type="button"
-                onClick={onClearFilters}
-                className="px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5"
-              >
-                Clear
-              </button>
-            )}
-          </div> */}
         </div>
+      </div>
 
       {error ? (
         <div className="text-sm text-red-400">Failed to load jobs.</div>
@@ -354,16 +232,11 @@ export function AdminJobsPage() {
           data={jobs}
           columns={columns}
           isLoading={isLoading}
-          searchValue={search}
           isFilter={isFilter}
-          onSearchChange={setSearch}
-          searchPlaceholder="Search title, dept, location..."
-          statusValue={filterStatus}
-          onStatusChange={(v) => setFilterStatus(v as StatusFilter)}
           emptyTitle="No job openings yet. Click “New job” to create one."
           noResultsTitle="No results found. Try changing your filters."
-          setPageNumber={setPageNumber}
-          setPageSize={setPageSize}
+          setPageNumber={onChangePage}
+          setPageSize={onChangePageSize}
           pageNumber={pageNumber}
           pageSize={pageSize}
           totalCount={totalCount}

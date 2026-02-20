@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
@@ -9,15 +10,14 @@ import {
   ChevronRight,
   LocateIcon,
 } from "lucide-react";
-import { benefits } from "../fixtures";
-import { IBenefit, IJob, JobDto } from "../interfaces";
-import { Link, useLocation } from "react-router-dom";
-import { capitalizeFirstLetter } from "../utils/helper";
+import { benefits } from "@/app/fixtures";
+import { IBenefit, IJob, JobDto } from "@/app/interfaces";
+import { capitalizeFirstLetter } from "@/app/utils/helper";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getActiveJobs, getJobs } from "../api/jobs";
-import { JobCardLoader } from "../components/ui/job-card-loader";
+import { getActiveJobs, getJobs } from "@/app/api/jobs";
+import { JobCardLoader } from "@/app/components/ui/job-card-loader";
 
-export function CareersPage() {
+export function Careers() {
   const queryClient = useQueryClient();
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const openPositionsRef = useRef<HTMLElement | null>(null);

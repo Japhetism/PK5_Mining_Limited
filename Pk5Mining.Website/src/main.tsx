@@ -4,8 +4,8 @@ import "./styles/index.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import App from "./app/App";
-import { AuthProvider } from "./app/auth/AuthContext";
+import { AuthProvider } from "./app/context/AuthContext";
+import { App } from "./app/App";
 
 const queryClient = new QueryClient({
   defaultOptions: {

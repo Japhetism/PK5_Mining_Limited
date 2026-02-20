@@ -1,10 +1,10 @@
-import { motion } from "motion/react";
-import { AnimatedSection } from "@/app/components/animated-section";
-import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
 import { useState } from "react";
-import { email, locations, telephone } from "../fixtures";
-import LocationsMap from "../components/ui/locationsMap";
-import AnimatedDots from "../components/ui/animated-dots";
+import { motion } from "motion/react";
+import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
+import { AnimatedSection } from "@/app/components/animated-section";
+import LocationsMap from "@/app/components/ui/locationsMap";
+import AnimatedDots from "@/app/components/ui/animated-dots";
+import { email, locations, telephone } from "@/app/fixtures";
 
 const actualLocations = locations.map((loc) => loc.actualAddress);
 const displayLocations = locations.map((loc) => loc.displayAddress);
@@ -27,7 +27,7 @@ const contactInfo = [
   },
 ];
 
-export function ContactPage() {
+export function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

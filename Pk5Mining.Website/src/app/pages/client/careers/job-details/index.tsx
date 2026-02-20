@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { MapPin, Clock, Linkedin, LocateIcon, ArrowLeft } from "lucide-react";
 import { AnimatedSection } from "@/app/components/animated-section";
-import { ApplicationErrors, JobDto } from "../interfaces";
-import AnimatedDots from "../components/ui/animated-dots";
-import { Badge } from "../components/ui/badge";
-import { capitalizeFirstLetter, formatDate } from "../utils/helper";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getJobById } from "../api/jobs";
-import { applyToJob } from "../api/applications";
-import { JobDetailsLoader } from "../components/ui/job-details-loader";
+import { ApplicationErrors, JobDto } from "@/app/interfaces";
+import AnimatedDots from "@/app/components/ui/animated-dots";
+import { Badge } from "@/app/components/ui/badge";
+import { capitalizeFirstLetter, formatDate } from "@/app/utils/helper";
+import { getJobById } from "@/app/api/jobs";
+import { applyToJob } from "@/app/api/applications";
+import { JobDetailsLoader } from "@/app/components/ui/job-details-loader";
 import {
   isValidEmail,
   isValidLinkedIn,
@@ -18,8 +18,8 @@ import {
   isValidPhone,
   isValidPhoneForCountry,
   validateApplication,
-} from "../utils/validator";
-import { ApplicationSubmitted } from "../components/ui/application-submitted";
+} from "@/app/utils/validator";
+import { ApplicationSubmitted } from "@/app/components/ui/application-submitted";
 
 const countries = [
   "Nigeria",
@@ -43,7 +43,7 @@ const defaultFormData = {
   linkedinUrl: "",
 };
 
-export function JobDetailsPage() {
+export function JobDetails() {
   const { jobId } = useParams<{ jobId: string }>();
 
   const {

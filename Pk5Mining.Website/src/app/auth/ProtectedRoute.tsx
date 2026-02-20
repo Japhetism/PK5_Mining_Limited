@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
-export function AdminProtectedRoute() {
+export function ProtectedRoute() {
   const location = useLocation();
   const { user, isAdmin, isLoading } = useAuth();
 
@@ -15,4 +15,3 @@ export function AdminProtectedRoute() {
 
   return <Outlet />;
 }
-
