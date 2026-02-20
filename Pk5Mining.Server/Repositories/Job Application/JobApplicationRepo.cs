@@ -40,6 +40,7 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                     throw new ArgumentNullException(nameof(jobApplication));
                 }
                 jobApplication.Id = IdGenerator.GenerateUniqueId();
+                jobApplication.DT_Created = DateTime.UtcNow;
                 (IJobApplication? savedJobApplication, string? error) = await base.PostRepoItemAsync(jobApplication);
                 return (savedJobApplication, error, false);
 
