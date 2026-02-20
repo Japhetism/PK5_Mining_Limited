@@ -15,8 +15,8 @@ namespace Pk5Mining.Server.Models.Job_Application
         public string? Resume { get; set; }
         public string? Status { get; set; }
         public string? LinkedIn { get; set; }
-        public DateTime DT_Created { get; set; }
-        public DateTime DT_Modified { get; set; }
+        public DateTime? DT_Created { get; set; }
+        public DateTime? DT_Modified { get; set; }
 
         public JobLightResponseDTO? Job { get; set; }
     }
