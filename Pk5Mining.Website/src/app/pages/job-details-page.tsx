@@ -139,6 +139,7 @@ export function JobDetailsPage() {
       fd.append("Country", formData.country);
       fd.append("LinkedIn", formData.linkedinUrl);
       fd.append("ResumeFile", resumeFile, resumeFile.name);
+      fd.append("status", "new");
 
       mutation.mutate(fd);
     }
