@@ -12,8 +12,12 @@ import {
   Eye,
   Linkedin,
 } from "lucide-react";
-import { capitalizeFirstLetter, cleanParams, formatDate } from "../utils/helper";
-import { useQuery } from "@tanstack/react-query";
+import {
+  capitalizeFirstLetter,
+  cleanParams,
+  formatDate,
+} from "../utils/helper";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobById } from "../api/jobs";
 import { Badge } from "../components/ui/badge";
 import { JobDetailsSkeleton } from "../components/ui/job-details-skeleton";
@@ -24,11 +28,15 @@ import {
 } from "../components/ui/applicant-details-card";
 import { ApplicationsByJobIdQuery, JobApplicationDto } from "../interfaces";
 import { ApplicationStatusPill } from "./applications-page";
+import { ResumeViewerModal } from "../components/ui/resume-viewer-modal";
 
 export function AdminJobDetailPage() {
+  const queryClient = useQueryClient();
   const { jobId } = useParams<{ jobId: string }>();
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [selectedApplicant, setSelectedApplicant] = useState<JobApplicationDto | null>(null);
 
   const queryParams: ApplicationsByJobIdQuery = useMemo(() => {
     const raw: ApplicationsByJobIdQuery = {
@@ -73,7 +81,8 @@ export function AdminJobDetailPage() {
   const applications: JobApplicationDto[] = jobApplications?.data ?? [];
   const totalCount = jobApplications?.totalCount ?? 0;
   const totalPages: number =
-    jobApplications?.totalPages ?? Math.ceil((totalCount ?? 0) / (pageSize || 1));
+    jobApplications?.totalPages ??
+    Math.ceil((totalCount ?? 0) / (pageSize || 1));
 
   if (!job && !isLoading) {
     return <Navigate to="/admin/jobs" replace />;
@@ -181,9 +190,7 @@ export function AdminJobDetailPage() {
                 <p className="text-xs font-semibold text-gray-400 mb-1">
                   Posted
                 </p>
-                <p className="mb-3">
-                  {formatDate(job.dT_Created)}
-                </p>
+                <p className="mb-3">{formatDate(job.dT_Created)}</p>
               </>
             )}
 
@@ -192,9 +199,7 @@ export function AdminJobDetailPage() {
                 <p className="text-xs font-semibold text-gray-400 mb-1">
                   Updated
                 </p>
-                <p className="mb-3">
-                  {formatDate(job.dT_Modified)}
-                </p>
+                <p className="mb-3">{formatDate(job.dT_Modified)}</p>
               </>
             )}
 
@@ -207,7 +212,10 @@ export function AdminJobDetailPage() {
 
                 return (
                   <>
-                    <p title={isExpired ? formatDate(job.dT_Expiry) : ''} className="text-xs font-semibold text-gray-400 mb-1">
+                    <p
+                      title={isExpired ? formatDate(job.dT_Expiry) : ""}
+                      className="text-xs font-semibold text-gray-400 mb-1"
+                    >
                       {isExpired ? "Closed" : "Closing on"}
                     </p>
 
@@ -296,30 +304,44 @@ export function AdminJobDetailPage() {
 
               {/* Actions */}
               <div className="flex items-center gap-2">
-                <button
-                  // onClick={() => onViewApplicant(a.id)}
+                <Link
+                  to={`/admin/applications/${a.id}`}
+                  title="View application details"
+                  onClick={() => {
+                    queryClient.setQueryData(["applications", String(a.id)], a);
+                  }}
                   className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-200 hover:bg-white/5"
                 >
                   <Eye className="w-4 h-4" />
-                  View
-                </button>
+                  View Details
+                </Link>
 
-                <button
-                  // onClick={() => {
-                  //   if (!a.resumeUrl) return;
-                  //   onViewResume?.(a.resumeUrl);
-                  // }}
-                  // disabled={!a.resumeUrl}
+                <motion.button
+                  type="button"
+                  onClick={() => {
+                    setSelectedApplicant(a);
+                    setIsViewerOpen(true);
+                  }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-200 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+                  title="View resume"
                 >
                   <FileText className="w-4 h-4" />
                   Resume
-                </button>
+                </motion.button>
               </div>
             </div>
           )}
         />
       </div>
+      <ResumeViewerModal
+        isOpen={isViewerOpen}
+        onClose={() => setIsViewerOpen(false)}
+        resume={selectedApplicant?.resume ?? ""}
+        firstName={selectedApplicant?.firstName}
+        lastName={selectedApplicant?.lastName}
+      />
     </div>
   );
 }
