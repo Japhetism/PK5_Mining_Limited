@@ -227,6 +227,7 @@ export type CreateJobPayload = Omit<
   workArrangement: WorkArrangement | undefined;
   briefDescription: string;
   dT_Expiry?: string;
+  dT_Modified?: string;
 };
 export type UpdateJobPayload = Partial<CreateJobPayload>;
 

@@ -126,6 +126,8 @@ export function AdminJobEditPage() {
 
     mutation.mutate({
       ...form,
+      dT_Expiry: form.dT_Expiry ? new Date(form.dT_Expiry).toISOString() : undefined,
+      dT_Modified: form.title ? new Date().toISOString() : undefined,
       isActive: existing?.isActive ?? true,
     });
   };
@@ -231,10 +233,10 @@ export function AdminJobEditPage() {
               value={form.location}
               onChange={onChange}
               onBlur={() => {
-                if (!isValidName(form.location)) {
+                if (!form.location) {
                   setFieldErrors((prev) => ({
                     ...prev,
-                    location: "Invalid location name",
+                    location: "Location is required",
                   }));
                 } else {
                   setFieldErrors((prev) => {
@@ -267,7 +269,7 @@ export function AdminJobEditPage() {
               value={form.dT_Expiry}
               onChange={onChange}
               className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.location ? "border-red-500" : "border-gray-800"}
+                ${fieldErrors.dT_Expiry ? "border-red-500" : "border-gray-800"}
                 focus:border-[#c89b3c]`}
             />
             {fieldErrors.dT_Expiry && (
@@ -290,7 +292,7 @@ export function AdminJobEditPage() {
                 if (!form.experience) {
                   setFieldErrors((prev) => ({
                     ...prev,
-                    experience: "Invalid experience value",
+                    experience: "Work experience is required",
                   }));
                 } else {
                   setFieldErrors((prev) => {
@@ -416,10 +418,10 @@ export function AdminJobEditPage() {
             value={form.briefDescription}
             onChange={onChange}
             onBlur={() => {
-              if (!isValidName(form.briefDescription)) {
+              if (!form.briefDescription) {
                 setFieldErrors((prev) => ({
                   ...prev,
-                  briefDescription: "Invalid brief description",
+                  briefDescription: "Brief description is required",
                 }));
               } else {
                 setFieldErrors((prev) => {
