@@ -160,7 +160,7 @@ export function AdminJobsPage() {
             <div className="font-semibold text-[#c89b3c]">{job.title}</div>
           </Link>
           <div className="text-xs text-gray-500 line-clamp-2">
-            {job.briefDescription}
+            {job.id}
           </div>
         </div>
       ),
