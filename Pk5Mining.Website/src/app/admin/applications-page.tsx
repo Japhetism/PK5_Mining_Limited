@@ -8,7 +8,7 @@ import {
   PaginatedTable,
   PaginatedTableColumn,
 } from "../components/ui/paginated-table";
-import { cleanParams, toNumber } from "../utils/helper";
+import { cleanParams, formatDate, toNumber } from "../utils/helper";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 
 type StatusFilter =
@@ -81,6 +81,11 @@ export function AdminApplicationsPage() {
 
   const columns: PaginatedTableColumn<JobApplicationDto>[] = [
     {
+      key: "id",
+      header: "Candidate ID",
+      render: (app) => app.id ?? "-",
+    },
+    {
       key: "candidate",
       header: "Candidate",
       render: (app) => (
@@ -93,8 +98,8 @@ export function AdminApplicationsPage() {
       ),
     },
     {
-      key: "role",
-      header: "Role",
+      key: "job",
+      header: "Job Applied For",
       render: (app) => app?.job?.title ?? "-",
     },
     {
@@ -110,7 +115,12 @@ export function AdminApplicationsPage() {
     {
       key: "submitted",
       header: "Submitted",
-      render: (app) => new Date(app.dT_Created).toLocaleDateString(),
+      render: (app) => formatDate(app.dT_Created),
+    },
+    {
+      key: "modified",
+      header: "Modified",
+      render: (app) => formatDate(app.dT_Modified),
     },
     {
       key: "actions",
