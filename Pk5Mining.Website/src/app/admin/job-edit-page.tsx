@@ -260,27 +260,12 @@ export function AdminJobEditPage() {
           <div>
             <label className="block text-xs font-semibold text-gray-300 mb-2">
               Close Date
-              <span className="ml-1 text-red-500">*</span>
             </label>
             <motion.input
               name="dT_Expiry"
               type="date"
               value={form.dT_Expiry}
               onChange={onChange}
-              onBlur={() => {
-                if (!form.dT_Expiry) {
-                  setFieldErrors((prev) => ({
-                    ...prev,
-                    dT_Expiry: "Invalid close date",
-                  }));
-                } else {
-                  setFieldErrors((prev) => {
-                    const updated = { ...prev };
-                    delete updated.dT_Expiry;
-                    return updated;
-                  });
-                }
-              }}
               className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
                 ${fieldErrors.location ? "border-red-500" : "border-gray-800"}
                 focus:border-[#c89b3c]`}
