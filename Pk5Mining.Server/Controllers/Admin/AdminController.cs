@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories.Admin;
+using Pk5Mining.Server.Services;
 
 namespace Pk5Mining.Server.Controllers.Admin
 {
@@ -11,28 +13,34 @@ namespace Pk5Mining.Server.Controllers.Admin
     public class AdminController : ControllerBase
     {
         private readonly IAdminRepo _adminRepo;
+        private readonly ITokenService _tokenService;
 
-        public AdminController(IAdminRepo adminRepo)
+        public AdminController(IAdminRepo adminRepo, ITokenService tokenService)
         {
             _adminRepo = adminRepo;
+            _tokenService = tokenService;
         }
 
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] AdminLoginDTO dto)
         {
-            try
+            var (admin, error) = await _adminRepo.LoginAsync(dto);
+            if (error != null)
             {
-                (AdminResponseDTO? admin, string? error) = await _adminRepo.LoginAsync(dto);
-                if (error != null)
-                {
-                    return BadRequest(ApiResponse.AuthenticationException(null, error));
-                }
-                return Ok(ApiResponse.SuccessMessage(admin, "Login successful."));
+                return Unauthorized(ApiResponse.AuthorizationException(null, error));
             }
-            catch (Exception)
+            var jwtToken = _tokenService.CreateJWTToken(admin);
+
+            var response = new AdminResponseDTO
             {
-                return StatusCode(500, "Internal server error.");
-            }
+                Id = admin.Id,
+                FirstName = admin.FirstName,
+                LastName = admin.LastName,
+                Username = admin.Username,
+                JwtToken = jwtToken
+            };
+
+            return Ok(response);
         }
     }
 }

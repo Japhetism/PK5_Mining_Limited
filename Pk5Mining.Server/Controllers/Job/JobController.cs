@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Job;
@@ -29,6 +30,7 @@ namespace Pk5Mining.Server.Controllers.Job
             var jobs = await _jobRepo.GetRepoItems();
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
+        [Authorize]
         [HttpGet("light")]
         public async Task<ActionResult<IEnumerable<JobLightResponseDTO>>> GetLight()
         {
@@ -51,6 +53,7 @@ namespace Pk5Mining.Server.Controllers.Job
             return Ok(ApiResponse.SuccessMessage(job, "Job retrieved successfully."));
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<IJobs>> Post([FromBody] JobsDTO value)
         {
@@ -82,7 +85,7 @@ namespace Pk5Mining.Server.Controllers.Job
                 }
             }
         }
-
+        [Authorize]
         [HttpGet("filter")]
         public async Task<IActionResult> GetJobs(
             [FromQuery] int pageNumber = 1,
@@ -114,6 +117,7 @@ namespace Pk5Mining.Server.Controllers.Job
             return Ok(ApiResponse.SuccessMessage(response, "Jobs retrieved successfully."));
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] JobsDTO value)
         {
@@ -127,6 +131,5 @@ namespace Pk5Mining.Server.Controllers.Job
             }
             return Ok(ApiResponse.SuccessMessage(job, "Job updated successfully."));
         }
-
     }
 }
