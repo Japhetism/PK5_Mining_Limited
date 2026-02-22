@@ -12,28 +12,14 @@ namespace Pk5Mining.Server.Repositories.Admin
             _dbContext = dbContext;
         }
 
-        public async Task<(AdminResponseDTO?, string?)> LoginAsync(AdminLoginDTO dto)
+        public async Task<(Admins?, string?)> LoginAsync(AdminLoginDTO dto)
         {
-            try
+            var admin = await _dbContext.Admins.FirstOrDefaultAsync(a => a.Username == dto.Username && a.Password == dto.Password);
+            if (admin == null)
             {
-                Admins? admin = await _dbContext.Admins.FirstOrDefaultAsync(a => a.Username == dto.Username && a.Password == dto.Password);
-                if (admin == null)
-                {
-                    return (null, "Invalid username or password.");
-                }
-                AdminResponseDTO? response = new AdminResponseDTO
-                {
-                    Id = admin.Id,
-                    FirstName = admin.FirstName,
-                    LastName = admin.LastName,
-                    Username = admin.Username
-                };
-                return (response, null);
+                return (null, "Invalid username or password.");
             }
-            catch (Exception ex)
-            {
-                return (null, ex.Message);
-            }
+            return (admin, null);
         }
     }
 }

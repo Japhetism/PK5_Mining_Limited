@@ -4,6 +4,6 @@ namespace Pk5Mining.Server.Repositories.Admin
 {
     public interface IAdminRepo
     {
-        Task<(AdminResponseDTO?, string?)> LoginAsync(AdminLoginDTO dto);
+        Task<(Admins?, string?)> LoginAsync(AdminLoginDTO dto);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
@@ -24,7 +25,7 @@ namespace Pk5Mining.Server.Controllers.Job_Application
             _specificRepo = specificRepo;
             _fileAccessor = fileAccessor;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IJobApplication>>> Get()
         {
@@ -32,6 +33,7 @@ namespace Pk5Mining.Server.Controllers.Job_Application
             return Ok(ApiResponse.SuccessMessage(jobApplication, "Job Applications retrieved successfully."));
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<IJobApplication>> Get(long id)
         {
@@ -43,7 +45,7 @@ namespace Pk5Mining.Server.Controllers.Job_Application
             }
             return Ok(ApiResponse.SuccessMessage(jobApplication, "Job Application retrieved successfully."));
         }
-
+        [Authorize]
         [HttpGet("ByJobId/{id}")]
         public async Task<ActionResult> GetByJobId(long id, int pageNumber = 1, int pageSize = 10)
         {
@@ -61,7 +63,7 @@ namespace Pk5Mining.Server.Controllers.Job_Application
                 Data = data
             }, "Job Applications retrieved successfully."));
         }
-
+        [Authorize]
         [HttpGet("filter")]
         public async Task<IActionResult> GetJobs( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? email = null)
         {
@@ -119,7 +121,7 @@ namespace Pk5Mining.Server.Controllers.Job_Application
                 }
             }
         }
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] JobApplicationUpdateDTO value)
         {
