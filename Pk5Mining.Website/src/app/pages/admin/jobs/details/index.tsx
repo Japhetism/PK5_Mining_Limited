@@ -24,10 +24,8 @@ export function JobDetail() {
   const {
     job,
     isLoading,
-    isError,
     applications,
     jobApplicationsLoading,
-    jobApplicationsHasError,
     totalCount,
     pageNumber,
     pageSize,
@@ -41,19 +39,7 @@ export function JobDetail() {
     setSelectedApplicant,
   } = useJobDetailsViewModel();
 
-  if (!job && !isLoading) {
-    return <Navigate to="/admin/jobs" replace />;
-  }
-
   if (isLoading) return <JobDetailsSkeleton className="mt-6" />;
-
-  if (isError) {
-    return (
-      <div className="space-y-4 mt-6">
-        <p className="text-red-400">Failed to load job details.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">

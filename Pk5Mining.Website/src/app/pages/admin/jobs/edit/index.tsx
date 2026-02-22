@@ -10,7 +10,6 @@ export function JobEdit() {
     existing,
     form,
     fieldErrors,
-    error,
     loading,
     navigate,
     onSubmit,
@@ -373,7 +372,6 @@ export function JobEdit() {
                 : "Save Job"}
           </motion.button>
         </div>
-        {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
       </form>
     </div>
   );

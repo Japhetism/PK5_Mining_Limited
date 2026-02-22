@@ -1,15 +1,16 @@
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createJob, getJobById, updateJob } from "@/app/api/jobs";
 import {
-  ApiError,
   CreateJobPayload,
   JobDto,
   JobErrors,
   UpdateJobPayload,
 } from "@/app/interfaces";
 import { validateJob } from "@/app/utils/validator";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
 function useJobEditViewModel() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -18,8 +19,7 @@ function useJobEditViewModel() {
 
   const {
     data,
-    isLoading,
-    isError,
+    isLoading: jobLoading,
     error: fetchError,
   } = useQuery({
     queryKey: ["jobs", jobId],
@@ -27,6 +27,16 @@ function useJobEditViewModel() {
     enabled: !!jobId,
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (fetchError) {
+      const message = getAxiosErrorMessage(
+        fetchError,
+        "An error occurred while fetching job details. Please try again.",
+      );
+      toast.error(message);
+    }
+  }, [fetchError]);
 
   const existing = useMemo<JobDto | CreateJobPayload | undefined>(
     () => (jobId ? data : undefined),
@@ -37,24 +47,24 @@ function useJobEditViewModel() {
     mutationFn: (payload: CreateJobPayload) => createJob(payload),
     onSuccess: (data) => {
       setLoading(false);
+      toast.success("Job created successfully");
       navigate(`/admin/jobs/${data?.id}`);
     },
     onError: (err: unknown) => {
-      console.error(err);
       setLoading(false);
+      const message = getAxiosErrorMessage(
+        err,
+        "An error occurred while saving the job. Please try again.",
+      );
 
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error ? err.message : undefined) ??
-        "An error occurred while saving the job. Please try again.";
-
-      setError(message);
+      toast.error(message);
     },
   });
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateJobPayload) => {
       if (!existing || !("id" in existing)) {
+        toast.error("Cannot update: missing existing job id");
         throw new Error("Cannot update: missing existing job id");
       }
       return updateJob(existing.id, payload);
@@ -62,18 +72,17 @@ function useJobEditViewModel() {
     onSuccess: (data) => {
       setLoading(false);
       queryClient.setQueryData(["jobs", String(data?.id)], data);
+      toast.success("Job updated successfully");
       navigate(`/admin/jobs/${data?.id}`);
     },
     onError: (err: unknown) => {
-      console.error(err);
       setLoading(false);
+      const message = getAxiosErrorMessage(
+        err,
+        "An error occurred while updating the job. Please try again.",
+      );
 
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error ? err.message : undefined) ??
-        "An error occurred while updating the job. Please try again.";
-
-      setError(message);
+      toast.error(message);
     },
   });
 
@@ -91,7 +100,6 @@ function useJobEditViewModel() {
     dT_Expiry: existing?.dT_Expiry ?? "",
   });
   const [fieldErrors, setFieldErrors] = useState<JobErrors>({});
-  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const onChange = (
@@ -105,7 +113,6 @@ function useJobEditViewModel() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
     const errors: JobErrors = validateJob(form);
 
@@ -131,8 +138,7 @@ function useJobEditViewModel() {
     existing,
     form,
     fieldErrors,
-    error,
-    loading,
+    loading: loading || jobLoading,
     navigate,
     onSubmit,
     setFieldErrors,

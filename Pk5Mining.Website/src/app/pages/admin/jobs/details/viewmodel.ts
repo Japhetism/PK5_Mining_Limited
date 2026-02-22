@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobApplicationsByJobId } from "@/app/api/applications";
 import { getJobById } from "@/app/api/jobs";
 import { ApplicationsByJobIdQuery, JobApplicationDto } from "@/app/interfaces";
 import { cleanParams } from "@/app/utils/helper";
+import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
 function useJobDetailsViewModel() {
   const queryClient = useQueryClient();
@@ -46,6 +48,24 @@ function useJobDetailsViewModel() {
     enabled: !!jobId,
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (fetchError) {
+      const message = getAxiosErrorMessage(
+        fetchError,
+        "An error occurred while fetching job details. Please try again.",
+      );
+      toast.error(message);
+    }
+
+    if (jobApplicationsFetchError) {
+      const message = getAxiosErrorMessage(
+        jobApplicationsFetchError,
+        "An error occurred while fetching job applications. Please try again.",
+      );
+      toast.error(message);
+    }
+  }, [fetchError, jobApplicationsFetchError]);
 
   const onChangePage = (next: number) => setPageNumber(next);
 

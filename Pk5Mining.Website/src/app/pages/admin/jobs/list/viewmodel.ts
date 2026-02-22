@@ -1,16 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs, updateJob } from "@/app/api/jobs";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import {
-  ApiError,
   JobDto,
   JobsQuery,
   StatusFilter,
   UpdateJobPayload,
 } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
+import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
 function useJobListViewModel() {
   const queryClient = useQueryClient();
@@ -23,7 +24,6 @@ function useJobListViewModel() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [selectedJob, setSelectedJob] = useState<JobDto | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
-  const [updateError, setUpdateError] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const [pageNumber, setPageNumber] = useState(() =>
@@ -73,6 +73,16 @@ function useJobListViewModel() {
     staleTime: 30_000,
   });
 
+  useEffect(() => {
+    if (error) {
+      const message = getAxiosErrorMessage(
+        error,
+        "An error occurred while fetching jobs. Please try again.",
+      );
+      toast.error(message);
+    }
+  }, [error]);
+
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateJobPayload) => {
       if (!selectedJob || !("id" in selectedJob)) {
@@ -90,12 +100,11 @@ function useJobListViewModel() {
     onError: (err: unknown) => {
       console.error(err);
       setIsUpdating(false);
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error ? err.message : undefined) ??
-        "An error occurred while updating the job. Please try again.";
-
-      setUpdateError(message);
+      const message = getAxiosErrorMessage(
+        err,
+        "An error occurred while updating the job. Please try again.",
+      );
+      toast.error(message);
     },
   });
 
@@ -114,7 +123,6 @@ function useJobListViewModel() {
   const handleUpdateStatus = () => {
     if (!selectedJob) return;
 
-    setUpdateError("");
     setIsUpdating(true);
 
     updateMutation.mutate({
@@ -144,7 +152,6 @@ function useJobListViewModel() {
     totalPages,
     pageNumber,
     pageSize,
-    updateError,
     isUpdating,
     confirmOpen,
     filters,

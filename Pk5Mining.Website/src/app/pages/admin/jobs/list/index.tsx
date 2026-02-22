@@ -225,24 +225,20 @@ export function JobList() {
         </div>
       </div>
 
-      {error ? (
-        <div className="text-sm text-red-400">Failed to load jobs.</div>
-      ) : (
-        <PaginatedTable<JobDto>
-          data={jobs}
-          columns={columns}
-          isLoading={isLoading}
-          isFilter={isFilter}
-          emptyTitle="No job openings yet. Click “New job” to create one."
-          noResultsTitle="No results found. Try changing your filters."
-          setPageNumber={onChangePage}
-          setPageSize={onChangePageSize}
-          pageNumber={pageNumber}
-          pageSize={pageSize}
-          totalCount={totalCount}
-          totalPages={totalPages}
-        />
-      )}
+      <PaginatedTable<JobDto>
+        data={jobs}
+        columns={columns}
+        isLoading={isLoading}
+        isFilter={isFilter}
+        emptyTitle="No job openings yet. Click “New job” to create one."
+        noResultsTitle="No results found. Try changing your filters."
+        setPageNumber={onChangePage}
+        setPageSize={onChangePageSize}
+        pageNumber={pageNumber}
+        pageSize={pageSize}
+        totalCount={totalCount}
+        totalPages={totalPages}
+      />
 
       <ConfirmModal
         open={confirmOpen}
