@@ -4,12 +4,13 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useRef,
 } from "react";
 import { login as loginApi } from "../api/auth";
 import { IUser } from "../interfaces";
 import { AUTH_KEY } from "../constants";
 import { setAuthToken } from "../api/http";
-import { isJwtExpired } from "../utils/jwt"; // uses jwt-decode
+import { isJwtExpired } from "../utils/jwt";
 import { tokenStore } from "../auth/token";
 
 type AuthState = {
@@ -23,29 +24,37 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
+const INACTIVITY_TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Restore persisted auth on app start (sessionStorage)
+  // Keep logout stable for event listeners/timers
+  const logoutRef = useRef<() => void>(() => {});
+
+  function logout() {
+    sessionStorage.removeItem(AUTH_KEY);
+    tokenStore.clear();
+    setUser(null);
+    setAuthToken(undefined);
+  }
+
+  logoutRef.current = logout;
+
+  // Restore persisted auth on app start
   useEffect(() => {
     try {
       const token = tokenStore.get();
       const rawUser = sessionStorage.getItem(AUTH_KEY);
 
-      // If token missing OR expired -> clear auth
       if (!token || isJwtExpired(token)) {
-        tokenStore.clear();
-        sessionStorage.removeItem(AUTH_KEY);
-        setUser(null);
-        setAuthToken(undefined);
+        logoutRef.current();
         return;
       }
 
-      // Token is valid -> set auth header
       setAuthToken(token);
 
-      // Restore user if available (optional but useful for UI)
       if (rawUser) {
         const parsedUser = JSON.parse(rawUser) as IUser;
         setUser(parsedUser);
@@ -53,42 +62,95 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
       }
     } catch {
-      tokenStore.clear();
-      sessionStorage.removeItem(AUTH_KEY);
-      setUser(null);
-      setAuthToken(undefined);
+      logoutRef.current();
     } finally {
       setIsLoading(false);
     }
   }, []);
 
+  // ✅ Listen for 401 unauthorized emitted by axios interceptor
+  useEffect(() => {
+    const handler = () => logoutRef.current();
+    window.addEventListener("unauthorized", handler);
+    return () => window.removeEventListener("unauthorized", handler);
+  }, []);
+
+  // ✅ Inactivity logout (2 mins)
+  useEffect(() => {
+    let timer: number | undefined;
+
+    const clear = () => {
+      if (timer) window.clearTimeout(timer);
+      timer = undefined;
+    };
+
+    const reset = () => {
+      // only track inactivity when authenticated
+      const token = tokenStore.get();
+      if (!token || isJwtExpired(token)) {
+        clear();
+        return;
+      }
+
+      clear();
+      timer = window.setTimeout(() => {
+        // re-check before logging out
+        const t = tokenStore.get();
+        if (t && !isJwtExpired(t)) logoutRef.current();
+      }, INACTIVITY_TIMEOUT_MS);
+    };
+
+    const onActivity = () => reset();
+
+    const events: (keyof WindowEventMap)[] = [
+      "mousemove",
+      "mousedown",
+      "keydown",
+      "touchstart",
+      "scroll",
+    ];
+
+    // start once
+    reset();
+
+    events.forEach((e) =>
+      window.addEventListener(e, onActivity, { passive: true })
+    );
+
+    // optional: pause when tab is hidden, resume when visible
+    const onVisibility = () => {
+      if (document.hidden) clear();
+      else reset();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      clear();
+      events.forEach((e) => window.removeEventListener(e, onActivity));
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+
   async function login(username: string, password: string) {
-    const nextUser = await loginApi({ username, password }); // returns IUser with jwtToken
+    const nextUser = await loginApi({ username, password });
 
     if (!nextUser?.jwtToken) {
       throw new Error("Login succeeded but no JWT token was returned.");
     }
 
-    // If backend ever returns an already-expired token, handle it safely
     if (isJwtExpired(nextUser.jwtToken)) {
       throw new Error("Session token is expired. Please login again.");
     }
 
     setUser(nextUser);
 
-    // Persist BOTH user + token in sessionStorage
     sessionStorage.setItem(AUTH_KEY, JSON.stringify(nextUser));
     tokenStore.set(nextUser.jwtToken);
 
-    // Set axios header immediately
     setAuthToken(nextUser.jwtToken);
-  }
 
-  function logout() {
-    sessionStorage.removeItem(AUTH_KEY);
-    tokenStore.clear();
-    setUser(null);
-    setAuthToken(undefined);
+    // 🔥 reset inactivity timer immediately after login
+    window.dispatchEvent(new Event("mousemove"));
   }
 
   const value = useMemo<AuthState>(() => {
@@ -100,7 +162,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       login,
       logout,
-      isAdmin: true, // replace with role-based check when available
+      isAdmin: true,
       isAuthenticated,
     };
   }, [user, isLoading]);
