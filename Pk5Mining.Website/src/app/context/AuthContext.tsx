@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const token = tokenStore.get();
       const rawUser = sessionStorage.getItem(AUTH_KEY);
 
-      if (!token || isJwtExpired(token)) {
+      if (!rawUser || !token || isJwtExpired(token)) {
         logoutRef.current();
         return;
       }
