@@ -18,11 +18,11 @@ export function setAuthToken(token?: string) {
   else delete http.defaults.headers.common.Authorization;
 }
 
-// ✅ On app boot, set header if token exists (covers refresh)
+// On app boot, set header if token exists (covers refresh)
 const bootToken = tokenStore.get();
 if (bootToken) setAuthToken(bootToken);
 
-// ✅ Always attach latest token to every request
+// Always attach latest token to every request
 http.interceptors.request.use((config) => {
   const token = tokenStore.get();
   if (token) {
@@ -34,7 +34,7 @@ http.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ Optional: auto-clear token on unauthorized
+// Optional: auto-clear token on unauthorized
 http.interceptors.response.use(
   (res) => res,
   (err) => {
