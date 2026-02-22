@@ -25,13 +25,11 @@ function useJobDetailsViewModel() {
   const mutation = useMutation({
     mutationFn: (fd: FormData) => applyToJob(fd),
     onSuccess: () => {
-      console.log("Application submitted");
       setFormData(defaultFormData);
       setSubmitted(true);
       setLoading(false);
     },
     onError: (error) => {
-      console.error(error);
       setLoading(false);
     },
   });
@@ -66,8 +64,6 @@ function useJobDetailsViewModel() {
       setResumeFile(null);
       return;
     }
-
-    console.log("file is ", file);
 
     setError("");
     setResumeFile(file);

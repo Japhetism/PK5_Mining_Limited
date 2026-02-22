@@ -52,7 +52,6 @@ export const downloadFile = async (url: string, fileName: string) => {
     link.remove();
     window.URL.revokeObjectURL(blobUrl);
   } catch (error) {
-    console.error("Download failed:", error);
     throw new Error("Failed to download file");
   }
 };

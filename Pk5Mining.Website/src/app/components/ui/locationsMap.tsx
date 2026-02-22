@@ -22,8 +22,6 @@ async function geocode(address: string): Promise<GeoLocation | null> {
     )}`
   );
 
-  console.log("GEOCODE", res.url, res.status, res);
-
   if (!res.ok) return null;
 
   const data: any[] = await res.json();
@@ -86,7 +84,6 @@ export default function LocationsMap({
       }
 
       if (!cancelled) {
-        console.log("Geocoded locations:", results, failedOnes);
         setPoints(results);
         setFailed(failedOnes);
       }

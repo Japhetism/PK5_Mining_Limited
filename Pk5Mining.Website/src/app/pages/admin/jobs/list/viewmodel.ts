@@ -98,7 +98,6 @@ function useJobListViewModel() {
       await queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
     onError: (err: unknown) => {
-      console.error(err);
       setIsUpdating(false);
       const message = getAxiosErrorMessage(
         err,

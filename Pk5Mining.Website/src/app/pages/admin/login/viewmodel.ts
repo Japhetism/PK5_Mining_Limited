@@ -27,7 +27,6 @@ function useLoginViewModel() {
       navigate(redirectTo, { replace: true });
     },
     onError: (err) => {
-      console.error("Login failed", err);
       setLoading(false);
 
       const message =
