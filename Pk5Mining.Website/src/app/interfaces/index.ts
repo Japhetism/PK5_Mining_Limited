@@ -201,6 +201,7 @@ export interface IUser {
   firstName: string;
   lastName: string;
   password: string;
+  jwtToken: string;
 }
 
 export interface ILoginPayload {

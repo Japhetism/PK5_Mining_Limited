@@ -8,15 +8,16 @@ import React, {
 import { login as loginApi } from "../api/auth";
 import { IUser } from "../interfaces";
 import { AUTH_KEY } from "../constants";
-
-const useMock = import.meta.env.VITE_USE_MOCK === "true";
+import { setAuthToken } from "../api/http";
+import { tokenStore } from "../auth/token";
 
 type AuthState = {
   user: IUser | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   isAdmin: boolean;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -25,49 +26,67 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 🔹 On mount: restore persisted auth only
+  // Restore persisted auth on app start (sessionStorage)
   useEffect(() => {
     try {
-      const raw = sessionStorage.getItem(AUTH_KEY);
-      if (!raw) {
-        // No persisted auth → just logout state
-        setUser(null);
-        return;
-      }
+      const rawUser = sessionStorage.getItem(AUTH_KEY);
+      const token = tokenStore.get(); // tokenStore should also use sessionStorage now
 
-      const parsed = JSON.parse(raw) as {
-        user: IUser;
-      };
-
-      if (!parsed?.user) {
-        // Corrupt storage → logout
+      if (!rawUser || !token) {
+        // Incomplete auth state -> clear both
         sessionStorage.removeItem(AUTH_KEY);
+        tokenStore.clear();
         setUser(null);
+        setAuthToken(undefined);
         return;
       }
 
-      // Restore state
-      setUser(parsed.user);
+      const parsedUser = JSON.parse(rawUser) as IUser;
+
+      // Minimal validation
+      if (!parsedUser?.id || !parsedUser?.username) {
+        sessionStorage.removeItem(AUTH_KEY);
+        tokenStore.clear();
+        setUser(null);
+        setAuthToken(undefined);
+        return;
+      }
+
+      setUser(parsedUser);
+      setAuthToken(token);
     } catch {
       sessionStorage.removeItem(AUTH_KEY);
+      tokenStore.clear();
       setUser(null);
+      setAuthToken(undefined);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   async function login(username: string, password: string) {
-    const user = await loginApi({ username, password });
+    // backend returns IUser directly (includes jwtToken)
+    const nextUser = await loginApi({ username, password });
 
-    if (user) {
-      setUser(user);
-      sessionStorage.setItem(AUTH_KEY, JSON.stringify({ user }));
+    if (!nextUser?.jwtToken) {
+      throw new Error("Login succeeded but no JWT token was returned.");
     }
+
+    setUser(nextUser);
+
+    // Persist BOTH user + token in sessionStorage
+    sessionStorage.setItem(AUTH_KEY, JSON.stringify(nextUser));
+    tokenStore.set(nextUser.jwtToken);
+
+    // Set axios header immediately
+    setAuthToken(nextUser.jwtToken);
   }
 
   function logout() {
     sessionStorage.removeItem(AUTH_KEY);
+    tokenStore.clear();
     setUser(null);
+    setAuthToken(undefined);
   }
 
   const value = useMemo<AuthState>(() => {
@@ -76,7 +95,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       login,
       logout,
-      isAdmin: true
+      isAdmin: true,
+      isAuthenticated: !!user && !!tokenStore.get(),
     };
   }, [user, isLoading]);
 

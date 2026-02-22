@@ -4,9 +4,9 @@ import { getAxiosErrorMessage } from "../utils/axios-error";
 
 export async function login(payload: ILoginPayload) {
   try {
-    const { data } = await http.post<ApiResponse<IUser>>("/Admin/login", payload);
+    const { data } = await http.post<IUser>("/Admin/login", payload);
 
-    return data.responseData;
+    return data;
   } catch (err) {
     throw new Error(
       getAxiosErrorMessage(err, "Failed to authenticate user")
