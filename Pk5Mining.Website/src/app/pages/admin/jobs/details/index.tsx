@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import {
   ArrowLeft,
@@ -53,9 +53,11 @@ export function JobDetail() {
             Back to jobs
           </Link>
           <div>
-            <Badge variant="secondary" className="mb-1 mt-4">
-              {job?.department}
-            </Badge>
+            {job && (
+              <Badge variant="secondary" className="mb-1 mt-4">
+                {job?.department}
+              </Badge>
+            )}
             <h1 className="text-2xl font-bold mb-1">{job?.title}</h1>
             <p className="text-sm">{job?.briefDescription}</p>
             <div className="flex flex-wrap gap-4 text-gray-300 mb-6">
@@ -105,19 +107,23 @@ export function JobDetail() {
 
         <div className="space-y-4">
           <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4 text-sm text-gray-300">
-            <p className="text-xs font-semibold text-gray-400 mb-1">Status</p>
-            <p className="mb-3">
-              <span
-                className={
-                  job?.isActive
-                    ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
-                    : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
-                }
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                {job?.isActive ? "Open" : "Closed"}
-              </span>
-            </p>
+            {job && (
+              <>
+                <p className="text-xs font-semibold text-gray-400 mb-1">Status</p>
+                <p className="mb-3">
+                  <span
+                    className={
+                      job?.isActive
+                        ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
+                        : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
+                    }
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                    {job?.isActive ? "Open" : "Closed"}
+                  </span>
+                </p>
+              </>
+            )}
 
             {job?.experience && (
               <>
@@ -169,30 +175,32 @@ export function JobDetail() {
                 );
               })()}
 
-            <div className="flex gap-2 mt-4">
-              <Link to={`/admin/jobs/${job?.id}/edit`} className="flex-1">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-700 text-xs font-semibold hover:border-[#c89b3c]"
+            {job && (
+              <div className="flex gap-2 mt-4">
+                <Link to={`/admin/jobs/${job?.id}/edit`} className="flex-1">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-700 text-xs font-semibold hover:border-[#c89b3c]"
+                  >
+                    Edit job
+                  </motion.button>
+                </Link>
+                <Link
+                  to={`/careers/job/${job?.id}`}
+                  className="flex-1"
+                  target="_blank"
                 >
-                  Edit job
-                </motion.button>
-              </Link>
-              <Link
-                to={`/careers/job/${job?.id}`}
-                className="flex-1"
-                target="_blank"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full px-3 py-2 rounded-lg bg-[#c89b3c]/10 text-[#c89b3c] text-xs font-semibold hover:bg-[#c89b3c]/20"
-                >
-                  View public page
-                </motion.button>
-              </Link>
-            </div>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-3 py-2 rounded-lg bg-[#c89b3c]/10 text-[#c89b3c] text-xs font-semibold hover:bg-[#c89b3c]/20"
+                  >
+                    View public page
+                  </motion.button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

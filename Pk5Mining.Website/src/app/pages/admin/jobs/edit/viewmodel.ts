@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createJob, getJobById, updateJob } from "@/app/api/jobs";
 import {
@@ -11,6 +10,7 @@ import {
 } from "@/app/interfaces";
 import { validateJob } from "@/app/utils/validator";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
+import { toastUtil } from "@/app/utils/toast";
 
 function useJobEditViewModel() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -34,7 +34,7 @@ function useJobEditViewModel() {
         fetchError,
         "An error occurred while fetching job details. Please try again.",
       );
-      toast.error(message);
+      toastUtil.error(message);
     }
   }, [fetchError]);
 
@@ -47,7 +47,7 @@ function useJobEditViewModel() {
     mutationFn: (payload: CreateJobPayload) => createJob(payload),
     onSuccess: (data) => {
       setLoading(false);
-      toast.success("Job created successfully");
+      toastUtil.success("Job created successfully");
       navigate(`/admin/jobs/${data?.id}`);
     },
     onError: (err: unknown) => {
@@ -57,14 +57,14 @@ function useJobEditViewModel() {
         "An error occurred while saving the job. Please try again.",
       );
 
-      toast.error(message);
+      toastUtil.error(message);
     },
   });
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateJobPayload) => {
       if (!existing || !("id" in existing)) {
-        toast.error("Cannot update: missing existing job id");
+        toastUtil.error("Cannot update: missing existing job id");
         throw new Error("Cannot update: missing existing job id");
       }
       return updateJob(existing.id, payload);
@@ -72,7 +72,7 @@ function useJobEditViewModel() {
     onSuccess: (data) => {
       setLoading(false);
       queryClient.setQueryData(["jobs", String(data?.id)], data);
-      toast.success("Job updated successfully");
+      toastUtil.success("Job updated successfully");
       navigate(`/admin/jobs/${data?.id}`);
     },
     onError: (err: unknown) => {
@@ -82,7 +82,7 @@ function useJobEditViewModel() {
         "An error occurred while updating the job. Please try again.",
       );
 
-      toast.error(message);
+      toastUtil.error(message);
     },
   });
 

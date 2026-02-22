@@ -12,6 +12,7 @@ export function App() {
         position="top-right"
         richColors
         closeButton
+        expand
       />
     </BrowserRouter>
   );

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobApplicationsByJobId } from "@/app/api/applications";
 import { getJobById } from "@/app/api/jobs";
 import { ApplicationsByJobIdQuery, JobApplicationDto } from "@/app/interfaces";
 import { cleanParams } from "@/app/utils/helper";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
+import { toastUtil } from "@/app/utils/toast";
 
 function useJobDetailsViewModel() {
   const queryClient = useQueryClient();
@@ -55,7 +55,7 @@ function useJobDetailsViewModel() {
         fetchError,
         "An error occurred while fetching job details. Please try again.",
       );
-      toast.error(message);
+      toastUtil.error(message);
     }
 
     if (jobApplicationsFetchError) {
@@ -63,7 +63,7 @@ function useJobDetailsViewModel() {
         jobApplicationsFetchError,
         "An error occurred while fetching job applications. Please try again.",
       );
-      toast.error(message);
+      toastUtil.error(message);
     }
   }, [fetchError, jobApplicationsFetchError]);
 
