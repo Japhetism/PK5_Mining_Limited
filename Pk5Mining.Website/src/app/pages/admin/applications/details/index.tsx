@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import {
   ArrowLeft,
   Download,
-  Edit,
   Edit2,
   Eye,
   Linkedin,
@@ -13,7 +12,6 @@ import {
   Phone,
   Save,
   SaveOff,
-  X,
 } from "lucide-react";
 import { ApplicationDetailsSkeleton } from "@/app/components/ui/application-details-loader";
 import { downloadFile } from "@/app/utils/helper";
@@ -34,7 +32,6 @@ export function ApplicationDetail() {
   const {
     app,
     isLoading,
-    isError,
     editStatus,
     setEditStatus,
     selectedStatus,
@@ -45,25 +42,11 @@ export function ApplicationDetail() {
     resumeFileName,
     isViewerOpen,
     setIsViewerOpen,
-    resumeLoading,
-    setResumeLoading,
-    error,
     handleUpdateStatus,
     updating,
   } = useApplicationDetailsViewModel();
-  if (!app && !isLoading) {
-    return <Navigate to="/admin/applications" replace />;
-  }
 
   if (isLoading) return <ApplicationDetailsSkeleton />;
-
-  if (isError) {
-    return (
-      <div className="space-y-4 mt-6">
-        <p className="text-red-400">Failed to load job application details.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -78,58 +61,60 @@ export function ApplicationDetail() {
           Back to applications
         </button>
 
-        <div className="flex items-center gap-2">
-          {editStatus ? (
-            <motion.select
-              value={selectedStatus ?? app?.status}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
-            >
-              {statuses.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </motion.select>
-          ) : (
-            <span className="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-gray-800">
-              <ApplicationStatusPill status={app?.status ?? "new"} />
-            </span>
-          )}
-          {!editStatus && (
-            <motion.button
-              onClick={() => setEditStatus(true)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
-              title="Edit"
-            >
-              <Edit2 className="w-3 h-3 text-gray-300" />
-            </motion.button>
-          )}
-          {editStatus && (
-            <div className="flex gap-2">
+        {app && (
+          <div className="flex items-center gap-2">
+            {editStatus ? (
+              <motion.select
+                value={selectedStatus ?? app?.status}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
+              >
+                {statuses.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </motion.select>
+            ) : (
+              <span className="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-gray-800">
+                <ApplicationStatusPill status={app?.status ?? "new"} />
+              </span>
+            )}
+            {!editStatus && (
               <motion.button
-                onClick={() => setConfirmOpen(true)}
+                onClick={() => setEditStatus(true)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
-                title="Save"
+                title="Edit"
               >
-                <Save className="w-3 h-3 text-gray-300" />
+                <Edit2 className="w-3 h-3 text-gray-300" />
               </motion.button>
-              <motion.button
-                onClick={() => setEditStatus(false)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-black text-xs font-semibold hover:bg-red-700"
-                title="Cancel"
-              >
-                <SaveOff className="w-3 h-3 text-gray-300" />
-              </motion.button>
-            </div>
-          )}
-        </div>
+            )}
+            {editStatus && (
+              <div className="flex gap-2">
+                <motion.button
+                  onClick={() => setConfirmOpen(true)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a]"
+                  title="Save"
+                >
+                  <Save className="w-3 h-3 text-gray-300" />
+                </motion.button>
+                <motion.button
+                  onClick={() => setEditStatus(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-black text-xs font-semibold hover:bg-red-700"
+                  title="Cancel"
+                >
+                  <SaveOff className="w-3 h-3 text-gray-300" />
+                </motion.button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Grid */}
@@ -210,22 +195,24 @@ export function ApplicationDetail() {
           <p className="text-xs font-semibold text-white mb-2">
             Other Information
           </p>
-          <p className="flex flex-col gap-2 text-xs text-gray-400">
-            <span>
-              Job applied for{" "}
-              <span className="font-semibold">{app?.job?.title ?? "-"}</span>
-            </span>
-            <span>
-              Submitted on{" "}
-              {app?.dT_Created &&
-                new Date(app?.dT_Created).toLocaleString("en-GB")}
-            </span>
-            <span>
-              Updated on{" "}
-              {app?.dT_Modified &&
-                new Date(app?.dT_Modified).toLocaleString("en-GB")}
-            </span>
-          </p>
+          {app && (
+            <p className="flex flex-col gap-2 text-xs text-gray-400">
+              <span>
+                Job applied for{" "}
+                <span className="font-semibold">{app?.job?.title ?? "-"}</span>
+              </span>
+              <span>
+                Submitted on{" "}
+                {app?.dT_Created &&
+                  new Date(app?.dT_Created).toLocaleString("en-GB")}
+              </span>
+              <span>
+                Updated on{" "}
+                {app?.dT_Modified &&
+                  new Date(app?.dT_Modified).toLocaleString("en-GB")}
+              </span>
+            </p>
+          )}
         </div>
       </div>
 

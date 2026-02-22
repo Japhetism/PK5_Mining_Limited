@@ -1,18 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 import {
   getApplicationById,
   updateJobApplicationStatus,
 } from "@/app/api/applications";
 import { ApiError } from "@/app/interfaces";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAxiosErrorMessage } from "@/app/utils/axios-error";
+import { toastUtil } from "@/app/utils/toast";
 
 function useApplicationDetailsViewModel() {
   const queryClient = useQueryClient();
   const { applicationId } = useParams<{ applicationId: string }>();
 
-  const [error, setError] = useState<string | null>(null);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [resumeLoading, setResumeLoading] = useState(false);
   const [editStatus, setEditStatus] = useState<boolean>(false);
@@ -20,7 +20,7 @@ function useApplicationDetailsViewModel() {
   const [updating, setUpdating] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["applications", applicationId],
     queryFn: () => getApplicationById(applicationId as string),
     enabled: !!applicationId,
@@ -30,7 +30,7 @@ function useApplicationDetailsViewModel() {
   const updateMutation = useMutation({
     mutationFn: (newStatus: string) => {
       if (!applicationId) {
-        toast.error("Invalid application ID");
+        toastUtil.error("Invalid application ID");
         throw new Error("Invalid application ID");
       }
       const payload = {
@@ -46,18 +46,17 @@ function useApplicationDetailsViewModel() {
       queryClient.invalidateQueries({
         queryKey: ["applications", applicationId],
       });
+      toastUtil.success("Application status updated successfully");
     },
     onError: (err: unknown) => {
-      console.error(err);
       setUpdating(false);
 
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error ? err.message : undefined) ??
-        "An error occurred while updating the job. Please try again.";
+      const message = getAxiosErrorMessage(
+        error,
+        "An error occurred while updating application status. Please try again.",
+      );
 
-      setError(message);
-      toast.error(message);
+      toastUtil.error(message);
     },
   });
 
@@ -75,13 +74,23 @@ function useApplicationDetailsViewModel() {
 
   const handleUpdateStatus = () => {
     if (!selectedStatus) {
-      setError("Please select a status");
+      toastUtil.error("Please select a status");
       return;
     }
 
     setUpdating(true);
     updateMutation.mutate(selectedStatus);
   };
+
+  useEffect(() => {
+    if (error) {
+      const message = getAxiosErrorMessage(
+        error,
+        "An error occurred while fetching application details. Please try again.",
+      );
+      toastUtil.error(message);
+    }
+  }, [error]);
 
   const app = data ?? undefined;
 

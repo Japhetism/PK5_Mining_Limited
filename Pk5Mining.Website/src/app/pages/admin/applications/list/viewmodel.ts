@@ -9,6 +9,8 @@ import {
   JobApplicationDto,
 } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
+import { toastUtil } from "@/app/utils/toast";
+import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
 function useApplicationsListViewModel() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,7 +18,6 @@ function useApplicationsListViewModel() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<ApplicationStatusFilter>("all");
   const [isFilter, setIsFilter] = useState<boolean>(false);
-  const [filterEmail, setFilterEmail] = useState<string>("");
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
   );
@@ -56,6 +57,16 @@ function useApplicationsListViewModel() {
     staleTime: 30_000,
   });
 
+   useEffect(() => {
+    if (error) {
+      const message = getAxiosErrorMessage(
+        error,
+        "An error occurred while fetching applications. Please try again.",
+      );
+      toastUtil.error(message);
+    }
+  }, [error]);
+
   const updateFilter = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
@@ -77,7 +88,6 @@ function useApplicationsListViewModel() {
     totalCount,
     totalPages,
     isLoading,
-    error,
     search,
     status,
     isFilter,

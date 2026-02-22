@@ -17,7 +17,6 @@ export function ApplicationList() {
     totalCount,
     totalPages,
     filters,
-    error,
     isLoading,
     isFilter,
     pageNumber,
@@ -124,27 +123,23 @@ export function ApplicationList() {
         </div>
       </div>
 
-      {error ? (
-        <div className="text-sm text-red-400">Failed to load applications.</div>
-      ) : (
-        <PaginatedTable<JobApplicationDto>
-          data={apps}
-          columns={columns}
-          isLoading={isLoading}
-          searchPlaceholder="Search name, email, role, country..."
-          statusValue={status}
-          onStatusChange={(v) => setStatus(v as ApplicationStatusFilter)}
-          emptyTitle="No applications yet. Once candidates apply, they will appear here."
-          noResultsTitle="No results found. Try changing your filters."
-          setPageNumber={onChangePage}
-          setPageSize={onChangePageSize}
-          pageNumber={pageNumber}
-          pageSize={pageSize}
-          totalCount={totalCount}
-          totalPages={totalPages}
-          isFilter={isFilter}
-        />
-      )}
+      <PaginatedTable<JobApplicationDto>
+        data={apps}
+        columns={columns}
+        isLoading={isLoading}
+        searchPlaceholder="Search name, email, role, country..."
+        statusValue={status}
+        onStatusChange={(v) => setStatus(v as ApplicationStatusFilter)}
+        emptyTitle="No applications yet. Once candidates apply, they will appear here."
+        noResultsTitle="No results found. Try changing your filters."
+        setPageNumber={onChangePage}
+        setPageSize={onChangePageSize}
+        pageNumber={pageNumber}
+        pageSize={pageSize}
+        totalCount={totalCount}
+        totalPages={totalPages}
+        isFilter={isFilter}
+      />
     </div>
   );
 }
