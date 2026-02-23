@@ -1,7 +1,6 @@
-// src/app/components/contact/contact-reply-modal.tsx
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
-import { Modal } from "../ui/modal"; // adjust path to where your Modal lives
+import { Modal } from "../ui/modal";
 
 type Props = {
   open: boolean;
