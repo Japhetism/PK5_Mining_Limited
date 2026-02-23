@@ -76,7 +76,7 @@ export function ContactMessageList() {
       render: (row) => (
         <div className="inline-flex items-center gap-2">
           <Link
-            to={`/admin/contact/${row.id}`}
+            to={`/admin/contact-messages/${row.id}`}
             title="View contact message details"
             onClick={() => {
               queryClient.setQueryData(

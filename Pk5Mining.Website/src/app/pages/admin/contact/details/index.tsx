@@ -1,0 +1,118 @@
+import { Link } from "react-router-dom";
+import { ArrowLeft, Mail, CheckCircle2 } from "lucide-react";
+// import { ContactReplyModal } from "@/app/components/contact/contact-reply-modal";
+import useContactDetailsViewModel from "./viewmodel";
+import { formatDateTime } from "@/app/utils/helper";
+
+export function ContactMessageDetails() {
+  const {
+    id,
+    thread,
+    contact,
+    defaultReplySubject,
+    isLoading,
+    isError,
+    isReplyOpen,
+    replyMutation,
+    statusMutation,
+    markReadMutation,
+    setIsReplyOpen,
+  } = useContactDetailsViewModel();
+
+  // If it's new, mark read once we have it
+  if (contact?.status === "new" && !markReadMutation.isPending) {
+    // fire and forget
+    markReadMutation.mutate();
+  }
+
+  if (!id) return null;
+
+  if (isLoading) return <div className="p-6 text-sm text-gray-300">Loading...</div>;
+  if (isError || !thread || !contact)
+    return <div className="p-6 text-sm text-red-400">Failed to load message.</div>;
+
+  return (
+    <div className="p-4 sm:p-6 space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <Link
+          to="/admin/contact"
+          className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-lg border border-gray-800 bg-[#0f0f0f] hover:bg-[#151515]"
+        >
+          <ArrowLeft size={16} />
+          Back
+        </Link>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsReplyOpen(true)}
+            className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-lg border border-gray-800 bg-[#0f0f0f] hover:bg-[#151515]"
+          >
+            <Mail size={16} />
+            Reply
+          </button>
+
+          <button
+            onClick={() => statusMutation.mutate("resolved")}
+            disabled={statusMutation.isPending}
+            className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-lg border border-gray-800 bg-[#c89b3c]/10 hover:bg-[#c89b3c]/20 disabled:opacity-50"
+          >
+            <CheckCircle2 size={16} />
+            Mark resolved
+          </button>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-gray-800 bg-[#0f0f0f] p-4 sm:p-5 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+          <div>
+            <h1 className="text-base font-semibold">{contact.subject}</h1>
+            <p className="text-xs text-gray-400">
+              From <span className="text-gray-200">{contact.name}</span> •{" "}
+              <a className="underline" href={`mailto:${contact.email}`}>
+                {contact.email}
+              </a>
+              {contact.company ? ` • ${contact.company}` : ""}
+            </p>
+          </div>
+
+          <div className="text-xs text-gray-400">
+            <div>Created: {formatDateTime(contact.dT_Created)}</div>
+            <div>Status: {contact.status}</div>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-gray-800 bg-black/20 p-3 text-sm text-gray-100 whitespace-pre-wrap">
+          {contact.message}
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-gray-800 bg-[#0f0f0f] p-4 sm:p-5">
+        <h2 className="text-sm font-semibold">Replies</h2>
+        <div className="mt-3 space-y-3">
+          {thread.replies?.length ? (
+            thread.replies.map((r) => (
+              <div key={r.id} className="rounded-lg border border-gray-800 bg-black/20 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-xs text-gray-300">{r.subject}</div>
+                  <div className="text-xs text-gray-500">{formatDateTime(r.dT_Created)}</div>
+                </div>
+                <div className="mt-2 text-sm text-gray-100 whitespace-pre-wrap">{r.message}</div>
+              </div>
+            ))
+          ) : (
+            <div className="text-xs text-gray-400">No replies yet.</div>
+          )}
+        </div>
+      </div>
+
+      {/* <ContactReplyModal
+        isOpen={isReplyOpen}
+        onClose={() => setIsReplyOpen(false)}
+        toEmail={contact.email}
+        defaultSubject={defaultReplySubject}
+        isSending={replyMutation.isPending}
+        onSend={(payload) => replyMutation.mutate(payload)}
+      /> */}
+    </div>
+  );
+}
