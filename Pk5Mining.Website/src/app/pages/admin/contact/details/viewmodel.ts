@@ -7,6 +7,7 @@ import {
   updateContactStatus,
 } from "@/app/api/contact";
 import { ContactStatus } from "@/app/interfaces";
+import { mockContactMessages } from "@/app/fixtures";
 
 function useContactDetailsViewModel() {
   const { id } = useParams<{ id: string }>();
@@ -64,7 +65,7 @@ function useContactDetailsViewModel() {
   return {
     id,
     thread,
-    contact,
+    contact: mockContactMessages[1],
     defaultReplySubject,
     isLoading,
     isError,
