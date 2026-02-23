@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { BarChart3, Briefcase, FileText, LogOut } from "lucide-react";
+import { BarChart3, Briefcase, FileText, LogOut, Mails } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting } from "@/app/utils/helper";
 import Logo from "../../../assets/images/logo.png";
@@ -9,6 +9,7 @@ const nav = [
   { to: "/admin", label: "Dashboard", icon: BarChart3, end: true },
   { to: "/admin/jobs", label: "Job Openings", icon: Briefcase },
   { to: "/admin/applications", label: "Applications", icon: FileText },
+  { to: "/admin/contact-messages", label: "Contact Messages", icon: Mails },
 ];
 
 export function AdminLayout() {

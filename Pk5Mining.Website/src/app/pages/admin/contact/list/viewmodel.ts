@@ -1,22 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getApplications } from "@/app/api/applications";
+import { getContactMessages } from "@/app/api/contact";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
-import {
-  ApplicationsQuery,
-  ApplicationStatusFilter,
-  JobApplicationDto,
-} from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
+import { ContactMessageDto, ContactQuery } from "@/app/interfaces";
 import { toastUtil } from "@/app/utils/toast";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
-function useApplicationsListViewModel() {
-  const [searchParams, setSearchParams] = useSearchParams();
+function useContactListViewModel() {
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState<ApplicationStatusFilter>("all");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -24,36 +19,36 @@ function useApplicationsListViewModel() {
   const [pageSize, setPageSize] = useState(() =>
     toNumber(searchParams.get("pageSize"), 10),
   );
-
+  
   const [filters, setFilters] = useState({
-    email: searchParams.get("email") ?? "",
+    search: searchParams.get("search") ?? "",
   });
 
   const debouncedFilters = useDebouncedValue(filters, 400);
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.email]);
+  }, [debouncedFilters.search]);
 
-  const queryParams: ApplicationsQuery = useMemo(() => {
-    const raw: ApplicationsQuery = {
+  const queryParams: ContactQuery = useMemo(() => {
+    const raw: ContactQuery = {
       pageNumber,
       pageSize,
-      email: debouncedFilters.email,
+      search: debouncedFilters.search,
     };
-
+  
     // clean out empty strings
-    return cleanParams(raw) as ApplicationsQuery;
-  }, [pageNumber, pageSize, debouncedFilters]);
+    return cleanParams(raw) as ContactQuery;
+  }, [pageNumber, pageSize, filterStatus, debouncedFilters]);
 
-  const { data, isLoading, error } = useQuery({
+   const { data, isLoading, error } = useQuery({
     queryKey: [
-      "applications",
+      "contactMessages",
       queryParams.pageNumber,
       queryParams.pageSize,
-      queryParams.email ?? "",
+      queryParams.search ?? "",
     ],
-    queryFn: () => getApplications(queryParams),
+    queryFn: () => getContactMessages(queryParams),
     staleTime: 30_000,
   });
 
@@ -61,7 +56,7 @@ function useApplicationsListViewModel() {
     if (error) {
       const message = getAxiosErrorMessage(
         error,
-        "An error occurred while fetching applications. Please try again.",
+        "An error occurred while fetching contact messages. Please try again.",
       );
       toastUtil.error(message);
     }
@@ -69,6 +64,7 @@ function useApplicationsListViewModel() {
 
   const updateFilter = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+    setIsFilter(true);
   };
 
   const onChangePage = (next: number) => setPageNumber(next);
@@ -78,34 +74,30 @@ function useApplicationsListViewModel() {
     setPageNumber(1);
   };
 
-  const apps: JobApplicationDto[] = data?.data ?? [];
+  const contactMessages: ContactMessageDto[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
 
   return {
-    queryClient,
-    apps,
+    contactMessages,
+    isLoading,
     totalCount,
     totalPages,
-    isLoading,
-    search,
-    status,
-    isFilter,
     filters,
     pageNumber,
     pageSize,
+    filterStatus,
+    isFilter,
+    queryClient,
     updateFilter,
-    setSearch,
-    setStatus,
-    setIsFilter,
-    setFilters,
     onChangePage,
     onChangePageSize,
-  };
+    setFilterStatus,
+  }
 }
 
-export default useApplicationsListViewModel;
+export default useContactListViewModel;
 
-export type ApplicationsListViewModel = ReturnType<
-  typeof useApplicationsListViewModel
+export type ContactListViewModel = ReturnType<
+  typeof useContactListViewModel
 >;

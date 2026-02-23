@@ -8,6 +8,7 @@ import { JobEdit } from "@/app/pages/admin/jobs/edit";
 import { JobDetail } from "@/app/pages/admin/jobs/details";
 import { ApplicationList } from "@/app/pages/admin/applications/list";
 import { ApplicationDetail } from "@/app/pages/admin/applications/details";
+import { ContactMessageList } from "../pages/admin/contact/list";
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
@@ -29,6 +30,7 @@ export const adminRoutes: RouteObject[] = [
             path: "applications/:applicationId",
             element: <ApplicationDetail />,
           },
+          { path: "contact-messages", element: <ContactMessageList />},
         ],
       },
     ],

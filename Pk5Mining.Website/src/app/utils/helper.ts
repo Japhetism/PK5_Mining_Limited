@@ -76,3 +76,9 @@ export const formatDate = (date: string) =>
     month: "long",
     year: "numeric",
   });
+
+export const formatDateTime = (s?: string | null) => {
+  if (!s) return "-";
+  // You used toLocaleString before; keep it but you can enforce day-first with en-GB
+  return new Date(s).toLocaleString("en-GB");
+};

@@ -1,14 +1,12 @@
-import axios from "axios";
 import {
   ApiResponse,
   ApplicationResponsePayload,
   ApplicationsByJobIdQuery,
   ApplicationsQuery,
-  IJobApplication,
   JobApplicationDto,
-  JobDto,
 } from "../interfaces";
 import { http } from "./http";
+import { getAxiosErrorMessage } from "../utils/axios-error";
 
 export async function applyToJob(payload: FormData) {
   try {
@@ -20,23 +18,18 @@ export async function applyToJob(payload: FormData) {
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
-        data.responseMessage || "Failed to create job application",
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to create job application",
+        ),
       );
     }
 
     return data.responseData;
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      const backendMsg = (
-        err.response?.data as ApiResponse<unknown> | undefined
-      )?.responseMessage;
-
-      throw new Error(
-        backendMsg || err.message || "Failed to create job application",
-      );
-    }
-
-    throw err;
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to create job application"),
+    );
   }
 }
 
@@ -49,21 +42,18 @@ export async function getApplications(params: ApplicationsQuery) {
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
-        data.responseMessage || "Failed to fetch job application",
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to fetch job applications",
+        ),
       );
     }
 
     return data.responseData;
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      const backendMsg = (
-        err.response?.data as ApiResponse<unknown> | undefined
-      )?.responseMessage;
-
-      throw new Error(backendMsg || err.message || "Failed to fetch jobs");
-    }
-
-    throw err;
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to fetch job applications"),
+    );
   }
 }
 
@@ -75,23 +65,18 @@ export async function getApplicationById(id: string) {
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
-        data.responseMessage || "Failed to fetch job application details",
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to fetch job application details",
+        ),
       );
     }
 
     return data.responseData;
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      const backendMsg = (
-        err.response?.data as ApiResponse<unknown> | undefined
-      )?.responseMessage;
-
-      throw new Error(
-        backendMsg || err.message || "Failed to fetch job application details",
-      );
-    }
-
-    throw err;
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to fetch job application details"),
+    );
   }
 }
 
@@ -108,27 +93,25 @@ export async function updateJobApplicationStatus(payload: {
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
-        data.responseMessage || "Failed to update job application status",
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to update job application status",
+        ),
       );
     }
 
     return data.responseData;
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      const backendMsg = (
-        err.response?.data as ApiResponse<unknown> | undefined
-      )?.responseMessage;
-
-      throw new Error(
-        backendMsg || err.message || "Failed to update job application status",
-      );
-    }
-
-    throw err;
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to update job application status"),
+    );
   }
 }
 
-export async function getJobApplicationsByJobId(jobId: string, params: ApplicationsByJobIdQuery) {
+export async function getJobApplicationsByJobId(
+  jobId: string,
+  params: ApplicationsByJobIdQuery,
+) {
   try {
     const { data } = await http.get<ApiResponse<ApplicationResponsePayload>>(
       `/JobApplication/ByJobId/${jobId}`,
@@ -137,22 +120,17 @@ export async function getJobApplicationsByJobId(jobId: string, params: Applicati
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
-        data.responseMessage || "Failed to get job applications by job id",
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to get job applications by job id",
+        ),
       );
     }
 
     return data.responseData;
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      const backendMsg = (
-        err.response?.data as ApiResponse<unknown> | undefined
-      )?.responseMessage;
-
-      throw new Error(
-        backendMsg || err.message || "Failed to get job applications by job id",
-      );
-    }
-
-    throw err;
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to get job applications by job id"),
+    );
   }
 }

@@ -280,3 +280,47 @@ export type ApplicationStatusFilter =
   | "shortlisted"
   | "rejected"
   | "hired";
+
+export type ContactStatus = "new" | "read" | "in review" |"replied" | "resolved" | "closed" | "archived";
+
+export type ContactMessageDto = {
+  id: string;
+  name: string;
+  email: string;
+  company?: string | null;
+  subject: string;
+  message: string;
+  status: ContactStatus;
+  dT_Created: string; // keep naming consistent with your backend style
+  dT_Updated?: string | null;
+};
+
+export type ContactReplyDto = {
+  id: string;
+  contactId: string;
+  subject: string;
+  message: string;
+  sentByAdminName?: string | null;
+  dT_Created: string;
+};
+
+export type ContactThreadDto = {
+  contact: ContactMessageDto;
+  replies: ContactReplyDto[];
+};
+
+export type ContactQuery = {
+  pageNumber?: number;
+  pageSize?: number;
+  status?: ContactStatus | "all";
+  search?: string; // search by name/email/subject
+};
+
+export type ReplyToContactBody = {
+  subject: string;
+  message: string;
+};
+
+export type ContactResponsePayload = {
+  data: ContactMessageDto[];
+} & PaginationInfo;
