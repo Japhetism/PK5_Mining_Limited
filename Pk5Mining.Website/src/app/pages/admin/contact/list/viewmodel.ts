@@ -93,6 +93,7 @@ function useContactListViewModel() {
     onChangePage,
     onChangePageSize,
     setFilterStatus,
+    setIsFilter,
   }
 }
 

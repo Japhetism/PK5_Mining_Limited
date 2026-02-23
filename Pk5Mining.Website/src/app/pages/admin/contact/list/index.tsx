@@ -34,6 +34,7 @@ export function ContactMessageList() {
     onChangePage,
     onChangePageSize,
     setFilterStatus,
+    setIsFilter,
   } = useContactListViewModel();
 
   const columns: PaginatedTableColumn<ContactMessageDto>[] = [
@@ -107,34 +108,45 @@ export function ContactMessageList() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-lg font-semibold">Contact Messages</h1>
-          <p className="text-xs text-gray-400">
+          <h1 className="text-2xl font-bold mb-1">Contact Messages</h1>
+          <p className="text-sm text-gray-400">
             Track contact form submissions, reply, and resolve.
           </p>
         </div>
+      </div>
 
-        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-          <motion.input
-            value={filters.search}
-            onChange={(e) => updateFilter("search", e.target.value)}
-            placeholder="Search name, email, subject..."
-            className="w-full sm:w-[280px] rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-2 text-sm text-gray-100 outline-none focus:border-[#c89b3c]"
-          />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex items-center gap-3">
+          <div className="w-full sm:w-[500px]">
+            <input
+              name="search"
+              type="text"
+              value={filters.search}
+              onChange={(e) => updateFilter("search", e.target.value)}
+              placeholder="Search by name, email, subject..."
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+            />
+          </div>
 
-          <motion.select
+          <select
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-2 text-sm text-gray-100 outline-none focus:border-[#c89b3c]"
+            onChange={(e) => {
+              setFilterStatus(e.target.value as ContactStatus | "all");
+              setIsFilter(true);
+            }}
+            className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
           >
-            {statusOptions.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
+            <option value="">All Statuses</option>
+            {statusOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
               </option>
             ))}
-          </motion.select>
+          </select>
         </div>
       </div>
 
