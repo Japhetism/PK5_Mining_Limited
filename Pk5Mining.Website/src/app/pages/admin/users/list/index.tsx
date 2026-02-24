@@ -34,11 +34,21 @@ export function UserList() {
     pageNumber,
     pageSize,
     isLoading,
+    selectedUser,
+    deleting,
+    updating,
+    toggleOpen,
+    deleteOpen,
     updateFilter,
     onChangePage,
     onChangePageSize,
     setFilterStatus,
     setIsFilter,
+    setSelectedUser,
+    setToggleOpen,
+    setDeleteOpen,
+    handleDeleteUser,
+    handleUpdateStatus
   } = useUserListViewModel();
 
   const columns: PaginatedTableColumn<UserDto>[] = useMemo(
@@ -61,13 +71,11 @@ export function UserList() {
         render: (u) => (
           <span className="text-xs text-gray-300">{u.role ?? "-"}</span>
         ),
-        className: "w-[160px]",
       },
       {
         key: "status",
         header: "Status",
         render: (u) => <UserStatusPill isActive={u.isActive} />,
-        className: "w-[120px]",
       },
       {
         key: "dT_Created",
@@ -77,13 +85,14 @@ export function UserList() {
             {formatDateTime(u.dT_Created)}
           </span>
         ),
-        className: "w-[170px]",
       },
       {
         key: "actions",
         header: "Actions",
+        headerClassName: "text-right",
+        className: "text-right",
         render: (u) => (
-          <div className="flex items-center gap-2">
+          <div className="inline-flex items-center gap-2">
             <Link
               to={`/admin/users/${u.id}`}
               className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-gray-800 bg-[#0f0f0f] hover:bg-[#151515]"
@@ -94,7 +103,10 @@ export function UserList() {
 
             <button
               type="button"
-              // onClick={() => setToggleTarget(u)}
+              onClick={() => {
+                setSelectedUser(u);
+                setToggleOpen(true);
+              }}
               className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-gray-800 bg-[#0f0f0f] hover:bg-[#151515]"
             >
               <Power size={14} />
@@ -103,7 +115,10 @@ export function UserList() {
 
             <button
               type="button"
-              // onClick={() => setDeleteTarget(u)}
+              onClick={() => {
+                setSelectedUser(u);
+                setDeleteOpen(true);
+              }}
               className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md border border-gray-800 bg-[#0f0f0f] hover:bg-[#151515]"
             >
               <Trash2 size={14} />
@@ -111,7 +126,6 @@ export function UserList() {
             </button>
           </div>
         ),
-        className: "w-[320px]",
       },
     ],
     [],
@@ -176,44 +190,44 @@ export function UserList() {
       />
 
       {/* Delete confirm */}
-      {/* <ConfirmModal
-        open={!!deleteTarget}
-        onClose={() => setDeleteTarget(null)}
-        onConfirm={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
+      <ConfirmModal
+        open={deleteOpen}
+        onClose={() => {
+          setSelectedUser(null);
+          setDeleteOpen(false);
+        }}
+        onConfirm={() => handleDeleteUser()}
         title="Delete user"
         description={
-          deleteTarget
-            ? `Are you sure you want to delete ${deleteTarget.firstName} ${deleteTarget.lastName}?`
+          selectedUser
+            ? `Are you sure you want to delete ${selectedUser?.firstName} ${selectedUser?.lastName}?`
             : undefined
         }
         confirmText="Delete"
         cancelText="Cancel"
-        loading={deleteMutation.isPending}
-      /> */}
+        loading={deleting}
+      />
 
       {/* Activate/Deactivate confirm */}
-      {/* <ConfirmModal
-        open={!!toggleTarget}
-        onClose={() => setToggleTarget(null)}
-        onConfirm={() =>
-          toggleTarget &&
-          toggleMutation.mutate({
-            id: toggleTarget.id,
-            isActive: !toggleTarget.isActive,
-          })
-        }
-        title={toggleTarget?.isActive ? "Deactivate user" : "Activate user"}
+      <ConfirmModal
+        open={toggleOpen}
+        onClose={() => {
+          setSelectedUser(null);
+          setToggleOpen(false);
+        }}
+        onConfirm={() => handleUpdateStatus(!selectedUser?.isActive)}
+        title={selectedUser?.isActive ? "Deactivate user" : "Activate user"}
         description={
-          toggleTarget
-            ? toggleTarget.isActive
-              ? `This will prevent ${toggleTarget.email} from accessing the portal.`
-              : `This will allow ${toggleTarget.email} to access the portal.`
+          selectedUser
+            ? selectedUser?.isActive
+              ? `This will prevent ${selectedUser?.email} from accessing the portal.`
+              : `This will allow ${selectedUser?.email} to access the portal.`
             : undefined
         }
-        confirmText={toggleTarget?.isActive ? "Deactivate" : "Activate"}
+        confirmText={selectedUser?.isActive ? "Deactivate" : "Activate"}
         cancelText="Cancel"
-        loading={toggleMutation.isPending}
-      /> */}
+        loading={updating}
+      />
     </div>
   );
 }

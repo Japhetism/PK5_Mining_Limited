@@ -36,6 +36,7 @@ import {
   ISocialLink,
   ITimelineEvent,
   IUser,
+  UserDto,
 } from "../interfaces";
 import CEOImg from "../../assets/images/CEO.png";
 import HOOImg from "../../assets/images/HOO.png";
@@ -424,4 +425,58 @@ export const mockContactMessages: ContactMessageDto[] = [
     "dT_Updated": "2026-02-23T08:50:00Z",
   }
 ]
+
+// to be removed
+export const mockUsers: UserDto[] = [
+  {
+    id: "usr_001",
+    firstName: "Babatunde",
+    lastName: "Ojo",
+    email: "babatunde.ojo@company.com",
+    role: "Super Admin",
+    isActive: true,
+    dT_Created: "2026-01-10T08:30:00Z",
+    dT_Updated: "2026-02-01T10:15:00Z",
+  },
+  {
+    id: "usr_002",
+    firstName: "Chioma",
+    lastName: "Adeyemi",
+    email: "chioma.adeyemi@company.com",
+    role: "HR Manager",
+    isActive: true,
+    dT_Created: "2026-01-12T09:45:00Z",
+    dT_Updated: null,
+  },
+  {
+    id: "usr_003",
+    firstName: "David",
+    lastName: "Okonkwo",
+    email: "david.okonkwo@company.com",
+    role: "Recruiter",
+    isActive: false,
+    dT_Created: "2026-01-15T11:20:00Z",
+    dT_Updated: "2026-02-18T14:00:00Z",
+  },
+  {
+    id: "usr_004",
+    firstName: "Aisha",
+    lastName: "Balogun",
+    email: "aisha.balogun@company.com",
+    role: "Admin",
+    isActive: true,
+    dT_Created: "2026-01-20T13:10:00Z",
+    dT_Updated: null,
+  },
+  {
+    id: "usr_005",
+    firstName: "Emeka",
+    lastName: "Nwosu",
+    email: "emeka.nwosu@company.com",
+    role: "Viewer",
+    isActive: false,
+    dT_Created: "2026-01-25T15:05:00Z",
+    dT_Updated: "2026-02-10T09:30:00Z",
+  },
+];
 

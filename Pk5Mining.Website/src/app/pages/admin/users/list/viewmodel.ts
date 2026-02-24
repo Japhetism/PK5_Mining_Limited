@@ -12,7 +12,11 @@ function useUserListViewModel() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
   const [updating, setUpdating] = useState<boolean>(false);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [toggleOpen, setToggleOpen] = useState<boolean>(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState(() =>
@@ -111,6 +115,14 @@ function useUserListViewModel() {
     setPageNumber(1);
   };
 
+  const handleDeleteUser = () => {
+
+  }
+
+  const handleUpdateStatus = (isActive: boolean) => {
+
+  }
+
   const users: UserDto[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -125,11 +137,21 @@ function useUserListViewModel() {
     pageNumber,
     pageSize,
     isLoading,
+    selectedUser,
+    deleting,
+    updating,
+    toggleOpen,
+    deleteOpen,
     updateFilter,
     onChangePage,
     onChangePageSize,
     setFilterStatus,
     setIsFilter,
+    setSelectedUser,
+    setDeleteOpen,
+    setToggleOpen,
+    handleDeleteUser,
+    handleUpdateStatus
   }
 }
 

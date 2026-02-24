@@ -9,11 +9,21 @@ import {
 } from "@/app/interfaces";
 import { http } from "./http";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
+import { mockUsers } from "../fixtures";
 
 const useMock = import.meta.env.VITE_USE_MOCK_CONTACT_MESSAGES === "true";
 
 export async function getUsers(params: UsersQuery) {
   try {
+    if (useMock) {
+      // Simulate mock response structure
+      return {
+        data: mockUsers,
+        totalCount: mockUsers.length,
+        totalPages: 1,
+      };
+    }
+
     const { data } = await http.get<ApiResponse<UsersResponsePayload>>(
       "/api/users",
       { params },

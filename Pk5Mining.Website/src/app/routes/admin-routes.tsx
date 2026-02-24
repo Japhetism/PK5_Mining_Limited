@@ -11,6 +11,7 @@ import { ApplicationDetail } from "@/app/pages/admin/applications/details";
 import { ContactMessageList } from "../pages/admin/contact/list";
 import { ContactMessageDetails } from "../pages/admin/contact/details";
 import { UserList } from "../pages/admin/users/list";
+import { UserDetails } from "../pages/admin/users/details";
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
@@ -34,7 +35,8 @@ export const adminRoutes: RouteObject[] = [
           },
           { path: "contact-messages", element: <ContactMessageList /> },
           { path: "contact-messages/:id", element: <ContactMessageDetails /> },
-          { path: "users", element: <UserList /> }
+          { path: "users", element: <UserList /> },
+          { path: "users/:id", element: <UserDetails /> }
         ],
       },
     ],
