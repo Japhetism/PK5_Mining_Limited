@@ -324,3 +324,45 @@ export type ReplyToContactBody = {
 export type ContactResponsePayload = {
   data: ContactMessageDto[];
 } & PaginationInfo;
+
+export type UserStatus = "active" | "inactive";
+
+export type UserDto = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role?: string | null;
+  isActive: boolean;
+  dT_Created: string;
+  dT_Updated?: string | null;
+};
+
+export type UsersResponsePayload = {
+  data: UserDto[];
+} & PaginationInfo;
+
+export type UsersQuery = {
+  pageNumber?: number;
+  pageSize?: number;
+  status?: "all" | UserStatus;
+  search?: string; // name/email
+};
+
+export type UpdateUserBody = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role?: string | null;
+  isActive?: boolean;
+};
+
+export type UpdateUserStatusBody = {
+  isActive: boolean;
+};
+
+export type ResetPasswordResponse = {
+  // depends on your backend - could be temp password or just ok message
+  tempPassword?: string;
+  message?: string;
+};
