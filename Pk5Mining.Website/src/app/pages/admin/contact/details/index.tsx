@@ -1,10 +1,9 @@
-import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, CheckCircle2 } from "lucide-react";
-// import { ContactReplyModal } from "@/app/components/contact/contact-reply-modal";
-import useContactDetailsViewModel from "./viewmodel";
 import { formatDateTime } from "@/app/utils/helper";
 import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
 import { ContactReplyModal } from "@/app/components/ui/contact-reply-modal";
+import { ContactDetailsSkeleton } from "@/app/components/ui/contact-details-skeleton";
+import useContactDetailsViewModel from "./viewmodel";
 
 export function ContactMessageDetails() {
   const {
@@ -29,9 +28,8 @@ export function ContactMessageDetails() {
 
   if (!id) return null;
 
-  if (isLoading)
-    return <div className="p-6 text-sm text-gray-300">Loading...</div>;
- 
+  if (isLoading) return <ContactDetailsSkeleton />;
+
   return (
     <div className="space-y-6">
       {/* Top bar */}
@@ -44,7 +42,7 @@ export function ContactMessageDetails() {
           <ArrowLeft className="w-3 h-3" />
           Back to contact messages
         </button>
-        
+
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsReplyOpen(true)}
@@ -80,7 +78,9 @@ export function ContactMessageDetails() {
 
           <div className="text-xs text-gray-400 gap-2 flex flex-col">
             <div>Created: {formatDateTime(contact.dT_Created)}</div>
-            <div>Status: <ContactStatusPill status={contact.status} /></div>
+            <div>
+              Status: <ContactStatusPill status={contact.status} />
+            </div>
           </div>
         </div>
 
