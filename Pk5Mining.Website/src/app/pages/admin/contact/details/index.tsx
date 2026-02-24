@@ -4,6 +4,7 @@ import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
 import { ContactReplyModal } from "@/app/components/ui/contact-reply-modal";
 import { ContactDetailsSkeleton } from "@/app/components/ui/contact-details-skeleton";
 import useContactDetailsViewModel from "./viewmodel";
+import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 
 export function ContactMessageDetails() {
   const {
@@ -17,7 +18,11 @@ export function ContactMessageDetails() {
     replyMutation,
     statusMutation,
     markReadMutation,
+    confirmOpen,
+    updating,
+    setConfirmOpen,
     setIsReplyOpen,
+    handleUpdateStatus,
   } = useContactDetailsViewModel();
 
   // If it's new, mark read once we have it
@@ -53,8 +58,8 @@ export function ContactMessageDetails() {
           </button>
 
           <button
-            onClick={() => statusMutation.mutate("resolved")}
-            disabled={statusMutation.isPending}
+            onClick={() => setConfirmOpen(true)}
+            disabled={updating}
             className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-lg border border-gray-800 bg-[#c89b3c]/10 hover:bg-[#c89b3c]/20 disabled:opacity-50"
           >
             <CheckCircle2 size={16} />
@@ -122,6 +127,17 @@ export function ContactMessageDetails() {
         defaultSubject={defaultReplySubject}
         loading={replyMutation.isPending}
         onSend={(payload) => replyMutation.mutate(payload)}
+      />
+
+      <ConfirmModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleUpdateStatus}
+        title="Update Contact Message Status"
+        description={`Are you sure you want to update the contact message status to resolved?`}
+        confirmText="Yes, update"
+        cancelText="No"
+        loading={updating}
       />
     </div>
   );

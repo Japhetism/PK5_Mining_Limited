@@ -48,7 +48,7 @@ function useApplicationDetailsViewModel() {
       });
       toastUtil.success("Application status updated successfully");
     },
-    onError: (err: unknown) => {
+    onError: (error: unknown) => {
       setUpdating(false);
 
       const message = getAxiosErrorMessage(

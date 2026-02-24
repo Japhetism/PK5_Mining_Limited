@@ -8,12 +8,17 @@ import {
 } from "@/app/api/contact";
 import { ContactStatus } from "@/app/interfaces";
 import { mockContactMessages } from "@/app/fixtures";
+import { getAxiosErrorMessage } from "@/app/utils/axios-error";
+import { toastUtil } from "@/app/utils/toast";
 
 function useContactDetailsViewModel() {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
 
-  const [isReplyOpen, setIsReplyOpen] = useState(false);
+  const [isReplyOpen, setIsReplyOpen] = useState<boolean>(false);
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [updating, setUpdating] = useState<boolean>(false);
+  const [replying, setReplying] = useState<boolean>(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["contact", "thread", id],
@@ -32,11 +37,21 @@ function useContactDetailsViewModel() {
     mutationFn: (body: { subject: string; message: string }) =>
       replyToContact(id as string, body),
     onSuccess: async () => {
+      setReplying(false);
       setIsReplyOpen(false);
       await queryClient.invalidateQueries({
         queryKey: ["contact", "thread", id],
       });
       await queryClient.invalidateQueries({ queryKey: ["contact", "list"] });
+      toastUtil.success("Contact message replied successfully");
+    },
+    onError: (error) => {
+      setReplying(false);
+      const message = getAxiosErrorMessage(
+        error,
+        "An error occurred while replying to contact message. Please try again.",
+      );
+      toastUtil.error(message);
     },
   });
 
@@ -44,10 +59,22 @@ function useContactDetailsViewModel() {
     mutationFn: (status: ContactStatus) =>
       updateContactStatus(id as string, status),
     onSuccess: async () => {
+      setUpdating(false);
+      setConfirmOpen(false);
       await queryClient.invalidateQueries({
         queryKey: ["contact", "thread", id],
       });
       await queryClient.invalidateQueries({ queryKey: ["contact", "list"] });
+      toastUtil.success("Contact message status updated successfully");
+    },
+    onError: (error) => {
+      setUpdating(false);
+      const message = getAxiosErrorMessage(
+        error,
+        "An error occurred while updating contact message status. Please try again.",
+      );
+
+      toastUtil.error(message);
     },
   });
 
@@ -60,7 +87,16 @@ function useContactDetailsViewModel() {
       ? contact.subject
       : `Re: ${contact.subject}`;
     return subj;
-  }, [contact?.subject]);
+  }, [contact?.subject]);   
+
+  const handleUpdateStatus = () => {
+    if (!id) {
+      toastUtil.error("Contact message not found");
+      return;
+    }
+
+    statusMutation.mutate("resolved");
+  }
 
   return {
     id,
@@ -73,9 +109,13 @@ function useContactDetailsViewModel() {
     replyMutation,
     statusMutation,
     markReadMutation,
+    confirmOpen,
+    replying,
+    updating,
     setIsReplyOpen,
-
-  }
+    setConfirmOpen,
+    handleUpdateStatus,
+  };
 }
 
 export default useContactDetailsViewModel;
