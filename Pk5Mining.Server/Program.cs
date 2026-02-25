@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pk5Mining.Server.Extensions;
+using Pk5Mining.Server.Services.Email;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,7 @@ builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "PKMining API", Version = "v1" });
@@ -51,6 +53,9 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+builder.Services.Configure<MailSettings>(
+            builder.Configuration.GetSection("MailSettings")
+ );
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {

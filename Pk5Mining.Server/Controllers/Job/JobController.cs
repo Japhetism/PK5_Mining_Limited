@@ -66,7 +66,7 @@ namespace Pk5Mining.Server.Controllers.Job
 
                 if (error != null)
                 {
-                    return BadRequest(error);
+                    return BadRequest(ApiResponse.Failure(null, error));
                 }
 
                 return CreatedAtAction(nameof(Get), new { id = job?.Id },
