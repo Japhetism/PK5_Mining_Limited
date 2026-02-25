@@ -1,10 +1,8 @@
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { saveContactInquiry } from "@/app/api/contact";
 import { InquiryForm, InquiryFormDto } from "@/app/interfaces";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
-import { toastUtil } from "@/app/utils/toast";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
 
 const defaultFormData = {
   name: "",
@@ -24,11 +22,10 @@ function useContactViewModel() {
 
   const createMutation = useMutation({
     mutationFn: (payload: InquiryFormDto) => saveContactInquiry(payload),
-    onSuccess: (data) => {
+    onSuccess: () => {
       setLoading(false);
       setSubmitted(true);
       setFormData(defaultFormData);
-      // toastUtil.success("Inquiry submitted successfully");
     },
     onError: (err: unknown) => {
       setLoading(false);
@@ -38,7 +35,6 @@ function useContactViewModel() {
         "An error occurred while submitting your inquiry. Please try again.",
       );
 
-      // toastUtil.error(message);
       setErrorMsg(message);
     },
   });
