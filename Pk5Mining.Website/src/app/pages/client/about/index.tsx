@@ -25,7 +25,7 @@ export function About() {
         </motion.div>
         <div className="relative z-10 container mx-auto px-6 text-center">
           <motion.h1
-            className="text-5xl md:text-6xl font-bold mb-4"
+            className="text-4xl md:text-6xl font-bold mb-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -33,7 +33,7 @@ export function About() {
             About <span className="text-[#c89b3c]">PK5 Mining</span>
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-300 md:w-3/6 xs:w-5/6 mx-auto"
+            className="text-md md:text-xl text-gray-300 md:w-3/6 xs:w-5/6 mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
