@@ -33,6 +33,7 @@ export function Contact() {
     submitted,
     loading,
     focusedField,
+    errorMsg,
     handleChange,
     handleSubmit,
     setFocusedField,
@@ -264,6 +265,16 @@ export function Contact() {
                     className="p-4 bg-green-500/10 border border-green-500 rounded-lg text-green-500 text-center"
                   >
                     Thank you! We'll get back to you soon.
+                  </motion.div>
+                )}
+
+                {errorMsg && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 bg-red-500/10 border border-red-500 rounded-lg text-red-500 text-center"
+                  >
+                    {errorMsg}
                   </motion.div>
                 )}
               </form>

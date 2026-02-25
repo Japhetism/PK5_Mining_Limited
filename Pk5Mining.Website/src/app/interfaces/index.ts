@@ -366,3 +366,22 @@ export type ResetPasswordResponse = {
   tempPassword?: string;
   message?: string;
 };
+
+export type InquiryFormDto = {
+  id?: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber?: string;
+  company?: string;
+  subject: string;
+  messageBody: string;
+}
+
+export type InquiryForm = {
+  name: string;
+  email: string;
+  company?: string;
+  subject: string;
+  message: string;
+}
