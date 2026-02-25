@@ -52,12 +52,12 @@ export function Home() {
                 transition={{ duration: 0.5 }}
                 className="absolute inset-0 flex flex-col items-center justify-center px-6"
               >
-                <h1 className="text-4xl md:text-6xl font-bold mb-2 leading-tight">
+                <h1 className="text-3xl md:text-6xl font-bold mb-2 leading-tight">
                   {content.title} <br />
                   <span className="text-[#c89b3c]">{content.subTitle}</span>
                 </h1>
 
-                <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                <p className="text-md md:text-2xl text-gray-300 max-w-3xl mx-auto">
                   {content.description}
                 </p>
               </motion.div>
@@ -65,7 +65,7 @@ export function Home() {
           </div>
 
           {/* Slide indicators */}
-          <div className="flex justify-center gap-2 mb-8">
+          <div className="flex justify-center gap-2 mb-8 mt-5">
             {slideShowContent.map((_, i) => (
               <button
                 key={i}
