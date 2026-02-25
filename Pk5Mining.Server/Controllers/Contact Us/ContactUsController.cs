@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Contact_Us;
-using Pk5Mining.Server.Models.Job;
-using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
-using Pk5Mining.Server.Repositories.Contact_Us;
-using Pk5Mining.Server.Repositories.Job;
 
 namespace Pk5Mining.Server.Controllers.Contact_Us
 {
