@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 
@@ -14,6 +15,7 @@ namespace Pk5Mining.Server.Configuration.Mapper
             ? src.JobApplications.Count : 0));
             CreateMap<Jobs, JobLightResponseDTO>();
             CreateMap<JobApplication, JobApplicationResponseDTO>().ForMember(dest => dest.Job, opt => opt.MapFrom(src => src.Jobs));
+            CreateMap<ContactUs, ContactUsDTO>().ReverseMap();
 
         }
     }

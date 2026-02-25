@@ -39,8 +39,7 @@ namespace Pk5Mining.Server.Controllers.Admin
                 Username = admin.Username,
                 JwtToken = jwtToken
             };
-
-            return Ok(response);
+            return Ok(ApiResponse.SuccessMessage(response, "Login Successful"));
         }
     }
 }
