@@ -385,3 +385,30 @@ export type InquiryForm = {
   subject: string;
   message: string;
 }
+
+export interface DashboardStatistics {
+  applicationStats: {
+    total: number;
+    byStage: {
+      new: number;
+      inReview: number;
+      shortlisted: number;
+      rejected: number;
+      hired: number;
+    };
+  };
+
+  jobStats: {
+    total: number;
+    open: number;
+    closed: number;
+  };
+
+  recentJobs: Array<{
+    jobId: string;
+    title: string;
+    isActive: boolean;
+    dT_Created: string;
+    applicationCount: number;
+  }>;
+}

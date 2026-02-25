@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import {
   ContactMessageDto,
+  DashboardStatistics,
   IBenefit,
   IFeature,
   IHighlight,
@@ -480,3 +481,59 @@ export const mockUsers: UserDto[] = [
   },
 ];
 
+export const mockDashboardResponse: DashboardStatistics = {
+  applicationStats: {
+    total: 128,
+    byStage: {
+      new: 32,
+      inReview: 45,
+      shortlisted: 18,
+      rejected: 25,
+      hired: 8,
+    },
+  },
+
+  jobStats: {
+    total: 14,
+    open: 9,
+    closed: 5,
+  },
+
+  recentJobs: [
+    {
+      jobId: "job-001",
+      title: "Senior Frontend Developer",
+      isActive: true,
+      dT_Created: "2026-02-20T09:15:00Z",
+      applicationCount: 27,
+    },
+    {
+      jobId: "job-002",
+      title: "Backend Engineer (Node.js)",
+      isActive: true,
+      dT_Created: "2026-02-18T14:30:00Z",
+      applicationCount: 19,
+    },
+    {
+      jobId: "job-003",
+      title: "Product Designer",
+      isActive: true,
+      dT_Created: "2026-02-12T08:00:00Z",
+      applicationCount: 34,
+    },
+    {
+      jobId: "job-004",
+      title: "DevOps Engineer",
+      isActive: true,
+      dT_Created: "2026-02-10T11:45:00Z",
+      applicationCount: 16,
+    },
+    {
+      jobId: "job-005",
+      title: "Mobile Engineer (React Native)",
+      isActive: true,
+      dT_Created: "2026-02-05T10:20:00Z",
+      applicationCount: 22,
+    },
+  ],
+};

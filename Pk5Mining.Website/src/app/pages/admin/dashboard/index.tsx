@@ -3,8 +3,16 @@ import { BarChart3, Briefcase, FileText, PieChart } from "lucide-react";
 import useDashboardViewModel from "./viewmodel";
 
 export function Dashboard() {
-  const { openJobs, closedJobs, totalApps, newApps, byJob, jobs, apps } =
-    useDashboardViewModel();
+  const {
+    openJobs,
+    closedJobs,
+    totalApps,
+    newApps,
+    byJob,
+    byStage,
+    totalJobs,
+    isLoading,
+  } = useDashboardViewModel();
   return (
     <div className="space-y-6">
       <div>
@@ -31,8 +39,8 @@ export function Dashboard() {
           icon={PieChart}
           label="Fill ratio"
           value={
-            jobs.length
-              ? Math.round(((jobs.length - openJobs) / jobs.length) * 100)
+            totalJobs
+              ? Math.round(((totalJobs - openJobs) / totalJobs) * 100)
               : 0
           }
           suffix="% closed"
@@ -40,7 +48,7 @@ export function Dashboard() {
         <StatCard
           icon={BarChart3}
           label="Avg. apps / role"
-          value={jobs.length ? Math.round(totalApps / jobs.length) : 0}
+          value={totalJobs ? Math.round(totalApps / totalJobs) : 0}
         />
       </div>
 
@@ -79,19 +87,19 @@ export function Dashboard() {
         <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5">
           <h2 className="text-sm font-semibold mb-4">Pipeline status</h2>
           <div className="grid grid-cols-2 gap-4 text-xs">
-            {["new", "in_review", "shortlisted", "rejected", "hired"].map(
-              (status) => {
-                const count = apps.filter((a) => a.status === status).length;
-                return (
-                  <div key={status} className="space-y-1">
-                    <p className="uppercase tracking-wide text-gray-400">
-                      {status.replace("_", " ")}
-                    </p>
-                    <p className="text-lg font-semibold">{count}</p>
-                  </div>
-                );
-              },
-            )}
+            {(
+              ["new", "in_review", "shortlisted", "rejected", "hired"] as const
+            ).map((status) => {
+              const count = byStage[status];
+              return (
+                <div key={status} className="space-y-1">
+                  <p className="uppercase tracking-wide text-gray-400">
+                    {status.replace("_", " ")}
+                  </p>
+                  <p className="text-lg font-semibold">{count}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
