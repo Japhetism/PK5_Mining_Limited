@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { BarChart3, Briefcase, FileText, PieChart } from "lucide-react";
+import { DashboardSkeleton } from "@/app/components/ui/dashboard-skeleton";
 import useDashboardViewModel from "./viewmodel";
 
 export function Dashboard() {
@@ -13,6 +14,9 @@ export function Dashboard() {
     totalJobs,
     isLoading,
   } = useDashboardViewModel();
+
+  if (isLoading) return <DashboardSkeleton />
+  
   return (
     <div className="space-y-6">
       <div>
