@@ -4,6 +4,9 @@ import { saveContactInquiry } from "@/app/api/contact";
 import { InquiryForm, InquiryFormDto } from "@/app/interfaces";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
+const AppID = import.meta.env.VITE_APP_ID as string;
+
+
 const defaultFormData = {
   name: "",
   email: "",
@@ -56,7 +59,8 @@ function useContactViewModel() {
       ...rest,
       firstName,
       lastName,
-      messageBody, 
+      messageBody,
+      appId: AppID,
     }
     
     createMutation.mutate(payload);
