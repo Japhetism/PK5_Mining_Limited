@@ -2,6 +2,7 @@
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
+using Pk5Mining.Server.Repositories.Contact_Us;
 
 namespace Pk5Mining.Server.Controllers.Contact_Us
 {
@@ -9,17 +10,33 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
     [ApiController]
     public class ContactUsController : ControllerBase
     {
-        private readonly Abs_Pk5Repo<IContactUs, IContactUsDTO> _repo;
+        private readonly IContactUsRepo _repo;
 
-        public ContactUsController(Abs_Pk5Repo<IContactUs, IContactUsDTO> repo)
+        public ContactUsController(IContactUsRepo repo)
         {
             _repo = repo;
         }
         [HttpPost("contact-us")]
-        public async Task<IActionResult> CreateContactUs([FromBody] ContactUsDTO dto)
+        public async Task<IActionResult> Post([FromBody] ContactUsDTO dto)
         {
 
-            var (contact, error, isInternalError) = await _repo.PostRepoItem(dto);
+            var (contact, error, isInternalError) = await _repo.CreateAsync(dto);
+
+            if (isInternalError)
+            {
+                return BadRequest(ApiResponse.Failure(null, error ?? "An unexpected error occurred."));
+            }
+            if (error != null)
+            {
+                return BadRequest(ApiResponse.Failure(null, error));
+            }
+            return Ok(ApiResponse.SuccessMessage(contact, "Your message has been sent successfully."));
+        }
+        [HttpPost("agro-contact-us")]
+        public async Task<IActionResult> PostAgro([FromBody] ContactUsDTO dto)
+        {
+
+            var (contact, error, isInternalError) = await _repo.CreateAgroAsync(dto);
 
             if (isInternalError)
             {

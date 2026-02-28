@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pk5Mining.Server.Extensions;
+using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Services.Email;
 using System.Text;
 
@@ -56,22 +57,75 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.Configure<MailSettings>(
             builder.Configuration.GetSection("MailSettings")
  );
+builder.Services.Configure<AgroMailSettings>(
+            builder.Configuration.GetSection("AgroMailSettings")
+ );
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-    options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            )
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+
+                var response = ApiResponse.AuthorizationException(
+                    null,
+                    "You are not authorized. Please login."
+                );
+
+                return context.Response.WriteAsJsonAsync(response);
+            },
+            OnForbidden = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                context.Response.ContentType = "application/json";
+
+                var response = ApiResponse.AuthorizationException(
+                    null,
+                    "You do not have permission to access this resource."
+                );
+
+                return context.Response.WriteAsJsonAsync(response);
+            },
+            OnAuthenticationFailed = context =>
+            {
+                if (context.Exception is SecurityTokenExpiredException)
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    context.Response.ContentType = "application/json";
+
+                    var response = ApiResponse.AuthorizationException(
+                        null,
+                        "Your session has expired. Please login again."
+                    );
+
+                    return context.Response.WriteAsJsonAsync(response);
+                }
+
+                return Task.CompletedTask;
+            }
+        };
     });
-
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline.s
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

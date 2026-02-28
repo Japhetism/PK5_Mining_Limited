@@ -16,6 +16,7 @@ namespace Pk5Mining.Server.Models.Job
         public string? Experience { get; set; }
         public string? BriefDescription { get; set; }
         public bool IsActive { get; set; }
+        public string? Status { get; set; }
         public DateTime? DT_Created { get; set; }
         public DateTime? DT_Modified { get; set; }
         public DateTime? DT_Expiry { get; set; }
