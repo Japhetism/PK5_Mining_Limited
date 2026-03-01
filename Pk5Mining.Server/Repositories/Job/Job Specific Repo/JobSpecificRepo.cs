@@ -68,6 +68,7 @@ namespace Pk5Mining.Server.Repositories.Job.Job_Specific_Repo
                 existingJob.JobType = dto.JobType;
                 existingJob.BriefDescription = dto.BriefDescription;
                 existingJob.IsActive = dto.IsActive;
+                existingJob.Status = dto.Status;
 
                 await _dbContext.SaveChangesAsync();
                 return (existingJob, null, false);

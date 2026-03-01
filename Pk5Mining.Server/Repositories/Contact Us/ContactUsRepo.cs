@@ -1,50 +1,43 @@
 ﻿using AutoMapper;
-using Pk5Mining.Server;
 using Pk5Mining.Server.Models.Contact_Us;
-using Pk5Mining.Server.Models.Job;
-using Pk5Mining.Server.Repositories;
 using Pk5Mining.Server.Services;
 using Pk5Mining.Server.Services.Email;
+using Pk5Mining.Server.Services.Email.Agro_Mail;
 
 namespace Pk5Mining.Server.Repositories.Contact_Us
 {
-    public class ContactUsRepo(Pk5MiningDBContext dbContext, IMapper mapper, IMailService mailService) : Abs_Pk5Repo<IContactUs, IContactUsDTO>(dbContext)
+    public class ContactUsRepo : IContactUsRepo
     {
-        private readonly Pk5MiningDBContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-        private readonly IMailService _mailService = mailService;
+        private readonly Pk5MiningDBContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly IMailService _mailService;
+        private readonly IAgroMailService _agroMailService;
 
-        public override Task<(IContactUs?, string?)> DeleteRepoItem(long Id)
+        public ContactUsRepo(Pk5MiningDBContext dbContext, IMapper mapper, Services.Email.IMailService mailService, IAgroMailService agroMailService)
         {
-            
-            throw new NotImplementedException();
+            _dbContext = dbContext;
+            _mapper = mapper;
+            _mailService = mailService;
+            _agroMailService = agroMailService;
         }
 
-        public override Task<(IContactUs?, string?)> GetRepoItem(long Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Task<IEnumerable<IContactUs>> GetRepoItems()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async override Task<(IContactUs?, string?, bool)> PostRepoItem(IContactUsDTO item)
+        public async Task<(IContactUs?, string?, bool)> CreateAsync(IContactUsDTO item)
         {
             try
             {
                 ContactUs contactUs = _mapper.Map<ContactUs>(item);
 
                 if (contactUs == null)
+                {
                     throw new ArgumentNullException(nameof(contactUs));
-
+                }
                 contactUs.Id = IdGenerator.GenerateUniqueId();
-                (IContactUs? savedContactUs, string? error) = await base.PostRepoItemAsync(contactUs);
-
-                if (savedContactUs == null)
-                    return (null, error ?? "Failed to save contact request", true);
-
+                await _dbContext.ContactUs.AddAsync(contactUs);
+                var result = await _dbContext.SaveChangesAsync();
+                if (result <= 0)
+                {
+                    return (null, "Failed to save contact request", true);
+                }
                 var adminMail = new MailData
                 {
                     EmailToId = "info@pk5miningltd.com",
@@ -60,7 +53,6 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 <p><strong>Message:</strong><br/>{item.MessageBody}</p>
             "
                 };
-
                 _mailService.SendHTMLMail(adminMail);
 
                 var guestMail = new MailData
@@ -82,7 +74,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
 
                 _mailService.SendHTMLMail(guestMail);
 
-                return (savedContactUs, null, false);
+                return (contactUs, null, false);
             }
             catch (Exception ex)
             {
@@ -91,9 +83,64 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
             }
         }
 
-        public override Task<(IContactUs?, string?, bool)> UpdateRepoItem(IContactUs obj)
+        public async Task<(IContactUs?, string?, bool)> CreateAgroAsync(IContactUsDTO item)
         {
-            throw new NotImplementedException();
+            try
+            {
+                ContactUs contactUs = _mapper.Map<ContactUs>(item);
+
+                if (contactUs == null)
+                    throw new ArgumentNullException(nameof(contactUs));
+
+                contactUs.Id = IdGenerator.GenerateUniqueId();
+                await _dbContext.ContactUs.AddAsync(contactUs);
+                var result = await _dbContext.SaveChangesAsync();
+                if (result <= 0)
+                {
+                    return (null, "Failed to save contact request", true);
+                }
+                var adminMail = new MailData
+                {
+                    EmailToId = "Info@pk5agroallied.com",
+                    EmailToName = "Admin",
+                    EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
+                    EmailBody = $@"
+                <h3>New Contact Request Received</h3>
+                <p><strong>Name:</strong> {item.FirstName} {item.LastName}</p>
+                <p><strong>Email:</strong> {item.Email}</p>
+                <p><strong>Phone:</strong> {item.PhoneNumber ?? "N/A"}</p>
+                <p><strong>Company:</strong> {item.Company ?? "N/A"}</p>
+                <p><strong>Subject:</strong> {item.Subject ?? "N/A"}</p>
+                <p><strong>Message:</strong><br/>{item.MessageBody}</p>
+            "
+                };
+                _mailService.SendHTMLMail(adminMail);
+
+                var guestMail = new MailData
+                {
+                    EmailToId = item.Email,
+                    EmailToName = $"{item.FirstName} {item.LastName}",
+                    EmailSubject = "Thank You For Reaching Out",
+                    EmailBody = $@"
+                <h3>Hi {item.FirstName},</h3>
+                <p>Thank you for contacting the Agro Company.</p>
+                <p>We have received your message and our team will get back to you shortly.</p>
+                <br/>
+                <p><strong>Your Message:</strong></p>
+                <p>{item.MessageBody}</p>
+                <br/>
+                <p>Best Regards,<br/>Pk5 Agro Allied Team</p>
+            "
+                };
+                _mailService.SendHTMLMail(guestMail);
+
+                return (contactUs, null, false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return (null, ex.Message, true);
+            }
         }
     }
 }

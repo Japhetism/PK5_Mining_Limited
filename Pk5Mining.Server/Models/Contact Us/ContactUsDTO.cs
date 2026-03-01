@@ -13,6 +13,7 @@ namespace Pk5Mining.Server.Models.Contact_Us
         public string? PhoneNumber { get; set; }
         public string? Company { get; set; }
         public string? Subject { get; set; }
+        public string AppId { get; set; }
         [Required]
         public string MessageBody { get; set; }
     }
