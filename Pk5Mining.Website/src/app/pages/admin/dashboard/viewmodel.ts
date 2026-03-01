@@ -27,20 +27,20 @@ function useDashboardViewModel() {
   const jobs = data?.recentJobs ?? [];
 
   const totalJobs = data?.jobStats?.total ?? 0;
-  const openJobs = data?.jobStats.open ?? 0;
-  const closedJobs = data?.jobStats.closed ?? 0;
+  const openJobs = data?.jobStats.byStatus.Open ?? 0;
+  const closedJobs = data?.jobStats.byStatus.Close ?? 0;
 
   const totalApps = data?.applicationStats.total ?? 0;
-  const newApps = data?.applicationStats.byStage.new ?? 0;
+  const newApps = data?.applicationStats.byStage.New ?? 0;
 
   const rawByStage = data?.applicationStats.byStage;
 
   const byStage = {
-    new: rawByStage?.new ?? 0,
-    in_review: rawByStage?.inReview ?? 0,
-    shortlisted: rawByStage?.shortlisted ?? 0,
-    rejected: rawByStage?.rejected ?? 0,
-    hired: rawByStage?.hired ?? 0,
+    new: rawByStage?.New ?? 0,
+    in_review: rawByStage?.InReview ?? 0,
+    shortlisted: rawByStage?.Shortlisted ?? 0,
+    rejected: rawByStage?.Rejected ?? 0,
+    hired: rawByStage?.Hired ?? 0,
   };
 
   // Best approximation from your response: recent jobs and their applicationCount

@@ -390,25 +390,27 @@ export interface DashboardStatistics {
   applicationStats: {
     total: number;
     byStage: {
-      new: number;
-      inReview: number;
-      shortlisted: number;
-      rejected: number;
-      hired: number;
+      New: number;
+      InReview: number;
+      Shortlisted: number;
+      Rejected: number;
+      Hired: number;
     };
   };
 
   jobStats: {
     total: number;
-    open: number;
-    closed: number;
+    byStatus: {
+      Open: number;
+      Close: number;
+    }
   };
 
   recentJobs: Array<{
     jobId: string;
     title: string;
-    isActive: boolean;
-    dT_Created: string;
+    status: "Open" | "Close";
+    createdAt: string;
     applicationCount: number;
   }>;
 }
