@@ -1,16 +1,33 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { BarChart3, Briefcase, FileText, LogOut, Mails, Users } from "lucide-react";
+import {
+  BarChart3,
+  Briefcase,
+  FileText,
+  LogOut,
+  Mails,
+  Users,
+} from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting } from "@/app/utils/helper";
 import Logo from "../../../assets/images/logo.png";
 
 const nav = [
-  { to: "/admin", label: "Dashboard", icon: BarChart3, end: true },
-  { to: "/admin/jobs", label: "Job Openings", icon: Briefcase },
-  { to: "/admin/applications", label: "Applications", icon: FileText },
-  { to: "/admin/contact-messages", label: "Contact Messages", icon: Mails },
-  { to: "/admin/users", label: "Users", icon: Users },
+  { to: "/admin", label: "Dashboard", icon: BarChart3, end: true, show: true },
+  { to: "/admin/jobs", label: "Job Openings", icon: Briefcase, show: true },
+  {
+    to: "/admin/applications",
+    label: "Applications",
+    icon: FileText,
+    show: true,
+  },
+  {
+    to: "/admin/contact-messages",
+    label: "Contact Messages",
+    icon: Mails,
+    show: false,
+  },
+  { to: "/admin/users", label: "Users", icon: Users, show: false },
 ];
 
 export function AdminLayout() {
@@ -58,24 +75,27 @@ export function AdminLayout() {
             <aside className="h-full bg-[#1a1a1a] border-r border-gray-800 p-4 flex flex-col overflow-hidden">
               {/* NAV scrolls when it grows */}
               <nav className="flex-1 overflow-y-auto space-y-1 pr-1">
-                {nav.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={(item as any).end}
-                    className={({ isActive }) =>
-                      [
-                        "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                        isActive
-                          ? "bg-[#c89b3c]/10 text-[#c89b3c] border border-[#c89b3c]/30"
-                          : "text-gray-300 hover:bg-white/5",
-                      ].join(" ")
-                    }
-                  >
-                    <item.icon className="w-4 h-4" />
-                    {item.label}
-                  </NavLink>
-                ))}
+                {nav.map((item) => {
+                  if (!item.show) return null;
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={(item as any).end}
+                      className={({ isActive }) =>
+                        [
+                          "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                          isActive
+                            ? "bg-[#c89b3c]/10 text-[#c89b3c] border border-[#c89b3c]/30"
+                            : "text-gray-300 hover:bg-white/5",
+                        ].join(" ")
+                      }
+                    >
+                      <item.icon className="w-4 h-4" />
+                      {item.label}
+                    </NavLink>
+                  );
+                })}
               </nav>
 
               {/* LOGOUT pinned at bottom */}
