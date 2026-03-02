@@ -14,7 +14,7 @@ import {
   SaveOff,
 } from "lucide-react";
 import { ApplicationDetailsSkeleton } from "@/app/components/ui/application-details-loader";
-import { downloadFile } from "@/app/utils/helper";
+import { downloadFile, getStageMeta } from "@/app/utils/helper";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { ResumeViewerModal } from "@/app/components/ui/resume-viewer-modal";
 import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
@@ -223,7 +223,7 @@ export function ApplicationDetail() {
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleUpdateStatus}
         title="Update Application Status"
-        description={`Are you sure you want to update the job application status to ${selectedStatus || "Unknown"}?`}
+        description={`Are you sure you want to update the job application status to ${selectedStatus && getStageMeta(selectedStatus)?.label || "Unknown"}?`}
         confirmText="Yes, update"
         cancelText="No"
         loading={updating}

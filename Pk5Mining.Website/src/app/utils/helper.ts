@@ -101,3 +101,11 @@ export function isStageValue(value: string): value is StageValue {
 export function normalizeStage(input: string): string {
   return input.trim().toLowerCase().replace(/\s+/g, "_");
 }
+
+export function getStageMeta(value?: string | undefined) {
+  if (!value) return undefined;
+
+  const normalized = value.toLowerCase();
+
+  return statuses.find((s) => s.value.toLowerCase() === normalized);
+}
