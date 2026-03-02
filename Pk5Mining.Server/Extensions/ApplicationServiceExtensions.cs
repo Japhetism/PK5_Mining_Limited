@@ -48,7 +48,9 @@ namespace Pk5Mining.Server.Extensions
                     {
                         policy.WithOrigins("http://localhost:5173", "https://localhost:5173",
                             "http://localhost:5174", "https://localhost:5174",
-                            "http://localhost:5175", "https://localhost:5175")
+                            "http://localhost:5175", "https://localhost:5175",
+                            "https://pk5miningltd.com", "https://pk5miningltd-test.vercel.app",
+                            "https://pk-5-agro.vercel.app")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                     });

@@ -44,6 +44,7 @@ namespace Pk5Mining.Server.Repositories.Job
                 }
                 job.Id = IdGenerator.GenerateUniqueId();
                 job.DT_Created = DateTime.UtcNow;
+                job.Status = "Open";
                 job.DT_Expiry = job.DT_Created?.AddMonths(3);
                 (IJobs? savedJob, string? error) = await base.PostRepoItemAsync(job);
                 return (savedJob, error, false);

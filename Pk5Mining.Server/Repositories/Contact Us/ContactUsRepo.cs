@@ -114,7 +114,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 <p><strong>Message:</strong><br/>{item.MessageBody}</p>
             "
                 };
-                _mailService.SendHTMLMail(adminMail);
+                _agroMailService.SendHTMLMail(adminMail);
 
                 var guestMail = new MailData
                 {
@@ -132,7 +132,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 <p>Best Regards,<br/>Pk5 Agro Allied Team</p>
             "
                 };
-                _mailService.SendHTMLMail(guestMail);
+                _agroMailService.SendHTMLMail(guestMail);
 
                 return (contactUs, null, false);
             }

@@ -41,6 +41,7 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                 }
                 jobApplication.Id = IdGenerator.GenerateUniqueId();
                 jobApplication.DT_Created = DateTime.UtcNow;
+                jobApplication.Status = "New";
                 (IJobApplication? savedJobApplication, string? error) = await base.PostRepoItemAsync(jobApplication);
                 return (savedJobApplication, error, false);
 
