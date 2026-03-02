@@ -109,7 +109,9 @@ export function JobDetail() {
           <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4 text-sm text-gray-300">
             {job && (
               <>
-                <p className="text-xs font-semibold text-gray-400 mb-1">Status</p>
+                <p className="text-xs font-semibold text-gray-400 mb-1">
+                  Status
+                </p>
                 <p className="mb-3">
                   <span
                     className={
@@ -233,7 +235,7 @@ export function JobDetail() {
                   Applicant ID: {a.id}
                 </div>
               </div>
-              <ApplicationStatusPill status={a.status} />
+              <ApplicationStatusPill status={a.status?.toLowerCase()} />
 
               {/* Contact */}
               <div className="space-y-2">
@@ -249,7 +251,17 @@ export function JobDetail() {
 
                 <div className="flex items-center gap-2 text-sm text-gray-200">
                   <Linkedin className="w-4 h-4 text-gray-400" />
-                  <span className="truncate">{a.linkedIn ?? "-"}</span>
+                  <a
+                    className="truncate"
+                    target="_blank"
+                    href={
+                      a?.linkedIn?.startsWith("http")
+                        ? a.linkedIn
+                        : `https://${a?.linkedIn}`
+                    }
+                  >
+                    {a.linkedIn ?? "-"}
+                  </a>
                 </div>
               </div>
 
