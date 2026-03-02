@@ -39,3 +39,13 @@ export const defaultFormData = {
   phone: "",
   linkedinUrl: "",
 } as const;
+
+export const statuses = [
+  { value: "new", label: "New" },
+  { value: "in_review", label: "In review" },
+  { value: "shortlisted", label: "Shortlisted" },
+  { value: "interview_scheduled", label: "Interview Scheduled" },
+  { value: "offer_sent", label: "Offer Sent" },
+  { value: "rejected", label: "Rejected" },
+  { value: "hired", label: "Hired" },
+] as const;

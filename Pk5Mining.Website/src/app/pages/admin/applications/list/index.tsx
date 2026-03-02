@@ -59,7 +59,7 @@ export function ApplicationList() {
     {
       key: "status",
       header: "Status",
-      render: (app) => <ApplicationStatusPill status={app.status} />,
+      render: (app) => <ApplicationStatusPill status={app.status?.toLowerCase()} />,
     },
     {
       key: "submitted",

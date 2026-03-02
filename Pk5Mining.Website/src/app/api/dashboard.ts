@@ -4,7 +4,7 @@ import { http } from "./http";
 
 export async function getDashboardStat() {
   try {
-    const { data } = await http.get<ApiResponse<DashboardStatistics>>("/Dashboard");
+    const { data } = await http.get<ApiResponse<DashboardStatistics>>("/Dashboard/dashboard");
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(

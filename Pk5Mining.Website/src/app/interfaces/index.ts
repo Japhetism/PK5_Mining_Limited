@@ -394,7 +394,7 @@ export interface DashboardStatistics {
       InReview: number;
       Shortlisted: number;
       Rejected: number;
-      Hired: number;
+      hired: number;
     };
   };
 

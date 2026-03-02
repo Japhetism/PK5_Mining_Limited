@@ -19,14 +19,7 @@ import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { ResumeViewerModal } from "@/app/components/ui/resume-viewer-modal";
 import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
 import useApplicationDetailsViewModel from "./viewmodel";
-
-const statuses = [
-  { value: "new", label: "New" },
-  { value: "in_review", label: "In review" },
-  { value: "shortlisted", label: "Shortlisted" },
-  { value: "rejected", label: "Rejected" },
-  { value: "hired", label: "Hired" },
-] as const;
+import { statuses } from "@/app/constants";
 
 export function ApplicationDetail() {
   const {
@@ -70,14 +63,14 @@ export function ApplicationDetail() {
                 className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
               >
                 {statuses.map((s) => (
-                  <option key={s.value} value={s.value}>
+                  <option key={s.value} value={s.value} disabled={s.value === app?.status?.toLowerCase()}>
                     {s.label}
                   </option>
                 ))}
               </motion.select>
             ) : (
               <span className="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-gray-800">
-                <ApplicationStatusPill status={app?.status ?? "new"} />
+                <ApplicationStatusPill status={app?.status?.toLowerCase() ?? "new"} />
               </span>
             )}
             {!editStatus && (
