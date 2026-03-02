@@ -40,7 +40,7 @@ function useDashboardViewModel() {
     in_review: rawByStage?.InReview ?? 0,
     shortlisted: rawByStage?.Shortlisted ?? 0,
     rejected: rawByStage?.Rejected ?? 0,
-    hired: rawByStage?.Hired ?? 0,
+    hired: rawByStage?.hired ?? 0,
   };
 
   // Best approximation from your response: recent jobs and their applicationCount

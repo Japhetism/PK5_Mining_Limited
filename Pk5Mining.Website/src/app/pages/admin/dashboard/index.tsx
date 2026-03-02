@@ -78,7 +78,7 @@ export function Dashboard() {
                         width:
                           totalApps === 0
                             ? "0%"
-                            : `${(row.count / Math.max(...byJob.map((r) => r.count || 1))) * 100}%`,
+                            : `${(row.count / totalApps) * 100}%`,
                       }}
                     />
                   </div>
