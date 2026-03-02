@@ -1,5 +1,5 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
-import { ByStage, RawByStage } from "../interfaces";
+import { ByStage, RawByStage, StageValue } from "../interfaces";
 import { statuses } from "../constants";
 
 export function capitalizeFirstLetter(value: string): string {
@@ -90,4 +90,14 @@ export function mapRawByStage(rawByStage?: RawByStage): ByStage {
     acc[s.value] = rawByStage?.[s.backendKey] ?? 0;
     return acc;
   }, {} as ByStage);
+}
+
+const stageSet = new Set<StageValue>(statuses.map((s) => s.value));
+
+export function isStageValue(value: string): value is StageValue {
+  return stageSet.has(value as StageValue);
+}
+
+export function normalizeStage(input: string): string {
+  return input.trim().toLowerCase().replace(/\s+/g, "_");
 }

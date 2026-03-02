@@ -1,35 +1,30 @@
 import { statuses } from "@/app/constants";
-
-type StageValue = (typeof statuses)[number]["value"];
+import { StageValue } from "@/app/interfaces";
+import { normalizeStage, isStageValue } from "@/app/utils/helper";
 
 type StatusProps = {
-  status: StageValue;
+  status: string;
 };
 
-const colorMap: Record<
-  StageValue,
-  { className: string }
-> = {
+const colorMap: Record<StageValue, { className: string }> = {
   new: { className: "bg-blue-500/10 text-blue-400" },
   in_review: { className: "bg-amber-500/10 text-amber-400" },
   shortlisted: { className: "bg-emerald-500/10 text-emerald-400" },
-  interview_scheduled: {
-    className: "bg-cyan-500/10 text-cyan-400",
-  },
-  offer_sent: {
-    className: "bg-indigo-500/10 text-indigo-400",
-  },
+  interview_scheduled: { className: "bg-cyan-500/10 text-cyan-400" },
+  offer_sent: { className: "bg-indigo-500/10 text-indigo-400" },
   rejected: { className: "bg-red-500/10 text-red-400" },
   hired: { className: "bg-purple-500/10 text-purple-400" },
 };
 
 export function ApplicationStatusPill({ status }: StatusProps) {
-  const statusMeta = statuses.find((s) => s.value === status);
+  const normalized = normalizeStage(status);
 
-  const meta = statusMeta
+  const stage: StageValue | null = isStageValue(normalized) ? normalized : null;
+
+  const meta = stage
     ? {
-        label: statusMeta.label,
-        className: colorMap[status]?.className,
+        label: statuses.find((s) => s.value === stage)?.label ?? stage,
+        className: colorMap[stage].className,
       }
     : {
         label: status,
