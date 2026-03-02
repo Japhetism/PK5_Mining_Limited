@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
-import { Lock, User } from "lucide-react";
+import { Lock, User, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import useLoginViewModel from "./viewmodel";
 
 export function Login() {
@@ -12,6 +13,8 @@ export function Login() {
     setPassword,
     onSubmit,
   } = useLoginViewModel();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center px-6">
@@ -26,6 +29,7 @@ export function Login() {
         </div>
 
         <form onSubmit={onSubmit} className="space-y-5">
+          {/* Username */}
           <div>
             <label className="block text-sm font-medium mb-2">Username</label>
             <div className="flex items-center gap-2 bg-[#0f0f0f] border border-gray-800 rounded-lg px-3">
@@ -40,18 +44,31 @@ export function Login() {
             </div>
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium mb-2">Password</label>
-            <div className="flex items-center gap-2 bg-[#0f0f0f] border border-gray-800 rounded-lg px-3">
-              <Lock className="w-4 h-4 text-gray-400" />
+            <div className="flex items-center bg-[#0f0f0f] border border-gray-800 rounded-lg px-3">
+              <Lock className="w-4 h-4 text-gray-400 mr-2" />
               <input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="w-full bg-transparent py-3 outline-none"
                 autoComplete="current-password"
               />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
             </div>
           </div>
 
