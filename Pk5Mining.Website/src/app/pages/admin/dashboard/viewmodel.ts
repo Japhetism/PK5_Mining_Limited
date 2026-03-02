@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getDashboardStat } from "@/app/api/dashboard";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
+import { ByStage, RawByStage } from "@/app/interfaces";
+import { mapRawByStage } from "@/app/utils/helper";
 
 function useDashboardViewModel() {
   const { data, isLoading, error } = useQuery({
@@ -33,15 +35,8 @@ function useDashboardViewModel() {
   const totalApps = data?.applicationStats.total ?? 0;
   const newApps = data?.applicationStats.byStage.New ?? 0;
 
-  const rawByStage = data?.applicationStats.byStage;
-
-  const byStage = {
-    new: rawByStage?.New ?? 0,
-    in_review: rawByStage?.InReview ?? 0,
-    shortlisted: rawByStage?.Shortlisted ?? 0,
-    rejected: rawByStage?.Rejected ?? 0,
-    hired: rawByStage?.hired ?? 0,
-  };
+  const rawByStage: RawByStage | undefined = data?.applicationStats.byStage;
+  const byStage: ByStage = mapRawByStage(rawByStage);
 
   // Best approximation from your response: recent jobs and their applicationCount
   const byJob = useMemo(

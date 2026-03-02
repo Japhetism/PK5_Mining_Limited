@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { BarChart3, Briefcase, FileText, PieChart } from "lucide-react";
 import { DashboardSkeleton } from "@/app/components/ui/dashboard-skeleton";
 import useDashboardViewModel from "./viewmodel";
+import { statuses } from "@/app/constants";
 
 export function Dashboard() {
   const {
@@ -15,8 +16,8 @@ export function Dashboard() {
     isLoading,
   } = useDashboardViewModel();
 
-  if (isLoading) return <DashboardSkeleton />
-  
+  if (isLoading) return <DashboardSkeleton />;
+
   return (
     <div className="space-y-6">
       <div>
@@ -91,14 +92,12 @@ export function Dashboard() {
         <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5">
           <h2 className="text-sm font-semibold mb-4">Pipeline status</h2>
           <div className="grid grid-cols-2 gap-4 text-xs">
-            {(
-              ["new", "in_review", "shortlisted", "rejected", "hired"] as const
-            ).map((status) => {
-              const count = byStage[status];
+            {statuses.map((s) => {
+              const count = byStage[s.value];
               return (
-                <div key={status} className="space-y-1">
+                <div key={s.value} className="space-y-1">
                   <p className="uppercase tracking-wide text-gray-400">
-                    {status.replace("_", " ")}
+                    {s.label}
                   </p>
                   <p className="text-lg font-semibold">{count}</p>
                 </div>

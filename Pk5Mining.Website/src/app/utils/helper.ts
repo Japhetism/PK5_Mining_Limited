@@ -1,4 +1,6 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
+import { ByStage, RawByStage } from "../interfaces";
+import { statuses } from "../constants";
 
 export function capitalizeFirstLetter(value: string): string {
   if (!value) return value;
@@ -82,3 +84,10 @@ export const formatDateTime = (s?: string | null) => {
   // You used toLocaleString before; keep it but you can enforce day-first with en-GB
   return new Date(s).toLocaleString("en-GB");
 };
+
+export function mapRawByStage(rawByStage?: RawByStage): ByStage {
+  return statuses.reduce((acc, s) => {
+    acc[s.value] = rawByStage?.[s.backendKey] ?? 0;
+    return acc;
+  }, {} as ByStage);
+}

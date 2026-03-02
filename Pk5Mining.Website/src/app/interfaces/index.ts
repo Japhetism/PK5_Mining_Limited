@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { statuses } from "../constants";
 
 export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 
@@ -414,3 +415,9 @@ export interface DashboardStatistics {
     applicationCount: number;
   }>;
 }
+
+export type StageValue = (typeof statuses)[number]["value"];
+export type BackendStageKey = (typeof statuses)[number]["backendKey"];
+
+export type RawByStage = Partial<Record<BackendStageKey, number>>;
+export type ByStage = Record<StageValue, number>;
