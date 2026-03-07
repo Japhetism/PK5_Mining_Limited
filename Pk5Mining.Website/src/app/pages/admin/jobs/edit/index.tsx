@@ -4,6 +4,7 @@ import { isValidName } from "@/app/utils/validator";
 import { jobTypes, workArrangements } from "@/app/constants";
 import useJobEditViewModel from "./viewmodel";
 import { RichTextEditor } from "@/app/components/ui/rich-text-editor";
+import { DatePicker } from "@/app/components/ui/date-picker";
 
 export function JobEdit() {
   const {
@@ -17,6 +18,8 @@ export function JobEdit() {
     onChange,
     setForm,
   } = useJobEditViewModel();
+
+  console.log("job details ", form);
 
   return (
     <div className="space-y-6">
@@ -149,14 +152,18 @@ export function JobEdit() {
             <label className="block text-xs font-semibold text-gray-300 mb-2">
               Close Date
             </label>
-            <motion.input
+            <DatePicker
               name="dT_Expiry"
-              type="date"
               value={form.dT_Expiry}
-              onChange={onChange}
-              className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.dT_Expiry ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+              onChange={(value) =>
+                setForm((prev) => ({
+                  ...prev,
+                  dT_Expiry: value,
+                }))
+              }
+              error={!!fieldErrors.dT_Expiry}
+              disablePastDates
+              fromYear={new Date().getFullYear()}
             />
             {fieldErrors.dT_Expiry && (
               <p className="text-xs text-red-500 mt-1">

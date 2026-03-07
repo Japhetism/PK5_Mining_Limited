@@ -6,11 +6,25 @@ import {
   CreateJobPayload,
   JobDto,
   JobErrors,
+  JobType,
   UpdateJobPayload,
+  WorkArrangement,
 } from "@/app/interfaces";
 import { validateJob } from "@/app/utils/validator";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
+
+const defaultFormData = {
+  title: "",
+  department: "",
+  location: "",
+  experience: "",
+  jobType: undefined as JobType | undefined,
+  workArrangement: undefined as WorkArrangement | undefined,
+  briefDescription: "",
+  description: "",
+  dT_Expiry: "",
+};
 
 function useJobEditViewModel() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -38,10 +52,30 @@ function useJobEditViewModel() {
     }
   }, [fetchError]);
 
-  const existing = useMemo<JobDto | CreateJobPayload | undefined>(
-    () => (jobId ? data : undefined),
-    [jobId, data],
-  );
+  const existing = useMemo<JobDto | undefined>(() => {
+    return jobId ? data : undefined;
+  }, [jobId, data]);
+
+  const [form, setForm] = useState(defaultFormData);
+
+  const [fieldErrors, setFieldErrors] = useState<JobErrors>({});
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!existing) return;
+
+    setForm({
+      title: existing.title ?? "",
+      department: existing.department ?? "",
+      location: existing.location ?? "",
+      experience: existing.experience ?? "",
+      jobType: existing.jobType ?? undefined,
+      workArrangement: existing.workArrangement ?? undefined,
+      briefDescription: existing.briefDescription ?? "",
+      description: existing.description ?? "",
+      dT_Expiry: existing.dT_Expiry ?? "",
+    });
+  }, [existing]);
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateJobPayload) => createJob(payload),
@@ -56,17 +90,17 @@ function useJobEditViewModel() {
         err,
         "An error occurred while saving the job. Please try again.",
       );
-
       toastUtil.error(message);
     },
   });
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateJobPayload) => {
-      if (!existing || !("id" in existing)) {
+      if (!existing?.id) {
         toastUtil.error("Cannot update: missing existing job id");
         throw new Error("Cannot update: missing existing job id");
       }
+
       return updateJob(existing.id, payload);
     },
     onSuccess: (data) => {
@@ -81,26 +115,11 @@ function useJobEditViewModel() {
         err,
         "An error occurred while updating the job. Please try again.",
       );
-
       toastUtil.error(message);
     },
   });
 
-  const mutation = existing ? updateMutation : createMutation;
-
-  const [form, setForm] = useState({
-    title: existing?.title ?? "",
-    department: existing?.department ?? "",
-    location: existing?.location ?? "",
-    experience: existing?.experience ?? "",
-    jobType: existing?.jobType ?? undefined,
-    workArrangement: existing?.workArrangement ?? undefined,
-    briefDescription: existing?.briefDescription ?? "",
-    description: existing?.description ?? "",
-    dT_Expiry: existing?.dT_Expiry ?? "",
-  });
-  const [fieldErrors, setFieldErrors] = useState<JobErrors>({});
-  const [loading, setLoading] = useState<boolean>(false);
+  const mutation = jobId ? updateMutation : createMutation;
 
   const onChange = (
     e: React.ChangeEvent<
@@ -129,7 +148,7 @@ function useJobEditViewModel() {
       dT_Expiry: form.dT_Expiry
         ? new Date(form.dT_Expiry).toISOString()
         : undefined,
-      dT_Modified: form.title ? new Date().toISOString() : undefined,
+      dT_Modified: jobId ? new Date().toISOString() : undefined,
       isActive: existing?.isActive ?? true,
     });
   };

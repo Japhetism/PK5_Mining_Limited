@@ -149,15 +149,15 @@ export type ApiResponse<T> = {
 };
 
 export type JobDto = {
-  id: number;
+  id?: number;
   title: string;
   description: string;
   department: string;
   location: string;
   isActive: boolean;
   experience?: string;
-  jobType: JobType | null;
-  workArrangement: WorkArrangement | null;
+  jobType?: JobType;
+  workArrangement?: WorkArrangement;
   briefDescription: string | null;
   dT_Created: string;
   dT_Modified: string;
