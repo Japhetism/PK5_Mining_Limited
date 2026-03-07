@@ -5,7 +5,7 @@ import {
   PaginatedTable,
   PaginatedTableColumn,
 } from "@/app/components/ui/paginated-table";
-import { formatDate } from "@/app/utils/helper";
+import { formatDate, formatDateTime } from "@/app/utils/helper";
 import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
 import useApplicationsListViewModel from "./viewmodel";
 
@@ -64,12 +64,12 @@ export function ApplicationList() {
     {
       key: "submitted",
       header: "Submitted",
-      render: (app) => formatDate(app.dT_Created),
+      render: (app) => formatDateTime(app.dT_Created),
     },
     {
       key: "modified",
       header: "Modified",
-      render: (app) => formatDate(app.dT_Modified),
+      render: (app) => formatDateTime(app.dT_Modified),
     },
     {
       key: "actions",
