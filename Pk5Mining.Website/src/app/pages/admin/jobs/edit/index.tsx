@@ -351,6 +351,7 @@ export function JobEdit() {
             onChange={(html) =>
               setForm((prev) => ({ ...prev, description: html }))
             }
+            error={Boolean(fieldErrors.description)}
           />
           <p className="mt-1 text-[11px] text-gray-500">
             You can use bold, italics, and bullet points. The HTML produced here
