@@ -7,6 +7,8 @@ import {
   XCircle,
   CheckCircle2,
   MoreVerticalIcon,
+  Edit,
+  Pencil,
 } from "lucide-react";
 import { JobDto, StatusFilter } from "@/app/interfaces";
 import { capitalizeFirstLetter, formatDateTime } from "@/app/utils/helper";
@@ -149,6 +151,19 @@ export function JobList() {
                 >
                   <Eye className="w-4 h-4" />
                   View details
+                </Link>
+              </DropdownMenu.Item>
+
+              <DropdownMenu.Item asChild>
+                <Link
+                  to={`/admin/jobs/${job.id}/edit`}
+                  onClick={() => {
+                    queryClient.setQueryData(["jobs", String(job.id)], job);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Job
                 </Link>
               </DropdownMenu.Item>
 
