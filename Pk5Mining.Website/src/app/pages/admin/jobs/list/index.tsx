@@ -1,8 +1,20 @@
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { Plus, Eye, XCircle, CheckCircle2 } from "lucide-react";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import {
+  Plus,
+  Eye,
+  XCircle,
+  CheckCircle2,
+  MoreHorizontal,
+  MoreVerticalIcon,
+} from "lucide-react";
 import { JobDto, StatusFilter } from "@/app/interfaces";
-import { capitalizeFirstLetter, formatDate, formatDateTime } from "@/app/utils/helper";
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  formatDateTime,
+} from "@/app/utils/helper";
 import {
   PaginatedTable,
   PaginatedTableColumn,
@@ -100,14 +112,15 @@ export function JobList() {
       render: (job) => job.applicationsCount ?? "0",
     },
     {
-      key: "applicationsCount",
+      key: "dateAdded",
       header: "Date Added",
       render: (job) => (job.dT_Created ? formatDateTime(job.dT_Created) : "-"),
     },
     {
-      key: "Close Date",
+      key: "closeDate",
       header: "Close Date",
-      render: (job) => (job.dT_Expiry ? formatDateTime(job.dT_Expiry, false) : "-"),
+      render: (job) =>
+        job.dT_Expiry ? formatDateTime(job.dT_Expiry, false) : "-",
     },
     {
       key: "actions",
@@ -115,35 +128,63 @@ export function JobList() {
       headerClassName: "text-right",
       className: "text-right",
       render: (job) => (
-        <div className="inline-flex items-center gap-1">
-          <Link
-            to={`/admin/jobs/${job.id}`}
-            title="View job details"
-            onClick={() => {
-              queryClient.setQueryData(["jobs", String(job.id)], job);
-            }}
-          >
-            <Eye className="w-4 h-4 inline text-gray-300" />
-          </Link>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedJob(job);
-              setConfirmOpen(true);
-            }}
-            className="p-1.5 rounded-md hover:bg-white/10 text-gray-300"
-            title={job.isActive ? "Close job" : "Reopen job"}
-          >
-            {job.isActive ? (
-              <XCircle className="w-4 h-4 text-red-400" />
-            ) : (
-              <CheckCircle2 className="w-4 h-4 text-green-400" />
-            )}
-          </button>
-        </div>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <button
+              type="button"
+              className="inline-flex h-8 w-8 items-center justify-center text-gray-300"
+              aria-label="Open actions"
+            >
+              <MoreVerticalIcon className="h-4 w-4" />
+            </button>
+          </DropdownMenu.Trigger>
+
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              align="end"
+              sideOffset={6}
+              className="z-50 min-w-[180px] rounded-lg border border-gray-800 bg-[#111111] p-1 shadow-xl"
+            >
+              <Link
+                to={`/admin/jobs/${job.id}`}
+                title="View job details"
+                onClick={() => {
+                  queryClient.setQueryData(["jobs", String(job.id)], job);
+                }}
+                className="flex items-center rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-white/10"
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                View details
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedJob(job);
+                  setConfirmOpen(true);
+                }}
+                className="flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-white/10"
+                title={job.isActive ? "Close job" : "Reopen job"}
+              >
+                {job.isActive ? (
+                  <>
+                    <XCircle className="mr-2 h-4 w-4 text-red-400" />
+                    Close job
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="mr-2 h-4 w-4 text-green-400" />
+                    Reopen job
+                  </>
+                )}
+              </button>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       ),
     },
   ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
