@@ -1,4 +1,4 @@
-import type { RouteObject } from "react-router-dom";
+import { Navigate, type RouteObject } from "react-router-dom";
 import { Login } from "@/app/pages/admin/login";
 import { ProtectedRoute } from "@/app/auth/ProtectedRoute";
 import { AdminLayout } from "@/app/pages/admin/layout";
@@ -23,7 +23,8 @@ export const adminRoutes: RouteObject[] = [
       {
         element: <AdminLayout />,
         children: [
-          { index: true, element: <Dashboard /> },
+          { index: true, element: <Navigate to="/admin/dashboard" replace /> },
+          { path: "dashboard", element: <Dashboard /> },
           { path: "jobs", element: <JobList /> },
           { path: "jobs/new", element: <JobEdit /> },
           { path: "jobs/:jobId", element: <JobDetail /> },
