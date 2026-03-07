@@ -13,7 +13,7 @@ import { getGreeting } from "@/app/utils/helper";
 import Logo from "../../../assets/images/logo.png";
 
 const nav = [
-  { to: "/admin", label: "Dashboard", icon: BarChart3, end: true, show: true },
+  { to: "/admin/dashboard", label: "Dashboard", icon: BarChart3, end: true, show: true },
   { to: "/admin/jobs", label: "Job Openings", icon: Briefcase, show: true },
   {
     to: "/admin/applications",
