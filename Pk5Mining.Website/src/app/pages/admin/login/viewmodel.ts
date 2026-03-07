@@ -14,17 +14,12 @@ function useLoginViewModel() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const redirectTo = useMemo(() => {
-    const from = location?.state?.from?.pathname as string | undefined;
-    return from && from.startsWith("/admin") ? from : "/admin";
-  }, [location?.state?.from?.pathname]);
-
   const mutation = useMutation({
     mutationFn: (payload: { username: string; password: string }) =>
       authLogin(payload.username, payload.password),
     onSuccess: () => {
       setLoading(false);
-      navigate(redirectTo, { replace: true });
+      navigate("/admin/dashboard", { replace: true });
     },
     onError: (err) => {
       setLoading(false);
