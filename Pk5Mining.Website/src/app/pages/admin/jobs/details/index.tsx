@@ -11,7 +11,7 @@ import {
   Eye,
   Linkedin,
 } from "lucide-react";
-import { capitalizeFirstLetter, formatDate } from "@/app/utils/helper";
+import { capitalizeFirstLetter, formatDate, formatDateTime } from "@/app/utils/helper";
 import { Badge } from "@/app/components/ui/badge";
 import { JobDetailsSkeleton } from "@/app/components/ui/job-details-skeleton";
 import { PaginatedCard } from "@/app/components/ui/applicant-details-card";
@@ -143,7 +143,7 @@ export function JobDetail() {
                 <p className="text-xs font-semibold text-gray-400 mb-1">
                   Posted
                 </p>
-                <p className="mb-3">{formatDate(job.dT_Created)}</p>
+                <p className="mb-3">{formatDateTime(job.dT_Created)}</p>
               </>
             )}
 
@@ -152,7 +152,7 @@ export function JobDetail() {
                 <p className="text-xs font-semibold text-gray-400 mb-1">
                   Updated
                 </p>
-                <p className="mb-3">{formatDate(job.dT_Modified)}</p>
+                <p className="mb-3">{formatDateTime(job.dT_Modified)}</p>
               </>
             )}
 
@@ -166,14 +166,14 @@ export function JobDetail() {
                 return (
                   <>
                     <p
-                      title={isExpired ? formatDate(job.dT_Expiry) : ""}
+                      title={isExpired ? formatDateTime(job.dT_Expiry, false) : ""}
                       className="text-xs font-semibold text-gray-400 mb-1"
                     >
                       {isExpired ? "Closed" : "Closing on"}
                     </p>
 
                     {!isExpired && (
-                      <p className="mb-3">{formatDate(job.dT_Expiry)}</p>
+                      <p className="mb-3">{formatDateTime(job.dT_Expiry, false)}</p>
                     )}
                   </>
                 );
