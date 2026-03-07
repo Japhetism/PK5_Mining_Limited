@@ -6,13 +6,11 @@ import {
   Eye,
   XCircle,
   CheckCircle2,
-  MoreHorizontal,
   MoreVerticalIcon,
 } from "lucide-react";
 import { JobDto, StatusFilter } from "@/app/interfaces";
 import {
   capitalizeFirstLetter,
-  formatDate,
   formatDateTime,
 } from "@/app/utils/helper";
 import {
