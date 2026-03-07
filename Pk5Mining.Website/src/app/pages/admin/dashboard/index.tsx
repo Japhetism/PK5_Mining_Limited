@@ -90,7 +90,7 @@ export function Dashboard() {
         </div>
 
         <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5">
-          <h2 className="text-sm font-semibold mb-4">Pipeline status</h2>
+          <h2 className="text-sm font-semibold mb-4">Application Pipeline status</h2>
           <div className="grid grid-cols-2 gap-4 text-xs">
             {statuses.map((s) => {
               const count = byStage[s.value];
