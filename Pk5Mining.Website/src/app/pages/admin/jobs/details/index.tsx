@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import {
   ArrowLeft,
@@ -39,19 +39,21 @@ export function JobDetail() {
     setSelectedApplicant,
   } = useJobDetailsViewModel();
 
+  const navigate = useNavigate();
+
   if (isLoading) return <JobDetailsSkeleton className="mt-6" />;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <Link
-            to="/admin/jobs"
+          <button
+            onClick={() => navigate(-1)}
             className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200 mb-2"
           >
             <ArrowLeft className="w-3 h-3" />
-            Back to jobs
-          </Link>
+            Back
+          </button>
           <div>
             {job && (
               <Badge variant="secondary" className="mb-1 mt-4">
