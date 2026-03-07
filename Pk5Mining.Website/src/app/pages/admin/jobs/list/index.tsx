@@ -127,7 +127,7 @@ export function JobList() {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-800 text-gray-300 hover:bg-white/10"
+              className="inline-flex h-8 w-8 items-center justify-center text-gray-300"
             >
               <MoreVerticalIcon className="h-4 w-4" />
             </button>
