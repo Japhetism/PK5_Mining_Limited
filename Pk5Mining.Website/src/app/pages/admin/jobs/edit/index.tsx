@@ -156,12 +156,13 @@ export function JobEdit() {
             <DatePicker
               name="dT_Expiry"
               value={formatDateTime(form.dT_Expiry, false)}
-              onChange={(value) =>
+              onChange={(value) => {
+                console.log("selected date is ", value, formatDateTime(value, false))
                 setForm((prev) => ({
                   ...prev,
                   dT_Expiry: value,
                 }))
-              }
+              }}
               error={!!fieldErrors.dT_Expiry}
               disablePastDates
               fromYear={new Date().getFullYear()}

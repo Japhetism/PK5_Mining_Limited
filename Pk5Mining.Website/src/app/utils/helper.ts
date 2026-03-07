@@ -84,6 +84,11 @@ export const formatDateTime = (s?: string | null, showTime: boolean = true) => {
 
   const date = new Date(s);
 
+  // Check if invalid date
+  if (isNaN(date.getTime())) {
+    return s;
+  }
+
   const options: Intl.DateTimeFormatOptions = {
     day: "2-digit",
     month: "2-digit",
@@ -130,3 +135,13 @@ export function getStageMeta(value?: string | undefined) {
 
   return statuses.find((s) => s.value.toLowerCase() === normalized);
 }
+
+export const ddmmyyyyToApiDate = (value?: string | null) => {
+  if (!value) return value;
+
+  const [day, month, year] = value.split("/");
+
+  if (!day || !month || !year) return value;
+
+  return `${year}-${month}-${day}`;
+};

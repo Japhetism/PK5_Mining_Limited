@@ -13,6 +13,7 @@ import {
 import { validateJob } from "@/app/utils/validator";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
+import { ddmmyyyyToApiDate } from "@/app/utils/helper";
 
 const defaultFormData = {
   title: "",
@@ -146,7 +147,7 @@ function useJobEditViewModel() {
     mutation.mutate({
       ...form,
       dT_Expiry: form.dT_Expiry
-        ? new Date(form.dT_Expiry).toISOString()
+        ? ddmmyyyyToApiDate(form.dT_Expiry) ?? ""
         : undefined,
       dT_Modified: jobId ? new Date().toISOString() : undefined,
       isActive: existing?.isActive ?? true,
