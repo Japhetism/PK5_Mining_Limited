@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getJobApplicationsByJobId } from "@/app/api/applications";
 import { getJobById } from "@/app/api/jobs";
 import { ApplicationsByJobIdQuery, JobApplicationDto } from "@/app/interfaces";
@@ -9,8 +9,8 @@ import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
 
 function useJobDetailsViewModel() {
-  const queryClient = useQueryClient();
   const { jobId } = useParams<{ jobId: string }>();
+
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
@@ -22,11 +22,12 @@ function useJobDetailsViewModel() {
       pageNumber,
       pageSize,
     };
+
     return cleanParams(raw) as ApplicationsByJobIdQuery;
-  }, [pageNumber, pageSize, jobId]);
+  }, [pageNumber, pageSize]);
 
   const {
-    data,
+    data: jobData,
     isLoading,
     isError,
     error: fetchError,
@@ -34,7 +35,10 @@ function useJobDetailsViewModel() {
     queryKey: ["jobs", jobId],
     queryFn: () => getJobById(jobId as string),
     enabled: !!jobId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const {
@@ -43,10 +47,13 @@ function useJobDetailsViewModel() {
     isError: jobApplicationsHasError,
     error: jobApplicationsFetchError,
   } = useQuery({
-    queryKey: ["jobApplications", jobId, queryParams],
+    queryKey: ["jobApplications", jobId, pageNumber, pageSize],
     queryFn: () => getJobApplicationsByJobId(jobId as string, queryParams),
     enabled: !!jobId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   useEffect(() => {
@@ -74,7 +81,7 @@ function useJobDetailsViewModel() {
     setPageNumber(1);
   };
 
-  const job = data ?? undefined;
+  const job = jobData ?? undefined;
   const applications: JobApplicationDto[] = jobApplications?.data ?? [];
   const totalCount = jobApplications?.totalCount ?? 0;
   const totalPages: number =
@@ -93,7 +100,6 @@ function useJobDetailsViewModel() {
     totalCount,
     totalPages,
     selectedApplicant,
-    queryClient,
     isViewerOpen,
     onChangePage,
     onChangePageSize,
