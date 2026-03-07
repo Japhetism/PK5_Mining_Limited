@@ -137,7 +137,7 @@ export function JobList() {
             <DropdownMenu.Content
               align="end"
               sideOffset={6}
-              className="z-50 min-w-[180px] rounded-lg border border-gray-800 bg-[#111111] p-1 shadow-xl"
+              className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
             >
               <DropdownMenu.Item asChild>
                 <Link
@@ -145,7 +145,7 @@ export function JobList() {
                   onClick={() => {
                     queryClient.setQueryData(["jobs", String(job.id)], job);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
                 >
                   <Eye className="w-4 h-4" />
                   View details
@@ -157,7 +157,7 @@ export function JobList() {
                   setSelectedJob(job);
                   setConfirmOpen(true);
                 }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
                 {job.isActive ? (
                   <>
