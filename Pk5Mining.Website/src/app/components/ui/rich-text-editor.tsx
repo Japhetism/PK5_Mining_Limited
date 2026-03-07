@@ -11,7 +11,7 @@ type Props = {
 export function RichTextEditor({
   value,
   onChange,
-  placeholder = "Start typing the job description...",
+  placeholder = "",
   error = false,
 }: Props) {
   const modules = {
