@@ -209,7 +209,8 @@ export function JobDetail() {
         </div>
       </div>
 
-      <div>
+      <div className="mt-20">
+        <h3 className="mb-2">Applications</h3>
         <PaginatedCard<JobApplicationDto>
           data={applications}
           isLoading={jobApplicationsLoading}
@@ -221,6 +222,7 @@ export function JobDetail() {
           setPageNumber={onChangePage}
           setPageSize={onChangePageSize}
           pageSizeOptions={[6, 9, 12, 24]}
+          emptyTitle="No application found"
           renderCard={(a) => (
             <div className="space-y-4">
               {/* Header */}
