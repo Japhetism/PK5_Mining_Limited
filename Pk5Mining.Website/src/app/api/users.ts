@@ -11,7 +11,7 @@ import { http } from "./http";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { mockUsers } from "../fixtures";
 
-const useMock = import.meta.env.VITE_USE_MOCK_CONTACT_MESSAGES === "true";
+const useMock = import.meta.env.VITE_USE_MOCK_DATA === "true";
 
 export async function getUsers(params: UsersQuery) {
   try {
@@ -25,7 +25,7 @@ export async function getUsers(params: UsersQuery) {
     }
 
     const { data } = await http.get<ApiResponse<UsersResponsePayload>>(
-      "/api/users",
+      "/User",
       { params },
     );
 
@@ -43,7 +43,14 @@ export async function getUsers(params: UsersQuery) {
 
 export async function getUserById(id: string) {
   try {
-    const { data } = await http.get<ApiResponse<UserDto>>(`/api/users/${id}`);
+    if (useMock) {
+      // Simulate mock response structure
+      return {
+        data: mockUsers[0],
+      };
+    }
+
+    const { data } = await http.get<ApiResponse<UserDto>>(`/User/${id}`);
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
@@ -62,8 +69,15 @@ export async function getUserById(id: string) {
 
 export async function updateUser(id: string, body: UpdateUserBody) {
   try {
+    if (useMock) {
+      // Simulate mock response structure
+      return {
+        data: mockUsers,
+      };
+    }
+
     const { data } = await http.put<ApiResponse<UserDto>>(
-      `/api/users/${id}`,
+      `/User/${id}`,
       body,
     );
 
@@ -84,8 +98,15 @@ export async function updateUser(id: string, body: UpdateUserBody) {
 
 export async function deleteUser(id: string) {
   try {
+    if (useMock) {
+      // Simulate mock response structure
+      return {
+        data: mockUsers,
+      };
+    }
+
     const { data } = await http.delete<ApiResponse<UserDto>>(
-      `/api/users/${id}`,
+      `/User/${id}`,
     );
 
     if (data.responseStatus !== "SUCCESS") {
@@ -102,8 +123,15 @@ export async function deleteUser(id: string) {
 
 export async function updateUserStatus(id: string, body: UpdateUserStatusBody) {
   try {
+    if (useMock) {
+      // Simulate mock response structure
+      return {
+        data: mockUsers,
+      };
+    }
+    
     const { data } = await http.patch<ApiResponse<UserDto>>(
-      `/api/users/${id}/status`,
+      `/User/${id}/status`,
       body,
     );
 
@@ -124,8 +152,15 @@ export async function updateUserStatus(id: string, body: UpdateUserStatusBody) {
 
 export async function resetUserPassword(id: string) {
   try {
+    if (useMock) {
+      // Simulate mock response structure
+      return {
+        data: mockUsers,
+      };
+    }
+
     const { data } = await http.post<ApiResponse<ResetPasswordResponse>>(
-      `/api/users/${id}/reset-password`,
+      `/Users/${id}/reset-password`,
     );
 
     if (data.responseStatus !== "SUCCESS") {
@@ -140,5 +175,33 @@ export async function resetUserPassword(id: string) {
     return data.responseData;
   } catch (err) {
     throw new Error(getAxiosErrorMessage(err, "Failed to reset user password"));
+  }
+}
+
+export async function createUser(user: UpdateUserBody) {
+  try {
+    if (useMock) {
+      // Simulate mock response structure
+      return {
+        data: mockUsers,
+        totalCount: mockUsers.length,
+        totalPages: 1,
+      };
+    }
+
+    const { data } = await http.post<ApiResponse<UsersResponsePayload>>(
+      "/User",
+      user,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(data.responseMessage, "Failed to create user"),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(getAxiosErrorMessage(err, "Failed to create user"));
   }
 }
