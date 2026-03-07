@@ -79,15 +79,32 @@ export const formatDate = (date: string) =>
     year: "numeric",
   });
 
-export const formatDateTime = (s?: string | null) => {
+export const formatDateTime = (s?: string | null, showTime: boolean = true) => {
   if (!s) return "-";
-  // You used toLocaleString before; keep it but you can enforce day-first with en-GB
-  return new Date(s).toLocaleString("en-GB");
+
+  const date = new Date(s);
+
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    ...(showTime && {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    }),
+  };
+
+  return date
+    .toLocaleString("en-GB", options)
+    .replace(",", "")
+    .replace(/\b(am|pm)\b/, (m) => m.toUpperCase());
 };
 
 export function mapRawByStage(rawByStage?: RawByStage): ByStage {
   const normalized = Object.fromEntries(
-    Object.entries(rawByStage ?? {}).map(([k, v]) => [k.toLowerCase(), v])
+    Object.entries(rawByStage ?? {}).map(([k, v]) => [k.toLowerCase(), v]),
   );
 
   return statuses.reduce((acc, s) => {

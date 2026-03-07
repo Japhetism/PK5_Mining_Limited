@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { Plus, Eye, XCircle, CheckCircle2 } from "lucide-react";
 import { JobDto, StatusFilter } from "@/app/interfaces";
-import { capitalizeFirstLetter, formatDate } from "@/app/utils/helper";
+import { capitalizeFirstLetter, formatDate, formatDateTime } from "@/app/utils/helper";
 import {
   PaginatedTable,
   PaginatedTableColumn,
@@ -102,12 +102,12 @@ export function JobList() {
     {
       key: "applicationsCount",
       header: "Date Added",
-      render: (job) => (job.dT_Created ? formatDate(job.dT_Created) : "-"),
+      render: (job) => (job.dT_Created ? formatDateTime(job.dT_Created) : "-"),
     },
     {
       key: "Close Date",
       header: "Close Date",
-      render: (job) => (job.dT_Expiry ? formatDate(job.dT_Expiry) : "-"),
+      render: (job) => (job.dT_Expiry ? formatDateTime(job.dT_Expiry, false) : "-"),
     },
     {
       key: "actions",
