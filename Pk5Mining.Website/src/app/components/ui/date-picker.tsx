@@ -1,5 +1,5 @@
 import * as React from "react";
-import { format, parse, startOfDay } from "date-fns";
+import { format, parse, startOfDay, isValid } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { DayPicker, type Matcher } from "react-day-picker";
 import "react-day-picker/dist/style.css";
@@ -25,17 +25,20 @@ export function DatePicker({
   disablePastDates = false,
   minDate,
   maxDate,
-  fromYear = 2020,
-  toYear = 2050,
+  fromYear = new Date().getFullYear(),
+  toYear = new Date().getFullYear() + 10,
   name,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
+  const [month, setMonth] = React.useState<Date>(new Date());
 
   const selectedDate = React.useMemo(() => {
     if (!value) return undefined;
 
     const parsed = parse(value, "dd/MM/yyyy", new Date());
-    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+    if (!isValid(parsed)) return undefined;
+
+    return startOfDay(parsed);
   }, [value]);
 
   const disabledDays = React.useMemo<Matcher[] | undefined>(() => {
@@ -52,13 +55,21 @@ export function DatePicker({
       matchers.push({ after: startOfDay(maxDate) });
     }
 
-    return matchers.length > 0 ? matchers : undefined;
+    return matchers.length ? matchers : undefined;
   }, [disablePastDates, minDate, maxDate]);
+
+  React.useEffect(() => {
+    if (open) {
+      setMonth(selectedDate ?? new Date());
+    }
+  }, [open, selectedDate]);
 
   const handleSelect = (date?: Date) => {
     if (!date) return;
 
-    onChange(format(date, "dd/MM/yyyy"));
+    const normalized = startOfDay(date);
+    onChange(format(normalized, "dd/MM/yyyy"));
+    setMonth(normalized);
     setOpen(false);
   };
 
@@ -92,18 +103,50 @@ export function DatePicker({
             <DayPicker
               mode="single"
               selected={selectedDate}
+              month={month}
+              onMonthChange={setMonth}
               onSelect={handleSelect}
               captionLayout="buttons"
               fromYear={fromYear}
               toYear={toYear}
               disabled={disabledDays}
+              showOutsideDays
               classNames={{
                 root: "text-sm text-gray-200",
                 month: "space-y-3",
-                caption:
-                  "flex items-center justify-between mb-2 text-gray-200 font-semibold",
+                caption: "flex items-center justify-between mb-2",
+                caption_label: "text-sm font-semibold text-gray-200",
                 nav: "flex items-center gap-1",
-                day: "h-9 w-9 rounded-md p-0 font-normal text-gray-200 hover:bg-white/10",
+                nav_button:
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-gray-200 hover:bg-white/10",
+                nav_button_previous:
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-gray-200 hover:bg-white/10",
+                nav_button_next:
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-gray-200 hover:bg-white/10",
+                table: "w-full border-collapse",
+                head_row: "",
+                head_cell:
+                  "h-9 w-9 text-xs font-medium text-gray-400 text-center",
+                row: "",
+                cell: "h-9 w-9 text-center",
+                day: "h-9 w-9 rounded-md text-sm text-gray-200 hover:bg-white/10",
+                day_today: "border border-[#c89b3c] text-[#c89b3c]",
+                day_outside: "text-gray-600",
+                day_disabled: "text-gray-600 opacity-50",
+                dropdown:
+                  "rounded-md border border-gray-700 bg-[#0f0f0f] px-2 py-1 text-sm text-gray-200",
+              }}
+              modifiersStyles={{
+                selected: {
+                  backgroundColor: "#c89b3c",
+                  color: "#000000",
+                  fontWeight: 600,
+                  borderRadius: "0.375rem",
+                },
+                today: {
+                  border: "1px solid #c89b3c",
+                  borderRadius: "0.375rem",
+                },
               }}
             />
           </div>

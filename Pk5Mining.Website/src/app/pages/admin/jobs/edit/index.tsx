@@ -5,6 +5,7 @@ import { jobTypes, workArrangements } from "@/app/constants";
 import useJobEditViewModel from "./viewmodel";
 import { RichTextEditor } from "@/app/components/ui/rich-text-editor";
 import { DatePicker } from "@/app/components/ui/date-picker";
+import { formatDateTime } from "@/app/utils/helper";
 
 export function JobEdit() {
   const {
@@ -154,7 +155,7 @@ export function JobEdit() {
             </label>
             <DatePicker
               name="dT_Expiry"
-              value={form.dT_Expiry}
+              value={formatDateTime(form.dT_Expiry, false)}
               onChange={(value) =>
                 setForm((prev) => ({
                   ...prev,
