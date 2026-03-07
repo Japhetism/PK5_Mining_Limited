@@ -9,10 +9,7 @@ import {
   MoreVerticalIcon,
 } from "lucide-react";
 import { JobDto, StatusFilter } from "@/app/interfaces";
-import {
-  capitalizeFirstLetter,
-  formatDateTime,
-} from "@/app/utils/helper";
+import { capitalizeFirstLetter, formatDateTime } from "@/app/utils/helper";
 import {
   PaginatedTable,
   PaginatedTableColumn,
@@ -130,8 +127,7 @@ export function JobList() {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="inline-flex h-8 w-8 items-center justify-center text-gray-300"
-              aria-label="Open actions"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-800 text-gray-300 hover:bg-white/10"
             >
               <MoreVerticalIcon className="h-4 w-4" />
             </button>
@@ -143,39 +139,38 @@ export function JobList() {
               sideOffset={6}
               className="z-50 min-w-[180px] rounded-lg border border-gray-800 bg-[#111111] p-1 shadow-xl"
             >
-              <Link
-                to={`/admin/jobs/${job.id}`}
-                title="View job details"
-                onClick={() => {
-                  queryClient.setQueryData(["jobs", String(job.id)], job);
-                }}
-                className="flex items-center rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-white/10"
-              >
-                <Eye className="mr-2 h-4 w-4" />
-                View details
-              </Link>
+              <DropdownMenu.Item asChild>
+                <Link
+                  to={`/admin/jobs/${job.id}`}
+                  onClick={() => {
+                    queryClient.setQueryData(["jobs", String(job.id)], job);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10"
+                >
+                  <Eye className="w-4 h-4" />
+                  View details
+                </Link>
+              </DropdownMenu.Item>
 
-              <button
-                type="button"
-                onClick={() => {
+              <DropdownMenu.Item
+                onSelect={() => {
                   setSelectedJob(job);
                   setConfirmOpen(true);
                 }}
-                className="flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-white/10"
-                title={job.isActive ? "Close job" : "Reopen job"}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer"
               >
                 {job.isActive ? (
                   <>
-                    <XCircle className="mr-2 h-4 w-4 text-red-400" />
+                    <XCircle className="w-4 h-4 text-red-400" />
                     Close job
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="mr-2 h-4 w-4 text-green-400" />
+                    <CheckCircle2 className="w-4 h-4 text-green-400" />
                     Reopen job
                   </>
                 )}
-              </button>
+              </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
