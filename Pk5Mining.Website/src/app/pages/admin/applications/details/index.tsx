@@ -51,7 +51,7 @@ export function ApplicationDetail() {
           className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200"
         >
           <ArrowLeft className="w-3 h-3" />
-          Back to applications
+          Back
         </button>
 
         {app && (
