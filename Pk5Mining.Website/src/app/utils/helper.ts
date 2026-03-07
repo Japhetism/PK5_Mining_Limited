@@ -86,8 +86,12 @@ export const formatDateTime = (s?: string | null) => {
 };
 
 export function mapRawByStage(rawByStage?: RawByStage): ByStage {
+  const normalized = Object.fromEntries(
+    Object.entries(rawByStage ?? {}).map(([k, v]) => [k.toLowerCase(), v])
+  );
+
   return statuses.reduce((acc, s) => {
-    acc[s.value] = rawByStage?.[s.backendKey] ?? 0;
+    acc[s.value] = normalized[s.backendKey.toLowerCase()] ?? 0;
     return acc;
   }, {} as ByStage);
 }
