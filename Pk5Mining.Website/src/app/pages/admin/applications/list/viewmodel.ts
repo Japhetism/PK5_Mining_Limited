@@ -10,7 +10,6 @@ import {
 } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
-import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
 function useApplicationsListViewModel() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,10 +58,7 @@ function useApplicationsListViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while fetching applications. Please try again.",
-      );
+      const message = error ?? "An error occurred while fetching applications. Please try again.";
       toastUtil.error(message);
     }
   }, [error]);

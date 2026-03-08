@@ -11,7 +11,6 @@ import {
   WorkArrangement,
 } from "@/app/interfaces";
 import { validateJob } from "@/app/utils/validator";
-import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
 import { ddmmyyyyToApiDate } from "@/app/utils/helper";
 
@@ -45,10 +44,7 @@ function useJobEditViewModel() {
 
   useEffect(() => {
     if (fetchError) {
-      const message = getAxiosErrorMessage(
-        fetchError,
-        "An error occurred while fetching job details. Please try again.",
-      );
+      const message = fetchError ?? "An error occurred while fetching job details. Please try again.";
       toastUtil.error(message);
     }
   }, [fetchError]);
@@ -87,10 +83,7 @@ function useJobEditViewModel() {
     },
     onError: (err: unknown) => {
       setLoading(false);
-      const message = getAxiosErrorMessage(
-        err,
-        "An error occurred while saving the job. Please try again.",
-      );
+      const message = err ?? "An error occurred while saving the job. Please try again.";
       toastUtil.error(message);
     },
   });
@@ -112,10 +105,7 @@ function useJobEditViewModel() {
     },
     onError: (err: unknown) => {
       setLoading(false);
-      const message = getAxiosErrorMessage(
-        err,
-        "An error occurred while updating the job. Please try again.",
-      );
+      const message = err ?? "An error occurred while updating the job. Please try again.";
       toastUtil.error(message);
     },
   });

@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobApplicationsByJobId } from "@/app/api/applications";
 import { getJobById } from "@/app/api/jobs";
 import { ApplicationsByJobIdQuery, JobApplicationDto } from "@/app/interfaces";
 import { cleanParams } from "@/app/utils/helper";
-import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
 
 function useJobDetailsViewModel() {
+  const queryClient = useQueryClient();
   const { jobId } = useParams<{ jobId: string }>();
 
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -58,18 +58,16 @@ function useJobDetailsViewModel() {
 
   useEffect(() => {
     if (fetchError) {
-      const message = getAxiosErrorMessage(
-        fetchError,
-        "An error occurred while fetching job details. Please try again.",
-      );
+      const message =
+        fetchError ??
+        "An error occurred while fetching job details. Please try again.";
       toastUtil.error(message);
     }
 
     if (jobApplicationsFetchError) {
-      const message = getAxiosErrorMessage(
-        jobApplicationsFetchError,
-        "An error occurred while fetching job applications. Please try again.",
-      );
+      const message =
+        jobApplicationsFetchError ??
+        "An error occurred while fetching job applications. Please try again.";
       toastUtil.error(message);
     }
   }, [fetchError, jobApplicationsFetchError]);
@@ -101,6 +99,7 @@ function useJobDetailsViewModel() {
     totalPages,
     selectedApplicant,
     isViewerOpen,
+    queryClient,
     onChangePage,
     onChangePageSize,
     setIsViewerOpen,

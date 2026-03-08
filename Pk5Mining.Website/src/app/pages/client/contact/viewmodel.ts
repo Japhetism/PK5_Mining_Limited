@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { saveContactInquiry } from "@/app/api/contact";
 import { InquiryForm, InquiryFormDto } from "@/app/interfaces";
-import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
 const AppID = import.meta.env.VITE_APP_ID as string;
 
@@ -30,14 +29,10 @@ function useContactViewModel() {
       setSubmitted(true);
       setFormData(defaultFormData);
     },
-    onError: (err: unknown) => {
+    onError: (err: string) => {
       setLoading(false);
       setSubmitted(false);
-      const message = getAxiosErrorMessage(
-        err,
-        "An error occurred while submitting your inquiry. Please try again.",
-      );
-
+      const message = err ?? "An error occurred while submitting your inquiry. Please try again.";
       setErrorMsg(message);
     },
   });

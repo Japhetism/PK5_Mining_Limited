@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getApplicationById,
   updateJobApplicationStatus,
 } from "@/app/api/applications";
-import { ApiError } from "@/app/interfaces";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
 
 function useApplicationDetailsViewModel() {
@@ -51,11 +49,7 @@ function useApplicationDetailsViewModel() {
     onError: (error: unknown) => {
       setUpdating(false);
 
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while updating application status. Please try again.",
-      );
-
+      const message = error ?? "An error occurred while updating application status. Please try again.";
       toastUtil.error(message);
     },
   });
@@ -84,10 +78,7 @@ function useApplicationDetailsViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while fetching application details. Please try again.",
-      );
+      const message = error ?? "An error occurred while fetching application details. Please try again.";
       toastUtil.error(message);
     }
   }, [error]);

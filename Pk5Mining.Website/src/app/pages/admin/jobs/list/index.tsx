@@ -7,7 +7,6 @@ import {
   XCircle,
   CheckCircle2,
   MoreVerticalIcon,
-  Edit,
   Pencil,
 } from "lucide-react";
 import { JobDto, StatusFilter } from "@/app/interfaces";

@@ -10,7 +10,6 @@ import {
   UpdateJobPayload,
 } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
-import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
 
 function useJobListViewModel() {
@@ -75,17 +74,19 @@ function useJobListViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while fetching jobs. Please try again.",
-      );
+      const message =
+        error ?? "An error occurred while fetching jobs. Please try again.";
       toastUtil.error(message);
     }
   }, [error]);
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateJobPayload) => {
-      if (!selectedJob || !("id" in selectedJob)) {
+      if (
+        !selectedJob ||
+        !("id" in selectedJob) ||
+        typeof selectedJob.id !== "number"
+      ) {
         throw new Error("Cannot update: missing job id");
       }
       return updateJob(selectedJob.id, payload);
@@ -99,10 +100,7 @@ function useJobListViewModel() {
     },
     onError: (err: unknown) => {
       setIsUpdating(false);
-      const message = getAxiosErrorMessage(
-        err,
-        "An error occurred while updating the job. Please try again.",
-      );
+      const message = err ?? "An error occurred while updating the job. Please try again.";
       toastUtil.error(message);
     },
   });

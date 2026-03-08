@@ -10,8 +10,8 @@ export function getAxiosErrorMessage(
   if (err.response) {
     const backendMsg = (err.response.data as ApiResponse<unknown> | undefined)
       ?.responseMessage;
-
-    return backendMsg || `Request failed (${err.response.status})`;
+    
+    return backendMsg || "We couldn't process your request right now. Please try again later.";
   }
 
   if (err.request) {

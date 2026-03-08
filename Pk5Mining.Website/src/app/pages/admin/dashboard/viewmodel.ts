@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getDashboardStat } from "@/app/api/dashboard";
-import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
 import { ByStage, RawByStage } from "@/app/interfaces";
 import { mapRawByStage } from "@/app/utils/helper";
@@ -17,10 +16,7 @@ function useDashboardViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while fetching applications. Please try again.",
-      );
+      const message = error ?? "An error occurred while fetching applications. Please try again.";
       toastUtil.error(message);
     }
   }, [error]);
