@@ -102,7 +102,12 @@ export async function createJob(payload: CreateJobPayload) {
 
 export async function updateJob(id: number, payload: UpdateJobPayload) {
   try {
-    const { data } = await http.put<ApiResponse<JobDto>>(`/Job/${id}`, payload);
+    // to be remove
+    const createPayload = {
+      ...payload,
+      status: payload.isActive ? "Open" : "Close"
+    }
+    const { data } = await http.put<ApiResponse<JobDto>>(`/Job/${id}`, createPayload);
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(

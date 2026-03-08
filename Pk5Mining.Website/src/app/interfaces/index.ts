@@ -422,3 +422,11 @@ export type BackendStageKey = (typeof statuses)[number]["backendKey"];
 
 export type RawByStage = Partial<Record<BackendStageKey, number>>;
 export type ByStage = Record<StageValue, number>;
+
+export type NavItem = {
+  to: string;
+  label: string;
+  icon: LucideIcon;
+  show: boolean;
+  end?: boolean;
+};
