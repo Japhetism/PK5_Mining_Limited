@@ -195,19 +195,19 @@ export function JobList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold mb-1">Job openings</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold mb-1">Job openings</h1>
           <p className="text-sm text-gray-400">
             Create, update, and close job postings.
           </p>
         </div>
 
-        <Link to="/admin/jobs/new">
+        <Link to="/admin/jobs/new" className="w-full sm:w-auto">
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
           >
             <Plus className="w-4 h-4" />
             New job
@@ -215,78 +215,86 @@ export function JobList() {
         </Link>
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="flex items-center gap-3">
-          <div className="w-full sm:w-[200px]">
+      {/* Filters */}
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+          <div className="min-w-0">
             <input
               name="department"
               type="text"
               value={filters.department}
               onChange={(e) => updateFilter("department", e.target.value)}
               placeholder="Search by department"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
-          <div className="w-full sm:w-[200px]">
+          <div className="min-w-0">
             <input
               name="location"
               type="text"
               value={filters.location}
               onChange={(e) => updateFilter("location", e.target.value)}
               placeholder="Search by location"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
-          <select
-            value={filterStatus}
-            onChange={(e) => {
-              setFilterStatus(e.target.value as StatusFilter);
-              setIsFilter(true);
-            }}
-            className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-          >
-            <option value="">All Statuses</option>
-            {statusOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <div className="min-w-0">
+            <select
+              value={filterStatus}
+              onChange={(e) => {
+                setFilterStatus(e.target.value as StatusFilter);
+                setIsFilter(true);
+              }}
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+            >
+              <option value="">All Statuses</option>
+              {statusOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <select
-            value={filterJobType}
-            onChange={(e) => {
-              setFilterJobType(e.target.value);
-              setIsFilter(true);
-            }}
-            className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-          >
-            <option value="">All Job Type</option>
-            {jobTypes.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <div className="min-w-0">
+            <select
+              value={filterJobType}
+              onChange={(e) => {
+                setFilterJobType(e.target.value);
+                setIsFilter(true);
+              }}
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+            >
+              <option value="">All Job Type</option>
+              {jobTypes.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
-      <PaginatedTable<JobDto>
-        data={jobs}
-        columns={columns}
-        isLoading={isLoading}
-        isFilter={isFilter}
-        emptyTitle="No job openings yet. Click “New job” to create one."
-        noResultsTitle="No results found. Try changing your filters."
-        setPageNumber={onChangePage}
-        setPageSize={onChangePageSize}
-        pageNumber={pageNumber}
-        pageSize={pageSize}
-        totalCount={totalCount}
-        totalPages={totalPages}
-      />
+      {/* Table */}
+      <div className="min-w-0 overflow-x-auto rounded-xl border border-gray-800">
+        <PaginatedTable<JobDto>
+          data={jobs}
+          columns={columns}
+          isLoading={isLoading}
+          isFilter={isFilter}
+          emptyTitle="No job openings yet. Click “New job” to create one."
+          noResultsTitle="No results found. Try changing your filters."
+          setPageNumber={onChangePage}
+          setPageSize={onChangePageSize}
+          pageNumber={pageNumber}
+          pageSize={pageSize}
+          totalCount={totalCount}
+          totalPages={totalPages}
+        />
+      </div>
 
       <ConfirmModal
         open={confirmOpen}
