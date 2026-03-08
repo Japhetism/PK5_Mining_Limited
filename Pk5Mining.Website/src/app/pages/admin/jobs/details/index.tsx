@@ -11,7 +11,7 @@ import {
   Eye,
   Linkedin,
 } from "lucide-react";
-import { capitalizeFirstLetter, formatDate, formatDateTime } from "@/app/utils/helper";
+import { capitalizeFirstLetter, formatDateTime } from "@/app/utils/helper";
 import { Badge } from "@/app/components/ui/badge";
 import { JobDetailsSkeleton } from "@/app/components/ui/job-details-skeleton";
 import { PaginatedCard } from "@/app/components/ui/applicant-details-card";
@@ -166,14 +166,18 @@ export function JobDetail() {
                 return (
                   <>
                     <p
-                      title={isExpired ? formatDateTime(job.dT_Expiry, false) : ""}
+                      title={
+                        isExpired ? formatDateTime(job.dT_Expiry, false) : ""
+                      }
                       className="text-xs font-semibold text-gray-400 mb-1"
                     >
                       {isExpired ? "Closed" : "Closing on"}
                     </p>
 
                     {!isExpired && (
-                      <p className="mb-3">{formatDateTime(job.dT_Expiry, false)}</p>
+                      <p className="mb-3">
+                        {formatDateTime(job.dT_Expiry, false)}
+                      </p>
                     )}
                   </>
                 );
@@ -226,38 +230,43 @@ export function JobDetail() {
           renderCard={(a) => (
             <div className="space-y-4">
               {/* Header */}
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
-                  <div className="text-sm font-medium text-gray-100 truncate">
+                  <div className="text-sm font-medium text-gray-100 break-words">
                     {a.firstName} {a.lastName}
                   </div>
-                  <div className="text-xs text-gray-400 truncate">
+                  <div className="text-xs text-gray-400 break-all">
                     {a.email}
                   </div>
                 </div>
-                <div className="text-xs text-gray-400 truncate">
+
+                <div className="text-xs text-gray-400 break-all sm:text-right">
                   Applicant ID: {a.id}
                 </div>
               </div>
-              <ApplicationStatusPill status={a.status?.toLowerCase()} />
+
+              <div className="flex flex-wrap">
+                <ApplicationStatusPill status={a.status?.toLowerCase()} />
+              </div>
 
               {/* Contact */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-gray-200">
-                  <Mail className="w-4 h-4 text-gray-400" />
-                  <span className="truncate">{a.email}</span>
+                <div className="flex items-start gap-2 text-sm text-gray-200">
+                  <Mail className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+                  <span className="break-all">{a.email}</span>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-200">
-                  <Phone className="w-4 h-4 text-gray-400" />
-                  <span className="truncate">{a.phoneNumber ?? "-"}</span>
+                <div className="flex items-start gap-2 text-sm text-gray-200">
+                  <Phone className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+                  <span className="break-words">{a.phoneNumber ?? "-"}</span>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-200">
-                  <Linkedin className="w-4 h-4 text-gray-400" />
+                <div className="flex items-start gap-2 text-sm text-gray-200">
+                  <Linkedin className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
                   <a
-                    className="truncate"
+                    className="break-all hover:underline"
                     target="_blank"
+                    rel="noreferrer"
                     href={
                       a?.linkedIn?.startsWith("http")
                         ? a.linkedIn
@@ -270,17 +279,17 @@ export function JobDetail() {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <Link
                   to={`/admin/applications/${a.id}`}
                   title="View application details"
                   onClick={() => {
                     queryClient.setQueryData(["applications", String(a.id)], a);
                   }}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-200 hover:bg-white/5"
+                  className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-200 hover:bg-white/5"
                 >
-                  <Eye className="w-4 h-4" />
-                  View Details
+                  <Eye className="w-4 h-4 shrink-0" />
+                  <span className="truncate">View Details</span>
                 </Link>
 
                 <motion.button
@@ -291,11 +300,11 @@ export function JobDetail() {
                   }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-200 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-200 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
                   title="View resume"
                 >
-                  <FileText className="w-4 h-4" />
-                  Resume
+                  <FileText className="w-4 h-4 shrink-0" />
+                  <span className="truncate">Resume</span>
                 </motion.button>
               </div>
             </div>
