@@ -43,6 +43,7 @@ export function AdminLayout() {
               <img
                 src={Logo}
                 alt="PK5 Mining Logo"
+                loading="lazy"
                 className="w-14 sm:w-20 h-auto object-contain shrink-0"
               />
               <span className="font-bold text-sm sm:text-base truncate">
@@ -145,6 +146,7 @@ export function AdminLayout() {
                         <img
                           src={Logo}
                           alt="PK5 Mining Logo"
+                          loading="lazy"
                           className="w-14 h-auto object-contain shrink-0"
                         />
                         <span className="font-bold text-sm truncate">

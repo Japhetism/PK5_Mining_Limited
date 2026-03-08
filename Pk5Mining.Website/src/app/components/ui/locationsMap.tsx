@@ -1,3 +1,5 @@
+import "leaflet/dist/leaflet.css";
+import "../../../leaflet-icon-fix";
 import { useEffect, useState } from "react";
 import {
   MapContainer,

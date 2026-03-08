@@ -147,7 +147,7 @@ export function About() {
                     transition={{ duration: 0.8 }}
                   >
                     {/* <Users className="w-16 h-16 text-white" /> */}
-                    <img src={leader.image} alt={leader.name} className="w-32 h-32 rounded-full object-cover" />
+                    <img src={leader.image} alt={leader.name} loading="lazy" className="w-32 h-32 rounded-full object-cover" />
                   </motion.div>
                   <h3 className="text-xl font-bold mb-2">{leader.name}</h3>
                   <p className="text-[#c89b3c] text-sm mb-2">{leader.role}</p>

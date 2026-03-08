@@ -26,7 +26,7 @@ export function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src={Logo} alt="PK5 Mining Logo" className="w-30 h-auto object-contain" />
+              <img src={Logo} alt="PK5 Mining Logo" loading="lazy" className="w-30 h-auto object-contain" />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               Powering industry through responsible mining of strategic minerals and natural resources.

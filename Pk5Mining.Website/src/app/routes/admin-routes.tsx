@@ -1,21 +1,62 @@
+import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router-dom";
-import { Login } from "@/app/pages/admin/login";
-import { ProtectedRoute } from "@/app/auth/ProtectedRoute";
-import { AdminLayout } from "@/app/pages/admin/layout";
-import { Dashboard } from "@/app/pages/admin/dashboard";
-import { JobList } from "@/app/pages/admin/jobs/list";
-import { JobEdit } from "@/app/pages/admin/jobs/edit";
-import { JobDetail } from "@/app/pages/admin/jobs/details";
-import { ApplicationList } from "@/app/pages/admin/applications/list";
-import { ApplicationDetail } from "@/app/pages/admin/applications/details";
-import { ContactMessageList } from "../pages/admin/contact/list";
-import { ContactMessageDetails } from "../pages/admin/contact/details";
-import { UserList } from "../pages/admin/users/list";
-import { UserDetails } from "../pages/admin/users/details";
+
+const Login = lazy(() =>
+  import("@/app/pages/admin/login").then((m) => ({ default: m.Login })),
+);
+const ProtectedRoute = lazy(() =>
+  import("@/app/auth/ProtectedRoute").then((m) => ({
+    default: m.ProtectedRoute,
+  })),
+);
+const AdminLayout = lazy(() =>
+  import("@/app/pages/admin/layout").then((m) => ({ default: m.AdminLayout })),
+);
+const Dashboard = lazy(() =>
+  import("@/app/pages/admin/dashboard").then((m) => ({ default: m.Dashboard })),
+);
+const JobList = lazy(() =>
+  import("@/app/pages/admin/jobs/list").then((m) => ({ default: m.JobList })),
+);
+const JobEdit = lazy(() =>
+  import("@/app/pages/admin/jobs/edit").then((m) => ({ default: m.JobEdit })),
+);
+const JobDetail = lazy(() =>
+  import("@/app/pages/admin/jobs/details").then((m) => ({
+    default: m.JobDetail,
+  })),
+);
+const ApplicationList = lazy(() =>
+  import("@/app/pages/admin/applications/list").then((m) => ({
+    default: m.ApplicationList,
+  })),
+);
+const ApplicationDetail = lazy(() =>
+  import("@/app/pages/admin/applications/details").then((m) => ({
+    default: m.ApplicationDetail,
+  })),
+);
+const ContactMessageList = lazy(() =>
+  import("../pages/admin/contact/list").then((m) => ({
+    default: m.ContactMessageList,
+  })),
+);
+const ContactMessageDetails = lazy(() =>
+  import("../pages/admin/contact/details").then((m) => ({
+    default: m.ContactMessageDetails,
+  })),
+);
+const UserList = lazy(() =>
+  import("../pages/admin/users/list").then((m) => ({ default: m.UserList })),
+);
+const UserDetails = lazy(() =>
+  import("../pages/admin/users/details").then((m) => ({
+    default: m.UserDetails,
+  })),
+);
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
-
   {
     path: "/admin",
     element: <ProtectedRoute />,
@@ -37,7 +78,7 @@ export const adminRoutes: RouteObject[] = [
           { path: "contact-messages", element: <ContactMessageList /> },
           { path: "contact-messages/:id", element: <ContactMessageDetails /> },
           { path: "users", element: <UserList /> },
-          { path: "users/:id", element: <UserDetails /> }
+          { path: "users/:id", element: <UserDetails /> },
         ],
       },
     ],

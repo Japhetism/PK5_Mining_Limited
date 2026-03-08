@@ -39,7 +39,7 @@ export function Header() {
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 group">
-          <img src={Logo} alt="PK5 Mining Logo" className="w-40 h-auto object-contain" />
+          <img src={Logo} alt="PK5 Mining Logo" loading="lazy" className="w-40 h-auto object-contain" />
         </Link>
 
         {/* Desktop Navigation */}
