@@ -22,3 +22,9 @@ export type SubsidiaryResponsePayload = {
 export type CreateSubsidiaryPayload = Omit<Subsidiary, "id" | "dT_Created" | "dT_Updated">;
 
 export type UpdateSubsidiaryPayload = Partial<CreateSubsidiaryPayload>;
+
+export type SubsidiariesQuery = {
+  pageNumber: number;
+  pageSize: number;
+  isActive?: boolean | string;
+};

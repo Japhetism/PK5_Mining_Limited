@@ -3,6 +3,7 @@ import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 import {
   CreateSubsidiaryPayload,
+  SubsidiariesQuery,
   Subsidiary,
   SubsidiaryResponsePayload,
   UpdateSubsidiaryPayload,
@@ -11,7 +12,7 @@ import { mock_subsidiaries } from "../fixtures/subsidiary.fixture";
 
 const useMock = import.meta.env.VITE_USE_MOCK_DATA === "true";
 
-export async function getSubsidiaries() {
+export async function getSubsidiaries(queryParams: SubsidiariesQuery) {
   try {
     if (useMock) {
       // Simulate mock response structure

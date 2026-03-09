@@ -54,6 +54,11 @@ const UserDetails = lazy(() =>
     default: m.UserDetails,
   })),
 );
+const SubsidiaryList = lazy(() =>
+  import("../pages/admin/subsidiaries/list").then((m) => ({
+    default: m.SubsidiaryList,
+  })),
+);
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
@@ -79,6 +84,7 @@ export const adminRoutes: RouteObject[] = [
           { path: "contact-messages/:id", element: <ContactMessageDetails /> },
           { path: "users", element: <UserList /> },
           { path: "users/:id", element: <UserDetails /> },
+          { path: "subsidiaries", element: <SubsidiaryList /> },
         ],
       },
     ],

@@ -1,4 +1,4 @@
-import { BarChart3, Briefcase, FileText, Mails, Users } from "lucide-react";
+import { BarChart3, Briefcase, Building, FileText, Mails, Users } from "lucide-react";
 import { NavItem } from "../interfaces";
 
 export const nav: NavItem[] = [
@@ -23,4 +23,5 @@ export const nav: NavItem[] = [
     show: false,
   },
   { to: "/admin/users", label: "Users", icon: Users, show: false },
+  { to: "/admin/subsidiaries", label: "Subsidiaries", icon: Building, show: true },
 ];
