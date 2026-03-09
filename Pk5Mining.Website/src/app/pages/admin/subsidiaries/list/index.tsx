@@ -34,10 +34,14 @@ export function SubsidiaryList() {
     totalPages,
     error,
     confirmOpen,
+    confirmDeleteOpen,
+    confirmEditOpen,
     selectedSubsidiary,
     isUpdating,
     queryClient,
     setConfirmOpen,
+    setConfirmDeleteOpen,
+    setConfirmEditOpen,
     setSelectedSubsidiary,
     updateFilter,
     setIsFilter,
@@ -174,17 +178,15 @@ export function SubsidiaryList() {
                 )}
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item asChild>
-                <Link
-                  to={`/admin/subsidiaries/${subsidiary.id}/delete`}
-                  onClick={() => {
-                    queryClient.setQueryData(["subsidiaries", String(subsidiary.id)], subsidiary);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Trash className="w-4 h-4 text-red-400" />
-                  Delete Subsidiary
-                </Link>
+              <DropdownMenu.Item
+                onSelect={() => {
+                  setSelectedSubsidiary(subsidiary);
+                  setConfirmDeleteOpen(true);
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+              >
+                <Trash className="w-4 h-4 text-red-400" />
+                Delete Subsidiary
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
@@ -277,6 +279,17 @@ export function SubsidiaryList() {
         }
         description={`Are you sure you want to ${selectedSubsidiary?.isActive ? "deactivate" : "activate"} "${selectedSubsidiary?.name}"?`}
         confirmText={`Yes, ${selectedSubsidiary?.isActive ? "deactivate" : "activate"}`}
+        cancelText="No"
+        loading={isUpdating}
+      />
+
+      <ConfirmModal
+        open={confirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
+        onConfirm={handleUpdateStatus}
+        title="Delete Subsidiary"
+        description={`Are you sure you want to delete "${selectedSubsidiary?.name}"?`}
+        confirmText={`Yes, delete`}
         cancelText="No"
         loading={isUpdating}
       />

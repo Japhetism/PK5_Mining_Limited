@@ -16,6 +16,8 @@ function useSubsidiaryListViewModel() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
+  const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
   const [selectedSubsidiary, setSelectedSubsidiary] = useState<Subsidiary | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
@@ -133,6 +135,8 @@ function useSubsidiaryListViewModel() {
     pageSize,
     isUpdating,
     confirmOpen,
+    confirmDeleteOpen,
+    confirmEditOpen,
     filters,
     queryClient,
     setIsFilter,
@@ -143,6 +147,8 @@ function useSubsidiaryListViewModel() {
     onChangePage,
     onChangePageSize,
     setConfirmOpen,
+    setConfirmDeleteOpen,
+    setConfirmEditOpen,
   };
 }
 
