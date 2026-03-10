@@ -282,7 +282,7 @@ export type ApplicationStatusFilter =
   | "rejected"
   | "hired";
 
-export type ContactStatus = "new" | "read" | "in review" |"replied" | "resolved" | "closed" | "archived";
+export type ContactStatus = "new" | "in review" |"replied" | "resolved" | "closed";
 
 export type ContactMessageDto = {
   id: string;
