@@ -1,15 +1,10 @@
 import React from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
+import { DatePicker } from "@/app/components/ui/date-picker";
 import { ContactStatus } from "@/app/interfaces";
-
-const statusOptions: { label: string; value: ContactStatus | "all" }[] = [
-  { label: "All", value: "all" },
-  { label: "New", value: "new" },
-  { label: "Replied", value: "replied" },
-  { label: "Resolved", value: "resolved" },
-  { label: "Closed", value: "closed" },
-];
+import { formatDateTime } from "@/app/utils/helper";
+import { contactMsgStatusOptions, websites, miningSubjects } from "@/app/constants";
 
 type ContactMessageFilters = {
   search: string;
@@ -110,24 +105,34 @@ export function ContactMessageFilterPanel({
                 />
               </FilterField>
 
-              <FilterField label="Subject">
-                <input
-                  type="text"
-                  value={filters.subject}
-                  onChange={(e) => updateFilter("subject", e.target.value)}
-                  placeholder="Filter by subject"
-                  className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-                />
-              </FilterField>
-
               <FilterField label="Website">
-                <input
-                  type="text"
+                <select
                   value={filters.website}
                   onChange={(e) => updateFilter("website", e.target.value)}
-                  placeholder="Filter by website"
                   className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-                />
+                >
+                  <option value="all">All</option>
+                  {websites.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </FilterField>
+
+              <FilterField label="Subject">
+                <select
+                  value={filters.subject}
+                  onChange={(e) => updateFilter("subject", e.target.value)}
+                  className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                >
+                  <option value="all">All</option>
+                  {miningSubjects.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
               </FilterField>
 
               <FilterField label="Status">
@@ -138,7 +143,7 @@ export function ContactMessageFilterPanel({
                   }
                   className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
                 >
-                  {statusOptions.map((opt) => (
+                  {contactMsgStatusOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}
                     </option>
@@ -148,20 +153,18 @@ export function ContactMessageFilterPanel({
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <FilterField label="Start Date">
-                  <input
-                    type="date"
-                    value={filters.startDate}
-                    onChange={(e) => updateFilter("startDate", e.target.value)}
-                    className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                  <DatePicker
+                    name="startDate"
+                    value={formatDateTime(filters.startDate, false)}
+                    onChange={(value) => updateFilter("startDate", value)}
                   />
                 </FilterField>
 
                 <FilterField label="End Date">
-                  <input
-                    type="date"
-                    value={filters.endDate}
-                    onChange={(e) => updateFilter("endDate", e.target.value)}
-                    className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                  <DatePicker
+                    name="endDate"
+                    value={formatDateTime(filters.startDate, false)}
+                    onChange={(value) => updateFilter("endDate", value)}
                   />
                 </FilterField>
               </div>

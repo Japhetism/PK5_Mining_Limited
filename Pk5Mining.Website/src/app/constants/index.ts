@@ -1,3 +1,5 @@
+import { ContactStatus } from "@/app/interfaces";
+
 export const AUTH_KEY = "auth_state";
 
 export const jobTypes = [
@@ -49,3 +51,31 @@ export const statuses = [
   { value: "rejected", label: "Rejected", backendKey: "Rejected" },
   { value: "hired", label: "Hired", backendKey: "Hired" },
 ] as const;
+
+export const contactMsgStatusOptions: { label: string; value: ContactStatus | "all" }[] = [
+  { label: "All", value: "all" },
+  { label: "New", value: "new" },
+  { label: "Replied", value: "replied" },
+  { label: "Resolved", value: "resolved" },
+  { label: "Closed", value: "closed" },
+];
+
+export const websites = [
+  { label: "PK5 Mining", value: "" },
+  { label: "PK5 Agro", value: "" }
+]
+
+export const agroSubjects = [
+  { label: "Partnership", value: "partnership" },
+  { label: "Bulk Purchase", value: "bulk purchase" },
+  { label: "Export Inquiry", value: "export inquiry" },
+  { label: "General Inquiry", value: "general inquiry" },
+]
+
+export const miningSubjects = [
+  { label: "General Inquiry", value: "general inquiry" },
+  { label: "Partnership Opportunity", value: "partnership opportunity" },
+  { label: "Investor Relations", value: "investor relations" },
+  { label: "Career Opportunities", value: "career opportunnities" },
+  { label: "Media Inquiry", value: "media inquiry"}
+]
