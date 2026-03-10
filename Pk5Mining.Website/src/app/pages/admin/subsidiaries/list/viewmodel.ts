@@ -7,8 +7,17 @@ import {
 } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
-import { SubsidiariesQuery, Subsidiary, UpdateSubsidiaryPayload } from "@/app/interfaces/subsidiary";
+import { SubsidiariesQuery, Subsidiary, SubsidiaryErrors, UpdateSubsidiaryPayload } from "@/app/interfaces/subsidiary";
 import { getSubsidiaries, updateSubsidiary } from "@/app/api/subsidiary";
+
+const defaultFormData = {
+  name: "",
+  code: "",
+  country: "",
+  timezone: "",
+  address: "",
+  email: "",
+}
 
 function useSubsidiaryListViewModel() {
   const queryClient = useQueryClient();
@@ -21,6 +30,9 @@ function useSubsidiaryListViewModel() {
   const [selectedSubsidiary, setSelectedSubsidiary] = useState<Subsidiary | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+
+  const [form, setForm] = useState(defaultFormData);
+  const [fieldErrors, setFieldErrors] = useState<SubsidiaryErrors>({});
 
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -118,6 +130,21 @@ function useSubsidiaryListViewModel() {
     });
   };
 
+  const onChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log('form is ', form);
+  }
+
   const subsidaries: Subsidiary[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -139,6 +166,9 @@ function useSubsidiaryListViewModel() {
     confirmEditOpen,
     filters,
     queryClient,
+    form,
+    fieldErrors,
+    onChange,
     setIsFilter,
     setFilterStatus,
     handleUpdateStatus,
@@ -149,6 +179,7 @@ function useSubsidiaryListViewModel() {
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
+    setFieldErrors,
   };
 }
 

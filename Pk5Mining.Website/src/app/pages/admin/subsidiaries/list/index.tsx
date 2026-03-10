@@ -20,6 +20,7 @@ import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { statusOptions } from "@/app/constants";
 import useSubsidiaryListViewModel from "./viewmodel";
 import { Subsidiary } from "@/app/interfaces/subsidiary";
+import { EditModal } from "../components/edit-modal";
 
 export function SubsidiaryList() {
   const {
@@ -146,16 +147,16 @@ export function SubsidiaryList() {
               </DropdownMenu.Item>
 
               <DropdownMenu.Item asChild>
-                <Link
-                  to={`/admin/subsidiaries/${subsidiary.id}/edit`}
+                <button
                   onClick={() => {
-                    queryClient.setQueryData(["subsidiaries", String(subsidiary.id)], subsidiary);
+                    setSelectedSubsidiary(subsidiary)
+                    setConfirmEditOpen(true)
                   }}
                   className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
                 >
                   <Pencil className="w-4 h-4" />
                   Edit Subsidiary
-                </Link>
+                </button>
               </DropdownMenu.Item>
 
               <DropdownMenu.Item
@@ -206,7 +207,7 @@ export function SubsidiaryList() {
           </p>
         </div>
 
-        <Link to="/admin/subsidiaries/new" className="w-full sm:w-auto">
+        <button onClick={() => setConfirmEditOpen(true)} className="w-full sm:w-auto">
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
@@ -215,7 +216,7 @@ export function SubsidiaryList() {
             <Plus className="w-4 h-4" />
             New Subsidiary
           </motion.button>
-        </Link>
+        </button>
       </div>
 
       {/* Filters */}
@@ -291,6 +292,16 @@ export function SubsidiaryList() {
         description={`Are you sure you want to delete "${selectedSubsidiary?.name}"?`}
         confirmText={`Yes, delete`}
         cancelText="No"
+        loading={isUpdating}
+      />
+
+      <EditModal
+        open={confirmEditOpen}
+        onClose={() => setConfirmEditOpen(false)}
+        onConfirm={handleUpdateStatus}
+        title="Create Subsidiary"
+        confirmText="Create"
+        cancelText="Cancel"
         loading={isUpdating}
       />
     </div>

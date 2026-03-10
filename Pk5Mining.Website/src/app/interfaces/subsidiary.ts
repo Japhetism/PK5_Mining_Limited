@@ -28,3 +28,7 @@ export type SubsidiariesQuery = {
   pageSize: number;
   isActive?: boolean | string;
 };
+
+export type SubsidiaryErrors = {
+  [K in keyof CreateSubsidiaryPayload]?: string;
+};
