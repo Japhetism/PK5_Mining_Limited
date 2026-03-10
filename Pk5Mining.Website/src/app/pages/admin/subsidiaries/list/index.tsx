@@ -50,6 +50,7 @@ export function SubsidiaryList() {
     onChangePage,
     onChangePageSize,
     handleUpdateStatus,
+    setForm,
   } = useSubsidiaryListViewModel();
 
   const columns: PaginatedTableColumn<Subsidiary>[] = [
@@ -149,6 +150,7 @@ export function SubsidiaryList() {
               <DropdownMenu.Item asChild>
                 <button
                   onClick={() => {
+                    console.log("from edit button ", subsidiary)
                     setSelectedSubsidiary(subsidiary)
                     setConfirmEditOpen(true)
                   }}

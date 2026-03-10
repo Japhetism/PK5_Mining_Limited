@@ -22,6 +22,13 @@ function useContactListViewModel() {
   
   const [filters, setFilters] = useState({
     search: searchParams.get("search") ?? "",
+    name: searchParams.get("name") ?? "",
+    email: searchParams.get("email") ?? "",
+    subject: searchParams.get("subject") ?? "",
+    website: searchParams.get("website") ?? "",
+    phoneNumber: searchParams.get("phoneNumber") ?? "",
+    startDate: searchParams.get("startDate") ?? "",
+    endDate: searchParams.get("endDate") ?? "",
   });
 
   const debouncedFilters = useDebouncedValue(filters, 400);

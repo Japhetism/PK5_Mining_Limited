@@ -11,12 +11,16 @@ import { SubsidiariesQuery, Subsidiary, SubsidiaryErrors, UpdateSubsidiaryPayloa
 import { getSubsidiaries, updateSubsidiary } from "@/app/api/subsidiary";
 
 const defaultFormData = {
+  id: "",
   name: "",
   code: "",
   country: "",
   timezone: "",
   address: "",
   email: "",
+  isActive: true,
+  dT_Created: "",
+  dT_Updated: "",
 }
 
 function useSubsidiaryListViewModel() {
@@ -81,6 +85,16 @@ function useSubsidiaryListViewModel() {
       toastUtil.error(message);
     }
   }, [error]);
+
+  useEffect(() => {
+    if (!selectedSubsidiary) return;
+
+    setForm({
+      ...defaultFormData,
+      ...selectedSubsidiary,
+      dT_Updated: selectedSubsidiary.dT_Updated ?? ""
+    })
+  }, [selectedSubsidiary]);
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateSubsidiaryPayload) => {
@@ -180,6 +194,7 @@ function useSubsidiaryListViewModel() {
     setConfirmDeleteOpen,
     setConfirmEditOpen,
     setFieldErrors,
+    setForm,
   };
 }
 

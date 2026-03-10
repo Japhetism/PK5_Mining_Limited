@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import useSubsidiaryListViewModel from "../list/viewmodel";
 import { isValidName } from "@/app/utils/validator";
 import { countries } from "@/app/constants";
+import { useEffect } from "react";
 
 type EditModalProps = {
   open: boolean;
@@ -26,8 +27,11 @@ export function EditModal({
   cancelText = "No",
   loading = false,
 }: EditModalProps) {
-  const { form, fieldErrors, onChange, setFieldErrors } =
+  const { form, fieldErrors, onChange, setFieldErrors, selectedSubsidiary } =
     useSubsidiaryListViewModel();
+
+    console.log("form is ", form, selectedSubsidiary);
+
   return (
     <Modal
       open={open}
