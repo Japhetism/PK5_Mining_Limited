@@ -32,7 +32,7 @@ export function ContactMessageList() {
   } = useContactListViewModel();
 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
-  const [viewingId, setViewingId] = useState<string >("");
+  const [viewingId, setViewingId] = useState<string>("");
 
   const handleApplyFilters = () => {
     setIsFilter(true);
@@ -72,8 +72,16 @@ export function ContactMessageList() {
     {
       key: "website",
       header: "website",
-      render: (row) => row.website,
-    },
+      render: (row) => 
+        <a
+          href={row.website.startsWith('http') ? row.website : `https://${row.website}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline hover:text-blue-700 transition-colors"
+        >
+        {row.website}
+      </a>
+      },
     {
       key: "status",
       header: "Status",
@@ -96,11 +104,11 @@ export function ContactMessageList() {
       className: "text-right",
       render: (row) => (
         <div className="inline-flex items-center gap-2">
-            <button  onClick={() => setViewingId(row.id)}
+          <button onClick={() => setViewingId(row.id)}
             className="inline-flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-100 hover:border-[#c89b3c]">
-              <Eye className="h-3 w-3" />
-              View
-            </button>
+            <Eye className="h-3 w-3" />
+            View
+          </button>
 
           {/* <button
             type="button"
