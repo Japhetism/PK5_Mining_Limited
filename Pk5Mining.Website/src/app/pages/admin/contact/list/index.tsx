@@ -32,7 +32,7 @@ export function ContactMessageList() {
   } = useContactListViewModel();
 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
-  const [viewingId, setViewingId] = useState<string | null>(null);
+  const [viewingId, setViewingId] = useState<string >("");
 
   const handleApplyFilters = () => {
     setIsFilter(true);
@@ -102,7 +102,7 @@ export function ContactMessageList() {
               View
             </button>
 
-          <button
+          {/* <button
             type="button"
             onClick={() => {}}
             className="inline-flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-100 hover:border-[#c89b3c]"
@@ -110,7 +110,7 @@ export function ContactMessageList() {
           >
             <CheckCircle2 className="h-3 w-3 text-green-400" />
             Resolve
-          </button>
+          </button> */}
         </div>
       ),
     },
@@ -182,7 +182,7 @@ export function ContactMessageList() {
 
       <ContactViewModal
         open={!!viewingId}
-        onClose={() => setViewingId(null)}
+        onClose={() => setViewingId("")}
         contactId={viewingId} />
     </>
   );

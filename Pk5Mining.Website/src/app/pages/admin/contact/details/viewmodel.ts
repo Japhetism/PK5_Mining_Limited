@@ -11,104 +11,91 @@ import { mockContactMessages } from "@/app/fixtures";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
 
-function useContactDetailsViewModel() {
-  const { id } = useParams<{ id: string }>();
+function useContactDetailsViewModel(passedId?: string) {
+  const params = useParams<{ id: string }>();
   const queryClient = useQueryClient();
+
+  // 1. Consistently get the ID and treat it as a string
+  const activeId = String(passedId || params.id || "");
 
   const [isReplyOpen, setIsReplyOpen] = useState<boolean>(false);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [replying, setReplying] = useState<boolean>(false);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["contact", "thread", id],
-    queryFn: () => getContactThread(id as string),
-    enabled: !!id,
+  const { data: thread, isLoading, isError } = useQuery({
+    queryKey: ["contact", "thread", activeId],
+    queryFn: () => getContactThread(activeId),
+    enabled: !!activeId,
     staleTime: 30_000,
   });
 
-  // Mark read automatically when opened (optional)
+  // 2. FIND the correct contact based on the ID clicked
+  // We check the API response first, then fall back to mock data
+  const contact = useMemo(() => {
+    if (thread?.contact) return thread.contact;
+    return mockContactMessages.find((m) => String(m.id) === activeId);
+  }, [thread, activeId]);
+
+   // Mark read automatically when opened (optional)
   const markReadMutation = useMutation({
-    mutationFn: () => updateContactStatus(id as string, "read"),
+    mutationFn: () => updateContactStatus(activeId as string, "read"),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["contact"] }),
   });
 
   const replyMutation = useMutation({
     mutationFn: (body: { subject: string; message: string }) =>
-      replyToContact(id as string, body),
+      replyToContact(activeId, body),
     onSuccess: async () => {
       setReplying(false);
       setIsReplyOpen(false);
-      await queryClient.invalidateQueries({
-        queryKey: ["contact", "thread", id],
-      });
+      await queryClient.invalidateQueries({ queryKey: ["contact", "thread", activeId] });
       await queryClient.invalidateQueries({ queryKey: ["contact", "list"] });
       toastUtil.success("Contact message replied successfully");
     },
     onError: (error) => {
       setReplying(false);
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while replying to contact message. Please try again.",
-      );
-      toastUtil.error(message);
+      toastUtil.error(getAxiosErrorMessage(error, "Error replying."));
     },
   });
 
   const statusMutation = useMutation({
-    mutationFn: (status: ContactStatus) =>
-      updateContactStatus(id as string, status),
+    mutationFn: (status: ContactStatus) => updateContactStatus(activeId, status),
     onSuccess: async () => {
       setUpdating(false);
       setConfirmOpen(false);
-      await queryClient.invalidateQueries({
-        queryKey: ["contact", "thread", id],
-      });
+      await queryClient.invalidateQueries({ queryKey: ["contact", "thread", activeId] });
       await queryClient.invalidateQueries({ queryKey: ["contact", "list"] });
-      toastUtil.success("Contact message status updated successfully");
+      toastUtil.success("Status updated successfully");
     },
     onError: (error) => {
       setUpdating(false);
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while updating contact message status. Please try again.",
-      );
-
-      toastUtil.error(message);
+      toastUtil.error(getAxiosErrorMessage(error, "Error updating status."));
     },
   });
 
-  const thread = data;
-  const contact = thread?.contact;
-
   const defaultReplySubject = useMemo(() => {
     if (!contact?.subject) return "Re:";
-    const subj = contact.subject.startsWith("Re:")
-      ? contact.subject
-      : `Re: ${contact.subject}`;
-    return subj;
-  }, [contact?.subject]);   
+    return contact.subject.startsWith("Re:") ? contact.subject : `Re: ${contact.subject}`;
+  }, [contact?.subject]);
 
   const handleUpdateStatus = () => {
-    if (!id) {
-      toastUtil.error("Contact message not found");
-      return;
-    }
-
+    if (!activeId) return toastUtil.error("ID not found");
+    setUpdating(true);
     statusMutation.mutate("resolved");
-  }
+  };
 
   return {
-    id,
+    id: activeId,
     thread,
-    contact: mockContactMessages[1],
+    contact, 
     defaultReplySubject,
     isLoading,
     isError,
     isReplyOpen,
+    markReadMutation,
     replyMutation,
     statusMutation,
-    markReadMutation,
     confirmOpen,
     replying,
     updating,
@@ -119,7 +106,3 @@ function useContactDetailsViewModel() {
 }
 
 export default useContactDetailsViewModel;
-
-export type ContactDetailsViewModel = ReturnType<
-  typeof useContactDetailsViewModel
->;

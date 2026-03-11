@@ -71,18 +71,18 @@ export function ContactMessageDetails() {
       <div className="rounded-xl border border-gray-800 bg-[#0f0f0f] p-4 sm:p-5 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
           <div>
-            <h1 className="text-base font-semibold">{contact.subject}</h1>
+            <h1 className="text-base font-semibold">{contact?.subject}</h1>
             <p className="text-xs text-gray-400">
-              From <span className="text-gray-200">{contact.name}</span> •{" "}
-              <a className="underline" href={`mailto:${contact.email}`}>
-                {contact.email}
+              From <span className="text-gray-200">{contact?.name}</span> •{" "}
+              <a className="underline" href={`mailto:${contact?.email}`}>
+                {contact?.email}
               </a>
-              {contact.company ? ` • ${contact.company}` : ""}
+              {contact?.company ? ` • ${contact?.company}` : ""}
             </p>
           </div>
 
           <div className="text-xs text-gray-400 gap-2 flex flex-col">
-            <div>Created: {formatDateTime(contact.dT_Created)}</div>
+            <div>Created: {formatDateTime(contact?.dT_Created)}</div>
             <div>
               Status: <ContactStatusPill status={contact.status} />
             </div>
@@ -90,7 +90,7 @@ export function ContactMessageDetails() {
         </div>
 
         <div className="rounded-lg border border-gray-800 bg-black/20 p-3 text-sm text-gray-100 whitespace-pre-wrap">
-          {contact.message}
+          {contact?.message}
         </div>
       </div>
 

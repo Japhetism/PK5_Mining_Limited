@@ -7,16 +7,16 @@ import { ContactReplyModal } from "@/app/components/ui/contact-reply-modal";
 import { ContactDetailsSkeleton } from "@/app/components/ui/contact-details-skeleton";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import useContactDetailsViewModel from "../details/viewmodel";
-// import useContactDetailsViewModel from "./viewmodel";
 
 type ContactViewModalProps = {
   open: boolean;
   onClose: () => void;
-  contactId: string | number | null;
+  contactId: string ;
 };
 
 export function ContactViewModal({ open, onClose, contactId }: ContactViewModalProps) {
-  // Pass the contactId to your ViewModel to fetch data specifically for this ID
+  // Pass the contactId to the hook. 
+  // NOTE: This will only work after you apply the ViewModel fix in Step 2.
   const {
     contact,
     thread,
@@ -29,9 +29,10 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
     setConfirmOpen,
     setIsReplyOpen,
     handleUpdateStatus,
-  } = useContactDetailsViewModel();
+  } = useContactDetailsViewModel(contactId);
 
-  if (!contactId) return null;
+  // If modal is not open or no ID provided, return null early
+  if (!open || !contactId) return null;
 
   return (
     <Modal
@@ -47,7 +48,7 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
           <div className="min-w-0">
             <h2 className="text-sm font-semibold text-gray-200 truncate">
-              {isLoading ? "Loading message..." : contact?.subject}
+              {isLoading ? "Loading message..." : contact?.subject || "No Subject"}
             </h2>
           </div>
           <button
@@ -62,7 +63,7 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
         <div className="p-6 overflow-y-auto space-y-6 custom-scrollbar">
           {isLoading ? (
             <ContactDetailsSkeleton />
-          ) : (
+          ) : contact ? (
             <>
               {/* Metadata Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white/5 p-4 rounded-xl border border-gray-800">
@@ -118,6 +119,8 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
                 </div>
               </div>
             </>
+          ) : (
+            <div className="text-center py-10 text-gray-500">No message data found.</div>
           )}
         </div>
 
@@ -125,7 +128,7 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
         <div className="flex justify-end gap-3 p-4 border-t border-gray-800 bg-black/20">
           <button
             onClick={() => setIsReplyOpen(true)}
-            disabled={isLoading}
+            disabled={isLoading || !contact}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 transition-colors disabled:opacity-50"
           >
             <Mail size={14} />
@@ -134,7 +137,7 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
 
           <button
             onClick={() => setConfirmOpen(true)}
-            disabled={isLoading || updating || contact?.status === 'resolved'}
+            disabled={isLoading || updating || contact?.status === 'resolved' || !contact}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] transition-transform active:scale-95 disabled:opacity-50"
           >
             <CheckCircle2 size={14} />
@@ -143,11 +146,10 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
         </div>
       </div>
 
-      {/* Internal Modals maintained for flow */}
       <ContactReplyModal
         open={isReplyOpen}
         onClose={() => setIsReplyOpen(false)}
-        toEmail={contact?.email}
+        toEmail={contact.email}
         defaultSubject={defaultReplySubject}
         loading={replyMutation.isPending}
         onSend={(payload) => replyMutation.mutate(payload)}
