@@ -17,5 +17,8 @@ namespace Pk5Mining.Server.Models.Contact_Us
         public string AppId { get; set; }
         [Required]
         public required string MessageBody { get; set; }
+        public DateTime? DT_Created { get; set; }
+        public DateTime? DT_Modified { get; set; }
+        public string? Status { get; set; }
     }
 }

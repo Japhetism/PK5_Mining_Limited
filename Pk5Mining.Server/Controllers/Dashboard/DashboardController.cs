@@ -18,7 +18,7 @@ namespace Pk5Mining.Server.Controllers.Dashboard
         }
 
         [HttpGet("dashboard")]
-       /* [Authorize]*/
+        [Authorize]
         public async Task<ActionResult> GetDashboard()
         {
             DashboardResponseDTO data = await _repo.GetDashboardStatsAsync();

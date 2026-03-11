@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Services;
 using Pk5Mining.Server.Services.Email;
@@ -32,6 +33,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                     throw new ArgumentNullException(nameof(contactUs));
                 }
                 contactUs.Id = IdGenerator.GenerateUniqueId();
+                contactUs.DT_Created = DateTime.UtcNow;
                 await _dbContext.ContactUs.AddAsync(contactUs);
                 var result = await _dbContext.SaveChangesAsync();
                 if (result <= 0)
@@ -93,6 +95,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                     throw new ArgumentNullException(nameof(contactUs));
 
                 contactUs.Id = IdGenerator.GenerateUniqueId();
+                contactUs.DT_Created = DateTime.UtcNow;
                 await _dbContext.ContactUs.AddAsync(contactUs);
                 var result = await _dbContext.SaveChangesAsync();
                 if (result <= 0)
@@ -139,6 +142,88 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                return (null, ex.Message, true);
+            }
+        }
+        public async Task<(IContactUs?, string?)> GetById(long Id)
+        {
+            var contactUs = await _dbContext.ContactUs.FindAsync(Id);
+            if (contactUs == null)
+            {
+                return (null, "Contact request not found");
+            }
+            return (contactUs, null);
+        }
+        public async Task<IEnumerable<IContactUs>> GetAll()
+        {
+            return await _dbContext.ContactUs.ToListAsync();
+        }
+        public async Task<(IEnumerable<IContactUs> Contacts, int TotalCount)> GetFilteredContacts(
+             int pageNumber,
+             int pageSize,
+             string? email,
+             string? subject,
+             string? name,
+             string? appId,
+             DateTime? startDate,
+             DateTime? endDate)
+        {
+            IQueryable<ContactUs> query = _dbContext.ContactUs.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                query = query.Where(c => c.Email.Contains(email));
+            }
+            if (!string.IsNullOrWhiteSpace(subject))
+            {
+                query = query.Where(c => c.Subject!.Contains(subject));
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(c => c.FirstName.Contains(name) || c.LastName.Contains(name));
+            }
+
+            if (!string.IsNullOrWhiteSpace(appId))
+            {
+                query = query.Where(c => c.AppId == appId);
+            }
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(c => c.DT_Created >= startDate.Value);
+            }
+            if (endDate.HasValue)
+            {
+                query = query.Where(c => c.DT_Created <= endDate.Value);
+            }
+            int totalCount = await query.CountAsync();
+
+            var contacts = await query.OrderByDescending(c => c.DT_Created).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            return (contacts, totalCount);
+        }
+        public async Task<(IContactUs?, string?, bool)> UpdateRepoItem(long id, ContactUsUpdateDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
+                    return (null, "Invalid data.", true);
+                }
+
+                ContactUs? existingContactUs = await _dbContext.ContactUs.FirstOrDefaultAsync(c => c.Id == id);
+                if (existingContactUs == null)
+                {
+                    return (null, "Data Not found.", true);
+                }
+                existingContactUs.Status = dto.Status;
+                existingContactUs.DT_Modified = DateTime.UtcNow;
+
+                await _dbContext.SaveChangesAsync();
+                return (existingContactUs, null, false);
+            }
+            catch (Exception ex)
+            {
                 return (null, ex.Message, true);
             }
         }
