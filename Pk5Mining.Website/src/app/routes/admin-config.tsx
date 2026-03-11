@@ -6,6 +6,7 @@ import {
   Building,
   FileText,
   Mail,
+  ShieldCheck,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -80,6 +81,12 @@ const UserDetails = lazy(() =>
 const SubsidiaryList = lazy(() =>
   import("@/app/pages/admin/subsidiaries").then((m) => ({
     default: m.SubsidiaryList,
+  }))
+);
+
+const Roles = lazy(() =>
+  import("@/app/pages/admin/roles").then((m) => ({
+    default: m.Roles,
   }))
 );
 
@@ -194,6 +201,15 @@ export const adminRouteItems: AdminRouteItem[] = [
     canAccess: false,
     permissions: [PERMISSIONS.subsidiarView],
     element: SubsidiaryList,
+  },
+  {
+    path: "roles",
+    label: "Roles",
+    icon: ShieldCheck,
+    show: false,
+    canAccess: false,
+    permissions: [PERMISSIONS.roleView],
+    element: Roles,
   },
 ];
 
