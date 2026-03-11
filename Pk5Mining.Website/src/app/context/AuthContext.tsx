@@ -24,7 +24,7 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
-const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
+const DEFAULT_INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | null>(null);
@@ -32,6 +32,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Keep logout stable for event listeners/timers
   const logoutRef = useRef<() => void>(() => {});
+
+  const INACTIVITY_TIMEOUT_MS = import.meta.env.VITE_INACTIVITY_TIMEOUT_MS ?? DEFAULT_INACTIVITY_TIMEOUT_MS;
+
+  console.log("inactivity is ", INACTIVITY_TIMEOUT_MS)
 
   function logout() {
     sessionStorage.removeItem(AUTH_KEY);
