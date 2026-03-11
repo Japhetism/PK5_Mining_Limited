@@ -20,8 +20,8 @@ export const nav: NavItem[] = [
     to: "/admin/contact-messages",
     label: "Contact Messages",
     icon: Mails,
-    show: true,
+    show: false,
   },
   { to: "/admin/users", label: "Users", icon: Users, show: false },
-  { to: "/admin/subsidiaries", label: "Subsidiaries", icon: Building, show: true },
+  { to: "/admin/subsidiaries", label: "Subsidiaries", icon: Building, show: false },
 ];
