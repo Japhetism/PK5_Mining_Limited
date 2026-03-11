@@ -35,8 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const INACTIVITY_TIMEOUT_MS = import.meta.env.VITE_INACTIVITY_TIMEOUT_MS ?? DEFAULT_INACTIVITY_TIMEOUT_MS;
 
-  console.log("inactivity is ", INACTIVITY_TIMEOUT_MS)
-
   function logout() {
     sessionStorage.removeItem(AUTH_KEY);
     tokenStore.clear();
