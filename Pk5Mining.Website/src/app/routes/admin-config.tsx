@@ -1,0 +1,191 @@
+import { lazy } from "react";
+import type { LazyExoticComponent, ComponentType } from "react";
+import {
+  BarChart3,
+  Briefcase,
+  Building,
+  FileText,
+  Mail,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+import type { NavItem } from "../interfaces";
+
+export type AdminRouteItem = {
+  path: string;
+  label: string;
+  icon?: LucideIcon;
+  show: boolean;
+  canAccess: boolean;
+  end?: boolean;
+  element: LazyExoticComponent<ComponentType<any>>;
+  children?: AdminRouteItem[];
+};
+
+const Dashboard = lazy(() =>
+  import("@/app/pages/admin/dashboard").then((m) => ({ default: m.Dashboard }))
+);
+
+const JobList = lazy(() =>
+  import("@/app/pages/admin/jobs/list").then((m) => ({ default: m.JobList }))
+);
+
+const JobEdit = lazy(() =>
+  import("@/app/pages/admin/jobs/edit").then((m) => ({ default: m.JobEdit }))
+);
+
+const JobDetail = lazy(() =>
+  import("@/app/pages/admin/jobs/details").then((m) => ({
+    default: m.JobDetail,
+  }))
+);
+
+const ApplicationList = lazy(() =>
+  import("@/app/pages/admin/applications/list").then((m) => ({
+    default: m.ApplicationList,
+  }))
+);
+
+const ApplicationDetail = lazy(() =>
+  import("@/app/pages/admin/applications/details").then((m) => ({
+    default: m.ApplicationDetail,
+  }))
+);
+
+const ContactMessageList = lazy(() =>
+  import("@/app/pages/admin/contact/list").then((m) => ({
+    default: m.ContactMessageList,
+  }))
+);
+
+const ContactMessageDetails = lazy(() =>
+  import("@/app/pages/admin/contact/details").then((m) => ({
+    default: m.ContactMessageDetails,
+  }))
+);
+
+const UserList = lazy(() =>
+  import("@/app/pages/admin/users/list").then((m) => ({ default: m.UserList }))
+);
+
+const UserDetails = lazy(() =>
+  import("@/app/pages/admin/users/details").then((m) => ({
+    default: m.UserDetails,
+  }))
+);
+
+const SubsidiaryList = lazy(() =>
+  import("@/app/pages/admin/subsidiaries").then((m) => ({
+    default: m.SubsidiaryList,
+  }))
+);
+
+export const adminRouteItems: AdminRouteItem[] = [
+  {
+    path: "dashboard",
+    label: "Dashboard",
+    icon: BarChart3,
+    show: true,
+    canAccess: true,
+    end: true,
+    element: Dashboard,
+  },
+  {
+    path: "jobs",
+    label: "Job Openings",
+    icon: Briefcase,
+    show: true,
+    canAccess: true,
+    element: JobList,
+    children: [
+      {
+        path: "new",
+        label: "New Job",
+        show: false,
+        canAccess: true,
+        element: JobEdit,
+      },
+      {
+        path: ":jobId",
+        label: "Job Detail",
+        show: false,
+        canAccess: true,
+        element: JobDetail,
+      },
+      {
+        path: ":jobId/edit",
+        label: "Edit Job",
+        show: false,
+        canAccess: true,
+        element: JobEdit,
+      },
+    ],
+  },
+  {
+    path: "applications",
+    label: "Applications",
+    icon: FileText,
+    show: true,
+    canAccess: true,
+    element: ApplicationList,
+    children: [
+      {
+        path: ":applicationId",
+        label: "Application Detail",
+        show: false,
+        canAccess: true,
+        element: ApplicationDetail,
+      },
+    ],
+  },
+  {
+    path: "contact-messages",
+    label: "Contact Messages",
+    icon: Mail,
+    show: false,
+    canAccess: false,
+    element: ContactMessageList,
+    children: [
+      {
+        path: ":id",
+        label: "Contact Message Detail",
+        show: false,
+        canAccess: false,
+        element: ContactMessageDetails,
+      },
+    ],
+  },
+  {
+    path: "users",
+    label: "Users",
+    icon: Users,
+    show: false,
+    canAccess: false,
+    element: UserList,
+    children: [
+      {
+        path: ":id",
+        label: "User Detail",
+        show: false,
+        canAccess: false,
+        element: UserDetails,
+      },
+    ],
+  },
+  {
+    path: "subsidiaries",
+    label: "Subsidiaries",
+    icon: Building,
+    show: false,
+    canAccess: false,
+    element: SubsidiaryList,
+  },
+];
+
+export const nav: NavItem[] = adminRouteItems.map((item) => ({
+  to: `/admin/${item.path}`,
+  label: item.label,
+  icon: item.icon!,
+  show: item.show,
+  end: item.end,
+}));

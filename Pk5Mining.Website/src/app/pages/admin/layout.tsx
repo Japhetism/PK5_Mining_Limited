@@ -9,7 +9,7 @@ import {
 import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting } from "@/app/utils/helper";
 import Logo from "../../../assets/images/logo.png";
-import { nav } from "@/app/constants/sidemenu";
+import { nav } from "@/app/routes/admin-config";
 
 export function AdminLayout() {
   const { logout, user } = useAuth();

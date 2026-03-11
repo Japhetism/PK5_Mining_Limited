@@ -299,7 +299,7 @@ export function EditModal({
             whileTap={!loading ? { scale: 0.98 } : undefined}
             className="px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
           >
-            {loading ? "Processing..." : form.id ? "Update" : "create"}
+            {loading ? "Processing..." : form.id ? "Update" : "Create"}
           </motion.button>
         </div>
       </div>
