@@ -159,6 +159,12 @@ function useSubsidiaryListViewModel() {
     console.log('form is ', form);
   }
 
+  const handleCloseEditModal = () => {
+    setSelectedSubsidiary(null);
+    setForm(defaultFormData);
+    setConfirmEditOpen(false);
+  }
+
   const subsidaries: Subsidiary[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -195,6 +201,7 @@ function useSubsidiaryListViewModel() {
     setConfirmEditOpen,
     setFieldErrors,
     setForm,
+    handleCloseEditModal,
   };
 }
 

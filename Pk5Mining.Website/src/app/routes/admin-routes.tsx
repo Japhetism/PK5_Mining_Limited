@@ -56,7 +56,7 @@ const UserDetails = lazy(() =>
   })),
 );
 const SubsidiaryList = lazy(() =>
-  import("../pages/admin/subsidiaries/list").then((m) => ({
+  import("../pages/admin/subsidiaries").then((m) => ({
     default: m.SubsidiaryList,
   })),
 );

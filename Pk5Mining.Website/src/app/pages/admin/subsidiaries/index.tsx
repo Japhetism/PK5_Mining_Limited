@@ -20,7 +20,7 @@ import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { statusOptions } from "@/app/constants";
 import useSubsidiaryListViewModel from "./viewmodel";
 import { Subsidiary } from "@/app/interfaces/subsidiary";
-import { EditModal } from "../components/edit-modal";
+import { EditModal } from "./components/edit-modal";
 
 export function SubsidiaryList() {
   const {
@@ -34,6 +34,8 @@ export function SubsidiaryList() {
     totalCount,
     totalPages,
     error,
+    form,
+    fieldErrors,
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
@@ -51,6 +53,9 @@ export function SubsidiaryList() {
     onChangePageSize,
     handleUpdateStatus,
     setForm,
+    setFieldErrors,
+    onChange,
+    handleCloseEditModal,
   } = useSubsidiaryListViewModel();
 
   const columns: PaginatedTableColumn<Subsidiary>[] = [
@@ -209,16 +214,15 @@ export function SubsidiaryList() {
           </p>
         </div>
 
-        <button onClick={() => setConfirmEditOpen(true)} className="w-full sm:w-auto">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-          >
-            <Plus className="w-4 h-4" />
-            New Subsidiary
-          </motion.button>
-        </button>
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => setConfirmEditOpen(true)}
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+        >
+          <Plus className="w-4 h-4" />
+          New Subsidiary
+        </motion.button>
       </div>
 
       {/* Filters */}
@@ -299,12 +303,14 @@ export function SubsidiaryList() {
 
       <EditModal
         open={confirmEditOpen}
-        onClose={() => setConfirmEditOpen(false)}
-        onConfirm={handleUpdateStatus}
-        title="Create Subsidiary"
-        confirmText="Create"
+        form={form}
+        fieldErrors={fieldErrors}
         cancelText="Cancel"
         loading={isUpdating}
+        onClose={handleCloseEditModal}
+        onConfirm={handleUpdateStatus}
+        setFieldErrors={setFieldErrors}
+        onChange={onChange}
       />
     </div>
   );

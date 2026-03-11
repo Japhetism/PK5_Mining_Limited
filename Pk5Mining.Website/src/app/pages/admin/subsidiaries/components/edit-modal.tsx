@@ -1,37 +1,37 @@
 import { motion } from "motion/react";
-import { Modal } from "@/app/components/ui/modal";
 import { X } from "lucide-react";
-import useSubsidiaryListViewModel from "../list/viewmodel";
+import useSubsidiaryListViewModel from "../viewmodel";
+import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
 import { countries } from "@/app/constants";
-import { useEffect } from "react";
+import { Subsidiary, SubsidiaryErrors } from "@/app/interfaces/subsidiary";
 
 type EditModalProps = {
+  form: Subsidiary;
   open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-
   title?: string;
-
   confirmText?: string;
   cancelText?: string;
   loading?: boolean;
+  fieldErrors: any;
+  onClose: () => void;
+  onConfirm: () => void;
+  setFieldErrors: React.Dispatch<React.SetStateAction<SubsidiaryErrors>>;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => void;
 };
 
 export function EditModal({
+  form,
   open,
+  loading = false,
+  fieldErrors,
   onClose,
   onConfirm,
-  title = "Confirm action",
-  confirmText = "Yes",
-  cancelText = "No",
-  loading = false,
+  setFieldErrors,
+  onChange,
 }: EditModalProps) {
-  const { form, fieldErrors, onChange, setFieldErrors, selectedSubsidiary } =
-    useSubsidiaryListViewModel();
-
-    console.log("form is ", form, selectedSubsidiary);
-
   return (
     <Modal
       open={open}
@@ -46,7 +46,7 @@ export function EditModal({
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
             <div className="min-w-0">
               <p className="text-sm font-semibold text-gray-200 truncate">
-                Create Subsidiary
+                {form.id ? "Update" : "Create"} Subsidiary
               </p>
             </div>
 
@@ -288,7 +288,7 @@ export function EditModal({
             disabled={loading}
             className="px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 disabled:opacity-50"
           >
-            {cancelText}
+            Close
           </button>
 
           <motion.button
@@ -299,7 +299,7 @@ export function EditModal({
             whileTap={!loading ? { scale: 0.98 } : undefined}
             className="px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
           >
-            {loading ? "Processing..." : confirmText}
+            {loading ? "Processing..." : form.id ? "Update" : "create"}
           </motion.button>
         </div>
       </div>
