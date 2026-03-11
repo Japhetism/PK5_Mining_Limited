@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { DatePicker } from "@/app/components/ui/date-picker";
 import { ContactStatus } from "@/app/interfaces";
 import { formatDateTime } from "@/app/utils/helper";
-import { contactMsgStatusOptions, websites, miningSubjects } from "@/app/constants";
+import { contactMsgStatusOptions, websites, miningSubjects, agroSubjects } from "@/app/constants";
 
 type ContactMessageFilters = {
   search: string;
@@ -38,6 +38,9 @@ export function ContactMessageFilterPanel({
   onApply,
   onClear,
 }: Props) {
+  
+  const allSubjects = [...miningSubjects, ...agroSubjects];
+  
   return (
     <AnimatePresence>
       {open && (

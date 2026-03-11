@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router-dom";
+import { ChangePassword } from "../pages/admin/password/change";
 
 const Login = lazy(() =>
   import("@/app/pages/admin/login").then((m) => ({ default: m.Login })),
@@ -62,6 +63,7 @@ const SubsidiaryList = lazy(() =>
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
+  { path: "/admin/password/change", element: <ChangePassword /> },  
   {
     path: "/admin",
     element: <ProtectedRoute />,

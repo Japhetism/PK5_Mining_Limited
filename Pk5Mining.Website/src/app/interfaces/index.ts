@@ -430,3 +430,10 @@ export type NavItem = {
   show: boolean;
   end?: boolean;
 };
+
+export interface IChangePasswordPayload {
+  userId: number;
+  username: string;
+  oldPassword: string;
+  newPassword: string;
+}
