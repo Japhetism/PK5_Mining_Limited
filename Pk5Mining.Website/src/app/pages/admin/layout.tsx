@@ -7,9 +7,8 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
-import { getGreeting } from "@/app/utils/helper";
+import { getGreeting, getVisibleNav } from "@/app/utils/helper";
 import Logo from "../../../assets/images/logo.png";
-import { nav } from "@/app/routes/admin-config";
 
 export function AdminLayout() {
   const { logout, user } = useAuth();
@@ -22,6 +21,8 @@ export function AdminLayout() {
   };
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const nav = getVisibleNav(user?.permissions ?? []);
 
   return (
     <div className="h-screen bg-[#0f0f0f] text-white flex flex-col overflow-hidden">

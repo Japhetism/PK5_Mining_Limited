@@ -10,6 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { NavItem } from "../interfaces";
+import { Permission, PERMISSIONS } from "../constants/permissions";
 
 export type AdminRouteItem = {
   path: string;
@@ -19,6 +20,8 @@ export type AdminRouteItem = {
   canAccess: boolean;
   end?: boolean;
   element: LazyExoticComponent<ComponentType<any>>;
+  permissions?: Permission[];
+  requireAllPermissions?: boolean;
   children?: AdminRouteItem[];
 };
 
@@ -88,6 +91,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     show: true,
     canAccess: true,
     end: true,
+    permissions: [PERMISSIONS.dashboardView],
     element: Dashboard,
   },
   {
@@ -96,6 +100,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     icon: Briefcase,
     show: true,
     canAccess: true,
+    permissions: [PERMISSIONS.jobView],
     element: JobList,
     children: [
       {
@@ -103,6 +108,7 @@ export const adminRouteItems: AdminRouteItem[] = [
         label: "New Job",
         show: false,
         canAccess: true,
+        permissions: [PERMISSIONS.jobCreate],
         element: JobEdit,
       },
       {
@@ -110,6 +116,7 @@ export const adminRouteItems: AdminRouteItem[] = [
         label: "Job Detail",
         show: false,
         canAccess: true,
+        permissions: [PERMISSIONS.jobView],
         element: JobDetail,
       },
       {
@@ -117,6 +124,7 @@ export const adminRouteItems: AdminRouteItem[] = [
         label: "Edit Job",
         show: false,
         canAccess: true,
+        permissions: [PERMISSIONS.jobUpdate],
         element: JobEdit,
       },
     ],
@@ -127,6 +135,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     icon: FileText,
     show: true,
     canAccess: true,
+    permissions: [PERMISSIONS.applicationView],
     element: ApplicationList,
     children: [
       {
@@ -134,6 +143,7 @@ export const adminRouteItems: AdminRouteItem[] = [
         label: "Application Detail",
         show: false,
         canAccess: true,
+        permissions: [PERMISSIONS.applicationView, PERMISSIONS.applicationUpdate],
         element: ApplicationDetail,
       },
     ],
@@ -144,6 +154,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     icon: Mail,
     show: false,
     canAccess: false,
+    permissions: [PERMISSIONS.contactMessageView, PERMISSIONS.contactMessageUpdate],
     element: ContactMessageList,
     children: [
       {
@@ -151,6 +162,7 @@ export const adminRouteItems: AdminRouteItem[] = [
         label: "Contact Message Detail",
         show: false,
         canAccess: false,
+        permissions: [PERMISSIONS.contactMessageView, PERMISSIONS.contactMessageUpdate],
         element: ContactMessageDetails,
       },
     ],
@@ -161,6 +173,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     icon: Users,
     show: false,
     canAccess: false,
+    permissions: [PERMISSIONS.userView],
     element: UserList,
     children: [
       {
@@ -168,6 +181,7 @@ export const adminRouteItems: AdminRouteItem[] = [
         label: "User Detail",
         show: false,
         canAccess: false,
+        permissions: [PERMISSIONS.userView],
         element: UserDetails,
       },
     ],
@@ -178,6 +192,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     icon: Building,
     show: false,
     canAccess: false,
+    permissions: [PERMISSIONS.subsidiarView],
     element: SubsidiaryList,
   },
 ];

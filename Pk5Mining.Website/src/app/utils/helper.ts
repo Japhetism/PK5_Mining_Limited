@@ -1,6 +1,10 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
-import { ByStage, RawByStage, StageValue } from "../interfaces";
+import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
 import { statuses } from "../constants";
+import { Permission } from "../constants/permissions";
+import { adminRouteItems } from "../routes/admin-config";
+
+const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 
 export function capitalizeFirstLetter(value: string): string {
   if (!value) return value;
@@ -144,4 +148,42 @@ export const ddmmyyyyToApiDate = (value?: string | null) => {
   if (!day || !month || !year) return value;
 
   return `${year}-${month}-${day}`;
+};
+
+export const hasPermissions = (
+  userPermissions: Permission[] = [],
+  requiredPermissions: Permission[] = [],
+  requireAll = false,
+) => {
+  if (!enforcePermission || !requiredPermissions.length) return true;
+
+  if (requireAll) {
+    return requiredPermissions.every((permission) =>
+      userPermissions.includes(permission),
+    );
+  }
+
+  return requiredPermissions.some((permission) =>
+    userPermissions.includes(permission),
+  );
+};
+
+export const getVisibleNav = (userPermissions: Permission[]): NavItem[] => {
+  return adminRouteItems
+    .filter(
+      (item) =>
+        item.show &&
+        hasPermissions(
+          userPermissions,
+          item.permissions ?? [],
+          item.requireAllPermissions,
+        ),
+    )
+    .map((item) => ({
+      to: `/admin/${item.path}`,
+      label: item.label,
+      icon: item.icon!,
+      show: item.show,
+      end: item.end,
+    }));
 };
