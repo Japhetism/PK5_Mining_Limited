@@ -290,6 +290,7 @@ export type ContactMessageDto = {
   email: string;
   company?: string | null;
   subject: string;
+  website: string;
   message: string;
   status: ContactStatus;
   dT_Created: string; // keep naming consistent with your backend style

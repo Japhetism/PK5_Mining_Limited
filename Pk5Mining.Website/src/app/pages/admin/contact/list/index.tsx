@@ -10,6 +10,7 @@ import useContactListViewModel from "./viewmodel";
 import { formatDateTime } from "@/app/utils/helper";
 import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
 import { ContactMessageFilterPanel } from "../components/contact-message-filter-panel";
+import { ContactViewModal } from "../components/contact-message-modal";
 
 export function ContactMessageList() {
   const {
@@ -31,6 +32,7 @@ export function ContactMessageList() {
   } = useContactListViewModel();
 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [viewingId, setViewingId] = useState<string | null>(null);
 
   const handleApplyFilters = () => {
     setIsFilter(true);
@@ -68,6 +70,11 @@ export function ContactMessageList() {
       render: (row) => row.subject,
     },
     {
+      key: "website",
+      header: "website",
+      render: (row) => row.website,
+    },
+    {
       key: "status",
       header: "Status",
       render: (row) => <ContactStatusPill status={row.status} />,
@@ -89,18 +96,11 @@ export function ContactMessageList() {
       className: "text-right",
       render: (row) => (
         <div className="inline-flex items-center gap-2">
-          <Link
-            to={`/admin/contact-messages/${row.id}`}
-            title="View contact message details"
-            onClick={() => {
-              queryClient.setQueryData(["contactMessages", String(row.id)], row);
-            }}
-          >
-            <button className="inline-flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-100 hover:border-[#c89b3c]">
+            <button  onClick={() => setViewingId(row.id)}
+            className="inline-flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-100 hover:border-[#c89b3c]">
               <Eye className="h-3 w-3" />
               View
             </button>
-          </Link>
 
           <button
             type="button"
@@ -179,6 +179,12 @@ export function ContactMessageList() {
         onApply={handleApplyFilters}
         onClear={handleClearFilters}
       />
+
+      <ContactViewModal
+        open={!!viewingId}
+        onClose={() => setViewingId(null)}
+        contactId={viewingId} />
     </>
   );
 }
+
