@@ -6,7 +6,7 @@ import { AuthProvider } from "./app/context/AuthContext";
 import { App } from "./app/App";
 import { startInactivityLogout } from "./app/auth/Inactivity";
 
-startInactivityLogout({ timeoutMs: 2 * 60 * 1000 });
+startInactivityLogout({ timeoutMs: 15 * 60 * 1000 });
 
 const queryClient = new QueryClient({
   defaultOptions: {

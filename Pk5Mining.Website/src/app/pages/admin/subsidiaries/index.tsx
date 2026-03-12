@@ -17,7 +17,7 @@ import {
   PaginatedTableColumn,
 } from "@/app/components/ui/paginated-table";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
-import { statusOptions } from "@/app/constants";
+import { countries, statusOptions } from "@/app/constants";
 import useSubsidiaryListViewModel from "./viewmodel";
 import { Subsidiary } from "@/app/interfaces/subsidiary";
 import { EditModal } from "./components/edit-modal";
@@ -43,6 +43,7 @@ export function SubsidiaryList() {
     selectedSubsidiary,
     isUpdating,
     queryClient,
+    filterCountry,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -57,6 +58,7 @@ export function SubsidiaryList() {
     setFieldErrors,
     onChange,
     handleCloseModal,
+    setFilterCountry,
   } = useSubsidiaryListViewModel();
 
   const columns: PaginatedTableColumn<Subsidiary>[] = [
@@ -151,7 +153,7 @@ export function SubsidiaryList() {
                   setSelectedSubsidiary(subsidiary);
                   setConfirmOpen(true);
                 }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
                 <Eye className="w-4 h-4" />
                 View Details
@@ -162,7 +164,7 @@ export function SubsidiaryList() {
                   setSelectedSubsidiary(subsidiary);
                   setConfirmEditOpen(true);
                 }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
                 <Pencil className="w-4 h-4" />
                 Edit Subsidiary
@@ -228,20 +230,40 @@ export function SubsidiaryList() {
       </div>
 
       {/* Filters */}
-      <div className="space-y-3">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="w-full sm:w-[760px]">
+      <div className="space-y-3 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+          <div className="min-w-0">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Name
+            </label>
             <input
-              name="search"
-              type="search"
-              value={filters.search}
-              onChange={(e) => updateFilter("search", e.target.value)}
-              placeholder="Search by department"
+              name="name"
+              type="text"
+              value={filters.name}
+              onChange={(e) => updateFilter("name", e.target.value)}
+              placeholder="Search by name"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
           <div className="min-w-0">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Email
+            </label>
+            <input
+              name="email"
+              type="text"
+              value={filters.email}
+              onChange={(e) => updateFilter("email", e.target.value)}
+              placeholder="Search by email"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+            />
+          </div>
+
+          <div className="min-w-0">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Status
+            </label>
             <select
               value={filterStatus}
               onChange={(e) => {
@@ -254,6 +276,27 @@ export function SubsidiaryList() {
               {statusOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="min-w-0">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Country
+            </label>
+            <select
+              value={filterCountry}
+              onChange={(e) => {
+                setFilterCountry(e.target.value);
+                setIsFilter(true);
+              }}
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+            >
+              <option value="">All Countries</option>
+              {countries.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
                 </option>
               ))}
             </select>

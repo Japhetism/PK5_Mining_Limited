@@ -28,6 +28,7 @@ function useSubsidiaryListViewModel() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
+  const [filterCountry, setFilterCountry] = useState<string>("all");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
@@ -46,32 +47,39 @@ function useSubsidiaryListViewModel() {
   );
 
   const [filters, setFilters] = useState({
-    search: searchParams.get("search") ?? "",
+    name: searchParams.get("name") ?? "",
+    email: searchParams.get("email") ?? "",
   });
 
   const debouncedFilters = useDebouncedValue(filters, 400);
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.search]);
+  }, [debouncedFilters.email, debouncedFilters.name]);
 
   const queryParams: SubsidiariesQuery = useMemo(() => {
     const raw: SubsidiariesQuery = {
       pageNumber,
       pageSize,
+      name: debouncedFilters.name,
+      email: debouncedFilters.email,
+      country: filterCountry,
       isActive:
         filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
     };
 
     // clean out empty strings
     return cleanParams(raw) as SubsidiariesQuery;
-  }, [pageNumber, pageSize, debouncedFilters, filterStatus]);
+  }, [pageNumber, pageSize, debouncedFilters, filterStatus, filterCountry]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
       "subsidiaries",
       queryParams.pageNumber,
       queryParams.pageSize,
+      queryParams.country,
+      queryParams.email,
+      queryParams.name,
       queryParams.isActive ?? "",
     ],
     queryFn: () => getSubsidiaries(queryParams),
@@ -190,9 +198,11 @@ function useSubsidiaryListViewModel() {
     queryClient,
     form,
     fieldErrors,
+    filterCountry,
     onChange,
     setIsFilter,
     setFilterStatus,
+    setFilterCountry,
     handleUpdateStatus,
     setSelectedSubsidiary,
     updateFilter,
@@ -204,6 +214,7 @@ function useSubsidiaryListViewModel() {
     setFieldErrors,
     setForm,
     handleCloseModal,
+    setFilters,
   };
 }
 
