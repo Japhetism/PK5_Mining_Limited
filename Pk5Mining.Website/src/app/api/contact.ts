@@ -14,19 +14,31 @@ import { mockContactMessages } from "../fixtures";
 
 const useMock = import.meta.env.VITE_USE_MOCK_CONTACT_MESSAGES === "true";
 
+/**
+ * Enhanced Contact API with Advanced Filtering Support
+ * 
+ * Supports:
+ * - Quick search (across all fields)
+ * - Advanced filters: name, email, phone, subject, website, status
+ * - Date range filtering: startDate, endDate
+ * - Pagination: pageNumber, pageSize
+ */
+
 export async function getContactMessages(params: ContactQuery) {
   try {
     if (useMock) {
-      // Simulate mock response structure
+      // Simulate mock response structure with filtering
+      const filtered = filterMockMessages(params);
+      
       return {
-        data: mockContactMessages,
-        totalCount: mockContactMessages.length,
-        totalPages: 1,
+        data: filtered,
+        totalCount: filtered.length,
+        totalPages: Math.ceil(filtered.length / (params.pageSize || 10)),
       };
     }
 
     const { data } = await http.get<ApiResponse<ContactResponsePayload>>(
-      "/api/contact",
+      "/api/contactUs",
       { params }
     );
 
@@ -40,6 +52,96 @@ export async function getContactMessages(params: ContactQuery) {
   } catch (err) {
     throw new Error(getAxiosErrorMessage(err, "Failed to fetch contact messages"));
   }
+}
+
+/**
+ * Mock data filtering logic
+ * Replicate this logic in your backend for real implementation
+ */
+function filterMockMessages(params: ContactQuery): any[] {
+  let filtered = [...mockContactMessages];
+
+  // Quick search across all fields
+  if (params.search) {
+    const searchLower = params.search.toLowerCase();
+    filtered = filtered.filter(
+      (msg) =>
+        msg.name?.toLowerCase().includes(searchLower) ||
+        msg.email?.toLowerCase().includes(searchLower) ||
+        msg.subject?.toLowerCase().includes(searchLower) ||
+        msg.message?.toLowerCase().includes(searchLower) ||
+        // msg.phoneNumber?.toLowerCase().includes(searchLower) ||
+        msg.website?.toLowerCase().includes(searchLower)
+    );
+  }
+
+  // Advanced filters
+  if (params.name) {
+    const nameLower = params.name.toLowerCase();
+    filtered = filtered.filter((msg) =>
+      msg.name?.toLowerCase().includes(nameLower)
+    );
+  }
+
+  if (params.email) {
+    const emailLower = params.email.toLowerCase();
+    filtered = filtered.filter((msg) =>
+      msg.email?.toLowerCase().includes(emailLower)
+    );
+  }
+
+  if (params.phoneNumber) {
+    const phoneLower = params.phoneNumber.toLowerCase();
+    filtered = filtered.filter((msg) =>
+      msg.phoneNumber?.toLowerCase().includes(phoneLower)
+    );
+  }
+
+  if (params.subject) {
+    const subjectLower = params.subject.toLowerCase();
+    filtered = filtered.filter((msg) =>
+      msg.subject?.toLowerCase().includes(subjectLower)
+    );
+  }
+
+  if (params.website) {
+    const websiteLower = params.website.toLowerCase();
+    filtered = filtered.filter((msg) =>
+      msg.website?.toLowerCase().includes(websiteLower)
+    );
+  }
+
+  if (params.status && params.status !== "all") {
+    filtered = filtered.filter((msg) =>
+      msg.status?.toLowerCase() === params.status?.toLowerCase()
+    );
+  }
+
+  // Date range filtering
+  if (params.dT_Created) {
+    const startDate = new Date(params.dT_Created);
+    filtered = filtered.filter((msg) => {
+      const msgDate = new Date(msg.dT_Created);
+      return msgDate >= startDate;
+    });
+  }
+
+  if (params.dT_Updated) {
+    const endDate = new Date(params.dT_Updated);
+    endDate.setHours(23, 59, 59, 999); // End of day
+    filtered = filtered.filter((msg) => {
+      const msgDate = new Date(msg.dT_Created);
+      return msgDate <= endDate;
+    });
+  }
+
+  // Pagination
+  const pageNumber = params.pageNumber || 1;
+  const pageSize = params.pageSize || 10;
+  const startIndex = (pageNumber - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  return filtered.slice(startIndex, endIndex);
 }
 
 export async function getContactThread(id: string) {

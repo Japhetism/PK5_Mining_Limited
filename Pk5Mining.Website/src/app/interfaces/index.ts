@@ -291,6 +291,7 @@ export type ContactMessageDto = {
   company?: string | null;
   subject: string;
   website: string;
+  phoneNumber: string |null;
   message: string;
   status: ContactStatus;
   dT_Created: string; // keep naming consistent with your backend style
@@ -312,6 +313,16 @@ export type ContactThreadDto = {
 };
 
 export type ContactQuery = {
+  id: string;
+  name: string;
+  email: string;
+  company?: string | null;
+  subject: string;
+  website: string;
+  message: string;
+  phoneNumber: string;
+  dT_Created: string; // keep naming consistent with your backend style
+  dT_Updated?: string | null;
   pageNumber?: number;
   pageSize?: number;
   status?: ContactStatus | "all";
