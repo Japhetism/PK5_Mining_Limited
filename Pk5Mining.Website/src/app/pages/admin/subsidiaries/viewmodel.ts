@@ -25,8 +25,8 @@ const defaultFormData = {
 
 function useSubsidiaryListViewModel() {
   const queryClient = useQueryClient();
-
   const [searchParams, setSearchParams] = useSearchParams();
+  
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [filterCountry, setFilterCountry] = useState<string>("all");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);

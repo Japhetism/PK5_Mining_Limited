@@ -7,7 +7,7 @@ import {
   FileText,
   Mail,
   ShieldCheck,
-  Users,
+  Users as UsersIcon,
   type LucideIcon,
 } from "lucide-react";
 import type { NavItem } from "../interfaces";
@@ -69,17 +69,11 @@ const ContactMessageDetails = lazy(() =>
   })),
 );
 
-const UserList = lazy(() =>
-  import("@/app/pages/admin/users/list").then((m) => ({ default: m.UserList })),
+const Users = lazy(() =>
+  import("@/app/pages/admin/users").then((m) => ({ default: m.UserList })),
 );
 
-const UserDetails = lazy(() =>
-  import("@/app/pages/admin/users/details").then((m) => ({
-    default: m.UserDetails,
-  })),
-);
-
-const SubsidiaryList = lazy(() =>
+const Subsidiaries = lazy(() =>
   import("@/app/pages/admin/subsidiaries").then((m) => ({
     default: m.SubsidiaryList,
   })),
@@ -182,23 +176,14 @@ export const adminRouteItems: AdminRouteItem[] = [
   {
     path: "users",
     label: "Users",
-    icon: Users,
-    show: false,
-    canAccess: false,
+    icon: UsersIcon,
+    show: true,
+    canAccess: true,
     role: USERROLES.superAdmin,
     permissions: [PERMISSIONS.userView],
-    element: UserList,
+    element: Users,
   },
-  {
-    path: "users/:id",
-    label: "User Detail",
-    show: false,
-    canAccess: false,
-    role: USERROLES.superAdmin,
-    permissions: [PERMISSIONS.userView],
-    element: UserDetails,
-  },
-
+  
   {
     path: "subsidiaries",
     label: "Subsidiaries",
@@ -206,7 +191,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     show: true,
     canAccess: true,
     permissions: [PERMISSIONS.subsidiarView],
-    element: SubsidiaryList,
+    element: Subsidiaries,
   },
 
   {
