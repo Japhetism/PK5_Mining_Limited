@@ -47,7 +47,7 @@ export function UserMenu({
     {
       label: "Change Password",
       icon: KeyRound,
-      to: "/admin/change-password",
+      to: "/admin/password/change",
     },
     {
       label: "Settings",

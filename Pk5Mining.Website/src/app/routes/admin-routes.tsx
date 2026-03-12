@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router-dom";
-import { ChangePassword } from "../pages/admin/password/change";
+import { ChangePassword } from "../pages/admin/password/reset";
 import { adminRouteItems, type AdminRouteItem } from "./admin-config";
 import { hasPermissions, hasRole } from "../utils/helper";
 import { Permission } from "../constants/permissions";
@@ -74,7 +74,7 @@ function mapAdminRoutes(items: AdminRouteItem[]): RouteObject[] {
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
-  { path: "/admin/password/change", element: <ChangePassword /> },
+  { path: "/admin/reset/change", element: <ChangePassword /> },
   {
     path: "/admin",
     element: <ProtectedRoute />,

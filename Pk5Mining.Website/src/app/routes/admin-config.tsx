@@ -85,6 +85,12 @@ const Roles = lazy(() =>
   })),
 );
 
+const ChangePassword = lazy(() =>
+  import("@/app/pages/admin/password/change").then((m) => ({
+    default: m.ChangePassword,
+  })),
+);
+
 export const adminRouteItems: AdminRouteItem[] = [
   {
     path: "dashboard",
@@ -202,6 +208,16 @@ export const adminRouteItems: AdminRouteItem[] = [
     canAccess: false,
     permissions: [PERMISSIONS.roleView],
     element: Roles,
+  },
+
+  {
+    path: "password/change",
+    label: "Change Password",
+    icon: ShieldCheck,
+    show: false,
+    canAccess: true,
+    permissions: [],
+    element: ChangePassword,
   },
 ];
 
