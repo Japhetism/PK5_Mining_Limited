@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  LogOut,
-  Menu,
-  X,
-} from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting, getVisibleNav } from "@/app/utils/helper";
 import Logo from "../../../assets/images/logo.png";
+import { UserMenu } from "@/app/components/ui/userMenu";
 
 export function AdminLayout() {
   const { logout, user } = useAuth();
@@ -30,11 +27,10 @@ export function AdminLayout() {
       <header className="border-b border-gray-800 bg-[#0f0f0f]/95 backdrop-blur shrink-0">
         <div className="w-full px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            {/* Mobile menu button */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden inline-flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-2 text-gray-300 hover:bg-white/5 transition-colors"
+              className="lg:hidden inline-flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-2 text-gray-300 transition-colors"
               aria-label="Open menu"
             >
               <Menu className="w-5 h-5" />
@@ -53,25 +49,31 @@ export function AdminLayout() {
             </Link>
           </div>
 
-          <motion.p
-            className="hidden sm:block text-xs sm:text-sm text-gray-300 text-right"
+          <motion.div
+            className="hidden sm:block shrink-0"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span>{getGreeting()}, </span>
-            <span className="font-bold">
-              {user?.firstName} {user?.lastName}
-            </span>
-          </motion.p>
+            <UserMenu
+              firstName={user?.firstName}
+              lastName={user?.lastName}
+              email={user?.email}
+              greeting={getGreeting()}
+              onLogout={onLogout}
+            />
+          </motion.div>
         </div>
 
-        {/* Mobile greeting */}
-        <div className="sm:hidden px-4 pb-3 text-xs text-gray-300">
-          <span>{getGreeting()}, </span>
-          <span className="font-bold">
-            {user?.firstName} {user?.lastName}
-          </span>
+        <div className="sm:hidden px-4 pb-3">
+          <UserMenu
+            firstName={user?.firstName}
+            lastName={user?.lastName}
+            email={user?.email}
+            greeting={getGreeting()}
+            onLogout={onLogout}
+            mobile
+          />
         </div>
       </header>
 
