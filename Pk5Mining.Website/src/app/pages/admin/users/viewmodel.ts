@@ -1,9 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, deleteUser, getUsers, updateUser, updateUserStatus } from "@/app/api/users";
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+  updateUserStatus,
+} from "@/app/api/users";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
-import { CreateUserPayload, UpdateUserPayload, User, UserErrors, UsersQuery } from "@/app/interfaces/user";
+import {
+  CreateUserPayload,
+  UpdateUserPayload,
+  User,
+  UserErrors,
+  UsersQuery,
+} from "@/app/interfaces/user";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
@@ -19,7 +31,7 @@ const defaultFormData: User = {
   isActive: true,
   dT_Created: "",
   dT_Updated: "",
-}
+};
 
 function useUserViewModel() {
   const queryClient = useQueryClient();
@@ -41,7 +53,7 @@ function useUserViewModel() {
   const [pageSize, setPageSize] = useState(() =>
     toNumber(searchParams.get("pageSize"), 10),
   );
-  
+
   const [filters, setFilters] = useState({
     name: searchParams.get("name") ?? "",
     email: searchParams.get("email") ?? "",
@@ -63,7 +75,7 @@ function useUserViewModel() {
       phone: debouncedFilters.phone,
       isActive: filterStatus,
     };
-    
+
     // clean out empty strings
     return cleanParams(raw) as UsersQuery;
   }, [pageNumber, pageSize, filterStatus, debouncedFilters]);
@@ -81,6 +93,16 @@ function useUserViewModel() {
     queryFn: () => getUsers(queryParams),
     staleTime: 30_000,
   });
+
+  useEffect(() => {
+    if (!selectedUser) return;
+
+    setForm({
+      ...defaultFormData,
+      ...selectedUser,
+      dT_Updated: selectedUser.dT_Updated ?? "",
+    });
+  }, [selectedUser]);
 
   useEffect(() => {
     if (error) {
@@ -149,17 +171,11 @@ function useUserViewModel() {
     setPageNumber(1);
   };
 
-  const handleDeleteUser = () => {
+  const handleDeleteUser = () => {};
 
-  }
+  const handleCreateuser = () => {};
 
-  const handleCreateuser = () => {
-
-  }
-
-  const handleUpdateUser = () => {
-
-  }
+  const handleUpdateUser = () => {};
 
   const onChange = (
     e: React.ChangeEvent<
@@ -176,7 +192,7 @@ function useUserViewModel() {
     setConfirmEditOpen(false);
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
-  }
+  };
 
   const users: User[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
@@ -214,11 +230,10 @@ function useUserViewModel() {
     setForm,
     handleCloseModal,
     setFilters,
-  }
+    setFieldErrors,
+  };
 }
 
 export default useUserViewModel;
 
-export type UserViewModel = ReturnType<
-  typeof useUserViewModel
->;
+export type UserViewModel = ReturnType<typeof useUserViewModel>;

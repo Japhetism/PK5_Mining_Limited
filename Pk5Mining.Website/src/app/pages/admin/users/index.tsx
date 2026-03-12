@@ -20,6 +20,8 @@ import { formatDateTime } from "@/app/utils/helper";
 import useUserListViewModel from "./viewmodel";
 import { User } from "@/app/interfaces/user";
 import { StatusFilter } from "@/app/interfaces";
+import { EditModal } from "./components/edit-modal";
+import { DetailModal } from "./components/detail-modal";
 
 const statusOptions = [
   { label: "All", value: "all" },
@@ -44,6 +46,7 @@ export function UserList() {
     confirmOpen,
     confirmEditOpen,
     confirmDeleteOpen,
+    onChange,
     updateFilter,
     onChangePage,
     onChangePageSize,
@@ -58,6 +61,7 @@ export function UserList() {
     setConfirmDeleteOpen,
     handleCloseModal,
     setFilters,
+    setFieldErrors,
   } = useUserListViewModel();
 
   const columns: PaginatedTableColumn<User>[] = useMemo(
@@ -338,6 +342,24 @@ export function UserList() {
         confirmText={selectedUser?.isActive ? "Deactivate" : "Activate"}
         cancelText="Cancel"
         // loading={updating}
+      />
+
+      <EditModal
+        open={confirmEditOpen}
+        form={form}
+        fieldErrors={fieldErrors}
+        cancelText="Cancel"
+        //loading={isUpdating}
+        onClose={handleCloseModal}
+        onConfirm={handleUpdateUser}
+        setFieldErrors={setFieldErrors}
+        onChange={onChange}
+      />
+
+      <DetailModal
+        open={confirmOpen}
+        user={form}
+        onClose={handleCloseModal}
       />
     </div>
   );
