@@ -8,10 +8,11 @@ import { contactMsgStatusOptions, websites, miningSubjects } from "@/app/constan
 
 type ContactMessageFilters = {
   search: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   subject: string;
-  website: string;
+  company: string;
   phoneNumber: string;
   startDate: string;
   endDate: string;
@@ -126,8 +127,8 @@ export function ContactMessageFilterPanel({
               <FilterField label="Name">
                 <input
                   type="text"
-                  value={temporaryFilters.name}
-                  onChange={(e) => updateTemporaryFilter("name", e.target.value)}
+                  value={temporaryFilters.firstName}
+                  onChange={(e) => updateTemporaryFilter("firstName", e.target.value)}
                   placeholder="Filter by name"
                   className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
                 />
@@ -159,8 +160,8 @@ export function ContactMessageFilterPanel({
               <FilterField label="Website">
                 <div className="relative">
                   <select
-                    value={temporaryFilters.website}
-                    onChange={(e) => updateTemporaryFilter("website", e.target.value)}
+                    value={temporaryFilters.company}
+                    onChange={(e) => updateTemporaryFilter("company", e.target.value)}
                     className="w-full appearance-none rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
                   >
                     <option value="">All Websites</option>

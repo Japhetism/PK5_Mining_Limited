@@ -4,26 +4,28 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getContactMessages } from "@/app/api/contact";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import { cleanParams, toNumber } from "@/app/utils/helper";
-import { ContactMessageDto, ContactQuery } from "@/app/interfaces";
+import { ContactMessageDto, ContactQuery, ContactStatus } from "@/app/interfaces";
 import { toastUtil } from "@/app/utils/toast";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
 /**
  * Enhanced Contact List ViewModel
  * 
- * Features:
- * - Quick search (debounced, real-time) - shows results immediately
- * - Advanced filters - only apply on "Apply Filters" button click
- * - Uses REAL cloud data (getContactMessages API)
- * - Separate state for filter inputs vs applied filters
+ * Updated for your actual API response fields:
+ * - firstName, lastName (instead of name)
+ * - company (instead of website)
+ * - messageBody (instead of message)
+ * - dT_Modified (instead of dT_Updated)
+ * - status: "Resolved" | "Pending" | "Open"
  */
 
 export interface AdvancedFilters {
   search: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  company: string;
   subject: string;
-  website: string;
   phoneNumber: string;
   status: string;
   startDate: string;
@@ -58,10 +60,11 @@ function useContactListViewModel() {
   // Temporary filter state (UI inputs - not yet applied)
   const [temporaryFilters, setTemporaryFilters] = useState<AdvancedFilters>({
     search: "",
-    name: searchParams.get("name") ?? "",
+    firstName: searchParams.get("firstName") ?? "",
+    lastName: searchParams.get("lastName") ?? "",
     email: searchParams.get("email") ?? "",
+    company: searchParams.get("company") ?? "",
     subject: searchParams.get("subject") ?? "",
-    website: searchParams.get("website") ?? "",
     phoneNumber: searchParams.get("phoneNumber") ?? "",
     status: searchParams.get("status") ?? "all",
     startDate: searchParams.get("startDate") ?? "",
@@ -71,21 +74,27 @@ function useContactListViewModel() {
   // Applied filter state (only changes on "Apply" button click)
   const [appliedFilters, setAppliedFilters] = useState<AdvancedFilters>({
     search: "",
-    name: searchParams.get("name") ?? "",
+    firstName: searchParams.get("firstName") ?? "",
+    lastName: searchParams.get("lastName") ?? "",
     email: searchParams.get("email") ?? "",
+    company: searchParams.get("company") ?? "",
     subject: searchParams.get("subject") ?? "",
-    website: searchParams.get("website") ?? "",
     phoneNumber: searchParams.get("phoneNumber") ?? "",
     status: searchParams.get("status") ?? "all",
     startDate: searchParams.get("startDate") ?? "",
     endDate: searchParams.get("endDate") ?? "",
   });
 
+  // Track filter status separately
+  const [filterStatus, setFilterStatus] = useState<ContactStatus | "all">(
+    (searchParams.get("status") ?? "all") as any
+  );
+
   // ============================================
   // QUICK SEARCH EFFECT
   // ============================================
   useEffect(() => {
-    setPageNumber(1); // Reset to page 1 when quick search changes
+    setPageNumber(1);
   }, [debouncedQuickSearch]);
 
   // ============================================
@@ -95,16 +104,16 @@ function useContactListViewModel() {
     const raw: any = {
       pageNumber,
       pageSize,
-      search: debouncedQuickSearch, // Quick search is real-time
+      search: debouncedQuickSearch,
     };
 
-    // Add applied advanced filters (only if Apply button was clicked)
-    if (appliedFilters.name) raw.name = appliedFilters.name;
+    // Add applied advanced filters
+    if (appliedFilters.firstName) raw.firstName = appliedFilters.firstName;
+    if (appliedFilters.lastName) raw.lastName = appliedFilters.lastName;
     if (appliedFilters.email) raw.email = appliedFilters.email;
     if (appliedFilters.phoneNumber) raw.phoneNumber = appliedFilters.phoneNumber;
+    if (appliedFilters.company) raw.company = appliedFilters.company;
     if (appliedFilters.subject) raw.subject = appliedFilters.subject;
-    if (appliedFilters.website && appliedFilters.website !== "all") 
-      raw.website = appliedFilters.website;
     if (appliedFilters.status && appliedFilters.status !== "all") 
       raw.status = appliedFilters.status;
     if (appliedFilters.startDate) raw.startDate = appliedFilters.startDate;
@@ -122,19 +131,22 @@ function useContactListViewModel() {
       queryParams.pageNumber,
       queryParams.pageSize,
       queryParams.search ?? "",
-      queryParams.name ?? "",
+      queryParams.firstName ?? "",
+      queryParams.lastName ?? "",
       queryParams.email ?? "",
+      queryParams.company ?? "",
       queryParams.subject ?? "",
-      queryParams.website ?? "",
       queryParams.phoneNumber ?? "",
       queryParams.status ?? "",
-      queryParams.dT_startDate ?? "",
-      queryParams.dT_endDate ?? "",
+      queryParams.startDate ?? "",
+      queryParams.endDate ?? "",
     ],
     queryFn: () => getContactMessages(queryParams),
     staleTime: 30_000,
     placeholderData: (previousData) => previousData,
   });
+
+   console.log(data);
 
   // ============================================
   // ERROR HANDLING
@@ -160,39 +172,37 @@ function useContactListViewModel() {
   // ============================================
   // ADVANCED FILTER HANDLERS
   // ============================================
-  // Update temporary filter (UI input - doesn't trigger API call)
   const updateTemporaryFilter = (key: keyof AdvancedFilters, value: string) => {
     setTemporaryFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   // Apply filters (only called when "Apply Filters" button is clicked)
   const handleApplyFilters = () => {
-    // Copy temporary filters to applied filters
     setAppliedFilters(temporaryFilters);
-    setPageNumber(1); // Reset to page 1
-    // Panel will be closed by the component
+    setFilterStatus(temporaryFilters.status as ContactStatus | "all");
+    setPageNumber(1);
   };
 
   // Clear all filters
   const handleClearFilters = () => {
     const emptyFilters: AdvancedFilters = {
       search: "",
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
+      company: "",
       subject: "",
-      website: "",
       phoneNumber: "",
       status: "all",
       startDate: "",
       endDate: "",
     };
     
-    // Reset both temporary and applied filters
     setTemporaryFilters(emptyFilters);
     setAppliedFilters(emptyFilters);
+    setFilterStatus("all");
     setQuickSearch("");
     setPageNumber(1);
-    // Panel will be closed by the component
   };
 
   // ============================================
@@ -216,11 +226,12 @@ function useContactListViewModel() {
   // ============================================
   const hasActiveFilters = useMemo(() => {
     return (
-      appliedFilters.name !== "" ||
+      appliedFilters.firstName !== "" ||
+      appliedFilters.lastName !== "" ||
       appliedFilters.email !== "" ||
       appliedFilters.phoneNumber !== "" ||
+      appliedFilters.company !== "" ||
       appliedFilters.subject !== "" ||
-      appliedFilters.website !== "" ||
       appliedFilters.status !== "all" ||
       appliedFilters.startDate !== "" ||
       appliedFilters.endDate !== ""
@@ -228,7 +239,7 @@ function useContactListViewModel() {
   }, [appliedFilters]);
 
   // ============================================
-  // SYNC URL PARAMS (Optional - for bookmarking)
+  // SYNC URL PARAMS
   // ============================================
   useEffect(() => {
     const newParams = new URLSearchParams();
@@ -237,12 +248,12 @@ function useContactListViewModel() {
     newParams.set("pageSize", pageSize.toString());
     
     if (debouncedQuickSearch) newParams.set("search", debouncedQuickSearch);
-    if (appliedFilters.name) newParams.set("name", appliedFilters.name);
+    if (appliedFilters.firstName) newParams.set("firstName", appliedFilters.firstName);
+    if (appliedFilters.lastName) newParams.set("lastName", appliedFilters.lastName);
     if (appliedFilters.email) newParams.set("email", appliedFilters.email);
     if (appliedFilters.phoneNumber) newParams.set("phoneNumber", appliedFilters.phoneNumber);
+    if (appliedFilters.company) newParams.set("company", appliedFilters.company);
     if (appliedFilters.subject) newParams.set("subject", appliedFilters.subject);
-    if (appliedFilters.website && appliedFilters.website !== "all") 
-      newParams.set("website", appliedFilters.website);
     if (appliedFilters.status && appliedFilters.status !== "all") 
       newParams.set("status", appliedFilters.status);
     if (appliedFilters.startDate) newParams.set("startDate", appliedFilters.startDate);
@@ -264,17 +275,19 @@ function useContactListViewModel() {
     onChangePage,
     onChangePageSize,
 
-    // Quick Search (real-time)
+    // Quick Search
     quickSearch,
     handleQuickSearch,
 
     // Advanced Filters
-    temporaryFilters,      // Current UI inputs (not applied yet)
-    appliedFilters,        // Currently applied filters
-    updateTemporaryFilter, // Update UI inputs
-    handleApplyFilters,    // Apply button click
-    handleClearFilters,    // Clear button click
+    temporaryFilters,
+    appliedFilters,
+    updateTemporaryFilter,
+    handleApplyFilters,
+    handleClearFilters,
     hasActiveFilters,
+    filterStatus,
+    setFilterStatus,
 
     // Other
     queryClient,

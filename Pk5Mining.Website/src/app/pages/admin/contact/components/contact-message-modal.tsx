@@ -71,9 +71,9 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
                   <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Sender</p>
                   <div className="flex items-center gap-2 text-sm text-gray-200">
                     <User size={14} className="text-[#c89b3c]" />
-                    <span>{contact.name}</span>
+                    <span>{contact?.name}</span>
                   </div>
-                  <p className="text-xs text-gray-400 ml-5">{contact.email}</p>
+                  <p className="text-xs text-gray-400 ml-5">{contact?.email}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Details</p>
@@ -105,10 +105,10 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
                     thread.replies.map((r: any) => (
                       <div key={r.id} className="rounded-lg border border-gray-800 bg-white/5 p-3">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-medium text-[#c89b3c]">{r.subject}</span>
+                          <span className="text-xs font-medium text-[#c89b3c]">{r?.subject}</span>
                           <span className="text-[10px] text-gray-500">{formatDateTime(r.dT_Created)}</span>
                         </div>
-                        <p className="text-sm text-gray-300 whitespace-pre-wrap">{r.message}</p>
+                        <p className="text-sm text-gray-300 whitespace-pre-wrap">{r?.message}</p>
                       </div>
                     ))
                   ) : (
@@ -149,7 +149,7 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
       <ContactReplyModal
         open={isReplyOpen}
         onClose={() => setIsReplyOpen(false)}
-        toEmail={contact.email}
+        toEmail={contact?.email}
         defaultSubject={defaultReplySubject}
         loading={replyMutation.isPending}
         onSend={(payload) => replyMutation.mutate(payload)}

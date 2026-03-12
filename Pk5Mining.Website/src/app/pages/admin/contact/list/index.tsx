@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Eye, SlidersHorizontal, X } from "lucide-react";
 import { ContactMessageDto } from "@/app/interfaces";
 import {
@@ -12,13 +12,15 @@ import { ContactMessageFilterPanel } from "../components/contact-message-filter-
 import { ContactViewModal } from "../components/contact-message-modal";
 
 /**
- * Fixed Contact Message List Component
+ * Contact Message List Component
  * 
- * Changes:
- * - Filters only apply when "Apply Filters" button is clicked
- * - Quick search works in real-time
- * - Uses real cloud data (getContactMessages API)
- * - No mock data
+ * Field Mapping from your API:
+ * - firstName + lastName → displayed as full name
+ * - company → displayed in "Company" column (was "Website")
+ * - messageBody → stored but not displayed in table
+ * - dT_Modified → displayed as "Date Modified" (not dT_Updated)
+ * - status → "Resolved" | "Pending" | "Open"
+ * - appId → not displayed but available
  */
 export function ContactMessageList() {
   const {
@@ -30,10 +32,8 @@ export function ContactMessageList() {
     pageSize,
     onChangePage,
     onChangePageSize,
-    // Quick search
     quickSearch,
     handleQuickSearch,
-    // Advanced filters
     temporaryFilters,
     appliedFilters,
     updateTemporaryFilter,
@@ -46,16 +46,18 @@ export function ContactMessageList() {
   } = useContactListViewModel();
 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
-  const [viewingId, setViewingId] = useState<string>("");
+  const [viewingId, setViewingId] = useState<string | number>("");
 
-  // Table columns configuration
+  // Table columns - CORRECT FIELD MAPPING FOR YOUR API
   const columns: PaginatedTableColumn<ContactMessageDto>[] = [
     {
       key: "name",
       header: "Name",
       render: (row) => (
         <div>
-          <div className="font-semibold text-gray-100">{row.name}</div>
+          <div className="font-semibold text-gray-100">
+            {row.firstName} {row.lastName}
+          </div>
           <div className="text-xs text-gray-500">{row.email}</div>
         </div>
       ),
@@ -63,21 +65,27 @@ export function ContactMessageList() {
     {
       key: "subject",
       header: "Subject",
-      render: (row) => row.subject,
+      render: (row) => row.subject || "N/A",
     },
     {
-      key: "website",
-      header: "Website",
-      render: (row) => (
-        <a
-          href={row.website.startsWith("http") ? row.website : `https://${row.website}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:underline hover:text-blue-700 transition-colors"
-        >
-          {row.website}
-        </a>
-      ),
+      key: "company",
+      header: "Company",
+      render: (row) => {
+        if (!row.company) {
+          return <span className="text-gray-500">—</span>;
+        }
+        return <span className="text-gray-300">{row.company}</span>;
+      },
+    },
+    {
+      key: "phoneNumber",
+      header: "Phone",
+      render: (row) => {
+        if (!row.phoneNumber) {
+          return <span className="text-gray-500">—</span>;
+        }
+        return <span className="text-gray-300">{row.phoneNumber}</span>;
+      },
     },
     {
       key: "status",
@@ -87,12 +95,15 @@ export function ContactMessageList() {
     {
       key: "dT_Created",
       header: "Date Created",
-      render: (row) => formatDateTime(row.dT_Created),
+      render: (row) => 
+        row.dT_Created 
+          ? formatDateTime(row.dT_Created)
+          : <span className="text-gray-500">—</span>,
     },
     {
-      key: "dT_Updated",
-      header: "Date Updated",
-      render: (row) => formatDateTime(row.dT_Updated),
+      key: "dT_Modified",
+      header: "Date Modified",
+      render: (row) => formatDateTime(row.dT_Modified),
     },
     {
       key: "actions",
@@ -159,14 +170,11 @@ export function ContactMessageList() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-gray-400">Active filters:</span>
             
-            {appliedFilters.name && (
+            {appliedFilters.firstName && (
               <div className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200">
-                <span>Name: {appliedFilters.name}</span>
+                <span>First Name: {appliedFilters.firstName}</span>
                 <button
-                  onClick={() => {
-                    const updated = { ...appliedFilters, name: "" };
-                    // You can add a function to update single filter if needed
-                  }}
+                  onClick={() => updateTemporaryFilter("firstName", "")}
                   className="ml-1 text-gray-400 hover:text-gray-200"
                 >
                   <X className="h-3 w-3" />
@@ -174,9 +182,21 @@ export function ContactMessageList() {
               </div>
             )}
             
+            {appliedFilters.lastName && (
+              <div className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200">
+                <span>Last Name: {appliedFilters.lastName}</span>
+              </div>
+            )}
+            
             {appliedFilters.email && (
               <div className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200">
                 <span>Email: {appliedFilters.email}</span>
+              </div>
+            )}
+            
+            {appliedFilters.company && (
+              <div className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200">
+                <span>Company: {appliedFilters.company}</span>
               </div>
             )}
             
@@ -203,43 +223,54 @@ export function ContactMessageList() {
           </div>
         )}
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-gray-400">Loading contact messages...</div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && contactMessages.length === 0 && (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-gray-400">No contact messages found</div>
+          </div>
+        )}
+
         {/* Data Table */}
-        <PaginatedTable<ContactMessageDto>
-          columns={columns}
-          data={contactMessages}
-          isFilter={false}
-          isLoading={isLoading}
-          pageNumber={pageNumber}
-          pageSize={pageSize}
-          totalPages={totalPages}
-          totalCount={totalCount}
-          setPageNumber={onChangePage}
-          setPageSize={onChangePageSize}
-          emptyTitle="No contact messages"
-          noResultsTitle="No results found. Try changing your filters."
-        />
+        {!isLoading && contactMessages.length > 0 && (
+          <PaginatedTable<ContactMessageDto>
+            columns={columns}
+            data={contactMessages}
+            isLoading={isLoading}
+            pageNumber={pageNumber}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            totalCount={totalCount}
+            setPageNumber={onChangePage}
+            setPageSize={onChangePageSize}
+            emptyTitle="No contact messages"
+            noResultsTitle="No results found. Try changing your filters." isFilter={false}          />
+        )}
       </div>
 
       {/* Advanced Filter Panel */}
       <ContactMessageFilterPanel
         open={isFilterPanelOpen}
         onClose={() => setIsFilterPanelOpen(false)}
-        // Pass temporary filters (not applied yet)
         temporaryFilters={temporaryFilters}
         updateTemporaryFilter={updateTemporaryFilter}
-        // Status filter
         filterStatus={filterStatus as any}
         setFilterStatus={setFilterStatus}
-        // Button handlers - these WORK now!
-        onApply={handleApplyFilters}  // ✅ Actually applies filters
-        onClear={handleClearFilters}   // ✅ Actually clears filters
+        onApply={handleApplyFilters}
+        onClear={handleClearFilters}
       />
 
       {/* View Contact Modal */}
       <ContactViewModal
         open={!!viewingId}
         onClose={() => setViewingId("")}
-        contactId={viewingId}
+        contactId={viewingId.toString()}
       />
     </>
   );

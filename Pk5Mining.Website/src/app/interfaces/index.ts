@@ -286,16 +286,17 @@ export type ContactStatus = "new" | "in review" |"replied" | "resolved" | "close
 
 export type ContactMessageDto = {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  company?: string | null;
+  phoneNumber: string | null;
+  company: string;
   subject: string;
-  website: string;
-  phoneNumber: string |null;
-  message: string;
-  status: ContactStatus;
-  dT_Created: string; // keep naming consistent with your backend style
-  dT_Updated?: string | null;
+  appId: string;
+  messageBody: string;
+  dT_Created: string ;
+  dT_Modified: string;
+  status: "Resolved" | "Pending" | "Open" | string;
 };
 
 export type ContactReplyDto = {
@@ -313,6 +314,10 @@ export type ContactThreadDto = {
 };
 
 export type ContactQuery = {
+  firstName: string;
+  lastName: string;
+  startDate: string;
+  endDate: string;
   id: string;
   name: string;
   email: string;
