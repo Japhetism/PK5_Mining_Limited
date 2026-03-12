@@ -40,19 +40,9 @@ export function UserMenu({
 
   const menuItems = [
     {
-      label: "Profile",
+      label: "Account",
       icon: User,
-      to: "/admin/profile",
-    },
-    {
-      label: "Change Password",
-      icon: KeyRound,
-      to: "/admin/password/change",
-    },
-    {
-      label: "Settings",
-      icon: Settings,
-      to: "/admin/settings",
+      to: "/admin/account",
     },
   ];
 

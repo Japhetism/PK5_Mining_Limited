@@ -1,6 +1,8 @@
+import { useAuth } from "@/app/context/AuthContext";
 import { useState } from "react";
 
-function useChangePasswordViewModel() {
+function useAccountViewModel() {
+  const { user } = useAuth();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -82,6 +84,7 @@ function useChangePasswordViewModel() {
   };
 
   return {
+    user,
     errors,
     currentPassword,
     newPassword,
@@ -101,8 +104,8 @@ function useChangePasswordViewModel() {
   };
 }
 
-export default useChangePasswordViewModel;
+export default useAccountViewModel;
 
-export type ChangePasswordViewModel = ReturnType<
-  typeof useChangePasswordViewModel
+export type AccountViewModel = ReturnType<
+  typeof useAccountViewModel
 >;

@@ -7,6 +7,7 @@ import {
   FileText,
   Mail,
   ShieldCheck,
+  User,
   Users as UsersIcon,
   type LucideIcon,
 } from "lucide-react";
@@ -85,9 +86,9 @@ const Roles = lazy(() =>
   })),
 );
 
-const ChangePassword = lazy(() =>
-  import("@/app/pages/admin/password/change").then((m) => ({
-    default: m.ChangePassword,
+const Account = lazy(() =>
+  import("@/app/pages/admin/account").then((m) => ({
+    default: m.Account,
   })),
 );
 
@@ -211,13 +212,13 @@ export const adminRouteItems: AdminRouteItem[] = [
   },
 
   {
-    path: "password/change",
-    label: "Change Password",
-    icon: ShieldCheck,
+    path: "account",
+    label: "Account",
+    icon: User,
     show: false,
     canAccess: true,
     permissions: [],
-    element: ChangePassword,
+    element: Account,
   },
 ];
 
