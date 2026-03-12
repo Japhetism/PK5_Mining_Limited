@@ -321,8 +321,8 @@ export type ContactQuery = {
   website: string;
   message: string;
   phoneNumber: string;
-  dT_Created: string; // keep naming consistent with your backend style
-  dT_Updated?: string | null;
+  dT_startDate: string; // keep naming consistent with your backend style
+  dT_endDate?: string | null;
   pageNumber?: number;
   pageSize?: number;
   status?: ContactStatus | "all";

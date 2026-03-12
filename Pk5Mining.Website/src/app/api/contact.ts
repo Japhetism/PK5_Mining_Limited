@@ -118,16 +118,16 @@ function filterMockMessages(params: ContactQuery): any[] {
   }
 
   // Date range filtering
-  if (params.dT_Created) {
-    const startDate = new Date(params.dT_Created);
+  if (params.dT_startDate) {
+    const startDate = new Date(params.dT_startDate);
     filtered = filtered.filter((msg) => {
       const msgDate = new Date(msg.dT_Created);
       return msgDate >= startDate;
     });
   }
 
-  if (params.dT_Updated) {
-    const endDate = new Date(params.dT_Updated);
+  if (params.dT_endDate) {
+    const endDate = new Date(params.dT_endDate);
     endDate.setHours(23, 59, 59, 999); // End of day
     filtered = filtered.filter((msg) => {
       const msgDate = new Date(msg.dT_Created);
