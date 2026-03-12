@@ -216,9 +216,12 @@ export function JobList() {
       </div>
 
       {/* Filters */}
-      <div className="space-y-3">
+      <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Department
+            </label>
             <input
               name="department"
               type="text"
@@ -230,6 +233,9 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Location
+            </label>
             <input
               name="location"
               type="text"
@@ -241,6 +247,9 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Status
+            </label>
             <select
               value={filterStatus}
               onChange={(e) => {
@@ -259,6 +268,9 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Job Type
+            </label>
             <select
               value={filterJobType}
               onChange={(e) => {

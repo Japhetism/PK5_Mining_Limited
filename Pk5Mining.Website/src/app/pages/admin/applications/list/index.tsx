@@ -111,6 +111,9 @@ export function ApplicationList() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
           <div className="w-full sm:w-[360px]">
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Email
+            </label>
             <input
               name="email"
               type="email"

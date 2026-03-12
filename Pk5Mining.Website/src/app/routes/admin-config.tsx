@@ -23,71 +23,70 @@ export type AdminRouteItem = {
   element: LazyExoticComponent<ComponentType<any>>;
   permissions?: Permission[];
   requireAllPermissions?: boolean;
-  children?: AdminRouteItem[];
 };
 
 const Dashboard = lazy(() =>
-  import("@/app/pages/admin/dashboard").then((m) => ({ default: m.Dashboard }))
+  import("@/app/pages/admin/dashboard").then((m) => ({ default: m.Dashboard })),
 );
 
 const JobList = lazy(() =>
-  import("@/app/pages/admin/jobs/list").then((m) => ({ default: m.JobList }))
+  import("@/app/pages/admin/jobs/list").then((m) => ({ default: m.JobList })),
 );
 
 const JobEdit = lazy(() =>
-  import("@/app/pages/admin/jobs/edit").then((m) => ({ default: m.JobEdit }))
+  import("@/app/pages/admin/jobs/edit").then((m) => ({ default: m.JobEdit })),
 );
 
 const JobDetail = lazy(() =>
   import("@/app/pages/admin/jobs/details").then((m) => ({
     default: m.JobDetail,
-  }))
+  })),
 );
 
 const ApplicationList = lazy(() =>
   import("@/app/pages/admin/applications/list").then((m) => ({
     default: m.ApplicationList,
-  }))
+  })),
 );
 
 const ApplicationDetail = lazy(() =>
   import("@/app/pages/admin/applications/details").then((m) => ({
     default: m.ApplicationDetail,
-  }))
+  })),
 );
 
 const ContactMessageList = lazy(() =>
   import("@/app/pages/admin/contact/list").then((m) => ({
     default: m.ContactMessageList,
-  }))
+  })),
 );
 
 const ContactMessageDetails = lazy(() =>
   import("@/app/pages/admin/contact/details").then((m) => ({
     default: m.ContactMessageDetails,
-  }))
+  })),
 );
 
 const UserList = lazy(() =>
-  import("@/app/pages/admin/users/list").then((m) => ({ default: m.UserList }))
+  import("@/app/pages/admin/users/list").then((m) => ({ default: m.UserList })),
 );
 
 const UserDetails = lazy(() =>
   import("@/app/pages/admin/users/details").then((m) => ({
     default: m.UserDetails,
-  }))
+  })),
 );
 
 const SubsidiaryList = lazy(() =>
   import("@/app/pages/admin/subsidiaries").then((m) => ({
     default: m.SubsidiaryList,
-  }))
+  })),
 );
 
 const Roles = lazy(() =>
   import("@/app/pages/admin/roles").then((m) => ({
     default: m.Roles,
-  }))
+  })),
 );
 
 export const adminRouteItems: AdminRouteItem[] = [
@@ -101,6 +100,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     permissions: [PERMISSIONS.dashboardView],
     element: Dashboard,
   },
+
   {
     path: "jobs",
     label: "Job Openings",
@@ -109,33 +109,32 @@ export const adminRouteItems: AdminRouteItem[] = [
     canAccess: true,
     permissions: [PERMISSIONS.jobView],
     element: JobList,
-    children: [
-      {
-        path: "new",
-        label: "New Job",
-        show: false,
-        canAccess: true,
-        permissions: [PERMISSIONS.jobCreate],
-        element: JobEdit,
-      },
-      {
-        path: ":jobId",
-        label: "Job Detail",
-        show: false,
-        canAccess: true,
-        permissions: [PERMISSIONS.jobView],
-        element: JobDetail,
-      },
-      {
-        path: ":jobId/edit",
-        label: "Edit Job",
-        show: false,
-        canAccess: true,
-        permissions: [PERMISSIONS.jobUpdate],
-        element: JobEdit,
-      },
-    ],
   },
+  {
+    path: "jobs/new",
+    label: "New Job",
+    show: false,
+    canAccess: true,
+    permissions: [PERMISSIONS.jobCreate],
+    element: JobEdit,
+  },
+  {
+    path: "jobs/:jobId",
+    label: "Job Detail",
+    show: false,
+    canAccess: true,
+    permissions: [PERMISSIONS.jobView],
+    element: JobDetail,
+  },
+  {
+    path: "jobs/:jobId/edit",
+    label: "Edit Job",
+    show: false,
+    canAccess: true,
+    permissions: [PERMISSIONS.jobUpdate],
+    element: JobEdit,
+  },
+
   {
     path: "applications",
     label: "Applications",
@@ -144,36 +143,40 @@ export const adminRouteItems: AdminRouteItem[] = [
     canAccess: true,
     permissions: [PERMISSIONS.applicationView],
     element: ApplicationList,
-    children: [
-      {
-        path: ":applicationId",
-        label: "Application Detail",
-        show: false,
-        canAccess: true,
-        permissions: [PERMISSIONS.applicationView, PERMISSIONS.applicationUpdate],
-        element: ApplicationDetail,
-      },
-    ],
   },
+  {
+    path: "applications/:applicationId",
+    label: "Application Detail",
+    show: false,
+    canAccess: true,
+    permissions: [PERMISSIONS.applicationView, PERMISSIONS.applicationUpdate],
+    element: ApplicationDetail,
+  },
+
   {
     path: "contact-messages",
     label: "Contact Messages",
     icon: Mail,
     show: false,
     canAccess: false,
-    permissions: [PERMISSIONS.contactMessageView, PERMISSIONS.contactMessageUpdate],
-    element: ContactMessageList,
-    children: [
-      {
-        path: ":id",
-        label: "Contact Message Detail",
-        show: false,
-        canAccess: false,
-        permissions: [PERMISSIONS.contactMessageView, PERMISSIONS.contactMessageUpdate],
-        element: ContactMessageDetails,
-      },
+    permissions: [
+      PERMISSIONS.contactMessageView,
+      PERMISSIONS.contactMessageUpdate,
     ],
+    element: ContactMessageList,
   },
+  {
+    path: "contact-messages/:id",
+    label: "Contact Message Detail",
+    show: false,
+    canAccess: false,
+    permissions: [
+      PERMISSIONS.contactMessageView,
+      PERMISSIONS.contactMessageUpdate,
+    ],
+    element: ContactMessageDetails,
+  },
+
   {
     path: "users",
     label: "Users",
@@ -182,17 +185,16 @@ export const adminRouteItems: AdminRouteItem[] = [
     canAccess: false,
     permissions: [PERMISSIONS.userView],
     element: UserList,
-    children: [
-      {
-        path: ":id",
-        label: "User Detail",
-        show: false,
-        canAccess: false,
-        permissions: [PERMISSIONS.userView],
-        element: UserDetails,
-      },
-    ],
   },
+  {
+    path: "users/:id",
+    label: "User Detail",
+    show: false,
+    canAccess: false,
+    permissions: [PERMISSIONS.userView],
+    element: UserDetails,
+  },
+
   {
     path: "subsidiaries",
     label: "Subsidiaries",
@@ -202,6 +204,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     permissions: [PERMISSIONS.subsidiarView],
     element: SubsidiaryList,
   },
+
   {
     path: "roles",
     label: "Roles",
@@ -213,10 +216,12 @@ export const adminRouteItems: AdminRouteItem[] = [
   },
 ];
 
-export const nav: NavItem[] = adminRouteItems.map((item) => ({
-  to: `/admin/${item.path}`,
-  label: item.label,
-  icon: item.icon!,
-  show: item.show,
-  end: item.end,
-}));
+export const nav: NavItem[] = adminRouteItems
+  .filter((item) => item.show)
+  .map((item) => ({
+    to: `/admin/${item.path}`,
+    label: item.label,
+    icon: item.icon!,
+    show: item.show,
+    end: item.end,
+  }));
