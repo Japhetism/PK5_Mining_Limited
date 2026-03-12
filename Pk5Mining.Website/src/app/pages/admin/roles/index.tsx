@@ -22,6 +22,7 @@ import useRoleViewModel from "./viewmodel";
 import { Subsidiary } from "@/app/interfaces/subsidiary";
 import { Role } from "@/app/interfaces/role";
 import { EditModal } from "./components/edit-modal";
+import { DetailModal } from "./components/detail-modal";
 
 export function Roles() {
   const {
@@ -56,7 +57,7 @@ export function Roles() {
     setForm,
     setFieldErrors,
     onChange,
-    handleCloseEditModal,
+    handleCloseModal,
   } = useRoleViewModel();
 
   const columns: PaginatedTableColumn<Role>[] = [
@@ -68,7 +69,9 @@ export function Roles() {
           <div className="flex-1">
             <div className="font-semibold text-[#c89b3c]">{role.name}</div>
           </div>
-          <div className="text-xs text-gray-500 line-clamp-2">{role.description}</div>
+          <div className="text-xs text-gray-500 line-clamp-2">
+            {role.description}
+          </div>
         </div>
       ),
     },
@@ -96,12 +99,14 @@ export function Roles() {
     {
       key: "dT_Created",
       header: "Date Added",
-      render: (role) => (role.dT_Created ? formatDateTime(role.dT_Created) : "-"),
+      render: (role) =>
+        role.dT_Created ? formatDateTime(role.dT_Created) : "-",
     },
     {
       key: "dT_Updated",
       header: "Date Modified",
-      render: (role) => (role.dT_Updated ? formatDateTime(role.dT_Updated) : "-"),
+      render: (role) =>
+        role.dT_Updated ? formatDateTime(role.dT_Updated) : "-",
     },
     {
       key: "actions",
@@ -125,30 +130,26 @@ export function Roles() {
               sideOffset={6}
               className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
             >
-              <DropdownMenu.Item asChild>
-                <Link
-                  to={`/admin/roles/${role.id}`}
-                  onClick={() => {
-                    queryClient.setQueryData(["roles", String(role.id)], role);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Eye className="w-4 h-4" />
-                  View details
-                </Link>
+              <DropdownMenu.Item
+                onClick={() => {
+                  setSelectedRole(role);
+                  setConfirmOpen(true);
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+              >
+                <Eye className="w-4 h-4" />
+                View details
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item asChild>
-                <button
-                  onClick={() => {
-                    setSelectedRole(role)
-                    setConfirmEditOpen(true)
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit Role
-                </button>
+              <DropdownMenu.Item
+                onClick={() => {
+                  setSelectedRole(role);
+                  setConfirmEditOpen(true);
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+              >
+                <Pencil className="w-4 h-4" />
+                Edit Role
               </DropdownMenu.Item>
 
               <DropdownMenu.Item
@@ -161,12 +162,12 @@ export function Roles() {
                 {role.isActive ? (
                   <>
                     <XCircle className="w-4 h-4 text-red-400" />
-                    Deactivate
+                    <span className="text-red-400">Deactivate</span>
                   </>
                 ) : (
                   <>
                     <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    Activate
+                    <span className="text-green-400">Activate</span>
                   </>
                 )}
               </DropdownMenu.Item>
@@ -179,7 +180,7 @@ export function Roles() {
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
                 <Trash className="w-4 h-4 text-red-400" />
-                Delete Role
+                <span className="text-red-400">Delete Role</span>
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
@@ -266,9 +267,7 @@ export function Roles() {
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleUpdateStatus}
-        title={
-          selectedRole?.isActive ? "Deactivate Role" : "Activate Role"
-        }
+        title={selectedRole?.isActive ? "Deactivate Role" : "Activate Role"}
         description={`Are you sure you want to ${selectedRole?.isActive ? "deactivate" : "activate"} "${selectedRole?.name}"?`}
         confirmText={`Yes, ${selectedRole?.isActive ? "deactivate" : "activate"}`}
         cancelText="No"
@@ -292,10 +291,16 @@ export function Roles() {
         fieldErrors={fieldErrors}
         cancelText="Cancel"
         loading={isUpdating}
-        onClose={handleCloseEditModal}
+        onClose={handleCloseModal}
         onConfirm={handleUpdateStatus}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
+      />
+
+      <DetailModal
+        open={confirmOpen}
+        role={form}
+        onClose={handleCloseModal}
       />
     </div>
   );

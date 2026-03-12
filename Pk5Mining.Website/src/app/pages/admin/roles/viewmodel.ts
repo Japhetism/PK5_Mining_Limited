@@ -161,10 +161,12 @@ function useRoleViewModel() {
     console.log("form is ", form);
   };
 
-  const handleCloseEditModal = () => {
+  const handleCloseModal = () => {
     setSelectedRole(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);
+    setConfirmOpen(false);
+    setConfirmDeleteOpen(false);
   };
 
   const roles: Role[] = data?.data ?? [];
@@ -203,7 +205,7 @@ function useRoleViewModel() {
     setConfirmEditOpen,
     setFieldErrors,
     setForm,
-    handleCloseEditModal,
+    handleCloseModal,
   };
 }
 

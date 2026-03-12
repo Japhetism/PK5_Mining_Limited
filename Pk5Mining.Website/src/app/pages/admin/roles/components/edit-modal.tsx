@@ -16,7 +16,9 @@ type EditModalProps = {
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<RoleErrors>>;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => void;
 };
 
@@ -65,7 +67,7 @@ export function EditModal({
               // onSubmit={onSubmit}
               className="p-6 space-y-6"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Name
