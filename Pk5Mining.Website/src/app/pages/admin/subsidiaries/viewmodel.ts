@@ -159,10 +159,12 @@ function useSubsidiaryListViewModel() {
     console.log('form is ', form);
   }
 
-  const handleCloseEditModal = () => {
+  const handleCloseModal = () => {
     setSelectedSubsidiary(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);
+    setConfirmOpen(false);
+    setConfirmDeleteOpen(false);
   }
 
   const subsidaries: Subsidiary[] = data?.data ?? [];
@@ -201,7 +203,7 @@ function useSubsidiaryListViewModel() {
     setConfirmEditOpen,
     setFieldErrors,
     setForm,
-    handleCloseEditModal,
+    handleCloseModal,
   };
 }
 

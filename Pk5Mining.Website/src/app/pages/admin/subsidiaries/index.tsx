@@ -21,6 +21,7 @@ import { statusOptions } from "@/app/constants";
 import useSubsidiaryListViewModel from "./viewmodel";
 import { Subsidiary } from "@/app/interfaces/subsidiary";
 import { EditModal } from "./components/edit-modal";
+import { DetailModal } from "./components/detail-modal";
 
 export function SubsidiaryList() {
   const {
@@ -55,7 +56,7 @@ export function SubsidiaryList() {
     setForm,
     setFieldErrors,
     onChange,
-    handleCloseEditModal,
+    handleCloseModal,
   } = useSubsidiaryListViewModel();
 
   const columns: PaginatedTableColumn<Subsidiary>[] = [
@@ -65,9 +66,13 @@ export function SubsidiaryList() {
       render: (subsidiary) => (
         <div>
           <div className="flex-1">
-            <div className="font-semibold text-[#c89b3c]">{subsidiary.name}</div>
+            <div className="font-semibold text-[#c89b3c]">
+              {subsidiary.name}
+            </div>
           </div>
-          <div className="text-xs text-gray-500 line-clamp-2">{subsidiary.code}</div>
+          <div className="text-xs text-gray-500 line-clamp-2">
+            {subsidiary.code}
+          </div>
         </div>
       ),
     },
@@ -110,12 +115,14 @@ export function SubsidiaryList() {
     {
       key: "dT_Created",
       header: "Date Added",
-      render: (subsidiary) => (subsidiary.dT_Created ? formatDateTime(subsidiary.dT_Created) : "-"),
+      render: (subsidiary) =>
+        subsidiary.dT_Created ? formatDateTime(subsidiary.dT_Created) : "-",
     },
     {
       key: "dT_Updated",
       header: "Date Modified",
-      render: (subsidiary) => (subsidiary.dT_Updated ? formatDateTime(subsidiary.dT_Updated) : "-"),
+      render: (subsidiary) =>
+        subsidiary.dT_Updated ? formatDateTime(subsidiary.dT_Updated) : "-",
     },
     {
       key: "actions",
@@ -139,31 +146,26 @@ export function SubsidiaryList() {
               sideOffset={6}
               className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
             >
-              <DropdownMenu.Item asChild>
-                <Link
-                  to={`/admin/subsidiaries/${subsidiary.id}`}
-                  onClick={() => {
-                    queryClient.setQueryData(["subsidiaries", String(subsidiary.id)], subsidiary);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Eye className="w-4 h-4" />
-                  View details
-                </Link>
+              <DropdownMenu.Item
+                onClick={() => {
+                  setSelectedSubsidiary(subsidiary);
+                  setConfirmOpen(true);
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+              >
+                <Eye className="w-4 h-4" />
+                View Details
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item asChild>
-                <button
-                  onClick={() => {
-                    console.log("from edit button ", subsidiary)
-                    setSelectedSubsidiary(subsidiary)
-                    setConfirmEditOpen(true)
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit Subsidiary
-                </button>
+              <DropdownMenu.Item
+                onClick={() => {
+                  setSelectedSubsidiary(subsidiary);
+                  setConfirmEditOpen(true);
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+              >
+                <Pencil className="w-4 h-4" />
+                Edit Subsidiary
               </DropdownMenu.Item>
 
               <DropdownMenu.Item
@@ -176,12 +178,12 @@ export function SubsidiaryList() {
                 {subsidiary.isActive ? (
                   <>
                     <XCircle className="w-4 h-4 text-red-400" />
-                    Deactivate
+                    <span className="text-red-400">Deactivate Subsidiary</span>
                   </>
                 ) : (
                   <>
                     <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    Activate
+                    <span className="text-green-400">Activate Subsidiary</span>
                   </>
                 )}
               </DropdownMenu.Item>
@@ -194,7 +196,7 @@ export function SubsidiaryList() {
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
                 <Trash className="w-4 h-4 text-red-400" />
-                Delete Subsidiary
+                <span className="text-red-400">Delete Subsidiary</span>
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
@@ -282,7 +284,9 @@ export function SubsidiaryList() {
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleUpdateStatus}
         title={
-          selectedSubsidiary?.isActive ? "Deactivate Subsidiary" : "Activate Subsidiary"
+          selectedSubsidiary?.isActive
+            ? "Deactivate Subsidiary"
+            : "Activate Subsidiary"
         }
         description={`Are you sure you want to ${selectedSubsidiary?.isActive ? "deactivate" : "activate"} "${selectedSubsidiary?.name}"?`}
         confirmText={`Yes, ${selectedSubsidiary?.isActive ? "deactivate" : "activate"}`}
@@ -292,7 +296,7 @@ export function SubsidiaryList() {
 
       <ConfirmModal
         open={confirmDeleteOpen}
-        onClose={() => setConfirmDeleteOpen(false)}
+        onClose={() => handleCloseModal}
         onConfirm={handleUpdateStatus}
         title="Delete Subsidiary"
         description={`Are you sure you want to delete "${selectedSubsidiary?.name}"?`}
@@ -307,10 +311,16 @@ export function SubsidiaryList() {
         fieldErrors={fieldErrors}
         cancelText="Cancel"
         loading={isUpdating}
-        onClose={handleCloseEditModal}
+        onClose={handleCloseModal}
         onConfirm={handleUpdateStatus}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
+      />
+
+      <DetailModal
+        open={confirmOpen}
+        subsidiary={form}
+        onClose={handleCloseModal}
       />
     </div>
   );
