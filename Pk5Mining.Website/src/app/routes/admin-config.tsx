@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { NavItem } from "../interfaces";
 import { Permission, PERMISSIONS } from "../constants/permissions";
+import { UserRole, USERROLES } from "../constants/role";
 
 export type AdminRouteItem = {
   path: string;
@@ -21,6 +22,7 @@ export type AdminRouteItem = {
   canAccess: boolean;
   end?: boolean;
   element: LazyExoticComponent<ComponentType<any>>;
+  role?: UserRole;
   permissions?: Permission[];
   requireAllPermissions?: boolean;
 };
@@ -183,6 +185,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     icon: Users,
     show: false,
     canAccess: false,
+    role: USERROLES.superAdmin,
     permissions: [PERMISSIONS.userView],
     element: UserList,
   },
@@ -191,6 +194,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     label: "User Detail",
     show: false,
     canAccess: false,
+    role: USERROLES.superAdmin,
     permissions: [PERMISSIONS.userView],
     element: UserDetails,
   },

@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { statuses } from "../constants";
 import { Permission } from "../constants/permissions";
+import { UserRole } from "../constants/role";
 
 export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 
@@ -204,6 +205,7 @@ export interface IUser {
   lastName: string;
   password: string;
   jwtToken: string;
+  role?: UserRole;
   permissions?: Permission[];
 }
 

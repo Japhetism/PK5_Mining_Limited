@@ -3,8 +3,10 @@ import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
 import { statuses } from "../constants";
 import { Permission } from "../constants/permissions";
 import { adminRouteItems } from "../routes/admin-config";
+import { UserRole } from "../constants/role";
 
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
+const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
 
 export function capitalizeFirstLetter(value: string): string {
   if (!value) return value;
@@ -149,6 +151,11 @@ export const ddmmyyyyToApiDate = (value?: string | null) => {
 
   return `${year}-${month}-${day}`;
 };
+
+export const hasRole = (userRole?: UserRole, requiredRole?: UserRole): boolean => {
+  if (!enforceRole || !requiredRole) return true;
+  return userRole === requiredRole;
+}
 
 export const hasPermissions = (
   userPermissions: Permission[] = [],
