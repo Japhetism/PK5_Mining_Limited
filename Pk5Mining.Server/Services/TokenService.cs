@@ -22,7 +22,7 @@ namespace Pk5Mining.Server.Services
                 new Claim(ClaimTypes.GivenName, admins.FirstName),
                 new Claim(ClaimTypes.Email, admins.Username),
                 new Claim(ClaimTypes.Surname, admins.LastName),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Role, admins.Role)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));// Encoding the Key
