@@ -8,6 +8,6 @@
         public string Username { get; set; } = string.Empty;
         public string JwtToken { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
-        public bool? IsPasswordSet { get; set; }
+        public bool? HasChangedPassword { get; set; }
     }
 }

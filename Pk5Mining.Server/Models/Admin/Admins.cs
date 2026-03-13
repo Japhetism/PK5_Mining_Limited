@@ -11,7 +11,7 @@ namespace Pk5Mining.Server.Models.Admin
         [Required]
         public string Password { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
-        public bool? IsPasswordSet { get; set; }
+        public bool? HasChangedPassword { get; set; }
 
     }
 }
