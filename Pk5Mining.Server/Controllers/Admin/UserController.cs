@@ -10,37 +10,15 @@ namespace Pk5Mining.Server.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IAdminRepo _adminRepo;
-        private readonly ITokenService _tokenService;
 
-        public AdminController(IAdminRepo adminRepo, ITokenService tokenService)
+        public UserController(IAdminRepo adminRepo)
         {
             _adminRepo = adminRepo;
-            _tokenService = tokenService;
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] AdminLoginDTO dto)
-        {
-            var (admin, error) = await _adminRepo.LoginAsync(dto);
-            if (error != null)
-            {
-                return Unauthorized(ApiResponse.AuthorizationException(null, error));
-            }
-            var jwtToken = _tokenService.CreateJWTToken(admin);
-
-            var response = new AdminResponseDTO
-            {
-                Id = admin.Id,
-                FirstName = admin.FirstName,
-                LastName = admin.LastName,
-                Username = admin.Username,
-                JwtToken = jwtToken
-            };
-            return Ok(ApiResponse.SuccessMessage(response, "Login Successful"));
-        }
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] AdminDTO dto)
         {

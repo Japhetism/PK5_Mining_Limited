@@ -8,6 +8,6 @@
         string Password { get; set; }
         string Username { get; set; }
         string Role { get; set; }
-        bool? IsPasswordSet { get; set; }
+        bool? HasChangedPassword { get; set; }
     }
 }

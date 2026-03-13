@@ -17,7 +17,7 @@ namespace Pk5Mining.Server.Repositories.Admin
             _mapper = mapper;
         }
 
-        public async Task<(Admins?, string?)> LoginAsync(AdminLoginDTO dto)
+        public async Task<(Admins?, string?)> LoginAsync(LoginDTO dto)
         {
             var admin = await _dbContext.Admins.FirstOrDefaultAsync(a => a.Username == dto.Username && a.Password == dto.Password);
             if (admin == null)
@@ -37,7 +37,7 @@ namespace Pk5Mining.Server.Repositories.Admin
                 }
                 admin.Id = IdGenerator.GenerateUniqueId();
                 admin.Role = "Default User";
-                admin.IsPasswordSet = false;
+                admin.HasChangedPassword = false;
                 await _dbContext.Admins.AddAsync(admin);
                 await _dbContext.SaveChangesAsync();
                 return (admin, null, false);
@@ -58,7 +58,7 @@ namespace Pk5Mining.Server.Repositories.Admin
                     return (null, "Admin not found.", true);
                 }
                 admin.Password = dto.NewPassword;
-                admin.IsPasswordSet = true;
+                admin.HasChangedPassword = true;
                 _dbContext.Admins.Update(admin);
                 await _dbContext.SaveChangesAsync();
                 return (admin, null, false);
