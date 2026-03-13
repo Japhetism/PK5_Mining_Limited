@@ -100,6 +100,7 @@ export function PaginatedTable<T>({
                   </span>
                 </div>
               ))}
+
             </div>
           ))
         )}
@@ -159,60 +160,60 @@ export function PaginatedTable<T>({
             </table>
           )}
         </div>
-
-        {/* PAGINATION */}
-        {!isLoading && data.length > 0 && (
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-3 border-t border-gray-800 bg-black/20">
-
-            <div className="text-xs text-gray-400">
-              Showing {from}–{to} of {totalCount}
-            </div>
-
-            <div className="flex items-center gap-3">
-
-              {/* Page Size */}
-              <select
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setPageNumber(1);
-                }}
-                className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-              >
-                {pageSizeOptions.map((size) => (
-                  <option key={size} value={size}>
-                    {size} / page
-                  </option>
-                ))}
-              </select>
-
-              {/* Previous */}
-              <button
-                onClick={() =>
-                  setPageNumber(Math.max(1, pageNumber - 1))
-                }
-                disabled={pageNumber === 1}
-                className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              {/* Next */}
-              <button
-                onClick={() =>
-                  setPageNumber(Math.min(totalPages, pageNumber + 1))
-                }
-                disabled={pageNumber === totalPages}
-                className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-
-            </div>
-          </div>
-        )}
-
       </div>
+
+      {/* PAGINATION (MOBILE + DESKTOP) */}
+      {!isLoading && totalCount > 0 && (
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-3 border border-gray-800 rounded-xl bg-[#1a1a1a]">
+
+          <div className="text-xs text-gray-400">
+            Showing {from}–{to} of {totalCount}
+          </div>
+
+          <div className="flex items-center gap-3">
+
+            {/* Page Size */}
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPageNumber(1);
+              }}
+              className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+            >
+              {pageSizeOptions.map((size) => (
+                <option key={size} value={size}>
+                  {size} / page
+                </option>
+              ))}
+            </select>
+
+            {/* Previous */}
+            <button
+              onClick={() =>
+                setPageNumber(Math.max(1, pageNumber - 1))
+              }
+              disabled={pageNumber === 1}
+              className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+
+            {/* Next */}
+            <button
+              onClick={() =>
+                setPageNumber(Math.min(totalPages, pageNumber + 1))
+              }
+              disabled={pageNumber === totalPages}
+              className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
