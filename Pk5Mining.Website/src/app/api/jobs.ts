@@ -86,7 +86,16 @@ export async function getJobById(id: string) {
 
 export async function createJob(payload: CreateJobPayload) {
   try {
-    const { data } = await http.post<ApiResponse<JobDto>>("/Job", payload);
+    const createPayload = {
+      ...payload,
+      dT_Modified: new Date().toISOString(),
+    };
+
+    console.log("create job is ", createPayload)
+    const { data } = await http.post<ApiResponse<JobDto>>(
+      "/Job",
+      createPayload,
+    );
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
@@ -105,9 +114,12 @@ export async function updateJob(id: number, payload: UpdateJobPayload) {
     // to be remove
     const createPayload = {
       ...payload,
-      status: payload.isActive ? "Open" : "Close"
-    }
-    const { data } = await http.put<ApiResponse<JobDto>>(`/Job/${id}`, createPayload);
+      status: payload.isActive ? "Open" : "Close",
+    };
+    const { data } = await http.put<ApiResponse<JobDto>>(
+      `/Job/${id}`,
+      createPayload,
+    );
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(

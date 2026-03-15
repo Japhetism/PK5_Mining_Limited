@@ -267,7 +267,7 @@ export function UserList() {
               type="text"
               value={filters.phone}
               onChange={(e) => updateFilter("phone", e.target.value)}
-              placeholder="Search by name"
+              placeholder="Search by phone number"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
