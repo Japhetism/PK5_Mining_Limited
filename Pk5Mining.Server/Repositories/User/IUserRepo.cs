@@ -5,7 +5,13 @@ namespace Pk5Mining.Server.Repositories.Admin
     public interface IUserRepo
     {
         Task<(IUser?, string?, bool)> CreateAsync(IUserDTO dto);
-        Task<(IEnumerable<IUser>?, string?, bool)> GetAllAsync();
+        Task<(IEnumerable<IUser> User, int TotalCount)> GetFilteredUsers(
+             int pageNumber,
+             int pageSize,
+             string? email,
+             string? username,
+             string? name,
+             bool? isActive);
         Task<(IUser?, string?, bool)> GetByIdAsync(long adminId);
         Task<(User?, string?)> LoginAsync(LoginDTO dto);
         Task<(IUser?, string?, bool)> UpdatePasswordAsync(long Id, SetPassword dto);

@@ -87,17 +87,39 @@ namespace Pk5Mining.Server.Repositories.Admin
                 return (null, ex.Message, true);
             }
         }
-        public async Task<(IEnumerable<IUser>?, string?, bool)> GetAllAsync()
+        public async Task<(IEnumerable<IUser> User, int TotalCount)> GetFilteredUsers(
+              int pageNumber,
+              int pageSize,
+              string? email,
+              string? username,
+              string? name,
+              bool? isActive)
         {
-            try
+            IQueryable<User> query = _dbContext.Users.Where(u => u.IsDeleted == false).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(email))
             {
-                var admins = await _dbContext.Users.ToListAsync();
-                return (admins, null, false);
+                query = query.Where(c => c.Email.StartsWith(email));
             }
-            catch (Exception ex)
+
+            if (!string.IsNullOrWhiteSpace(username))
             {
-                return (null, ex.Message, true);
+                query = query.Where(c => c.Username.StartsWith(username));
             }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(c =>c.FirstName.StartsWith(name) || c.LastName.StartsWith(name));
+            }
+
+            if (isActive.HasValue)
+            {
+                query = query.Where(c => c.IsActive == isActive.Value);
+            }
+            int totalCount = await query.CountAsync();
+
+            var users = await query.OrderByDescending(c => c.DT_Created).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            return (users, totalCount);
         }
     }
 }

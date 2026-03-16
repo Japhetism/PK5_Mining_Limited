@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories.Admin;
-using Pk5Mining.Server.Services;
 
 namespace Pk5Mining.Server.Controllers.Admin
 {
@@ -12,17 +10,17 @@ namespace Pk5Mining.Server.Controllers.Admin
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepo _adminRepo;
+        private readonly IUserRepo _repo;
 
         public UserController(IUserRepo adminRepo)
         {
-            _adminRepo = adminRepo;
+            _repo = adminRepo;
         }
 
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] UserDTO dto)
         {
-            var (admin, error, isException) = await _adminRepo.CreateAsync(dto);
+            var (admin, error, isException) = await _repo.CreateAsync(dto);
             if (isException)
             {
                 return BadRequest(ApiResponse.Failure(null, error ?? "An error occurred while creating the admin."));
@@ -33,27 +31,42 @@ namespace Pk5Mining.Server.Controllers.Admin
         [HttpPut("update-password/{id}")]
         public async Task<ActionResult> UpdatePassword(long id, [FromBody] SetPassword newPassword)
         {
-            var (admin, error, isException) = await _adminRepo.UpdatePasswordAsync(id, newPassword);
+            var (admin, error, isException) = await _repo.UpdatePasswordAsync(id, newPassword);
             if (isException)
             {
                 return BadRequest(ApiResponse.Failure(null, error ?? "An error occurred while updating the password."));
             }
             return Ok(ApiResponse.SuccessMessage(admin, "Password updated successfully"));
         }
-        [HttpGet]
-        public async Task<ActionResult> Get()
+        /*[Authorize]*/
+        [HttpGet("filter")]
+        public async Task<IActionResult> Get( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? email = null, [FromQuery] string? userName = null,
+             [FromQuery] string? name = null,
+             [FromQuery] bool? isActive = null)
         {
-            var (admins, error, isException) = await _adminRepo.GetAllAsync();
-            if (isException)
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+            var (users, totalCount) = await _repo.GetFilteredUsers(
+                pageNumber,
+                pageSize,
+                email,
+                userName,
+                name,
+                isActive);
+            var response = new
             {
-                return BadRequest(ApiResponse.Failure(null, error ?? "An error occurred while retrieving admins."));
-            }
-            return Ok(ApiResponse.SuccessMessage(admins, "User retrieved successfully"));
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+                Data = users
+            };
+            return Ok(ApiResponse.SuccessMessage(response, "Users retrieved successfully."));
         }
         [HttpGet("{id}")]
         public async Task<ActionResult> Ge(long id)
         {
-            var (admin, error, isException) = await _adminRepo.GetByIdAsync(id);
+            var (admin, error, isException) = await _repo.GetByIdAsync(id);
             if (isException)
             {
                 return BadRequest(ApiResponse.Failure(null, error ?? "An error occurred while retrieving the user."));
