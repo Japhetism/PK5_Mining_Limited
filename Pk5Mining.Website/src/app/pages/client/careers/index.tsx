@@ -2,12 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { ImageWithFallback } from "@/app/components/ui/ImageWithFallback";
-import {
-  Briefcase,
-  MapPin,
-  Clock,
-  LocateIcon,
-} from "lucide-react";
+import { Briefcase, MapPin, Clock, LocateIcon } from "lucide-react";
 import { benefits } from "@/app/fixtures";
 import { IBenefit, JobDto } from "@/app/interfaces";
 import { capitalizeFirstLetter } from "@/app/utils/helper";
@@ -15,7 +10,6 @@ import { JobCardLoader } from "@/app/components/ui/job-card-loader";
 import useCareersViewModel from "./viewmodel";
 
 export function Careers() {
-
   const {
     jobs,
     isLoading,
@@ -213,66 +207,68 @@ export function Careers() {
                 </motion.div>
               </AnimatedSection>
             ) : (
-              jobs.map((job: JobDto, index: number) => (
-                <AnimatedSection key={job.title + index} delay={index * 0.05}>
-                  <motion.div
-                    className="mb-4 bg-[#0f0f0f] rounded-lg border border-gray-800 overflow-hidden"
-                    whileHover={{ borderColor: "#c89b3c" }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.button
-                      className="w-full p-6 flex items-center justify-between cursor-pointer"
-                      whileHover={{ x: 5 }}
-                      transition={{ duration: 0.2 }}
+              <div className="max-w-4xl mx-auto max-h-[600px] overflow-y-auto pr-10 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+                {jobs.map((job: JobDto, index: number) => (
+                  <AnimatedSection key={job.title + index} delay={index * 0.05}>
+                    <motion.div
+                      className="mb-4 bg-[#0f0f0f] rounded-lg border border-gray-800 overflow-hidden"
+                      whileHover={{ borderColor: "#c89b3c" }}
+                      transition={{ duration: 0.3 }}
                     >
-                      <div className="flex items-center gap-4 flex-1 text-left">
-                        <div>
-                          <h3 className="font-bold text-lg mb-5">
-                            {job.title}
-                          </h3>
-                          <p className="font-normal text-sm mb-3 text-gray-400">
-                            {job.briefDescription}
-                          </p>
-                          <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                            <span className="flex items-center gap-1">
-                              <MapPin size={14} /> {job.location}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Clock size={14} />{" "}
-                              {job.jobType &&
-                                capitalizeFirstLetter(job.jobType)}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <LocateIcon size={14} />{" "}
-                              {job.workArrangement &&
-                                capitalizeFirstLetter(job.workArrangement)}
-                            </span>
-                            <span>{job.experience}</span>
+                      <motion.button
+                        className="w-full p-6 flex items-center justify-between cursor-pointer"
+                        whileHover={{ x: 5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="flex items-center gap-4 flex-1 text-left">
+                          <div>
+                            <h3 className="font-bold text-lg mb-5">
+                              {job.title}
+                            </h3>
+                            <p className="font-normal text-sm mb-3 text-gray-400">
+                              {job.briefDescription}
+                            </p>
+                            <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                              <span className="flex items-center gap-1">
+                                <MapPin size={14} /> {job.location}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock size={14} />{" "}
+                                {job.jobType &&
+                                  capitalizeFirstLetter(job.jobType)}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <LocateIcon size={14} />{" "}
+                                {job.workArrangement &&
+                                  capitalizeFirstLetter(job.workArrangement)}
+                              </span>
+                              <span>{job.experience}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <Link
-                        to={`/careers/job/${job.id}`}
-                        onClick={() => {
-                          queryClient.setQueryData(
-                            ["job", String(job.id)],
-                            job,
-                          );
-                        }}
-                      >
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="px-4 py-2 bg-[#c89b3c] text-xs text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+                        <Link
+                          to={`/careers/job/${job.id}`}
+                          onClick={() => {
+                            queryClient.setQueryData(
+                              ["job", String(job.id)],
+                              job,
+                            );
+                          }}
                         >
-                          Apply Now
-                        </motion.button>
-                      </Link>
-                    </motion.button>
-                  </motion.div>
-                </AnimatedSection>
-              ))
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-4 py-2 bg-[#c89b3c] text-xs text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+                          >
+                            Apply Now
+                          </motion.button>
+                        </Link>
+                      </motion.button>
+                    </motion.div>
+                  </AnimatedSection>
+                ))}
+              </div>
             )}
           </div>
         </div>
