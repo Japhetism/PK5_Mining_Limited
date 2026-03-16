@@ -190,63 +190,75 @@ export function Careers() {
           </AnimatedSection>
 
           {/* Filters */}
-          <div className="max-w-4xl mx-auto mb-10 bg-[#0f0f0f] py-12 px-8 rounded-lg">
-            <div className="flex flex-col md:flex-row gap-3">
-              {/* Search */}
-              <div className="flex-1 min-w-0">
-                <input
-                  name="role"
-                  type="text"
-                  value={filters.title}
-                  onChange={(e) => setFilters((f) => ({ ...f, title: e.target.value }))}
-                  placeholder="Search role"
-                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-                />
-              </div>
+          {(!isLoading && jobs.length > 2) && (
+            <div className="max-w-4xl mx-auto mb-10 bg-[#0f0f0f] py-12 px-8 rounded-lg">
+              <div className="flex flex-col md:flex-row gap-3">
+                {/* Search */}
+                <div className="flex-1 min-w-0">
+                  <input
+                    name="role"
+                    type="text"
+                    value={filters.title}
+                    onChange={(e) =>
+                      setFilters((f) => ({ ...f, title: e.target.value }))
+                    }
+                    placeholder="Search role"
+                    className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                  />
+                </div>
 
-              {/* Select 1 */}
-              <div className="w-full md:w-40">
-                <select
-                  name="department"
-                  value={filters.department}
-                  onChange={(e) => setFilters((f) => ({ ...f, department: e.target.value }))}
-                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-                >
-                  <option value="">All</option>
-                  {departments.map((dept) => (
-                    <option key={dept} value={dept}>{dept}</option>
-                  ))}
-                </select>
-              </div>
+                {/* Select 1 */}
+                <div className="w-full md:w-40">
+                  <select
+                    name="department"
+                    value={filters.department}
+                    onChange={(e) =>
+                      setFilters((f) => ({ ...f, department: e.target.value }))
+                    }
+                    className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                  >
+                    <option value="">All</option>
+                    {departments.map((dept) => (
+                      <option key={dept} value={dept}>
+                        {dept}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              {/* Select 2 */}
-              <div className="w-full md:w-40">
-                <select
-                  name="location"
-                  value={filters.location}
-                  onChange={(e) => setFilters((f) => ({ ...f, location: e.target.value }))}
-                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-                >
-                  <option value="">All</option>
-                  {locations.map((loc) => (
-                    <option key={loc} value={loc}>{loc}</option>
-                  ))}
-                </select>
-              </div>
+                {/* Select 2 */}
+                <div className="w-full md:w-40">
+                  <select
+                    name="location"
+                    value={filters.location}
+                    onChange={(e) =>
+                      setFilters((f) => ({ ...f, location: e.target.value }))
+                    }
+                    className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                  >
+                    <option value="">All</option>
+                    {locations.map((loc) => (
+                      <option key={loc} value={loc}>
+                        {loc}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              {/* Button */}
-              <div className="w-full md:w-auto">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={handleSearch}
-                  className="w-full md:w-auto px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-                >
-                  Search
-                </motion.button>
+                {/* Button */}
+                <div className="w-full md:w-auto">
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={handleSearch}
+                    className="w-full md:w-auto px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+                  >
+                    Search
+                  </motion.button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="max-w-4xl mx-auto">
             {isLoading ? (
@@ -272,68 +284,87 @@ export function Careers() {
                 </motion.div>
               </AnimatedSection>
             ) : (
-              <div className="max-w-4xl mx-auto max-h-[600px] overflow-y-auto pr-10 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
-                {filteredJobs.map((job: JobDto, index: number) => (
-                  <AnimatedSection key={job.title + index} delay={index * 0.05}>
-                    <motion.div
-                      className="mb-4 bg-[#0f0f0f] rounded-lg border border-gray-800 overflow-hidden"
-                      whileHover={{ borderColor: "#c89b3c" }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <motion.button
-                        className="w-full p-6 flex items-center justify-between cursor-pointer"
-                        whileHover={{ x: 5 }}
-                        transition={{ duration: 0.2 }}
+              <>
+                {filteredJobs.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center text-center py-16 px-6 bg-[#0f0f0f] border border-dashed border-gray-800 rounded-lg">
+                    <Briefcase className="w-10 h-10 text-[#c89b3c] mb-4 opacity-80" />
+                    <p className="text-gray-300 text-lg mb-2">
+                      No jobs match your filters.
+                    </p>
+                    <p className="text-gray-500 max-w-md">
+                      Please try adjusting your search or filter criteria.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="max-w-4xl mx-auto max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+                    {filteredJobs.map((job: JobDto, index: number) => (
+                      <AnimatedSection
+                        key={job.title + index}
+                        delay={index * 0.05}
                       >
-                        <div className="flex items-center gap-4 flex-1 text-left">
-                          <div>
-                            <h3 className="font-bold text-lg mb-5">
-                              {job.title}
-                            </h3>
-                            <p className="font-normal text-sm mb-3 text-gray-400">
-                              {job.briefDescription}
-                            </p>
-                            <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                              <span className="flex items-center gap-1">
-                                <MapPin size={14} /> {job.location}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Clock size={14} />{" "}
-                                {job.jobType &&
-                                  capitalizeFirstLetter(job.jobType)}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <LocateIcon size={14} />{" "}
-                                {job.workArrangement &&
-                                  capitalizeFirstLetter(job.workArrangement)}
-                              </span>
-                              <span>{job.experience}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <Link
-                          to={`/careers/job/${job.id}`}
-                          onClick={() => {
-                            queryClient.setQueryData(
-                              ["job", String(job.id)],
-                              job,
-                            );
-                          }}
+                        <motion.div
+                          className="mb-4 bg-[#0f0f0f] rounded-lg border border-gray-800 overflow-hidden"
+                          whileHover={{ borderColor: "#c89b3c" }}
+                          transition={{ duration: 0.3 }}
                         >
                           <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-4 py-2 bg-[#c89b3c] text-xs text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+                            className="w-full p-6 flex items-center justify-between cursor-pointer"
+                            whileHover={{ x: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
-                            Apply Now
+                            <div className="flex items-center gap-4 flex-1 text-left">
+                              <div>
+                                <h3 className="font-bold text-lg mb-5">
+                                  {job.title}
+                                </h3>
+                                <p className="font-normal text-sm mb-3 text-gray-400">
+                                  {job.briefDescription}
+                                </p>
+                                <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                                  <span className="flex items-center gap-1">
+                                    <MapPin size={14} /> {job.location}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Clock size={14} />{" "}
+                                    {job.jobType &&
+                                      capitalizeFirstLetter(job.jobType)}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <LocateIcon size={14} />{" "}
+                                    {job.workArrangement &&
+                                      capitalizeFirstLetter(
+                                        job.workArrangement,
+                                      )}
+                                  </span>
+                                  <span>{job.experience}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <Link
+                              to={`/careers/job/${job.id}`}
+                              onClick={() => {
+                                queryClient.setQueryData(
+                                  ["job", String(job.id)],
+                                  job,
+                                );
+                              }}
+                            >
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-4 py-2 bg-[#c89b3c] text-xs text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
+                              >
+                                Apply Now
+                              </motion.button>
+                            </Link>
                           </motion.button>
-                        </Link>
-                      </motion.button>
-                    </motion.div>
-                  </AnimatedSection>
-                ))}
-              </div>
+                        </motion.div>
+                      </AnimatedSection>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
