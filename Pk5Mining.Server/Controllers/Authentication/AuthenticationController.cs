@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories.Admin;
@@ -10,33 +11,30 @@ namespace Pk5Mining.Server.Controllers.Authentication
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAdminRepo _adminRepo;
+        private readonly IUserRepo _adminRepo;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AuthenticationController(IAdminRepo adminRepo, ITokenService tokenService)
+        public AuthenticationController(IUserRepo adminRepo, ITokenService tokenService, IMapper mapper)
         {
             _adminRepo = adminRepo;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
-
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] LoginDTO dto)
         {
             var (admin, error) = await _adminRepo.LoginAsync(dto);
+
             if (error != null)
             {
                 return Unauthorized(ApiResponse.AuthorizationException(null, error));
             }
-            var jwtToken = _tokenService.CreateJWTToken(admin);
 
-            var response = new AdminResponseDTO
-            {
-                Id = admin.Id,
-                FirstName = admin.FirstName,
-                LastName = admin.LastName,
-                Username = admin.Username,
-                JwtToken = jwtToken
-            };
+            var response = _mapper.Map<UserResponseDTO>(admin);
+
+            response.JwtToken = _tokenService.CreateJWTToken(admin);
+
             return Ok(ApiResponse.SuccessMessage(response, "Login Successful"));
         }
     }

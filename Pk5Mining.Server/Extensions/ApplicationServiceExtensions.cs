@@ -35,7 +35,7 @@ namespace Pk5Mining.Server.Extensions
             services.AddScoped<IJobSpecificRepo, JobSpecificRepo>();
             services.AddScoped<IDashboardRepo , DashboardRepo>();
             services.AddScoped<IJobApplicationSpecificRepo, JobApplicationSpecificRepo>();
-            services.AddScoped<IAdminRepo,  AdminRepo>();
+            services.AddScoped<IUserRepo,  UserRepo>();
             services.AddScoped<ITokenService , TokenService>();
             services.AddTransient<IMailService  , MailService>();
             services.AddTransient<IAgroMailService, AgroMailService>();

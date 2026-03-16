@@ -15,12 +15,12 @@ namespace Pk5Mining.Server.Services
         {
             _configuration = configuration;
         }
-        public string CreateJWTToken(Admins admins)
+        public string CreateJWTToken(User admins)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.GivenName, admins.FirstName),
-                new Claim(ClaimTypes.Email, admins.Username),
+                new Claim(ClaimTypes.Email, admins.Email),
                 new Claim(ClaimTypes.Surname, admins.LastName),
                 new Claim(ClaimTypes.Role, admins.Role)
             };

@@ -6,31 +6,31 @@ using Pk5Mining.Server.Services;
 
 namespace Pk5Mining.Server.Repositories.Admin
 {
-    public class AdminRepo : IAdminRepo
+    public class UserRepo : IUserRepo
     {
         private readonly Pk5MiningDBContext _dbContext;
         private readonly IMapper _mapper;
 
-        public AdminRepo(Pk5MiningDBContext dbContext, IMapper mapper)
+        public UserRepo(Pk5MiningDBContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
 
-        public async Task<(Admins?, string?)> LoginAsync(LoginDTO dto)
+        public async Task<(User?, string?)> LoginAsync(LoginDTO dto)
         {
-            var admin = await _dbContext.Admins.FirstOrDefaultAsync(a => a.Username == dto.Username && a.Password == dto.Password);
+            var admin = await _dbContext.Users.FirstOrDefaultAsync(a => a.Email == dto.Email && a.Password == dto.Password);
             if (admin == null)
             {
-                return (null, "Invalid username or password.");
+                return (null, "Invalid email or password.");
             }
             return (admin, null);
         }
-        public async Task<(IAdmins?, string?, bool)> CreateAsync(IAdminDTO dto)
+        public async Task<(IUser?, string?, bool)> CreateAsync(IUserDTO dto)
         {
             try
             {
-                Admins admin = _mapper.Map<Admins>(dto);
+                User admin = _mapper.Map<User>(dto);
                 if (admin == null)
                 {
                     throw new ArgumentNullException(nameof(admin));
@@ -38,7 +38,10 @@ namespace Pk5Mining.Server.Repositories.Admin
                 admin.Id = IdGenerator.GenerateUniqueId();
                 admin.Role = "Default User";
                 admin.HasChangedPassword = false;
-                await _dbContext.Admins.AddAsync(admin);
+                admin.IsActive = true;
+                admin.IsDeleted = false;
+                admin.DT_Created = DateTime.UtcNow;
+                await _dbContext.Users.AddAsync(admin);
                 await _dbContext.SaveChangesAsync();
                 return (admin, null, false);
             }
@@ -48,18 +51,18 @@ namespace Pk5Mining.Server.Repositories.Admin
             }
         }
 
-        public async Task<(IAdmins?, string?, bool)> UpdatePasswordAsync(long Id, SetPassword dto)
+        public async Task<(IUser?, string?, bool)> UpdatePasswordAsync(long Id, SetPassword dto)
         {
             try
             {
-                var admin = await _dbContext.Admins.FindAsync(Id);
+                var admin = await _dbContext.Users.FindAsync(Id);
                 if (admin == null)
                 {
-                    return (null, "Admin not found.", true);
+                    return (null, "User not found.", true);
                 }
                 admin.Password = dto.NewPassword;
                 admin.HasChangedPassword = true;
-                _dbContext.Admins.Update(admin);
+                _dbContext.Users.Update(admin);
                 await _dbContext.SaveChangesAsync();
                 return (admin, null, false);
             }
@@ -68,11 +71,11 @@ namespace Pk5Mining.Server.Repositories.Admin
                 return (null, ex.Message, true);
             }
         }
-        public async Task<(IAdmins?, string?, bool)> GetByIdAsync(long adminId)
+        public async Task<(IUser?, string?, bool)> GetByIdAsync(long adminId)
         {
             try
             {
-                var admin = await _dbContext.Admins.FindAsync(adminId);
+                var admin = await _dbContext.Users.FindAsync(adminId);
                 if (admin == null)
                 {
                     return (null, "Admin not found.", true);
@@ -84,11 +87,11 @@ namespace Pk5Mining.Server.Repositories.Admin
                 return (null, ex.Message, true);
             }
         }
-        public async Task<(IEnumerable<IAdmins>?, string?, bool)> GetAllAsync()
+        public async Task<(IEnumerable<IUser>?, string?, bool)> GetAllAsync()
         {
             try
             {
-                var admins = await _dbContext.Admins.ToListAsync();
+                var admins = await _dbContext.Users.ToListAsync();
                 return (admins, null, false);
             }
             catch (Exception ex)

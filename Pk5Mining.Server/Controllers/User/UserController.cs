@@ -12,15 +12,15 @@ namespace Pk5Mining.Server.Controllers.Admin
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IAdminRepo _adminRepo;
+        private readonly IUserRepo _adminRepo;
 
-        public UserController(IAdminRepo adminRepo)
+        public UserController(IUserRepo adminRepo)
         {
             _adminRepo = adminRepo;
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult> Post([FromBody] AdminDTO dto)
+        public async Task<ActionResult> Post([FromBody] UserDTO dto)
         {
             var (admin, error, isException) = await _adminRepo.CreateAsync(dto);
             if (isException)
@@ -48,7 +48,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             {
                 return BadRequest(ApiResponse.Failure(null, error ?? "An error occurred while retrieving admins."));
             }
-            return Ok(ApiResponse.SuccessMessage(admins, "Admins retrieved successfully"));
+            return Ok(ApiResponse.SuccessMessage(admins, "User retrieved successfully"));
         }
         [HttpGet("{id}")]
         public async Task<ActionResult> Ge(long id)
@@ -56,13 +56,13 @@ namespace Pk5Mining.Server.Controllers.Admin
             var (admin, error, isException) = await _adminRepo.GetByIdAsync(id);
             if (isException)
             {
-                return BadRequest(ApiResponse.Failure(null, error ?? "An error occurred while retrieving the admin."));
+                return BadRequest(ApiResponse.Failure(null, error ?? "An error occurred while retrieving the user."));
             }
             if (admin == null)
             {
-                return NotFound(ApiResponse.Failure(null, "Admin not found."));
+                return NotFound(ApiResponse.Failure(null, "User not found."));
             }
-            return Ok(ApiResponse.SuccessMessage(admin, "Admin retrieved successfully"));
+            return Ok(ApiResponse.SuccessMessage(admin, "User retrieved successfully"));
         }
     }
 }

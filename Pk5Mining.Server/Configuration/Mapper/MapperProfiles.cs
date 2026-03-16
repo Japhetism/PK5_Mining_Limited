@@ -17,7 +17,8 @@ namespace Pk5Mining.Server.Configuration.Mapper
             CreateMap<Jobs, JobLightResponseDTO>();
             CreateMap<JobApplication, JobApplicationResponseDTO>().ForMember(dest => dest.Job, opt => opt.MapFrom(src => src.Jobs));
             CreateMap<ContactUs, ContactUsDTO>().ReverseMap();
-            CreateMap<Admins, AdminDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserResponseDTO>().ReverseMap();
 
         }
     }
