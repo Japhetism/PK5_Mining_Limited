@@ -12,6 +12,10 @@ import useCareersViewModel from "./viewmodel";
 export function Careers() {
   const {
     jobs,
+    filteredJobs,
+    filters,
+    departments,
+    locations,
     isLoading,
     error,
     expandedJob,
@@ -19,6 +23,8 @@ export function Careers() {
     openPositionsRef,
     scrollToOpenPositions,
     setExpandedJob,
+    setFilters,
+    handleSearch,
   } = useCareersViewModel();
 
   return (
@@ -183,6 +189,65 @@ export function Careers() {
             :
           </AnimatedSection>
 
+          {/* Filters */}
+          <div className="max-w-4xl mx-auto mb-10 bg-[#0f0f0f] py-12 px-8 rounded-lg">
+            <div className="flex flex-col md:flex-row gap-3">
+              {/* Search */}
+              <div className="flex-1 min-w-0">
+                <input
+                  name="role"
+                  type="text"
+                  value={filters.title}
+                  onChange={(e) => setFilters((f) => ({ ...f, title: e.target.value }))}
+                  placeholder="Search role"
+                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                />
+              </div>
+
+              {/* Select 1 */}
+              <div className="w-full md:w-40">
+                <select
+                  name="department"
+                  value={filters.department}
+                  onChange={(e) => setFilters((f) => ({ ...f, department: e.target.value }))}
+                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                >
+                  <option value="">All</option>
+                  {departments.map((dept) => (
+                    <option key={dept} value={dept}>{dept}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Select 2 */}
+              <div className="w-full md:w-40">
+                <select
+                  name="location"
+                  value={filters.location}
+                  onChange={(e) => setFilters((f) => ({ ...f, location: e.target.value }))}
+                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+                >
+                  <option value="">All</option>
+                  {locations.map((loc) => (
+                    <option key={loc} value={loc}>{loc}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Button */}
+              <div className="w-full md:w-auto">
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleSearch}
+                  className="w-full md:w-auto px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+                >
+                  Search
+                </motion.button>
+              </div>
+            </div>
+          </div>
+
           <div className="max-w-4xl mx-auto">
             {isLoading ? (
               <JobCardLoader records={6} />
@@ -208,7 +273,7 @@ export function Careers() {
               </AnimatedSection>
             ) : (
               <div className="max-w-4xl mx-auto max-h-[600px] overflow-y-auto pr-10 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
-                {jobs.map((job: JobDto, index: number) => (
+                {filteredJobs.map((job: JobDto, index: number) => (
                   <AnimatedSection key={job.title + index} delay={index * 0.05}>
                     <motion.div
                       className="mb-4 bg-[#0f0f0f] rounded-lg border border-gray-800 overflow-hidden"

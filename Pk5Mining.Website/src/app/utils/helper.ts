@@ -152,10 +152,13 @@ export const ddmmyyyyToApiDate = (value?: string | null) => {
   return `${year}-${month}-${day}`;
 };
 
-export const hasRole = (userRole?: UserRole, requiredRole?: UserRole): boolean => {
+export const hasRole = (
+  userRole?: UserRole,
+  requiredRole?: UserRole,
+): boolean => {
   if (!enforceRole || !requiredRole) return true;
   return userRole === requiredRole;
-}
+};
 
 export const hasPermissions = (
   userPermissions: Permission[] = [],
@@ -194,3 +197,9 @@ export const getVisibleNav = (userPermissions: Permission[]): NavItem[] => {
       end: item.end,
     }));
 };
+
+export const toTitleCase = (str: string) =>
+  str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
