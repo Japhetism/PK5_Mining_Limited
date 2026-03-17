@@ -204,10 +204,14 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email?: string;
-  password: string;
+  password?: string;
   jwtToken: string;
   role?: UserRole;
+  isDeleted?: boolean;
+  isActive?: boolean;
+  hasChangedPassword?: boolean;
   permissions?: Permission[];
+  dT_Created?: string;
 }
 
 export interface ILoginPayload {

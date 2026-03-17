@@ -144,7 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error("Session token is expired. Please login again.");
     }
 
-    setUser(nextUser);
+    setUser(nextUser as IUser);
 
     sessionStorage.setItem(AUTH_KEY, JSON.stringify(nextUser));
     tokenStore.set(nextUser.jwtToken);
