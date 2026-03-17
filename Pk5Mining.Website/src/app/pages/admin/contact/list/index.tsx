@@ -170,11 +170,11 @@ export function ContactMessageList() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-gray-400">Active filters:</span>
             
-            {appliedFilters.firstName && (
+            {appliedFilters.name && (
               <div className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200">
-                <span>First Name: {appliedFilters.firstName}</span>
+                <span>First Name: {appliedFilters.name}</span>
                 <button
-                  onClick={() => updateTemporaryFilter("firstName", "")}
+                  onClick={() => updateTemporaryFilter("name", "")}
                   className="ml-1 text-gray-400 hover:text-gray-200"
                 >
                   <X className="h-3 w-3" />
@@ -182,11 +182,11 @@ export function ContactMessageList() {
               </div>
             )}
             
-            {appliedFilters.lastName && (
+            {/* {appliedFilters.lastName && (
               <div className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200">
                 <span>Last Name: {appliedFilters.lastName}</span>
               </div>
-            )}
+            )} */}
             
             {appliedFilters.email && (
               <div className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200">

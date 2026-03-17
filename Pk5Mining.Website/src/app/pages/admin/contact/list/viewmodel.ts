@@ -9,8 +9,9 @@ import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 
 export interface AdvancedFilters {
   search: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  // firstName: string;
+  // lastName: string;
   email: string;
   company: string;
   subject: string;
@@ -41,8 +42,9 @@ function useContactListViewModel() {
 
   const [temporaryFilters, setTemporaryFilters] = useState<AdvancedFilters>({
     search: "",
-    firstName: "",
-    lastName: "",
+    name: "",
+    // firstName: "",
+    // lastName: "",
     email: "",
     company: "",
     subject: "",
@@ -54,8 +56,9 @@ function useContactListViewModel() {
 
   const [appliedFilters, setAppliedFilters] = useState<AdvancedFilters>({
     search: "",
-    firstName: "",
-    lastName: "",
+    name: "",
+    // firstName: "",
+    // lastName: "",
     email: "",
     company: "",
     subject: "",
@@ -87,8 +90,9 @@ function useContactListViewModel() {
     if (debouncedQuickSearch) raw.email = debouncedQuickSearch;
 
     // Add applied filters
-    if (appliedFilters.firstName) raw.firstName = appliedFilters.firstName;
-    if (appliedFilters.lastName) raw.lastName = appliedFilters.lastName;
+    if (appliedFilters.name) raw.name = appliedFilters.name;
+    // if (appliedFilters.firstName) raw.firstName = appliedFilters.firstName;
+    // if (appliedFilters.lastName) raw.lastName = appliedFilters.lastName;
     if (appliedFilters.email) raw.email = appliedFilters.email;
     if (appliedFilters.phoneNumber) raw.phoneNumber = appliedFilters.phoneNumber;
     if (appliedFilters.company) raw.company = appliedFilters.company;
@@ -160,8 +164,9 @@ function useContactListViewModel() {
   const handleClearFilters = () => {    
     const emptyFilters: AdvancedFilters = {
       search: "",
-      firstName: "",
-      lastName: "",
+      name: "",
+      // firstName: "",
+      // lastName: "",
       email: "",
       company: "",
       subject: "",
@@ -202,8 +207,9 @@ function useContactListViewModel() {
   // ============================================
   const hasActiveFilters = useMemo(() => {
     return (
-      appliedFilters.firstName !== "" ||
-      appliedFilters.lastName !== "" ||
+      appliedFilters.name !== "" ||
+      // appliedFilters.firstName !== "" ||
+      // appliedFilters.lastName !== "" ||
       appliedFilters.email !== "" ||
       appliedFilters.phoneNumber !== "" ||
       appliedFilters.company !== "" ||
@@ -224,8 +230,9 @@ function useContactListViewModel() {
     newParams.set("pageSize", pageSize.toString());
     
     if (debouncedQuickSearch) newParams.set("email", debouncedQuickSearch);
-    if (appliedFilters.firstName) newParams.set("firstName", appliedFilters.firstName);
-    if (appliedFilters.lastName) newParams.set("lastName", appliedFilters.lastName);
+    if (appliedFilters.name) newParams.set("name", appliedFilters.name);
+    // if (appliedFilters.firstName) newParams.set("firstName", appliedFilters.firstName);
+    // if (appliedFilters.lastName) newParams.set("lastName", appliedFilters.lastName);
     if (appliedFilters.email) newParams.set("email", appliedFilters.email);
     if (appliedFilters.phoneNumber) newParams.set("phoneNumber", appliedFilters.phoneNumber);
     if (appliedFilters.company) newParams.set("company", appliedFilters.company);

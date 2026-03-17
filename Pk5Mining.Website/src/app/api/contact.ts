@@ -104,19 +104,19 @@ function filterMockMessages(params: ContactQuery): any[] {
   }
 
   // Advanced filters
-  if (params.firstName) {
-    const firstNameLower = params.firstName.toLowerCase();
+  if (params.name) {
+    const nameLower = params.name.toLowerCase();
     filtered = filtered.filter((msg) =>
-      msg.firstName?.toLowerCase().includes(firstNameLower),
+      msg.name?.toLowerCase().includes(nameLower),
     );
   }
 
-  if (params.lastName) {
-    const lastNameLower = params.lastName.toLowerCase();
-    filtered = filtered.filter((msg) =>
-      msg.lastName?.toLowerCase().includes(lastNameLower),
-    );
-  }
+  // if (params.lastName) {
+  //   const lastNameLower = params.lastName.toLowerCase();
+  //   filtered = filtered.filter((msg) =>
+  //     msg.lastName?.toLowerCase().includes(lastNameLower),
+  //   );
+  // }
 
   if (params.email) {
     const emailLower = params.email.toLowerCase();

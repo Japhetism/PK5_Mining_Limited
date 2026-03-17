@@ -288,6 +288,7 @@ export type ContactMessageDto = {
   id: string;
   firstName: string;
   lastName: string;
+  name: string;
   email: string;
   phoneNumber: string | null;
   company: string;
@@ -314,8 +315,8 @@ export type ContactThreadDto = {
 };
 
 export type ContactQuery = {
-  firstName: string;
-  lastName: string;
+  // firstName: string;
+  // lastName: string;
   startDate: string;
   endDate: string;
   id: string;
