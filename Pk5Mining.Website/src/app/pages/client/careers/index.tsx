@@ -296,7 +296,7 @@ export function Careers() {
                     </p>
                   </div>
                 ) : (
-                  <div className="max-w-4xl mx-auto max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+                  <div className="max-w-4xl mx-auto max-h-[600px] overflow-y-auto scrollbar-black">
                     {filteredJobs.map((job: JobDto, index: number) => (
                       <AnimatedSection
                         key={job.title + index}
