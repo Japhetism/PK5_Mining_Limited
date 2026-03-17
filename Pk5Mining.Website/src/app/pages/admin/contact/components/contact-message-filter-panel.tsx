@@ -124,12 +124,22 @@ export function ContactMessageFilterPanel({
             {/* Content */}
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5">
               {/* Name Filter */}
-              <FilterField label="Name">
+              <FilterField label="Firstname">
                 <input
                   type="text"
                   value={temporaryFilters.firstName}
                   onChange={(e) => updateTemporaryFilter("firstName", e.target.value)}
-                  placeholder="Filter by name"
+                  placeholder="Filter by firstName"
+                  className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                />
+              </FilterField>
+
+              <FilterField label="Lastname">
+                <input
+                  type="text"
+                  value={temporaryFilters.lastName}
+                  onChange={(e) => updateTemporaryFilter("lastName", e.target.value)}
+                  placeholder="Filter by lastName"
                   className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
                 />
               </FilterField>

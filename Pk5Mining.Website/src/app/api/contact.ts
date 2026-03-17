@@ -16,12 +16,12 @@ const useMock = import.meta.env.VITE_USE_MOCK_CONTACT_MESSAGES === "true";
 
 /**
  * Enhanced Contact API with Fallback Strategy
- * 
+ *
  * Strategy:
  * 1. Try to fetch from cloud API first
  * 2. If cloud fails, automatically fallback to mock data
  * 3. Only use pure mock mode if env var VITE_USE_MOCK_CONTACT_MESSAGES is "true"
- * 
+ *
  * Supports:
  * - Quick search (across all fields)
  * - Advanced filters: name, email, phone, subject, website, status
@@ -31,6 +31,7 @@ const useMock = import.meta.env.VITE_USE_MOCK_CONTACT_MESSAGES === "true";
 
 export async function getContactMessages(params: ContactQuery) {
   // If pure mock mode is enabled, use mock data immediately
+
   // if (useMock) {
   //   const filtered = filterMockMessages(params);
   //   return {
@@ -43,21 +44,23 @@ export async function getContactMessages(params: ContactQuery) {
   // Try cloud API first
   try {
     const { data } = await http.get<ApiResponse<ContactResponsePayload>>(
-      "contactUs/filter", // ✅ Corrected endpoint (was "/api/contactUs")
-      { params }
+      "contactUs/filter",
+      { params },
     );
 
     console.log("✅ Cloud API Success:", data);
 
-    // if (data.responseStatus !== "SUCCESS") {
-    //   console.warn("⚠️ Cloud API returned non-success status, falling back to mock");
-    //   // Fall back to mock data
-    //   return getFallbackMockData(params);
-    // }
+    if (data.responseStatus !== "SUCCESS") {
+      console.warn(
+        "⚠️ Cloud API returned non-success status, falling back to mock",
+      );
+      // Fall back to mock data
+      return getFallbackMockData(params);
+    }
 
     return data.responseData;
   } catch (cloudError) {
-    console.warn("❌ Cloud API failed, falling back to mock data");
+    console.warn(" Cloud API failed, falling back to mock data");
     console.warn("Error:", cloudError);
 
     // Fallback to mock data
@@ -69,7 +72,7 @@ export async function getContactMessages(params: ContactQuery) {
  * Fallback function - returns mock data when cloud API fails
  */
 function getFallbackMockData(params: ContactQuery) {
-  console.log("📦 Using mock data as fallback");
+  console.log(" Using mock data as fallback");
   const filtered = filterMockMessages(params);
 
   return {
@@ -87,58 +90,65 @@ function filterMockMessages(params: ContactQuery): any[] {
   let filtered = [...mockContactMessages];
 
   // Quick search across all fields
-  if (params.search) {
-    const searchLower = params.search.toLowerCase();
+  if (params.email) {
+    const searchLower = params.email.toLowerCase();
     filtered = filtered.filter(
       (msg) =>
         // msg.firstName?.toLowerCase().includes(searchLower) ||
-        msg.email?.toLowerCase().includes(searchLower)
-        // msg.subject?.toLowerCase().includes(searchLower) ||
-        // msg.messageBody?.toLowerCase().includes(searchLower) ||
-        // msg.phoneNumber?.toLowerCase().includes(searchLower) ||
-        // msg.company?.toLowerCase().includes(searchLower)
+        msg.email?.toLowerCase().includes(searchLower),
+      // msg.subject?.toLowerCase().includes(searchLower) ||
+      // msg.messageBody?.toLowerCase().includes(searchLower) ||
+      // msg.phoneNumber?.toLowerCase().includes(searchLower) ||
+      // msg.company?.toLowerCase().includes(searchLower)
     );
   }
 
   // Advanced filters
-  if (params.name) {
-    const nameLower = params.name.toLowerCase();
+  if (params.firstName) {
+    const firstNameLower = params.firstName.toLowerCase();
     filtered = filtered.filter((msg) =>
-      msg.firstName?.toLowerCase().includes(nameLower)
+      msg.firstName?.toLowerCase().includes(firstNameLower),
+    );
+  }
+
+  if (params.lastName) {
+    const lastNameLower = params.lastName.toLowerCase();
+    filtered = filtered.filter((msg) =>
+      msg.lastName?.toLowerCase().includes(lastNameLower),
     );
   }
 
   if (params.email) {
     const emailLower = params.email.toLowerCase();
     filtered = filtered.filter((msg) =>
-      msg.email?.toLowerCase().includes(emailLower)
+      msg.email?.toLowerCase().includes(emailLower),
     );
   }
 
   if (params.phoneNumber) {
     const phoneLower = params.phoneNumber.toLowerCase();
     filtered = filtered.filter((msg) =>
-      msg.phoneNumber?.toLowerCase().includes(phoneLower)
+      msg.phoneNumber?.toLowerCase().includes(phoneLower),
     );
   }
 
   if (params.subject) {
     const subjectLower = params.subject.toLowerCase();
     filtered = filtered.filter((msg) =>
-      msg.subject?.toLowerCase().includes(subjectLower)
+      msg.subject?.toLowerCase().includes(subjectLower),
     );
   }
 
   if (params.website) {
     const websiteLower = params.website.toLowerCase();
     filtered = filtered.filter((msg) =>
-      msg.company?.toLowerCase().includes(websiteLower)
+      msg.company?.toLowerCase().includes(websiteLower),
     );
   }
 
   if (params.status && params.status !== "all") {
-    filtered = filtered.filter((msg) =>
-      msg.status?.toLowerCase() === params.status?.toLowerCase()
+    filtered = filtered.filter(
+      (msg) => msg.status?.toLowerCase() === params.status?.toLowerCase(),
     );
   }
 
@@ -177,7 +187,7 @@ export async function getContactThread(id: string) {
   // Try cloud first
   try {
     const { data } = await http.get<ApiResponse<ContactThreadDto>>(
-      `/api/contact/${id}`
+      `/api/contact/${id}`,
     );
 
     if (data.responseStatus !== "SUCCESS") {
@@ -186,8 +196,10 @@ export async function getContactThread(id: string) {
 
     return data.responseData;
   } catch (error) {
-    console.warn("❌ Cloud API failed for getContactThread, using mock fallback");
-    
+    console.warn(
+      "❌ Cloud API failed for getContactThread, using mock fallback",
+    );
+
     // Fallback: find in mock data
     const mockThread = mockContactMessages.find((msg) => msg.id === id);
     if (!mockThread) {
@@ -209,19 +221,24 @@ export async function updateContactStatus(id: string, status: ContactStatus) {
   try {
     const { data } = await http.patch<ApiResponse<void>>(
       `/api/contact/${id}/status`,
-      { status }
+      { status },
     );
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
-        getAxiosErrorMessage(data.responseMessage, "Failed to update contact status"),
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to update contact status",
+        ),
       );
     }
 
     console.log("✅ Contact status updated successfully");
     return data.responseData;
   } catch (err) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to update contact status"));
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to update contact status"),
+    );
   }
 }
 
@@ -233,19 +250,24 @@ export async function replyToContact(id: string, body: ReplyToContactBody) {
   try {
     const { data } = await http.post<ApiResponse<ContactReplyDto>>(
       `/api/contact/${id}/reply`,
-      body
+      body,
     );
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
-        getAxiosErrorMessage(data.responseMessage, "Failed to send reply to contact"),
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to send reply to contact",
+        ),
       );
     }
 
     console.log("✅ Reply sent successfully");
     return data.responseData;
   } catch (err) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to send reply to contact"));
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to send reply to contact"),
+    );
   }
 }
 
@@ -257,7 +279,7 @@ export async function saveContactInquiry(body: InquiryFormDto) {
   try {
     const { data } = await http.post<ApiResponse<InquiryFormDto>>(
       `/contactUs/contact-us`,
-      body
+      body,
     );
 
     if (data.responseStatus !== "SUCCESS") {
