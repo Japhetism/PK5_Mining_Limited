@@ -11,7 +11,7 @@ export async function login(payload: ILoginPayload) {
     return mockAuthenticationResonsePayload.responseData;
   }
   try {
-    const { data } = await http.post<ApiResponse<IUser>>("/Admin/login", payload);
+    const { data } = await http.post<ApiResponse<IUser>>("/Authentication/login", payload);
 
      if (data.responseStatus !== "SUCCESS") {
       throw new Error(

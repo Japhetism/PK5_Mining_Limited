@@ -16,7 +16,7 @@ import { tokenStore } from "../auth/token";
 type AuthState = {
   user: IUser | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isAdmin: boolean;
   isAuthenticated: boolean;
@@ -133,8 +133,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  async function login(username: string, password: string) {
-    const nextUser = await loginApi({ username, password });
+  async function login(email: string, password: string) {
+    const nextUser = await loginApi({ email, password });
 
     if (!nextUser?.jwtToken) {
       throw new Error("Login succeeded but no JWT token was returned.");
