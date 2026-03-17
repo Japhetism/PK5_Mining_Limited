@@ -91,7 +91,7 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-2">Message</p>
                 <div className="rounded-lg border border-gray-800 bg-black/40 p-4 text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">
-                  {contact.message}
+                  {contact.messageBody}
                 </div>
               </div>
 
