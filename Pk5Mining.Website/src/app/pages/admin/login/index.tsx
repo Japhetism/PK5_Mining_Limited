@@ -5,11 +5,11 @@ import useLoginViewModel from "./viewmodel";
 
 export function Login() {
   const {
-    username,
+    email,
     password,
     error,
     loading,
-    setUsername,
+    setEmail,
     setPassword,
     onSubmit,
   } = useLoginViewModel();
@@ -31,15 +31,17 @@ export function Login() {
         <form onSubmit={onSubmit} className="space-y-5">
           {/* Username */}
           <div>
-            <label className="block text-sm font-medium mb-2">Username</label>
+            <label className="block text-sm font-medium mb-2">Email Address</label>
             <div className="flex items-center gap-2 bg-[#0f0f0f] border border-gray-800 rounded-lg px-3">
               <User className="w-4 h-4 text-gray-400" />
               <input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                name="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full bg-transparent py-3 outline-none"
-                autoComplete="username"
+                autoComplete="off"
               />
             </div>
           </div>

@@ -9,14 +9,14 @@ function useLoginViewModel() {
   const location = useLocation() as any;
   const { login: authLogin } = useAuth();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: (payload: { username: string; password: string }) =>
-      authLogin(payload.username, payload.password),
+    mutationFn: (payload: { email: string; password: string }) =>
+      authLogin(payload.email, payload.password),
     onSuccess: () => {
       setLoading(false);
       navigate("/admin/dashboard", { replace: true });
@@ -38,15 +38,15 @@ function useLoginViewModel() {
     setError("");
     setLoading(true);
 
-    mutation.mutate({ username, password });
+    mutation.mutate({ email, password });
   };
 
   return {
-    username,
+    email,
     password,
     error,
     loading,
-    setUsername,
+    setEmail,
     setPassword,
     onSubmit,
   }
