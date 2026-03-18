@@ -7,18 +7,19 @@ import { ContactReplyModal } from "@/app/components/ui/contact-reply-modal";
 import { ContactDetailsSkeleton } from "@/app/components/ui/contact-details-skeleton";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import useContactDetailsViewModel from "../details/viewmodel";
+import { ContactMessageDto } from "@/app/interfaces";
 
 type ContactViewModalProps = {
   open: boolean;
   onClose: () => void;
   contactId: string ;
+  contact:ContactMessageDto | null ;
 };
 
-export function ContactViewModal({ open, onClose, contactId }: ContactViewModalProps) {
+export function ContactViewModal({ open, onClose, contactId, contact }: ContactViewModalProps) {
   // Pass the contactId to the hook. 
   // NOTE: This will only work after you apply the ViewModel fix in Step 2.
   const {
-    contact,
     thread,
     defaultReplySubject,
     isLoading,
@@ -71,7 +72,7 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
                   <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Sender</p>
                   <div className="flex items-center gap-2 text-sm text-gray-200">
                     <User size={14} className="text-[#c89b3c]" />
-                    <span>{contact?.name}</span>
+                    <span>{contact?.firstName}</span>
                   </div>
                   <p className="text-xs text-gray-400 ml-5">{contact?.email}</p>
                 </div>
@@ -149,7 +150,7 @@ export function ContactViewModal({ open, onClose, contactId }: ContactViewModalP
       <ContactReplyModal
         open={isReplyOpen}
         onClose={() => setIsReplyOpen(false)}
-        toEmail={contact?.email}
+        toEmail={contact?.email ?? ""}
         defaultSubject={defaultReplySubject}
         loading={replyMutation.isPending}
         onSend={(payload) => replyMutation.mutate(payload)}

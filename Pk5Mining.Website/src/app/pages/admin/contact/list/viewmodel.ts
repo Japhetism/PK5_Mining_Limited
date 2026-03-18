@@ -24,6 +24,7 @@ export interface AdvancedFilters {
 function useContactListViewModel() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [contactMessage, setContactMessage] = useState<ContactMessageDto | null>(null)
 
   // ============================================
   // STATE
@@ -266,6 +267,8 @@ function useContactListViewModel() {
     setFilterStatus,
     queryClient,
     error,
+    contactMessage,
+    setContactMessage,
   };
 }
 

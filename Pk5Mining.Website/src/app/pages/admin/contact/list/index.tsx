@@ -43,6 +43,8 @@ export function ContactMessageList() {
     filterStatus,
     setFilterStatus,
     error,
+    contactMessage,
+    setContactMessage,
   } = useContactListViewModel();
 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
@@ -112,7 +114,10 @@ export function ContactMessageList() {
       className: "text-right",
       render: (row) => (
         <button
-          onClick={() => setViewingId(String(row.id))}
+          onClick={() =>{ 
+            setViewingId(String(row.id));
+            setContactMessage(row)
+          }}
           className="inline-flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-100 hover:border-[#c89b3c] hover:text-[#c89b3c] transition-colors"
         >
           <Eye className="h-3 w-3" />
@@ -271,6 +276,7 @@ export function ContactMessageList() {
         open={!!viewingId}
         onClose={() => setViewingId("")}
         contactId={viewingId}
+        contact={contactMessage}
       />
     </>
   );
