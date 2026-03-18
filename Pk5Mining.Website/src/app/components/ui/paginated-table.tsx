@@ -15,26 +15,9 @@ type PaginatedTableProps<T> = {
   isLoading?: boolean;
   isFilter: boolean;
 
-  // empty states
-  emptyTitle?: string; // when data is empty
-  noResultsTitle?: string; // when data exists but filtered result is empty
+  emptyTitle?: string;
+  noResultsTitle?: string;
 
-  // filtering (client-side)
-  searchValue?: string;
-  onSearchChange?: (v: string) => void;
-  searchPlaceholder?: string;
-  statusValue?: string;
-  onStatusChange?: (v: string) => void;
-  statusOptions?: { value: string; label: string }[];
-
-  onClearFilters?: () => void;
-
-  // filtering function
-  filterFn?: (row: T, q: string, status: string) => boolean;
-
-  // pagination
-  initialPageSize?: number;
-  pageSizeOptions?: number[];
   pageNumber: number;
   pageSize: number;
   totalCount: number;
@@ -42,6 +25,8 @@ type PaginatedTableProps<T> = {
 
   setPageNumber: (pageNumber: number) => void;
   setPageSize: (pageSize: number) => void;
+
+  pageSizeOptions?: number[];
 };
 
 export function PaginatedTable<T>({
@@ -51,20 +36,8 @@ export function PaginatedTable<T>({
   isFilter,
 
   emptyTitle = "No records found.",
-  noResultsTitle = "No results found. Try changing your filters.",
+  noResultsTitle = "No results found.",
 
-  searchValue,
-  onSearchChange,
-  searchPlaceholder = "Search...",
-
-  statusValue = "all",
-  onStatusChange,
-  statusOptions,
-
-  onClearFilters,
-  filterFn,
-
-  pageSizeOptions = [5, 10, 20, 50],
   pageNumber,
   pageSize,
   totalCount,
@@ -72,27 +45,76 @@ export function PaginatedTable<T>({
 
   setPageNumber,
   setPageSize,
+
+  pageSizeOptions = [5, 10, 20, 50],
 }: PaginatedTableProps<T>) {
 
   const from =
-  totalCount === 0
-    ? 0
-    : (pageNumber - 1) * pageSize + 1;
+    totalCount === 0 ? 0 : (pageNumber - 1) * pageSize + 1;
 
-const to =
-  totalCount === 0
-    ? 0
-    : Math.min(pageNumber * pageSize, totalCount);
-  
+  const to =
+    totalCount === 0 ? 0 : Math.min(pageNumber * pageSize, totalCount);
+
+  const emptyMessage =
+    data.length === 0 && !isFilter ? emptyTitle : noResultsTitle;
+
+  const actionsColumn = columns.find((c) => c.key === "actions");
+  const dataColumns = columns.filter((c) => c.key !== "actions");
+
   return (
     <div className="space-y-4">
-      {/* Table */}
-      <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden">
+
+      {/* MOBILE VIEW */}
+      <div className="md:hidden space-y-3">
+        {isLoading ? (
+          <TableSkeleton cols={1} />
+        ) : data.length === 0 ? (
+          <div className="text-center text-sm text-gray-500 py-6">
+            {emptyMessage}
+          </div>
+        ) : (
+          data.map((row, i) => (
+            <div
+              key={i}
+              className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4 space-y-3"
+            >
+
+              {/* Actions */}
+              {actionsColumn && (
+                <div className="flex justify-end">
+                  {actionsColumn.render(row)}
+                </div>
+              )}
+
+              {/* Fields */}
+              {dataColumns.map((col) => (
+                <div key={col.key} className="flex justify-between gap-4">
+                  <span className="text-xs text-gray-500">
+                    {col.header}
+                  </span>
+
+                  <span
+                    className={`text-sm text-gray-200 text-right ${col.className ?? ""}`}
+                  >
+                    {col.render(row)}
+                  </span>
+                </div>
+              ))}
+
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* DESKTOP TABLE */}
+      <div className="hidden md:block bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
+
           {isLoading ? (
             <TableSkeleton cols={columns.length} />
           ) : (
             <table className="min-w-full text-sm">
+
               <thead className="bg-black/40 text-gray-300">
                 <tr>
                   {columns.map((col) => (
@@ -113,9 +135,7 @@ const to =
                       colSpan={columns.length}
                       className="px-4 py-6 text-center text-sm text-gray-500"
                     >
-                      {data.length === 0 && !isFilter
-                        ? emptyTitle
-                        : noResultsTitle}
+                      {emptyMessage}
                     </td>
                   </tr>
                 ) : (
@@ -136,55 +156,64 @@ const to =
                   ))
                 )}
               </tbody>
+
             </table>
           )}
         </div>
-
-        {/* Pagination Footer */}
-        {/* {!isLoading && totalItems > 0 && totalPages > 1 && ( */}
-        {(!isLoading && data.length > 0) && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-800 bg-black/20">
-            <div className="text-xs text-gray-400">
-              Showing {from}–{to} of {totalCount}
-            </div>
-
-            <div className="flex items-center gap-3">
-              <select
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setPageNumber(1);
-                }}
-                className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-              >
-                {pageSizeOptions.map((n) => (
-                  <option key={n} value={n}>
-                    {n} / page
-                  </option>
-                ))}
-              </select>
-
-              <button
-                onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
-                disabled={pageNumber === 1}
-                className="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:bg-transparent"
-                aria-label="Previous page"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={() => setPageNumber(Math.min(totalPages, pageNumber + 1))}
-                disabled={pageNumber === totalPages}
-                className="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:bg-transparent"
-                aria-label="Next page"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* PAGINATION (MOBILE + DESKTOP) */}
+      {!isLoading && totalCount > 0 && (
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-3 border border-gray-800 rounded-xl bg-[#1a1a1a]">
+
+          <div className="text-xs text-gray-400">
+            Showing {from}–{to} of {totalCount}
+          </div>
+
+          <div className="flex items-center gap-3">
+
+            {/* Page Size */}
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPageNumber(1);
+              }}
+              className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+            >
+              {pageSizeOptions.map((size) => (
+                <option key={size} value={size}>
+                  {size} / page
+                </option>
+              ))}
+            </select>
+
+            {/* Previous */}
+            <button
+              onClick={() =>
+                setPageNumber(Math.max(1, pageNumber - 1))
+              }
+              disabled={pageNumber === 1}
+              className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+
+            {/* Next */}
+            <button
+              onClick={() =>
+                setPageNumber(Math.min(totalPages, pageNumber + 1))
+              }
+              disabled={pageNumber === totalPages}
+              className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

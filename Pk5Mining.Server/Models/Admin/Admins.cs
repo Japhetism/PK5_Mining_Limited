@@ -1,4 +1,6 @@
-﻿namespace Pk5Mining.Server.Models.Admin
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Pk5Mining.Server.Models.Admin
 {
     public class Admins : IAdmins
     {
@@ -6,6 +8,10 @@
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
+        [Required]
         public string Password { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public bool? HasChangedPassword { get; set; }
+
     }
 }

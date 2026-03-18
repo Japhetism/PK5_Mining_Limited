@@ -2,28 +2,29 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
-import {
-  StatusFilter,
-} from "@/app/interfaces";
+import { StatusFilter } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
-import { SubsidiariesQuery, Subsidiary, SubsidiaryErrors, UpdateSubsidiaryPayload } from "@/app/interfaces/subsidiary";
-import { getSubsidiaries, updateSubsidiary } from "@/app/api/subsidiary";
+import {
+  Role,
+  RoleErrors,
+  RolesQuery,
+  UpdateRolePayload,
+} from "@/app/interfaces/role";
+import { getRoles, updateRole } from "@/app/api/roles";
 
-const defaultFormData = {
+const defaultFormData: Role = {
   id: "",
   name: "",
-  code: "",
-  country: "",
-  timezone: "",
-  address: "",
-  email: "",
+  description: "",
+  isSystem: false,
   isActive: true,
+  permissions: [],
   dT_Created: "",
   dT_Updated: "",
-}
+};
 
-function useSubsidiaryListViewModel() {
+function useRoleViewModel() {
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,12 +32,12 @@ function useSubsidiaryListViewModel() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
-  const [selectedSubsidiary, setSelectedSubsidiary] = useState<Subsidiary | null>(null);
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
-  const [form, setForm] = useState(defaultFormData);
-  const [fieldErrors, setFieldErrors] = useState<SubsidiaryErrors>({});
+  const [form, setForm] = useState<Role>(defaultFormData);
+  const [fieldErrors, setFieldErrors] = useState<RoleErrors>({});
 
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -55,8 +56,8 @@ function useSubsidiaryListViewModel() {
     setPageNumber(1);
   }, [debouncedFilters.search]);
 
-  const queryParams: SubsidiariesQuery = useMemo(() => {
-    const raw: SubsidiariesQuery = {
+  const queryParams: RolesQuery = useMemo(() => {
+    const raw: RolesQuery = {
       pageNumber,
       pageSize,
       isActive:
@@ -64,59 +65,60 @@ function useSubsidiaryListViewModel() {
     };
 
     // clean out empty strings
-    return cleanParams(raw) as SubsidiariesQuery;
+    return cleanParams(raw) as RolesQuery;
   }, [pageNumber, pageSize, debouncedFilters, filterStatus]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
-      "subsidiaries",
+      "roles",
       queryParams.pageNumber,
       queryParams.pageSize,
       queryParams.isActive ?? "",
     ],
-    queryFn: () => getSubsidiaries(queryParams),
+    queryFn: () => getRoles(queryParams),
     staleTime: 30_000,
   });
 
   useEffect(() => {
     if (error) {
       const message =
-        error ?? "An error occurred while fetching subsidaries. Please try again.";
+        error ?? "An error occurred while fetching roles. Please try again.";
       toastUtil.error(message);
     }
   }, [error]);
 
   useEffect(() => {
-    if (!selectedSubsidiary) return;
+    if (!selectedRole) return;
 
     setForm({
       ...defaultFormData,
-      ...selectedSubsidiary,
-      dT_Updated: selectedSubsidiary.dT_Updated ?? ""
-    })
-  }, [selectedSubsidiary]);
+      ...selectedRole,
+      dT_Updated: selectedRole.dT_Updated ?? "",
+    });
+  }, [selectedRole]);
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateSubsidiaryPayload) => {
+    mutationFn: (payload: UpdateRolePayload) => {
       if (
-        !selectedSubsidiary ||
-        !("id" in selectedSubsidiary) ||
-        typeof selectedSubsidiary.id !== "number"
+        !selectedRole ||
+        !("id" in selectedRole) ||
+        typeof selectedRole.id !== "number"
       ) {
-        throw new Error("Cannot update: missing subsidiary id");
+        throw new Error("Cannot update: missing role id");
       }
-      return updateSubsidiary(selectedSubsidiary.id, payload);
+      return updateRole(selectedRole.id, payload);
     },
     onSuccess: async () => {
       setIsUpdating(false);
       setConfirmOpen(false);
-      setSelectedSubsidiary(null);
+      setSelectedRole(null);
 
-      await queryClient.invalidateQueries({ queryKey: ["subsidiaries"] });
+      await queryClient.invalidateQueries({ queryKey: ["roles"] });
     },
     onError: (err: unknown) => {
       setIsUpdating(false);
-      const message = err ?? "An error occurred while updating the subsidary. Please try again.";
+      const message =
+        err ?? "An error occurred while updating role. Please try again.";
       toastUtil.error(message);
     },
   });
@@ -134,13 +136,13 @@ function useSubsidiaryListViewModel() {
   };
 
   const handleUpdateStatus = () => {
-    if (!selectedSubsidiary) return;
+    if (!selectedRole) return;
 
     setIsUpdating(true);
 
     updateMutation.mutate({
-      ...selectedSubsidiary,
-      isActive: !selectedSubsidiary.isActive,
+      ...selectedRole,
+      isActive: !selectedRole.isActive,
     });
   };
 
@@ -156,20 +158,28 @@ function useSubsidiaryListViewModel() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('form is ', form);
-  }
+    console.log("form is ", form);
+  };
 
-  const subsidaries: Subsidiary[] = data?.data ?? [];
+  const handleCloseModal = () => {
+    setSelectedRole(null);
+    setForm(defaultFormData);
+    setConfirmEditOpen(false);
+    setConfirmOpen(false);
+    setConfirmDeleteOpen(false);
+  };
+
+  const roles: Role[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
 
   return {
-    subsidaries,
+    roles,
     isLoading,
     error,
     filterStatus,
     isFilter,
-    selectedSubsidiary,
+    selectedRole,
     totalCount,
     totalPages,
     pageNumber,
@@ -186,7 +196,7 @@ function useSubsidiaryListViewModel() {
     setIsFilter,
     setFilterStatus,
     handleUpdateStatus,
-    setSelectedSubsidiary,
+    setSelectedRole,
     updateFilter,
     onChangePage,
     onChangePageSize,
@@ -195,9 +205,10 @@ function useSubsidiaryListViewModel() {
     setConfirmEditOpen,
     setFieldErrors,
     setForm,
+    handleCloseModal,
   };
 }
 
-export default useSubsidiaryListViewModel;
+export default useRoleViewModel;
 
-export type SubsidiaryListViewModel = ReturnType<typeof useSubsidiaryListViewModel>;
+export type RoleViewModel = ReturnType<typeof useRoleViewModel>;

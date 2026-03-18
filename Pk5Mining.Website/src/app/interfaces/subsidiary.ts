@@ -26,6 +26,9 @@ export type UpdateSubsidiaryPayload = Partial<CreateSubsidiaryPayload>;
 export type SubsidiariesQuery = {
   pageNumber: number;
   pageSize: number;
+  name?: string;
+  email?: string;
+  country?: string;
   isActive?: boolean | string;
 };
 

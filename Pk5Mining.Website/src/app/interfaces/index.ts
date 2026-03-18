@@ -1,5 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { statuses } from "../constants";
+import { Permission } from "../constants/permissions";
+import { UserRole } from "../constants/role";
 
 export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 
@@ -201,12 +203,19 @@ export interface IUser {
   username: string;
   firstName: string;
   lastName: string;
-  password: string;
+  email?: string;
+  password?: string;
   jwtToken: string;
+  role?: UserRole;
+  isDeleted?: boolean;
+  isActive?: boolean;
+  hasChangedPassword?: boolean;
+  permissions?: Permission[];
+  dT_Created?: string;
 }
 
 export interface ILoginPayload {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -343,49 +352,6 @@ export type ReplyToContactBody = {
 export type ContactResponsePayload = {
   data: ContactMessageDto[];
 } & PaginationInfo;
-
-export type UserStatus = "active" | "inactive";
-
-export type UserDto = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  role?: string | null;
-  isActive: boolean;
-  dT_Created: string;
-  dT_Updated?: string | null;
-};
-
-export type UsersResponsePayload = {
-  data: UserDto[];
-} & PaginationInfo;
-
-export type UsersQuery = {
-  pageNumber?: number;
-  pageSize?: number;
-  status?: "all" | UserStatus;
-  search?: string; // name/email
-};
-
-export type UpdateUserBody = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  role?: string | null;
-  isActive?: boolean;
-};
-
-export type UpdateUserStatusBody = {
-  isActive: boolean;
-};
-
-export type ResetPasswordResponse = {
-  // depends on your backend - could be temp password or just ok message
-  tempPassword?: string;
-  message?: string;
-};
 
 export type InquiryFormDto = {
   id?: number;

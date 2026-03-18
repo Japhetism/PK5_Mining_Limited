@@ -7,5 +7,7 @@
         public string LastName { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public string JwtToken { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public bool? HasChangedPassword { get; set; }
     }
 }

@@ -3,11 +3,19 @@ import { Toaster } from "sonner";
 import { Suspense } from "react";
 import { ScrollToTop } from "@/app/components/scrollToTop";
 import { AppRoutes } from "./routes";
+import Logo from '../assets/images/logo.png';
 
 function AppLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] text-white">
-      <div className="text-sm text-gray-300">Loading...</div>
+      <div className="text-sm text-gray-300">
+        <img
+          src={Logo}
+          alt="PK5 Mining Logo"
+          loading="lazy"
+          className="w-30 h-auto object-contain"
+        />
+      </div>
     </div>
   );
 }

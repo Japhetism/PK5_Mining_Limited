@@ -18,13 +18,15 @@ import {
 } from "@/app/components/ui/paginated-table";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { statusOptions } from "@/app/constants";
-import useSubsidiaryListViewModel from "./viewmodel";
+import useRoleViewModel from "./viewmodel";
 import { Subsidiary } from "@/app/interfaces/subsidiary";
-import { EditModal } from "../components/edit-modal";
+import { Role } from "@/app/interfaces/role";
+import { EditModal } from "./components/edit-modal";
+import { DetailModal } from "./components/detail-modal";
 
-export function SubsidiaryList() {
+export function Roles() {
   const {
-    subsidaries,
+    roles,
     filters,
     filterStatus,
     isLoading,
@@ -34,16 +36,18 @@ export function SubsidiaryList() {
     totalCount,
     totalPages,
     error,
+    form,
+    fieldErrors,
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
-    selectedSubsidiary,
+    selectedRole,
     isUpdating,
     queryClient,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
-    setSelectedSubsidiary,
+    setSelectedRole,
     updateFilter,
     setIsFilter,
     setFilterStatus,
@@ -51,73 +55,65 @@ export function SubsidiaryList() {
     onChangePageSize,
     handleUpdateStatus,
     setForm,
-  } = useSubsidiaryListViewModel();
+    setFieldErrors,
+    onChange,
+    handleCloseModal,
+  } = useRoleViewModel();
 
-  const columns: PaginatedTableColumn<Subsidiary>[] = [
+  const columns: PaginatedTableColumn<Role>[] = [
     {
       key: "name",
       header: "Name",
-      render: (subsidiary) => (
+      render: (role) => (
         <div>
           <div className="flex-1">
-            <div className="font-semibold text-[#c89b3c]">{subsidiary.name}</div>
+            <div className="font-semibold text-[#c89b3c]">{role.name}</div>
           </div>
-          <div className="text-xs text-gray-500 line-clamp-2">{subsidiary.code}</div>
+          <div className="text-xs text-gray-500 line-clamp-2">
+            {role.description}
+          </div>
         </div>
       ),
     },
     {
-      key: "country",
-      header: "Country",
-      render: (subsidiary) => subsidiary.country ?? "-",
-    },
-    {
-      key: "timezone",
-      header: "Time Zone",
-      render: (subsidiary) => subsidiary.timezone ?? "-",
-    },
-    {
-      key: "address",
-      header: "Address",
-      render: (subsidiary) => subsidiary.address ?? "-",
-    },
-    {
-      key: "email",
-      header: "Email",
-      render: (subsidiary) => subsidiary.email ?? "-",
+      key: "isSystem",
+      header: "System Role",
+      render: (role) => role.isSystem ?? "-",
     },
     {
       key: "isActive",
       header: "Status",
-      render: (subsidiary) => (
+      render: (role) => (
         <span
           className={
-            subsidiary.isActive
+            role.isActive
               ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
               : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
           }
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {subsidiary.isActive ? "Active" : "Inactive"}
+          {role.isActive ? "Active" : "Inactive"}
         </span>
       ),
     },
     {
       key: "dT_Created",
       header: "Date Added",
-      render: (subsidiary) => (subsidiary.dT_Created ? formatDateTime(subsidiary.dT_Created) : "-"),
+      render: (role) =>
+        role.dT_Created ? formatDateTime(role.dT_Created) : "-",
     },
     {
       key: "dT_Updated",
       header: "Date Modified",
-      render: (subsidiary) => (subsidiary.dT_Updated ? formatDateTime(subsidiary.dT_Updated) : "-"),
+      render: (role) =>
+        role.dT_Updated ? formatDateTime(role.dT_Updated) : "-",
     },
     {
       key: "actions",
       header: "Actions",
       headerClassName: "text-right",
       className: "text-right",
-      render: (subsidiary) => (
+      render: (role) => (
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button
@@ -134,62 +130,57 @@ export function SubsidiaryList() {
               sideOffset={6}
               className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
             >
-              <DropdownMenu.Item asChild>
-                <Link
-                  to={`/admin/subsidiaries/${subsidiary.id}`}
-                  onClick={() => {
-                    queryClient.setQueryData(["subsidiaries", String(subsidiary.id)], subsidiary);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Eye className="w-4 h-4" />
-                  View details
-                </Link>
-              </DropdownMenu.Item>
-
-              <DropdownMenu.Item asChild>
-                <button
-                  onClick={() => {
-                    console.log("from edit button ", subsidiary)
-                    setSelectedSubsidiary(subsidiary)
-                    setConfirmEditOpen(true)
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit Subsidiary
-                </button>
-              </DropdownMenu.Item>
-
               <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedSubsidiary(subsidiary);
+                onClick={() => {
+                  setSelectedRole(role);
                   setConfirmOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
-                {subsidiary.isActive ? (
+                <Eye className="w-4 h-4" />
+                View details
+              </DropdownMenu.Item>
+
+              <DropdownMenu.Item
+                onClick={() => {
+                  setSelectedRole(role);
+                  setConfirmEditOpen(true);
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+              >
+                <Pencil className="w-4 h-4" />
+                Edit Role
+              </DropdownMenu.Item>
+
+              <DropdownMenu.Item
+                onSelect={() => {
+                  setSelectedRole(role);
+                  setConfirmOpen(true);
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+              >
+                {role.isActive ? (
                   <>
                     <XCircle className="w-4 h-4 text-red-400" />
-                    Deactivate
+                    <span className="text-red-400">Deactivate</span>
                   </>
                 ) : (
                   <>
                     <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    Activate
+                    <span className="text-green-400">Activate</span>
                   </>
                 )}
               </DropdownMenu.Item>
 
               <DropdownMenu.Item
                 onSelect={() => {
-                  setSelectedSubsidiary(subsidiary);
+                  setSelectedRole(role);
                   setConfirmDeleteOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
                 <Trash className="w-4 h-4 text-red-400" />
-                Delete Subsidiary
+                <span className="text-red-400">Delete Role</span>
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
@@ -203,22 +194,21 @@ export function SubsidiaryList() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold mb-1">Subsidiaries</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-1">Roles</h1>
           <p className="text-sm text-gray-400">
-            Manage company subsidiaries and their details.
+            Manage roles and permission assignments.
           </p>
         </div>
 
-        <button onClick={() => setConfirmEditOpen(true)} className="w-full sm:w-auto">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-          >
-            <Plus className="w-4 h-4" />
-            New Subsidiary
-          </motion.button>
-        </button>
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => setConfirmEditOpen(true)}
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+        >
+          <Plus className="w-4 h-4" />
+          New Role
+        </motion.button>
       </div>
 
       {/* Filters */}
@@ -230,7 +220,7 @@ export function SubsidiaryList() {
               type="search"
               value={filters.search}
               onChange={(e) => updateFilter("search", e.target.value)}
-              placeholder="Search by department"
+              placeholder="Search by name"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
@@ -257,12 +247,12 @@ export function SubsidiaryList() {
 
       {/* Table */}
       <div className="min-w-0 overflow-x-auto rounded-xl border border-gray-800">
-        <PaginatedTable<Subsidiary>
-          data={subsidaries}
+        <PaginatedTable<Role>
+          data={roles}
           columns={columns}
           isLoading={isLoading}
           isFilter={isFilter}
-          emptyTitle="No subsidiary yet. Click “New subsidiary” to create one."
+          emptyTitle="No role yet. Click “New role” to create one."
           noResultsTitle="No results found. Try changing your filters."
           setPageNumber={onChangePage}
           setPageSize={onChangePageSize}
@@ -277,11 +267,9 @@ export function SubsidiaryList() {
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleUpdateStatus}
-        title={
-          selectedSubsidiary?.isActive ? "Deactivate Subsidiary" : "Activate Subsidiary"
-        }
-        description={`Are you sure you want to ${selectedSubsidiary?.isActive ? "deactivate" : "activate"} "${selectedSubsidiary?.name}"?`}
-        confirmText={`Yes, ${selectedSubsidiary?.isActive ? "deactivate" : "activate"}`}
+        title={selectedRole?.isActive ? "Deactivate Role" : "Activate Role"}
+        description={`Are you sure you want to ${selectedRole?.isActive ? "deactivate" : "activate"} "${selectedRole?.name}"?`}
+        confirmText={`Yes, ${selectedRole?.isActive ? "deactivate" : "activate"}`}
         cancelText="No"
         loading={isUpdating}
       />
@@ -290,8 +278,8 @@ export function SubsidiaryList() {
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleUpdateStatus}
-        title="Delete Subsidiary"
-        description={`Are you sure you want to delete "${selectedSubsidiary?.name}"?`}
+        title="Delete Role"
+        description={`Are you sure you want to delete "${selectedRole?.name}"?`}
         confirmText={`Yes, delete`}
         cancelText="No"
         loading={isUpdating}
@@ -299,12 +287,20 @@ export function SubsidiaryList() {
 
       <EditModal
         open={confirmEditOpen}
-        onClose={() => setConfirmEditOpen(false)}
-        onConfirm={handleUpdateStatus}
-        title="Create Subsidiary"
-        confirmText="Create"
+        form={form}
+        fieldErrors={fieldErrors}
         cancelText="Cancel"
         loading={isUpdating}
+        onClose={handleCloseModal}
+        onConfirm={handleUpdateStatus}
+        setFieldErrors={setFieldErrors}
+        onChange={onChange}
+      />
+
+      <DetailModal
+        open={confirmOpen}
+        role={form}
+        onClose={handleCloseModal}
       />
     </div>
   );

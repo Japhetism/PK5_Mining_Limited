@@ -5,7 +5,6 @@ import { InquiryForm, InquiryFormDto } from "@/app/interfaces";
 
 const AppID = import.meta.env.VITE_APP_ID as string;
 
-
 const defaultFormData = {
   name: "",
   email: "",

@@ -9,11 +9,11 @@ import {
 } from "../interfaces/subsidiary";
 import { mock_subsidiaries } from "../fixtures/subsidiary.fixture";
 import { mock_roles } from "../fixtures/role.fixture";
-import { CreateRolePayload, Permission, Role, RoleResponsePayload, UpdateRolePayload } from "../interfaces/role";
+import { CreateRolePayload, Permission, Role, RoleResponsePayload, RolesQuery, UpdateRolePayload } from "../interfaces/role";
 
 const useMock = import.meta.env.VITE_USE_MOCK_DATA === "true";
 
-export async function getRoles() {
+export async function getRoles(queryParams: RolesQuery) {
   try {
     if (useMock) {
       // Simulate mock response structure

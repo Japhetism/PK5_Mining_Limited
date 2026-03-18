@@ -1,15 +1,10 @@
 import {
   ApiResponse,
-  ResetPasswordResponse,
-  UpdateUserBody,
-  UpdateUserStatusBody,
-  UserDto,
-  UsersQuery,
-  UsersResponsePayload,
 } from "@/app/interfaces";
+import { CreateUserPayload, ResetPasswordResponse, UpdateUserPayload, User, UsersQuery, UsersResponsePayload } from "../interfaces/user";
 import { http } from "./http";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
-import { mockUsers } from "../fixtures";
+import { mockUsers } from "../fixtures/user.fixture";
 
 const useMock = import.meta.env.VITE_USE_MOCK_DATA === "true";
 
@@ -50,7 +45,7 @@ export async function getUserById(id: string) {
       };
     }
 
-    const { data } = await http.get<ApiResponse<UserDto>>(`/User/${id}`);
+    const { data } = await http.get<ApiResponse<User>>(`/User/${id}`);
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
@@ -67,7 +62,7 @@ export async function getUserById(id: string) {
   }
 }
 
-export async function updateUser(id: string, body: UpdateUserBody) {
+export async function updateUser(id: string, body: UpdateUserPayload) {
   try {
     if (useMock) {
       // Simulate mock response structure
@@ -76,7 +71,7 @@ export async function updateUser(id: string, body: UpdateUserBody) {
       };
     }
 
-    const { data } = await http.put<ApiResponse<UserDto>>(
+    const { data } = await http.put<ApiResponse<User>>(
       `/User/${id}`,
       body,
     );
@@ -105,7 +100,7 @@ export async function deleteUser(id: string) {
       };
     }
 
-    const { data } = await http.delete<ApiResponse<UserDto>>(
+    const { data } = await http.delete<ApiResponse<User>>(
       `/User/${id}`,
     );
 
@@ -121,7 +116,7 @@ export async function deleteUser(id: string) {
   }
 }
 
-export async function updateUserStatus(id: string, body: UpdateUserStatusBody) {
+export async function updateUserStatus(id: string, body: UpdateUserPayload) {
   try {
     if (useMock) {
       // Simulate mock response structure
@@ -130,7 +125,7 @@ export async function updateUserStatus(id: string, body: UpdateUserStatusBody) {
       };
     }
     
-    const { data } = await http.patch<ApiResponse<UserDto>>(
+    const { data } = await http.patch<ApiResponse<User>>(
       `/User/${id}/status`,
       body,
     );
@@ -178,7 +173,7 @@ export async function resetUserPassword(id: string) {
   }
 }
 
-export async function createUser(user: UpdateUserBody) {
+export async function createUser(user: CreateUserPayload) {
   try {
     if (useMock) {
       // Simulate mock response structure

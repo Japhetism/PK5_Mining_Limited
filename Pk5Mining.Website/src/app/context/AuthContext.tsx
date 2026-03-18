@@ -16,7 +16,7 @@ import { tokenStore } from "../auth/token";
 type AuthState = {
   user: IUser | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isAdmin: boolean;
   isAuthenticated: boolean;
@@ -24,7 +24,7 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
-const INACTIVITY_TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
+const DEFAULT_INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | null>(null);
@@ -32,6 +32,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Keep logout stable for event listeners/timers
   const logoutRef = useRef<() => void>(() => {});
+
+  const INACTIVITY_TIMEOUT_MS = import.meta.env.VITE_INACTIVITY_TIMEOUT_MS ?? DEFAULT_INACTIVITY_TIMEOUT_MS;
 
   function logout() {
     sessionStorage.removeItem(AUTH_KEY);
@@ -131,8 +133,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  async function login(username: string, password: string) {
-    const nextUser = await loginApi({ username, password });
+  async function login(email: string, password: string) {
+    const nextUser = await loginApi({ email, password });
 
     if (!nextUser?.jwtToken) {
       throw new Error("Login succeeded but no JWT token was returned.");
@@ -142,7 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error("Session token is expired. Please login again.");
     }
 
-    setUser(nextUser);
+    setUser(nextUser as IUser);
 
     sessionStorage.setItem(AUTH_KEY, JSON.stringify(nextUser));
     tokenStore.set(nextUser.jwtToken);

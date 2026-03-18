@@ -37,7 +37,6 @@ import {
   ISocialLink,
   ITimelineEvent,
   IUser,
-  UserDto,
 } from "../interfaces";
 import CEOImg from "../../assets/images/CEO.png";
 import HOOImg from "../../assets/images/HOO.png";

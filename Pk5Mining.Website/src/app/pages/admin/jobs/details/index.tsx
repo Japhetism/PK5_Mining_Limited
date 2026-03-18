@@ -48,7 +48,7 @@ export function JobDetail() {
       <div className="flex items-center justify-between gap-3">
         <div>
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/admin/jobs")}
             className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200 mb-2"
           >
             <ArrowLeft className="w-3 h-3" />

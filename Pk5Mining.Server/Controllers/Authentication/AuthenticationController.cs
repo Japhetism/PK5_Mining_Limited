@@ -1,28 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories.Admin;
 using Pk5Mining.Server.Services;
 
-namespace Pk5Mining.Server.Controllers.Admin
+namespace Pk5Mining.Server.Controllers.Authentication
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
         private readonly IAdminRepo _adminRepo;
         private readonly ITokenService _tokenService;
 
-        public AdminController(IAdminRepo adminRepo, ITokenService tokenService)
+        public AuthenticationController(IAdminRepo adminRepo, ITokenService tokenService)
         {
             _adminRepo = adminRepo;
             _tokenService = tokenService;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] AdminLoginDTO dto)
+        public async Task<ActionResult> Login([FromBody] LoginDTO dto)
         {
             var (admin, error) = await _adminRepo.LoginAsync(dto);
             if (error != null)

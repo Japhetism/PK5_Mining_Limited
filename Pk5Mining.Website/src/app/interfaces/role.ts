@@ -21,3 +21,13 @@ export type CreateRolePayload = Omit<Role, "id" | "dT_Created" | "dT_Updated">;
 export type UpdateRolePayload = Partial<CreateRolePayload>;
 
 export type Permission = { id: string; key: string; description?: string };
+
+export type RoleErrors = {
+  [K in keyof CreateRolePayload]?: string;
+};
+
+export type RolesQuery = {
+  pageNumber: number;
+  pageSize: number;
+  isActive?: boolean | string;
+};
