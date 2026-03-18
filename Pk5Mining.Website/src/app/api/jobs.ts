@@ -9,8 +9,13 @@ import {
 import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 
+const displayJobs = import.meta.env.VITE_DISPLAY_JOBS_PRODUCTION === "true";
+
 export async function getActiveJobs() {
   try {
+    if (!displayJobs) {
+      return [];
+    }
     const { data } = await http.get<ApiResponse<JobDto[]>>("/Job");
 
     if (data.responseStatus !== "SUCCESS") {
