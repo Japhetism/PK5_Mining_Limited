@@ -207,6 +207,7 @@ export interface IUser {
   password?: string;
   jwtToken: string;
   role?: UserRole;
+  phoneNumber?: string;
   isDeleted?: boolean;
   isActive?: boolean;
   hasChangedPassword?: boolean;

@@ -121,19 +121,7 @@ export function ChangePassword() {
             disabled={loading}
             className="inline-flex items-center justify-center rounded-xl bg-[#c89b3c] px-5 py-3 text-sm font-semibold text-black hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 transition"
           >
-            {loading ? "Updating..." : "Update Password"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setNewPassword("");
-              setConfirmNewPassword("");
-              setErrors({});
-            }}
-            className="inline-flex items-center justify-center rounded-xl border border-gray-800 bg-transparent px-5 py-3 text-sm font-medium text-gray-300 hover:bg-white/5 transition"
-          >
-            Reset
+            {loading ? "Updating..." : "Change Password"}
           </button>
         </div>
       </form>
