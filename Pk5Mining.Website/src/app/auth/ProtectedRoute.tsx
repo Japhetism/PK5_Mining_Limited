@@ -5,12 +5,18 @@ export function ProtectedRoute() {
   const location = useLocation();
   const { user, isAdmin, isLoading } = useAuth();
 
-  if (!isLoading && (!user || !isAdmin)) {
+  if (isLoading) return null;
+
+  if (!user) {
     return <Navigate to="/admin/login" replace state={{ from: location }} />;
   }
 
-  if (!isLoading && !isAdmin) {
+  if (!isAdmin) {
     return <Navigate to="/" replace />;
+  }
+
+  if (!user.hasChangedPassword) {
+    return <Navigate to="/admin/change/password" replace />;
   }
 
   return <Outlet />;
