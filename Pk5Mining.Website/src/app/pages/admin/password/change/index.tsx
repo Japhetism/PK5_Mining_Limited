@@ -111,7 +111,7 @@ export function ChangePassword() {
             className="w-full px-6 py-3 bg-[#c89b3c] text-black font-bold rounded-lg hover:bg-[#d4a84a] transition-colors disabled:opacity-70"
             disabled={loading}
           >
-            {loading ? "Updating..." : "Update Password"}
+            {loading ? "Updating..." : "Change Password"}
           </motion.button>
 
           {successMsg && (
