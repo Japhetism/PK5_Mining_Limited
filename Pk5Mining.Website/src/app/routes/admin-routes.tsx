@@ -74,7 +74,7 @@ function mapAdminRoutes(items: AdminRouteItem[]): RouteObject[] {
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
-  { path: "/admin/reset/change", element: <ChangePassword /> },
+  { path: "/admin/change/password", element: <ChangePassword /> },
   {
     path: "/admin",
     element: <ProtectedRoute />,

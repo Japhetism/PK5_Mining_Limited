@@ -153,6 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // 🔥 reset inactivity timer immediately after login
     window.dispatchEvent(new Event("mousemove"));
+
   }
 
   const value = useMemo<AuthState>(() => {
