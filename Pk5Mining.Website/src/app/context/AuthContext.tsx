@@ -16,10 +16,11 @@ import { tokenStore } from "../auth/token";
 type AuthState = {
   user: IUser | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
   isAdmin: boolean;
   isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  setUser: (user: IUser | null) => void;
 };
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -163,10 +164,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return {
       user,
       isLoading,
-      login,
-      logout,
       isAdmin: true,
       isAuthenticated,
+      login,
+      logout,
+      setUser,
     };
   }, [user, isLoading]);
 

@@ -44,8 +44,6 @@ export type ResetPasswordResponse = {
 };
 
 export interface IChangePasswordPayload {
-  userId: number;
-  username: string;
-  oldPassword: string;
+  userId: string;
   newPassword: string;
 }

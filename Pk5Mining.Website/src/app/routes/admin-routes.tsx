@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router-dom";
-import { ChangePassword } from "../pages/admin/password/reset";
 import { adminRouteItems, type AdminRouteItem } from "./admin-config";
 import { hasPermissions, hasRole } from "../utils/helper";
 import { Permission } from "../constants/permissions";
@@ -9,6 +8,10 @@ import { UserRole } from "../constants/role";
 
 const Login = lazy(() =>
   import("@/app/pages/admin/login").then((m) => ({ default: m.Login }))
+);
+
+const ChangePassword = lazy(() =>
+  import("@/app/pages/admin/password/change").then((m) => ({ default: m.ChangePassword }))
 );
 
 const ProtectedRoute = lazy(() =>

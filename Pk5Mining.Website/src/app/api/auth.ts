@@ -32,7 +32,11 @@ export async function login(payload: ILoginPayload) {
 
 export async function changePassword(payload: IChangePasswordPayload) {
   try {
-    const { data } = await http.post<ApiResponse<IUser>>("/Admin/Change-Password", payload);
+    const changePasswordPayload = {
+      newPassword: payload.newPassword
+    }
+
+    const { data } = await http.put<ApiResponse<IUser>>(`User/update-password/${payload.userId}`, changePasswordPayload);
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(

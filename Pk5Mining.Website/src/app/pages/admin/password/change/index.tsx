@@ -4,20 +4,17 @@ import useResetPasswordViewModel from "./viewmodel";
 
 export function ChangePassword() {
   const {
-    currentPassword,
     confirmPassword,
     newPassword,
-    showCurrent,
     showConfirm,
     showNew,
     error,
     loading,
+    successMsg,
     onSubmit,
-    setCurrentPassword,
     setNewPassword,
     setConfirmPassword,
     setShowConfirm,
-    setShowCurrent,
     setShowNew,
   } = useResetPasswordViewModel();
 
@@ -37,38 +34,6 @@ export function ChangePassword() {
         </div>
 
         <form onSubmit={onSubmit} className="space-y-5">
-          {/* Current Password */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Current Password
-            </label>
-
-            <div className={inputStyle}>
-              <Lock className="w-4 h-4 text-gray-400 mr-2" />
-
-              <input
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                required
-                type={showCurrent ? "text" : "password"}
-                className="w-full bg-transparent py-3 outline-none"
-                autoComplete="current-password"
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowCurrent((p) => !p)}
-                className="text-gray-400 hover:text-white"
-              >
-                {showCurrent ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-          </div>
-
           {/* New Password */}
           <div>
             <label className="block text-sm font-medium mb-2">
@@ -148,6 +113,12 @@ export function ChangePassword() {
           >
             {loading ? "Updating..." : "Update Password"}
           </motion.button>
+
+          {successMsg && (
+            <div className="text-sm text-green-500 bg-green-500/10 border border-green-500/40 rounded-md px-3 py-2">
+              {successMsg}
+            </div>
+          )}
         </form>
       </motion.div>
     </div>
