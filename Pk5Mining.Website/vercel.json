@@ -3,6 +3,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://pk5miningapi-cdc9fyc0d4fmchag.westus2-01.azurewebsites.net/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
