@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Response;
+using Pk5Mining.Server.Models.User;
 using Pk5Mining.Server.Repositories.Admin;
 
 namespace Pk5Mining.Server.Controllers.Admin
@@ -76,6 +77,17 @@ namespace Pk5Mining.Server.Controllers.Admin
                 return NotFound(ApiResponse.Failure(null, "User not found."));
             }
             return Ok(ApiResponse.SuccessMessage(admin, "User retrieved successfully"));
+        }
+        [HttpPut("update-user")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto dto)
+        {
+            var (user, error, hasError) = await _repo.UpdateUserAsync(dto);
+
+            if (hasError)
+            {
+                return BadRequest(ApiResponse.Failure(null, error));
+            }
+            return Ok(ApiResponse.SuccessMessage(user, "User updated successfully"));
         }
     }
 }

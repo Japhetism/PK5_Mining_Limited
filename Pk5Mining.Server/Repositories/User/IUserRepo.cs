@@ -1,4 +1,5 @@
 ﻿using Pk5Mining.Server.Models.Admin;
+using Pk5Mining.Server.Models.User;
 
 namespace Pk5Mining.Server.Repositories.Admin
 {
@@ -15,5 +16,6 @@ namespace Pk5Mining.Server.Repositories.Admin
         Task<(IUser?, string?, bool)> GetByIdAsync(long adminId);
         Task<(User?, string?)> LoginAsync(LoginDTO dto);
         Task<(IUser?, string?, bool)> UpdatePasswordAsync(long Id, SetPassword dto);
+        Task<(IUser?, string?, bool)> UpdateUserAsync(UpdateUserDto dto);
     }
 }

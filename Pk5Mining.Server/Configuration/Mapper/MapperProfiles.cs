@@ -3,6 +3,7 @@ using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
+using Pk5Mining.Server.Models.User;
 
 namespace Pk5Mining.Server.Configuration.Mapper
 {
@@ -19,6 +20,7 @@ namespace Pk5Mining.Server.Configuration.Mapper
             CreateMap<ContactUs, ContactUsDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UserResponseDTO>().ReverseMap();
+            CreateMap<User, UpdateUserDto>().ReverseMap();
 
         }
     }

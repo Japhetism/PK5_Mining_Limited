@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Contact_Us;
+using Pk5Mining.Server.Models.User;
 using Pk5Mining.Server.Services;
 
 namespace Pk5Mining.Server.Repositories.Admin
@@ -120,6 +121,48 @@ namespace Pk5Mining.Server.Repositories.Admin
 
             var users = await query.OrderByDescending(c => c.DT_Created).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             return (users, totalCount);
+        }
+        public async Task<(IUser?, string?, bool)> UpdateUserAsync(UpdateUserDto dto)
+        {
+            try
+            {
+                var user = await _dbContext.Users.FindAsync(dto.Id);
+                if (user == null)
+                {
+                    return (null, "User not found.", true);
+                }
+                if (!string.IsNullOrWhiteSpace(dto.FirstName))
+                {
+                    user.FirstName = dto.FirstName;
+                }
+                if (!string.IsNullOrWhiteSpace(dto.LastName))
+                {
+                    user.LastName = dto.LastName;
+                }
+                if (!string.IsNullOrWhiteSpace(dto.Username))
+                {
+                    user.Username = dto.Username;
+                }
+                if (!string.IsNullOrWhiteSpace(dto.Role))
+                {
+                    user.Role = dto.Role;
+                }
+                if (dto.IsActive.HasValue)
+                {
+                    user.IsActive = dto.IsActive.Value;
+                }
+                if (dto.IsDeleted.HasValue)
+                {
+                    user.IsDeleted = dto.IsDeleted.Value;
+                }
+                _dbContext.Users.Update(user);
+                await _dbContext.SaveChangesAsync();
+                return (user, null, false);
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message, true);
+            }
         }
     }
 }
