@@ -2,7 +2,9 @@ import axios from "axios";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 import { tokenStore } from "../auth/token";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL as string;
+// const baseURL = import.meta.env.VITE_API_BASE_URL as string;
+
+const baseURL = "/api";
 
 export const http = axios.create({
   baseURL,

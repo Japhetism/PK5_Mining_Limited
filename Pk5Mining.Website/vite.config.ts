@@ -4,6 +4,15 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+  server: {
+     proxy: {
+      "/api": {
+        target: "https://pk5miningapi-cdc9fyc0d4fmchag.westus2-01.azurewebsites.net/api/", // your real API
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
