@@ -159,17 +159,8 @@ export async function resetUserPassword(id: string) {
 
 export async function createUser(user: CreateUserPayload) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mockUsers,
-        totalCount: mockUsers.length,
-        totalPages: 1,
-      };
-    }
-
     const { data } = await http.post<ApiResponse<UsersResponsePayload>>(
-      "/User",
+      "/User/create",
       user,
     );
 

@@ -18,7 +18,7 @@ import {
   UsersQuery,
 } from "@/app/interfaces/user";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
-import { cleanParams, toNumber } from "@/app/utils/helper";
+import { cleanParams, generatePassword, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import { ApiError } from "@/app/interfaces";
 import { changePassword } from "@/app/api/auth";
@@ -30,6 +30,7 @@ const defaultFormData: User = {
   email: "",
   username: "",
   role: "",
+  password: "",
   isActive: true,
   dT_Created: "",
 };
@@ -108,13 +109,18 @@ function useUserViewModel() {
   });
 
   useEffect(() => {
+    if (confirmEditOpen) {
+      const tempPassword = generatePassword();
+      setForm({ ...defaultFormData, password: tempPassword })
+    }
+
     if (!selectedUser) return;
 
     setForm({
       ...defaultFormData,
       ...selectedUser,
     });
-  }, [selectedUser]);
+  }, [selectedUser, confirmEditOpen]);
 
   useEffect(() => {
     if (error) {
@@ -143,8 +149,12 @@ function useUserViewModel() {
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateUserPayload) => createUser(payload),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
+      setConfirmEditOpen(false);
       toastUtil.success("User created successfully");
     },
     onError: (error) => {
@@ -154,6 +164,7 @@ function useUserViewModel() {
       );
       toastUtil.error(message);
     },
+    onSettled: () => setIsUpdating(false),
   });
 
   const updateMutation = useMutation({
@@ -211,7 +222,14 @@ function useUserViewModel() {
 
   const handleDeleteUser = () => {};
 
-  const handleCreateuser = () => {};
+  const handleCreateuser = () => {
+    if (!form.email || !form.username || !form.firstName) {
+      toastUtil.error("Please fill in required fields (*)");
+      return;
+    }
+    const { id, dT_Created, ...payload } = form;
+    createMutation.mutate(payload as CreateUserPayload);
+  };
 
   const handleUpdateUser = () => {
     if (selectedUser) {

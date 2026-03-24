@@ -356,7 +356,7 @@ export function UserList() {
         cancelText="Cancel"
         loading={isUpdating}
         onClose={handleCloseModal}
-        onConfirm={handleUpdateUser}
+        onConfirm={selectedUser ? handleUpdateUser : handleCreateuser}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
       />

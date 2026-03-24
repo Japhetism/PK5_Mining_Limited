@@ -9,6 +9,7 @@ export type User = {
   email: string;
   username?: string;
   role?: string;
+  password?: string;
   isActive?: boolean;
   dT_Created: string;
 }

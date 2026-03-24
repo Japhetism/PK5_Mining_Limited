@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
 import { User, UserErrors } from "@/app/interfaces/user";
+import { PasswordInput } from "@/app/components/ui/password-input";
 
 type EditModalProps = {
   form: User;
@@ -234,6 +235,14 @@ export function EditModal({
                     </p>
                   )}
                 </div>
+
+                <PasswordInput
+                  label="Temporary Password"
+                  value={form.password || ""}
+                  disabled
+                  infoText="Copy and share this temporary password with the user"
+                  canCopy={true}
+                />
               </div>
             </form>
           </div>
