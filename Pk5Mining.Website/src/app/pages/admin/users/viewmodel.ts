@@ -6,7 +6,6 @@ import {
   deleteUser,
   getUsers,
   updateUser,
-  updateUserStatus,
 } from "@/app/api/users";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import {
@@ -32,6 +31,7 @@ const defaultFormData: User = {
   role: "",
   isActive: true,
   dT_Created: "",
+  password: "",
 };
 
 function useUserViewModel() {
@@ -44,10 +44,8 @@ function useUserViewModel() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
-
   const [changePasswordOpen, setChangePasswordOpen] = useState<boolean>(false);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-
+  
   const [form, setForm] = useState(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<UserErrors>({});
 
@@ -80,41 +78,24 @@ function useUserViewModel() {
       isActive:
         filterStatus === "inactive" ? false : filterStatus === "active" ? true : "",
     };
-
-    // clean out empty strings
     return cleanParams(raw) as UsersQuery;
   }, [pageNumber, pageSize, filterStatus, debouncedFilters]);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: [
-      "users",
-      queryParams.pageNumber,
-      queryParams.pageSize,
-      queryParams.name ?? "",
-      queryParams.email ?? "",
-      queryParams.userName ?? "",
-      queryParams.isActive ?? "",
-    ],
+    queryKey: ["users", queryParams],
     queryFn: () => getUsers(queryParams),
     staleTime: 30_000,
   });
 
   useEffect(() => {
-    if (!selectedUser) return;
-
-    setForm({
-      ...defaultFormData,
-      ...selectedUser,
-    });
+    if (selectedUser) {
+      setForm({ ...defaultFormData, ...selectedUser });
+    }
   }, [selectedUser]);
 
   useEffect(() => {
     if (error) {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while fetching users. Please try again.",
-      );
-      toastUtil.error(message);
+      toastUtil.error(getAxiosErrorMessage(error, "An error occurred while fetching users."));
     }
   }, [error]);
 
@@ -123,14 +104,9 @@ function useUserViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       toastUtil.success("User deleted successfully");
+      handleCloseModal();
     },
-    onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while deleting user. Please try again.",
-      );
-      toastUtil.error(message);
-    },
+    onError: (err) => toastUtil.error(getAxiosErrorMessage(err)),
   });
 
   const createMutation = useMutation({
@@ -138,77 +114,60 @@ function useUserViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       toastUtil.success("User created successfully");
+      handleCloseModal();
     },
-    onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while creating user. Please try again.",
-      );
-      toastUtil.error(message);
-    },
+    onError: (err) => toastUtil.error(getAxiosErrorMessage(err)),
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateUserPayload) => updateUser(payload.id, payload),
+    mutationFn: (payload: UpdateUserPayload) => updateUser(String(payload.id), payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       toastUtil.success("User updated successfully");
+      handleCloseModal();
     },
-    onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while updating user. Please try again.",
-      );
-      toastUtil.error(message);
-    },
+    onError: (err) => toastUtil.error(getAxiosErrorMessage(err)),
   });
 
   const changeUserPasswordMutation = useMutation({
     mutationFn: (payload: IChangePasswordPayload) => changePassword(payload),
-    onMutate: () => {
-      setIsUpdating(true);
-    },
     onSuccess: () => {
-      setChangePasswordOpen(false);
       toastUtil.success("Password changed successfully.");
+      handleCloseModal();
     },
     onError: (err) => {
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error
-          ? err.message
-          : "An error occurred. Please try again.");
-
+      const message = (err as ApiError)?.message ?? "An error occurred. Please try again.";
       toastUtil.error(message);
     },
-    onSettled: () => setIsUpdating(false),
   });
 
-  const updateFilter = (key: keyof typeof filters, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-    setIsFilter(true);
+  const handleCreateuser = () => {
+    if (!form.email || !form.username || !form.firstName) {
+      toastUtil.error("Please fill in required fields (*)");
+      return;
+    }
+    const { id, dT_Created, ...payload } = form;
+    createMutation.mutate(payload as CreateUserPayload);
   };
 
-  const onChangePage = (next: number) => setPageNumber(next);
-
-  const onChangePageSize = (size: number) => {
-    setPageSize(size);
-    setPageNumber(1);
+  const handleUpdateUser = () => {
+    if (!selectedUser?.id) return;
+    // Remove read-only fields that might cause 500 errors if sent back to the server
+    const { dT_Created, ...payload } = form;
+    updateMutation.mutate({ ...payload, id: selectedUser.id } as UpdateUserPayload);
   };
 
-  const handleDeleteUser = () => {};
+  const handleDeleteUser = () => {
+    if (!selectedUser?.id) return;
+    deleteMutation.mutate(selectedUser.id.toString());
+  };
 
-  const handleCreateuser = () => {};
-
-  const handleUpdateUser = () => {};
-
-  const onChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const handleChangeUserPassword = (password: string) => {
+    if (!selectedUser?.id) return;
+    changeUserPasswordMutation.mutate({
+      userId: selectedUser.id.toString(), // The check above ensures this is safe
+      newPassword: password
+    });
   };
 
   const handleCloseModal = () => {
@@ -218,42 +177,45 @@ function useUserViewModel() {
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
     setChangePasswordOpen(false);
+    setFieldErrors({});
   };
 
-  const handleChangeUserPassword = (password: string) => {
-    if (selectedUser) {
-      changeUserPasswordMutation.mutate({
-        userId: selectedUser?.id?.toString(),
-        newPassword: password
-      })
-    }
-  }
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const users: User[] = data?.data ?? [];
-  const totalCount: number = data?.totalCount ?? 0;
-  const totalPages: number = data?.totalPages ?? 0;
+  const updateFilter = (key: keyof typeof filters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setIsFilter(true);
+  };
 
   return {
-    users,
-    totalCount,
-    totalPages,
+    users: data?.data ?? [],
+    totalCount: data?.totalCount ?? 0,
+    totalPages: data?.totalPages ?? 0,
     filters,
     filterStatus,
     isFilter,
     pageNumber,
     pageSize,
     isLoading,
+    isProcessing: 
+      createMutation.isPending || 
+      updateMutation.isPending || 
+      deleteMutation.isPending || 
+      changeUserPasswordMutation.isPending,
     selectedUser,
     confirmOpen,
     confirmEditOpen,
     confirmDeleteOpen,
+    changePasswordOpen,
     form,
     fieldErrors,
-    changePasswordOpen,
     onChange,
     updateFilter,
-    onChangePage,
-    onChangePageSize,
+    onChangePage: (next: number) => setPageNumber(next),
+    onChangePageSize: (size: number) => { setPageSize(size); setPageNumber(1); },
     setFilterStatus,
     setIsFilter,
     setSelectedUser,
@@ -273,5 +235,4 @@ function useUserViewModel() {
 }
 
 export default useUserViewModel;
-
 export type UserViewModel = ReturnType<typeof useUserViewModel>;

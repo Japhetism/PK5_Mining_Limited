@@ -61,15 +61,12 @@ export function EditModal({
           </div>
 
           <div className="relative w-full h-full">
-            <form
-              // onSubmit={onSubmit}
-              className="p-6 space-y-6"
-            >
+            <form className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* First Name */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    First Name
-                    <span className="ml-1 text-red-500">*</span>
+                    First Name <span className="text-red-500">*</span>
                   </label>
                   <motion.input
                     name="firstName"
@@ -77,10 +74,7 @@ export function EditModal({
                     onChange={onChange}
                     onBlur={() => {
                       if (!isValidName(form.firstName)) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          title: "Invalid first name",
-                        }));
+                        setFieldErrors((prev) => ({ ...prev, firstName: "Invalid first name" }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
@@ -90,19 +84,15 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.firstName ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                    ${fieldErrors.firstName ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.firstName && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.firstName}
-                    </p>
-                  )}
+                  {fieldErrors.firstName && <p className="text-xs text-red-500 mt-1">{fieldErrors.firstName}</p>}
                 </div>
+
+                {/* Last Name */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Last Name
-                    <span className="ml-1 text-red-500">*</span>
+                    Last Name <span className="text-red-500">*</span>
                   </label>
                   <motion.input
                     name="lastName"
@@ -110,10 +100,7 @@ export function EditModal({
                     onChange={onChange}
                     onBlur={() => {
                       if (!isValidName(form.lastName)) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          department: "Invalid last name",
-                        }));
+                        setFieldErrors((prev) => ({ ...prev, lastName: "Invalid last name" }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
@@ -123,31 +110,24 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.lastName ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                    ${fieldErrors.lastName ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.lastName && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.lastName}
-                    </p>
-                  )}
+                  {fieldErrors.lastName && <p className="text-xs text-red-500 mt-1">{fieldErrors.lastName}</p>}
                 </div>
 
+                {/* Email */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Email
-                    <span className="ml-1 text-red-500">*</span>
+                    Email <span className="text-red-500">*</span>
                   </label>
                   <motion.input
                     name="email"
+                    type="email"
                     value={form.email}
                     onChange={onChange}
                     onBlur={() => {
                       if (!form.email) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          location: "Email is required",
-                        }));
+                        setFieldErrors((prev) => ({ ...prev, email: "Email is required" }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
@@ -157,20 +137,15 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.email ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                    ${fieldErrors.email ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.email && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.email}
-                    </p>
-                  )}
+                  {fieldErrors.email && <p className="text-xs text-red-500 mt-1">{fieldErrors.email}</p>}
                 </div>
 
+                {/* Phone Number */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Phone Number
-                    <span className="ml-1 text-red-500">*</span>
+                    Phone Number <span className="text-red-500">*</span>
                   </label>
                   <motion.input
                     name="phone"
@@ -178,10 +153,7 @@ export function EditModal({
                     onChange={onChange}
                     onBlur={() => {
                       if (!form.phone) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          location: "Phone number is required",
-                        }));
+                        setFieldErrors((prev) => ({ ...prev, phone: "Phone number is required" }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
@@ -191,20 +163,70 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.phone ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                    ${fieldErrors.phone ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.phone && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.phone}
-                    </p>
-                  )}
+                  {fieldErrors.phone && <p className="text-xs text-red-500 mt-1">{fieldErrors.phone}</p>}
+                </div>
+
+                {/* NEW FIELD: Username */}
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Username <span className="text-red-500">*</span>
+                  </label>
+                  <motion.input
+                    name="username"
+                    value={form.username || ""}
+                    onChange={onChange}
+                    onBlur={() => {
+                      if (!form.username) {
+                        setFieldErrors((prev) => ({ ...prev, username: "Username is required" }));
+                      } else {
+                        setFieldErrors((prev) => {
+                          const updated = { ...prev };
+                          delete updated.username;
+                          return updated;
+                        });
+                      }
+                    }}
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    ${fieldErrors.username ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                  />
+                  {fieldErrors.username && <p className="text-xs text-red-500 mt-1">{fieldErrors.username}</p>}
+                </div>
+
+                {/* NEW FIELD: Password */}
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Password <span className="text-red-500">*</span>
+                  </label>
+                  <motion.input
+                    name="password"
+                    type="password"
+                    value={form.password || ""}
+                    onChange={onChange}
+                    onBlur={() => {
+                      if (!form.password || form.password.length < 6) {
+                        setFieldErrors((prev) => ({ ...prev, password: "Password must be at least 6 characters" }));
+                      } else {
+                        setFieldErrors((prev) => {
+                          const updated = { ...prev };
+                          delete updated.password;
+                          return updated;
+                        });
+                      }
+                    }}
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    ${fieldErrors.password ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                  />
+                  {fieldErrors.password && <p className="text-xs text-red-500 mt-1">{fieldErrors.password}</p>}
                 </div>
               </div>
             </form>
           </div>
         </div>
-        <div className="flex justify-end gap-3">
+        
+        {/* Footer Actions */}
+        <div className="flex justify-end gap-3 px-6 pb-6">
           <button
             type="button"
             onClick={onClose}
