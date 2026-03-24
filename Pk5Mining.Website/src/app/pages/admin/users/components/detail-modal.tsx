@@ -61,7 +61,7 @@ export function DetailModal({ user, open, onClose }: DetailModalProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <DetailItem label="Name" value={`${user.firstName} ${user.lastName}`} />
               <DetailItem label="Email" value={user.email} />
-              <DetailItem label="Phone Number" value={user.phone} />
+              <DetailItem label="Username" value={user.username} />
               <DetailItem label="Role" value={user.role} />
               <DetailItem
                 label="Status"
@@ -72,14 +72,6 @@ export function DetailModal({ user, open, onClose }: DetailModalProps) {
                 value={
                   user.dT_Created
                     ? formatDateTime(user.dT_Created)
-                    : "-"
-                }
-              />
-              <DetailItem
-                label="Date Modified"
-                value={
-                  user.dT_Updated
-                    ? formatDateTime(user.dT_Updated)
                     : "-"
                 }
               />
