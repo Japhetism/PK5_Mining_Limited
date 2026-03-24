@@ -3,14 +3,17 @@ import { PaginationInfo } from ".";
 export type UserStatus = "active" | "inactive";
 
 export type User = {
-  id: number;
+  id?: number;
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
-  username?: string;
+  username: string;
+  password: string;
   role?: string;
+  hasChangedPassword?: boolean;
   isActive?: boolean;
-  dT_Created: string;
+  isDeleted?: boolean;
+  dT_Created?: string; 
 }
 
 export type UsersResponsePayload = {
@@ -20,7 +23,7 @@ export type UsersResponsePayload = {
 export type CreateUserPayload = Omit<User, "id" | "dT_Created" | "dT_Updated">;
 
 export type UpdateUserPayload = Partial<CreateUserPayload> & {
-    id: string;
+    id: number;
 };
 
 export type UsersQuery = {
