@@ -169,34 +169,68 @@ export function EditModal({
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Phone Number
+                    Username
                     <span className="ml-1 text-red-500">*</span>
                   </label>
                   <motion.input
-                    name="phone"
-                    value={form.phone}
+                    name="username"
+                    value={form.username}
                     onChange={onChange}
                     onBlur={() => {
-                      if (!form.phone) {
+                      if (!form.username) {
                         setFieldErrors((prev) => ({
                           ...prev,
-                          location: "Phone number is required",
+                          location: "Username is required",
                         }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
-                          delete updated.phone;
+                          delete updated.username;
                           return updated;
                         });
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.phone ? "border-red-500" : "border-gray-800"}
+                ${fieldErrors.username ? "border-red-500" : "border-gray-800"}
                 focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.phone && (
+                  {fieldErrors.username && (
                     <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.phone}
+                      {fieldErrors.username}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Role
+                    <span className="ml-1 text-red-500">*</span>
+                  </label>
+                  <motion.input
+                    name="role"
+                    value={form.role}
+                    onChange={onChange}
+                    onBlur={() => {
+                      if (!form.role) {
+                        setFieldErrors((prev) => ({
+                          ...prev,
+                          location: "Role is required",
+                        }));
+                      } else {
+                        setFieldErrors((prev) => {
+                          const updated = { ...prev };
+                          delete updated.role;
+                          return updated;
+                        });
+                      }
+                    }}
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                ${fieldErrors.role ? "border-red-500" : "border-gray-800"}
+                focus:border-[#c89b3c]`}
+                  />
+                  {fieldErrors.role && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {fieldErrors.role}
                     </p>
                   )}
                 </div>

@@ -53,17 +53,10 @@ export async function getUserById(id: string) {
   }
 }
 
-export async function updateUser(id: string, body: UpdateUserPayload) {
+export async function updateUser(body: UpdateUserPayload) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mockUsers,
-      };
-    }
-
     const { data } = await http.put<ApiResponse<User>>(
-      `/User/${id}`,
+      "/User/update-user",
       body,
     );
 

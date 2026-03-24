@@ -68,7 +68,11 @@ function useUserViewModel() {
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.name, debouncedFilters.email, debouncedFilters.userName]);
+  }, [
+    debouncedFilters.name,
+    debouncedFilters.email,
+    debouncedFilters.userName,
+  ]);
 
   const queryParams: UsersQuery = useMemo(() => {
     const raw: UsersQuery = {
@@ -78,7 +82,11 @@ function useUserViewModel() {
       email: debouncedFilters.email,
       userName: debouncedFilters.userName,
       isActive:
-        filterStatus === "inactive" ? false : filterStatus === "active" ? true : "",
+        filterStatus === "inactive"
+          ? false
+          : filterStatus === "active"
+            ? true
+            : "",
     };
 
     // clean out empty strings
@@ -149,9 +157,13 @@ function useUserViewModel() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateUserPayload) => updateUser(payload.id, payload),
+    mutationFn: (payload: UpdateUserPayload) => updateUser(payload),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
+      setConfirmEditOpen(false);
       toastUtil.success("User updated successfully");
     },
     onError: (error) => {
@@ -161,6 +173,7 @@ function useUserViewModel() {
       );
       toastUtil.error(message);
     },
+    onSettled: () => setIsUpdating(false),
   });
 
   const changeUserPasswordMutation = useMutation({
@@ -200,7 +213,16 @@ function useUserViewModel() {
 
   const handleCreateuser = () => {};
 
-  const handleUpdateUser = () => {};
+  const handleUpdateUser = () => {
+    if (selectedUser) {
+      const payload: UpdateUserPayload = {
+        ...form,
+        id: String(form.id),
+      };
+
+      updateMutation.mutate(payload);
+    }
+  };
 
   const onChange = (
     e: React.ChangeEvent<
@@ -224,10 +246,10 @@ function useUserViewModel() {
     if (selectedUser) {
       changeUserPasswordMutation.mutate({
         userId: selectedUser?.id?.toString(),
-        newPassword: password
-      })
+        newPassword: password,
+      });
     }
-  }
+  };
 
   const users: User[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
