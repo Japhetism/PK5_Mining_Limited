@@ -354,7 +354,7 @@ export function UserList() {
         form={form}
         fieldErrors={fieldErrors}
         cancelText="Cancel"
-        //loading={isUpdating}
+        loading={isUpdating}
         onClose={handleCloseModal}
         onConfirm={handleUpdateUser}
         setFieldErrors={setFieldErrors}
