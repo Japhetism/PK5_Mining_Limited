@@ -15,7 +15,7 @@ type EditModalProps = {
   fieldErrors: any;
   onClose: () => void;
   onConfirm: () => void;
-  setFieldErrors: React.Dispatch<React.SetStateAction<UserErrors>>;
+  setFieldErrors: React.Dispatch<React.SetStateAction<UserErrors | null>>;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => void;
@@ -75,7 +75,10 @@ export function EditModal({
                     onChange={onChange}
                     onBlur={() => {
                       if (!isValidName(form.firstName)) {
-                        setFieldErrors((prev) => ({ ...prev, firstName: "Invalid first name" }));
+                        setFieldErrors((prev) => ({
+                          ...prev,
+                          firstName: "Invalid first name",
+                        }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
@@ -85,9 +88,13 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                    ${fieldErrors.firstName ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                    ${fieldErrors?.firstName ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.firstName && <p className="text-xs text-red-500 mt-1">{fieldErrors.firstName}</p>}
+                  {fieldErrors?.firstName && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {fieldErrors?.firstName}
+                    </p>
+                  )}
                 </div>
 
                 {/* Last Name */}
@@ -101,7 +108,10 @@ export function EditModal({
                     onChange={onChange}
                     onBlur={() => {
                       if (!isValidName(form.lastName)) {
-                        setFieldErrors((prev) => ({ ...prev, lastName: "Invalid last name" }));
+                        setFieldErrors((prev) => ({
+                          ...prev,
+                          lastName: "Invalid last name",
+                        }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
@@ -111,9 +121,13 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                    ${fieldErrors.lastName ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                    ${fieldErrors?.lastName ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.lastName && <p className="text-xs text-red-500 mt-1">{fieldErrors.lastName}</p>}
+                  {fieldErrors?.lastName && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {fieldErrors?.lastName}
+                    </p>
+                  )}
                 </div>
 
                 {/* Email */}
@@ -126,9 +140,13 @@ export function EditModal({
                     type="email"
                     value={form.email}
                     onChange={onChange}
+                    disabled={Boolean(form.id)}
                     onBlur={() => {
                       if (!form.email) {
-                        setFieldErrors((prev) => ({ ...prev, email: "Email is required" }));
+                        setFieldErrors((prev) => ({
+                          ...prev,
+                          email: "Email is required",
+                        }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
@@ -138,9 +156,18 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                    ${fieldErrors.email ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                    ${fieldErrors?.email ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.email && <p className="text-xs text-red-500 mt-1">{fieldErrors.email}</p>}
+                  {Boolean(form.id) && (
+                    <span className="text-[10px] text-gray-500">
+                      Email cannot be changed.
+                    </span>
+                  )}
+                  {fieldErrors?.email && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {fieldErrors?.email}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -153,7 +180,10 @@ export function EditModal({
                     onChange={onChange}
                     onBlur={() => {
                       if (!form.username) {
-                        setFieldErrors((prev) => ({ ...prev, username: "Username is required" }));
+                        setFieldErrors((prev) => ({
+                          ...prev,
+                          username: "Username is required",
+                        }));
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
@@ -163,9 +193,13 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                    ${fieldErrors.username ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                    ${fieldErrors?.username ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
                   />
-                  {fieldErrors.username && <p className="text-xs text-red-500 mt-1">{fieldErrors.username}</p>}
+                  {fieldErrors?.username && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {fieldErrors?.username}
+                    </p>
+                  )}
                 </div>
 
                 <PasswordInput
@@ -179,7 +213,7 @@ export function EditModal({
             </form>
           </div>
         </div>
-        
+
         {/* Footer Actions */}
         <div className="flex justify-end gap-3 px-6 pb-6">
           <button

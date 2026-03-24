@@ -51,7 +51,7 @@ function useUserViewModel() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const [form, setForm] = useState(defaultFormData);
-  const [fieldErrors, setFieldErrors] = useState<UserErrors>({});
+  const [fieldErrors, setFieldErrors] = useState<UserErrors | null>(null);
 
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -257,6 +257,7 @@ function useUserViewModel() {
   };
 
   const handleCloseModal = () => {
+    setFieldErrors(null);
     setSelectedUser(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);
