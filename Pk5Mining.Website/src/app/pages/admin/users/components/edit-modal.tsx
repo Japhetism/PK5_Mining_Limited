@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
 import { User, UserErrors } from "@/app/interfaces/user";
+import { PasswordInput } from "@/app/components/ui/password-input";
 
 type EditModalProps = {
   form: User;
@@ -142,34 +143,6 @@ export function EditModal({
                   {fieldErrors.email && <p className="text-xs text-red-500 mt-1">{fieldErrors.email}</p>}
                 </div>
 
-                {/* Phone Number */}
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Username
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="username"
-                    value={form.username}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.phone) {
-                        setFieldErrors((prev) => ({ ...prev, phone: "Phone number is required" }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.username;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                    ${fieldErrors.phone ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.phone && <p className="text-xs text-red-500 mt-1">{fieldErrors.phone}</p>}
-                </div>
-
-                {/* NEW FIELD: Username */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Username <span className="text-red-500">*</span>
@@ -195,32 +168,13 @@ export function EditModal({
                   {fieldErrors.username && <p className="text-xs text-red-500 mt-1">{fieldErrors.username}</p>}
                 </div>
 
-                {/* NEW FIELD: Password */}
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Password <span className="text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="password"
-                    type="password"
-                    value={form.password || ""}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.password || form.password.length < 6) {
-                        setFieldErrors((prev) => ({ ...prev, password: "Password must be at least 6 characters" }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.password;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                    ${fieldErrors.password ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.password && <p className="text-xs text-red-500 mt-1">{fieldErrors.password}</p>}
-                </div>
+                <PasswordInput
+                  label="Temporary Password"
+                  value={form.password || ""}
+                  disabled
+                  infoText="Copy and share this temporary password with the user"
+                  canCopy={true}
+                />
               </div>
             </form>
           </div>

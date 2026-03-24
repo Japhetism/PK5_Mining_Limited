@@ -10,7 +10,6 @@ export type User = {
   username: string;
   password: string;
   role?: string;
-  hasChangedPassword?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   dT_Created?: string; 

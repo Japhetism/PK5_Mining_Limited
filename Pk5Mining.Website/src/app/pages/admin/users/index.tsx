@@ -40,7 +40,6 @@ export function UserList() {
     pageNumber,
     pageSize,
     isLoading,
-    isProcessing,
     selectedUser,
     form,
     fieldErrors,
@@ -48,7 +47,7 @@ export function UserList() {
     confirmEditOpen,
     confirmDeleteOpen,
     changePasswordOpen,
-    isUpdating,
+    isProcessing,
     onChange,
     updateFilter,
     onChangePage,
@@ -318,7 +317,6 @@ export function UserList() {
         emptyTitle="No users found"
         noResultsTitle="No results found. Try changing your filters."
       />
-
     
       <ConfirmModal
         open={confirmDeleteOpen}
@@ -334,7 +332,6 @@ export function UserList() {
         confirmText="Delete"
         cancelText="Cancel"
       />
-
     
       <ConfirmModal
         open={confirmOpen && !!selectedUser}
@@ -350,20 +347,17 @@ export function UserList() {
         confirmText={selectedUser?.isActive ? "Deactivate" : "Activate"}
         cancelText="Cancel"
       />
-
       
       <EditModal
         open={confirmEditOpen}
         form={form}
         fieldErrors={fieldErrors}
         onClose={handleCloseModal}
-        // Logic: if we have a selectedUser, it's an update; otherwise, it's a create.
         onConfirm={selectedUser ? handleUpdateUser : handleCreateuser}
-        loading={isProcessing}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
+        loading={isProcessing}
       />
-
    
       <DetailModal
         open={confirmOpen && !!selectedUser}
@@ -371,14 +365,12 @@ export function UserList() {
         onClose={handleCloseModal}
       />
 
-
       <ChangePasswordModal
         user={selectedUser}
         open={changePasswordOpen}
-        isUpdating={isUpdating}
+        isUpdating={isProcessing}
         onClose={handleCloseModal}
         onConfirm={handleChangeUserPassword}
-        loading={isProcessing}
       />
     </div>
   );

@@ -21,17 +21,6 @@ builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("ViteDev", policy =>
-    {
-        policy
-            .WithOrigins("http://localhost:5173")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -145,8 +134,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("MyAllowSpecificOrigins");
 app.UseHttpsRedirection();
-// Use CORS (must be before Authorization + MapControllers)
-app.UseCors("ViteDev");
 app.UseAuthentication();
 app.UseAuthorization();
 
