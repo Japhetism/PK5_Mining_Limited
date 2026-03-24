@@ -3,16 +3,14 @@ import { PaginationInfo } from ".";
 export type UserStatus = "active" | "inactive";
 
 export type User = {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
   username?: string;
-  phone: string;
   role?: string;
   isActive?: boolean;
   dT_Created: string;
-  dT_Updated?: string | null;
 }
 
 export type UsersResponsePayload = {
@@ -30,7 +28,7 @@ export type UsersQuery = {
   pageSize: number;
   name?: string;
   email?: string;
-  phone?: string;
+  userName?: string;
   isActive?: boolean | string;
 };
 

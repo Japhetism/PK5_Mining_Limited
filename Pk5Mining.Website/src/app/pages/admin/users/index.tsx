@@ -24,7 +24,6 @@ import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
 
 const statusOptions = [
-  { label: "All", value: "all" },
   { label: "Active", value: "active" },
   { label: "Inactive", value: "inactive" },
 ] as const;
@@ -79,10 +78,17 @@ export function UserList() {
         ),
       },
       {
-        key: "phone",
-        header: "Phone Number",
+        key: "username",
+        header: "Username",
         render: (user) => (
-          <span className="text-xs text-gray-300">{user.phone ?? "-"}</span>
+          <span className="text-xs text-gray-300">{user.username ?? "-"}</span>
+        ),
+      },
+      {
+        key: "role",
+        header: "Role",
+        render: (user) => (
+          <span className="text-xs text-gray-300">{user.role ?? "-"}</span>
         ),
       },
       {
@@ -106,12 +112,6 @@ export function UserList() {
         header: "Date Added",
         render: (user) =>
           user.dT_Created ? formatDateTime(user.dT_Created) : "-",
-      },
-      {
-        key: "dT_Updated",
-        header: "Date Modified",
-        render: (user) =>
-          user.dT_Updated ? formatDateTime(user.dT_Updated) : "-",
       },
       {
         key: "actions",
@@ -260,14 +260,14 @@ export function UserList() {
 
           <div className="min-w-0">
             <label className="block text-xs font-semibold text-gray-300 mb-2">
-              Phone Number
+              Username
             </label>
             <input
-              name="phone"
+              name="userName"
               type="text"
-              value={filters.phone}
-              onChange={(e) => updateFilter("phone", e.target.value)}
-              placeholder="Search by phone number"
+              value={filters.userName}
+              onChange={(e) => updateFilter("userName", e.target.value)}
+              placeholder="Search by username"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
