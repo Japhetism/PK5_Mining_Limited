@@ -367,6 +367,7 @@ export function UserList() {
       />
 
       <ChangePasswordModal
+        user={selectedUser}
         open={changePasswordOpen}
         onClose={handleCloseModal}
         onConfirm={handleChangeUserPassword}

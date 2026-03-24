@@ -3,15 +3,18 @@ import { motion } from "motion/react";
 import { X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { generatePassword } from "@/app/utils/helper";
+import { User } from "@/app/interfaces/user";
 
 type ChangePasswordModalProps = {
+  user: User | null,
   open: boolean;
   loading?: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (password: string) => void;
 };
 
 export function ChangePasswordModal({
+  user,
   open,
   loading = false,
   onClose,
@@ -19,13 +22,23 @@ export function ChangePasswordModal({
 }: ChangePasswordModalProps) {
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   useEffect(() => {
     if (open) {
-        const generatedPassword = generatePassword();
-        setNewPassword(generatedPassword);
+      const generatedPassword = generatePassword();
+      setNewPassword(generatedPassword);
     }
   }, [open]);
+
+  const handleSubmit = (e: any) => {
+    if (newPassword != confirmPassword) {
+      setErrorMsg("New password and confirm password does not match");
+      return;
+    }
+
+    onConfirm(newPassword);
+  };
 
   return (
     <Modal
@@ -41,7 +54,7 @@ export function ChangePasswordModal({
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
             <div className="min-w-0">
               <p className="text-sm font-semibold text-gray-200 truncate">
-                Change User Password
+                Change Password for {user?.firstName} {user?.lastName}
               </p>
             </div>
 
@@ -71,6 +84,7 @@ export function ChangePasswordModal({
                   <motion.input
                     name="newPassword"
                     value={newPassword}
+                    disabled
                     onChange={(e) => setNewPassword(e.target.value)}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors border-gray-800 focus:border-[#c89b3c]`}
                   />
@@ -86,11 +100,12 @@ export function ChangePasswordModal({
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors border-gray-800 focus:border-[#c89b3c]`}
                   />
-                  {/* {fieldErrors.lastName && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.lastName}
-                    </p>
-                  )} */}
+                  <span className="text-[10px] text-gray-500">
+                    Type Password as seen in the password field
+                  </span>
+                  {errorMsg && (
+                    <p className="text-xs text-red-500 mt-1">{errorMsg}</p>
+                  )}
                 </div>
               </div>
             </form>
@@ -108,8 +123,7 @@ export function ChangePasswordModal({
 
           <motion.button
             type="button"
-            onClick={onConfirm}
-            disabled={loading}
+            onClick={handleSubmit}
             whileHover={!loading ? { scale: 1.02 } : undefined}
             whileTap={!loading ? { scale: 0.98 } : undefined}
             className="px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
