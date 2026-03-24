@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Copy } from "lucide-react";
 import { motion } from "motion/react";
 import { X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { generatePassword } from "@/app/utils/helper";
 import { User } from "@/app/interfaces/user";
+import { PasswordInput } from "@/app/components/ui/password-input";
 
 type ChangePasswordModalProps = {
   user: User | null;
@@ -24,8 +24,7 @@ export function ChangePasswordModal({
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
-  const [copied, setCopied] = useState(false);
-
+  
   useEffect(() => {
     if (open) {
       const generatedPassword = generatePassword();
@@ -35,16 +34,9 @@ export function ChangePasswordModal({
     }
   }, [open]);
 
-  const handleCopy = async () => {
-    if (!newPassword) return;
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
 
-    await navigator.clipboard.writeText(newPassword);
-    setCopied(true);
-
-    setTimeout(() => setCopied(false), 1500);
-  };
-
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrorMsg("");
     if (newPassword != confirmPassword) {
       setErrorMsg("Oops! The passwords don’t match. Please try again.");
@@ -90,57 +82,21 @@ export function ChangePasswordModal({
               className="p-6 space-y-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Password
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
+                <PasswordInput
+                  label="Temporary Password"
+                  value={newPassword}
+                  disabled
+                  infoText="Copy and share this temporary password with the user"
+                  canCopy={true}
+                />
 
-                  <div className="relative">
-                    <motion.input
-                      name="newPassword"
-                      value={newPassword}
-                      disabled
-                      className="w-full px-4 py-3 pr-10 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors border-gray-800 focus:border-[#c89b3c]"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={handleCopy}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                    >
-                      <Copy size={16} />
-                    </button>
-                  </div>
-
-                  <span className="text-[10px] text-gray-500">
-                    {copied
-                      ? "Copied!"
-                      : "Copy and share this temporary password with the user"}
-                  </span>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Confirm Password
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="lastName"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    onPaste={(e) => e.preventDefault()}
-                    onDrop={(e) => e.preventDefault()}
-                    onDragOver={(e) => e.preventDefault()}
-                    autoComplete="off"
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors border-gray-800 focus:border-[#c89b3c]`}
-                  />
-                  <span className="text-[10px] text-gray-500">
-                    Type the password exactly as displayed to confirm
-                  </span>
-                  {errorMsg && (
-                    <p className="text-xs text-red-500 mt-1">{errorMsg}</p>
-                  )}
-                </div>
+                <PasswordInput
+                  label="Confirm Password"
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                  infoText="Type the password exactly as displayed to confirm"
+                  error={errorMsg}
+                />
               </div>
             </form>
           </div>
