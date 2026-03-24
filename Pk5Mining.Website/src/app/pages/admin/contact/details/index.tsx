@@ -11,7 +11,6 @@ export function ContactMessageDetails() {
     id,
     thread,
     contact,
-    defaultReplySubject,
     isLoading,
     isError,
     isReplyOpen,
@@ -26,10 +25,7 @@ export function ContactMessageDetails() {
   } = useContactDetailsViewModel();
 
   // If it's new, mark read once we have it
-  if (contact?.status === "new" && !markReadMutation.isPending) {
-    // fire and forget
-    markReadMutation.mutate();
-  }
+  
 
   if (!id) return null;
 
@@ -67,78 +63,6 @@ export function ContactMessageDetails() {
           </button>
         </div>
       </div>
-
-      <div className="rounded-xl border border-gray-800 bg-[#0f0f0f] p-4 sm:p-5 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-          <div>
-            <h1 className="text-base font-semibold">{contact?.subject}</h1>
-            <p className="text-xs text-gray-400">
-              From <span className="text-gray-200">{contact?.name}</span> •{" "}
-              <a className="underline" href={`mailto:${contact?.email}`}>
-                {contact?.email}
-              </a>
-              {contact?.company ? ` • ${contact?.company}` : ""}
-            </p>
-          </div>
-
-          <div className="text-xs text-gray-400 gap-2 flex flex-col">
-            <div>Created: {formatDateTime(contact?.dT_Created)}</div>
-            <div>
-              Status: <ContactStatusPill status={contact.status} />
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-800 bg-black/20 p-3 text-sm text-gray-100 whitespace-pre-wrap">
-          {contact?.message}
-        </div>
-      </div>
-
-      <div className="rounded-xl border border-gray-800 bg-[#0f0f0f] p-4 sm:p-5">
-        <h2 className="text-sm font-semibold">Replies</h2>
-        <div className="mt-3 space-y-3">
-          {thread?.replies?.length ? (
-            thread.replies.map((r) => (
-              <div
-                key={r.id}
-                className="rounded-lg border border-gray-800 bg-black/20 p-3"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="text-xs text-gray-300">{r.subject}</div>
-                  <div className="text-xs text-gray-500">
-                    {formatDateTime(r.dT_Created)}
-                  </div>
-                </div>
-                <div className="mt-2 text-sm text-gray-100 whitespace-pre-wrap">
-                  {r.message}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-xs text-gray-400">No replies yet.</div>
-          )}
-        </div>
-      </div>
-
-      <ContactReplyModal
-        open={isReplyOpen}
-        onClose={() => setIsReplyOpen(false)}
-        toEmail={contact.email}
-        defaultSubject={defaultReplySubject}
-        loading={replyMutation.isPending}
-        onSend={(payload) => replyMutation.mutate(payload)}
-      />
-
-      <ConfirmModal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        onConfirm={handleUpdateStatus}
-        title="Update Contact Message Status"
-        description={`Are you sure you want to update the contact message status to resolved?`}
-        confirmText="Yes, update"
-        cancelText="No"
-        loading={updating}
-      />
     </div>
   );
 }

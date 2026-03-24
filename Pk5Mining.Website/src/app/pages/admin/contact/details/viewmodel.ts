@@ -7,7 +7,6 @@ import {
   updateContactStatus,
 } from "@/app/api/contact";
 import { ContactStatus } from "@/app/interfaces";
-import { mockContactMessages } from "@/app/fixtures";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
 
@@ -34,12 +33,12 @@ function useContactDetailsViewModel(passedId?: string) {
   // We check the API response first, then fall back to mock data
   const contact = useMemo(() => {
     if (thread?.contact) return thread.contact;
-    return mockContactMessages.find((m) => String(m.id) === activeId);
+    return [];
   }, [thread, activeId]);
 
    // Mark read automatically when opened (optional)
   const markReadMutation = useMutation({
-    mutationFn: () => updateContactStatus(activeId as string, "read"),
+    mutationFn: () => updateContactStatus(activeId as string, "replied"),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["contact"] }),
   });
 
@@ -74,11 +73,6 @@ function useContactDetailsViewModel(passedId?: string) {
     },
   });
 
-  const defaultReplySubject = useMemo(() => {
-    if (!contact?.subject) return "Re:";
-    return contact.subject.startsWith("Re:") ? contact.subject : `Re: ${contact.subject}`;
-  }, [contact?.subject]);
-
   const handleUpdateStatus = () => {
     if (!activeId) return toastUtil.error("ID not found");
     setUpdating(true);
@@ -89,7 +83,6 @@ function useContactDetailsViewModel(passedId?: string) {
     id: activeId,
     thread,
     contact, 
-    defaultReplySubject,
     isLoading,
     isError,
     isReplyOpen,

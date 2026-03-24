@@ -52,35 +52,6 @@ export function ContactDetailsSkeleton() {
           <Skeleton className="h-3 w-[60%]" />
         </div>
       </div>
-
-      {/* Replies card */}
-      <div className="rounded-xl border border-gray-800 bg-[#0f0f0f] p-4 sm:p-5">
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-28" />
-        </div>
-
-        <div className="mt-4 space-y-3">
-          {Array.from({ length: 3 }).map((_, idx) => (
-            <div
-              key={idx}
-              className="rounded-lg border border-gray-800 bg-black/20 p-3"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <Skeleton className="h-3 w-44" />
-                <Skeleton className="h-3 w-28" />
-              </div>
-
-              <div className="mt-3 space-y-2">
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-3 w-[92%]" />
-                <Skeleton className="h-3 w-[88%]" />
-                <Skeleton className="h-3 w-[70%]" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

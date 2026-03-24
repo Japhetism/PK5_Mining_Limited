@@ -17,7 +17,7 @@ type ModalProps = {
   /** Width presets aligned with your admin design */
   maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl";
   /** Height preset */
-  height?: "md" | "lg" | "xl";
+  height?: "md" | "lg" | "xl" | "h-auto";
 
   /** Click outside to close */
   closeOnOverlayClick?: boolean;
@@ -41,6 +41,7 @@ const heightMap: Record<NonNullable<ModalProps["height"]>, string> = {
   md: "h-[60vh]",
   lg: "h-[75vh]",
   xl: "h-[85vh]",
+  "h-auto": "h-auto",
 };
 
 export function Modal({
@@ -51,7 +52,7 @@ export function Modal({
   children,
   headerActions,
   maxWidth = "xl",
-  height = "xl",
+  height = "h-auto",
   closeOnOverlayClick = true,
   showCloseButton = true,
   panelClassName = "",

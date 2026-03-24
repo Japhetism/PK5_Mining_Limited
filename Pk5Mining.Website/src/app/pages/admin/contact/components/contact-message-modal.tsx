@@ -21,7 +21,6 @@ export function ContactViewModal({ open, onClose, contactId, contact }: ContactV
   // NOTE: This will only work after you apply the ViewModel fix in Step 2.
   const {
     thread,
-    defaultReplySubject,
     isLoading,
     isReplyOpen,
     replyMutation,
@@ -40,7 +39,7 @@ export function ContactViewModal({ open, onClose, contactId, contact }: ContactV
       open={open}
       onClose={onClose}
       maxWidth="2xl"
-      height="md"
+      height="h-auto"
       showCloseButton={false}
       panelClassName="bg-[#0a0a0a] border border-gray-800"
     >
@@ -95,30 +94,6 @@ export function ContactViewModal({ open, onClose, contactId, contact }: ContactV
                   {contact.messageBody}
                 </div>
               </div>
-
-              {/* Replies Thread */}
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-3">
-                  Reply History ({thread?.replies?.length || 0})
-                </p>
-                <div className="space-y-3">
-                  {thread?.replies?.length ? (
-                    thread.replies.map((r: any) => (
-                      <div key={r.id} className="rounded-lg border border-gray-800 bg-white/5 p-3">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-medium text-[#c89b3c]">{r?.subject}</span>
-                          <span className="text-[10px] text-gray-500">{formatDateTime(r.dT_Created)}</span>
-                        </div>
-                        <p className="text-sm text-gray-300 whitespace-pre-wrap">{r?.message}</p>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-4 rounded-lg border border-dashed border-gray-800 text-xs text-gray-500">
-                      No replies recorded for this message.
-                    </div>
-                  )}
-                </div>
-              </div>
             </>
           ) : (
             <div className="text-center py-10 text-gray-500">No message data found.</div>
@@ -146,15 +121,6 @@ export function ContactViewModal({ open, onClose, contactId, contact }: ContactV
           </button>
         </div>
       </div>
-
-      <ContactReplyModal
-        open={isReplyOpen}
-        onClose={() => setIsReplyOpen(false)}
-        toEmail={contact?.email ?? ""}
-        defaultSubject={defaultReplySubject}
-        loading={replyMutation.isPending}
-        onSend={(payload) => replyMutation.mutate(payload)}
-      />
 
       <ConfirmModal
         open={confirmOpen}
