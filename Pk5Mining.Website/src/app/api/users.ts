@@ -10,17 +10,8 @@ const useMock = import.meta.env.VITE_USE_MOCK_DATA === "true";
 
 export async function getUsers(params: UsersQuery) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mockUsers,
-        totalCount: mockUsers.length,
-        totalPages: 1,
-      };
-    }
-
     const { data } = await http.get<ApiResponse<UsersResponsePayload>>(
-      "/User",
+      "/User/filter",
       { params },
     );
 

@@ -21,16 +21,14 @@ import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 
 const defaultFormData: User = {
-  id: "",
+  id: 0,
   firstName: "",
   lastName: "",
   email: "",
   username: "",
-  phone: "",
   role: "",
   isActive: true,
   dT_Created: "",
-  dT_Updated: "",
 };
 
 function useUserViewModel() {
@@ -38,7 +36,7 @@ function useUserViewModel() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("");
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
@@ -57,14 +55,14 @@ function useUserViewModel() {
   const [filters, setFilters] = useState({
     name: searchParams.get("name") ?? "",
     email: searchParams.get("email") ?? "",
-    phone: searchParams.get("phone") ?? "",
+    userName: searchParams.get("userName") ?? "",
   });
 
   const debouncedFilters = useDebouncedValue(filters, 400);
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.name, debouncedFilters.email, debouncedFilters.phone]);
+  }, [debouncedFilters.name, debouncedFilters.email, debouncedFilters.userName]);
 
   const queryParams: UsersQuery = useMemo(() => {
     const raw: UsersQuery = {
@@ -72,8 +70,9 @@ function useUserViewModel() {
       pageSize,
       name: debouncedFilters.name,
       email: debouncedFilters.email,
-      phone: debouncedFilters.phone,
-      isActive: filterStatus,
+      userName: debouncedFilters.userName,
+      isActive:
+        filterStatus === "inactive" ? false : filterStatus === "active" ? true : "",
     };
 
     // clean out empty strings
@@ -87,7 +86,7 @@ function useUserViewModel() {
       queryParams.pageSize,
       queryParams.name ?? "",
       queryParams.email ?? "",
-      queryParams.phone ?? "",
+      queryParams.userName ?? "",
       queryParams.isActive ?? "",
     ],
     queryFn: () => getUsers(queryParams),
@@ -100,7 +99,6 @@ function useUserViewModel() {
     setForm({
       ...defaultFormData,
       ...selectedUser,
-      dT_Updated: selectedUser.dT_Updated ?? "",
     });
   }, [selectedUser]);
 
