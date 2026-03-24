@@ -56,7 +56,7 @@ export function UserList() {
     setIsFilter,
     setSelectedUser,
     handleDeleteUser,
-    handleCreateuser,
+    handleCreateUser,
     handleUpdateUser,
     setConfirmOpen,
     setConfirmEditOpen,
@@ -353,7 +353,7 @@ export function UserList() {
         form={form}
         fieldErrors={fieldErrors}
         onClose={handleCloseModal}
-        onConfirm={selectedUser ? handleUpdateUser : handleCreateuser}
+        onConfirm={selectedUser ? handleUpdateUser : handleCreateUser}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
         loading={isProcessing}

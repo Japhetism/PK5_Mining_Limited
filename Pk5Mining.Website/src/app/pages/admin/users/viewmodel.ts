@@ -18,10 +18,16 @@ import {
   UsersQuery,
 } from "@/app/interfaces/user";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
-import { cleanParams, generatePassword, toNumber } from "@/app/utils/helper";
+import {
+  cleanParams,
+  generatePassword,
+  mapZodErrors,
+  toNumber,
+} from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import { ApiError } from "@/app/interfaces";
 import { changePassword } from "@/app/api/auth";
+import { createUserSchema, updateUserSchema } from "@/app/schemas/user.schema";
 
 const defaultFormData: User = {
   id: 0,
@@ -50,7 +56,7 @@ function useUserViewModel() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const [form, setForm] = useState(defaultFormData);
-  const [fieldErrors, setFieldErrors] = useState<UserErrors>({});
+  const [fieldErrors, setFieldErrors] = useState<UserErrors | null>(null);
 
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -111,7 +117,7 @@ function useUserViewModel() {
   useEffect(() => {
     if (confirmEditOpen) {
       const tempPassword = generatePassword();
-      setForm({ ...defaultFormData, password: tempPassword })
+      setForm({ ...defaultFormData, password: tempPassword });
     }
 
     if (!selectedUser) return;
@@ -222,24 +228,33 @@ function useUserViewModel() {
 
   const handleDeleteUser = () => {};
 
-  const handleCreateuser = () => {
-    if (!form.email || !form.username || !form.firstName) {
-      toastUtil.error("Please fill in required fields (*)");
+  const handleCreateUser = () => {
+    const result = createUserSchema.safeParse(form);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<CreateUserPayload>(result.error));
       return;
     }
-    const { id, dT_Created, ...payload } = form;
-    createMutation.mutate(payload as CreateUserPayload);
+
+    setFieldErrors({});
+
+    createMutation.mutate(result.data);
   };
 
   const handleUpdateUser = () => {
-    if (selectedUser) {
-      const payload: UpdateUserPayload = {
-        ...form,
-        id: Number(form.id),
-      };
+    if (!selectedUser) return;
 
-      updateMutation.mutate(payload);
+    const formWithId = { ...form, id: Number(form.id) };
+
+    const result = updateUserSchema.safeParse(formWithId);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<UpdateUserPayload>(result.error));
+      return;
     }
+
+    setFieldErrors({});
+    updateMutation.mutate(result.data);
   };
 
   const onChange = (
@@ -252,6 +267,7 @@ function useUserViewModel() {
   };
 
   const handleCloseModal = () => {
+    setFieldErrors(null);
     setSelectedUser(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);
@@ -299,7 +315,7 @@ function useUserViewModel() {
     setIsFilter,
     setSelectedUser,
     handleDeleteUser,
-    handleCreateuser,
+    handleCreateUser,
     handleUpdateUser,
     setConfirmOpen,
     setConfirmDeleteOpen,
