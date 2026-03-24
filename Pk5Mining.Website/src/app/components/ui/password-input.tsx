@@ -6,7 +6,7 @@ interface PasswordInputProps {
   value: string;
   infoText?: string;
   disabled?: boolean;
-  disablePasting?: boolean;
+  blockPaste?: boolean;
   canCopy?: boolean;
   error?: string;
   onChange?: (val: string) => void;
@@ -17,7 +17,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
   value,
   infoText,
   disabled = false,
-  disablePasting = false,
+  blockPaste = false,
   canCopy = false,
   error,
   onChange,
@@ -44,9 +44,9 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           disabled={disabled}
-          onPaste={(e) => e.preventDefault()}
-          onDrop={(e) => e.preventDefault()}
-          onDragOver={(e) => e.preventDefault()}
+           onPaste={blockPaste ? (e) => e.preventDefault() : undefined}
+          onDrop={blockPaste ? (e) => e.preventDefault() : undefined}
+          onDragOver={blockPaste ? (e) => e.preventDefault() : undefined}
           autoComplete="off"
           className="w-full px-4 py-3 pr-10 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors border-gray-800 focus:border-[#c89b3c]"
         />

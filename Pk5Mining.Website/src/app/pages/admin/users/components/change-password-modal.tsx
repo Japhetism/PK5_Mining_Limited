@@ -24,7 +24,7 @@ export function ChangePasswordModal({
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
-  
+
   useEffect(() => {
     if (open) {
       const generatedPassword = generatePassword();
@@ -77,10 +77,7 @@ export function ChangePasswordModal({
           </div>
 
           <div className="relative w-full h-full">
-            <form
-              // onSubmit={onSubmit}
-              className="p-6 space-y-6"
-            >
+            <form className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <PasswordInput
                   label="Temporary Password"
@@ -96,6 +93,7 @@ export function ChangePasswordModal({
                   onChange={setConfirmPassword}
                   infoText="Type the password exactly as displayed to confirm"
                   error={errorMsg}
+                  blockPaste={true}
                 />
               </div>
             </form>
