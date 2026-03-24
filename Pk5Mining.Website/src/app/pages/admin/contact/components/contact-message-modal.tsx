@@ -82,7 +82,7 @@ export function ContactViewModal({ open, onClose, contactId, contact }: ContactV
                     <span>{formatDateTime(contact.dT_Created)}</span>
                   </div>
                   <div className="mt-1 ml-5">
-                    <ContactStatusPill status={contact.status} />
+                    <ContactStatusPill status={contact.status ?? "new"} />
                   </div>
                 </div>
               </div>
