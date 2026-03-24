@@ -22,6 +22,7 @@ import { User } from "@/app/interfaces/user";
 import { StatusFilter } from "@/app/interfaces";
 import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
+import { ChangePasswordModal } from "./components/change-password-modal";
 
 const statusOptions = [
   { label: "Active", value: "active" },
@@ -45,6 +46,7 @@ export function UserList() {
     confirmOpen,
     confirmEditOpen,
     confirmDeleteOpen,
+    changePasswordOpen,
     onChange,
     updateFilter,
     onChangePage,
@@ -61,6 +63,8 @@ export function UserList() {
     handleCloseModal,
     setFilters,
     setFieldErrors,
+    setChangePasswordOpen,
+    handleChangeUserPassword,
   } = useUserListViewModel();
 
   const columns: PaginatedTableColumn<User>[] = useMemo(
@@ -191,7 +195,7 @@ export function UserList() {
                 <DropdownMenu.Item
                   onSelect={() => {
                     setSelectedUser(user);
-                    setConfirmOpen(true);
+                    setChangePasswordOpen(true);
                   }}
                   className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
                 >
@@ -360,6 +364,12 @@ export function UserList() {
         open={confirmOpen}
         user={form}
         onClose={handleCloseModal}
+      />
+
+      <ChangePasswordModal
+        open={changePasswordOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleChangeUserPassword}
       />
     </div>
   );

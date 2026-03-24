@@ -42,6 +42,8 @@ function useUserViewModel() {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
 
+  const [changePasswordOpen, setChangePasswordOpen] = useState<boolean>(false);
+
   const [form, setForm] = useState(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<UserErrors>({});
 
@@ -190,7 +192,12 @@ function useUserViewModel() {
     setConfirmEditOpen(false);
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
+    setChangePasswordOpen(false);
   };
+
+  const handleChangeUserPassword = () => {
+
+  }
 
   const users: User[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
@@ -212,6 +219,7 @@ function useUserViewModel() {
     confirmDeleteOpen,
     form,
     fieldErrors,
+    changePasswordOpen,
     onChange,
     updateFilter,
     onChangePage,
@@ -229,6 +237,8 @@ function useUserViewModel() {
     handleCloseModal,
     setFilters,
     setFieldErrors,
+    setChangePasswordOpen,
+    handleChangeUserPassword,
   };
 }
 
