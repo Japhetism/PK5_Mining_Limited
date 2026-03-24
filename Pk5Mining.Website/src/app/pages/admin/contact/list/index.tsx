@@ -92,7 +92,7 @@ export function ContactMessageList() {
     {
       key: "status",
       header: "Status",
-      render: (row) => <ContactStatusPill status={row.status} />,
+      render: (row) => <ContactStatusPill status={row.status ?? "new"} />,
     },
     {
       key: "dT_Created",

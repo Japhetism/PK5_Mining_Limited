@@ -5,6 +5,7 @@ import { AnimatedSection } from "@/app/components/animated-section";
 import AnimatedDots from "@/app/components/ui/animated-dots";
 import { email, locations, telephone } from "@/app/fixtures";
 import useContactViewModel from "./viewmodel";
+import { miningSubjects } from "@/app/constants";
 
 const LocationsMap = lazy(() => import("@/app/components/ui/locationsMap"));
 
@@ -150,6 +151,7 @@ export function Contact() {
                     animate={{
                       borderColor: focusedField === "name" ? "#c89b3c" : "#333",
                     }}
+                    disabled={loading}
                   />
                 </div>
 
@@ -168,6 +170,7 @@ export function Contact() {
                       borderColor:
                         focusedField === "email" ? "#c89b3c" : "#333",
                     }}
+                    disabled={loading}
                   />
                 </div>
 
@@ -185,6 +188,7 @@ export function Contact() {
                       borderColor:
                         focusedField === "company" ? "#c89b3c" : "#333",
                     }}
+                    disabled={loading}
                   />
                 </div>
 
@@ -201,13 +205,12 @@ export function Contact() {
                       borderColor:
                         focusedField === "subject" ? "#c89b3c" : "#333",
                     }}
+                    disabled={loading}
                   >
                     <option value="">Select Subject</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="partnership">Partnership Opportunity</option>
-                    <option value="investor">Investor Relations</option>
-                    <option value="career">Career Opportunities</option>
-                    <option value="media">Media Inquiry</option>
+                    {miningSubjects.map((item: { label: string, value: string }, index: number) => (
+                      <option key={index} value={item.value}>{item.label}</option>
+                    ))}
                   </motion.select>
                 </div>
 
@@ -226,6 +229,7 @@ export function Contact() {
                       borderColor:
                         focusedField === "message" ? "#c89b3c" : "#333",
                     }}
+                    disabled={loading}
                   />
                 </div>
 

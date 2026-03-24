@@ -4,6 +4,7 @@ import { saveContactInquiry } from "@/app/api/contact";
 import { InquiryForm, InquiryFormDto } from "@/app/interfaces";
 
 const AppID = import.meta.env.VITE_APP_ID as string;
+const defaultStatus = "new";
 
 const defaultFormData = {
   name: "",
@@ -27,6 +28,10 @@ function useContactViewModel() {
       setLoading(false);
       setSubmitted(true);
       setFormData(defaultFormData);
+
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 3000);
     },
     onError: (err: string) => {
       setLoading(false);
@@ -55,6 +60,7 @@ function useContactViewModel() {
       lastName,
       messageBody,
       appId: AppID,
+      status: defaultStatus,
     }
     
     createMutation.mutate(payload);
