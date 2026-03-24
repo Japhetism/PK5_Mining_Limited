@@ -4,11 +4,12 @@ import { X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { generatePassword } from "@/app/utils/helper";
 import { User } from "@/app/interfaces/user";
+import { PasswordInput } from "@/app/components/ui/password-input";
 
 type ChangePasswordModalProps = {
-  user: User | null,
+  user: User | null;
   open: boolean;
-  loading?: boolean;
+  isUpdating?: boolean;
   onClose: () => void;
   onConfirm: (password: string) => void;
 };
@@ -16,7 +17,7 @@ type ChangePasswordModalProps = {
 export function ChangePasswordModal({
   user,
   open,
-  loading = false,
+  isUpdating = false,
   onClose,
   onConfirm,
 }: ChangePasswordModalProps) {
@@ -28,12 +29,17 @@ export function ChangePasswordModal({
     if (open) {
       const generatedPassword = generatePassword();
       setNewPassword(generatedPassword);
+      setConfirmPassword("");
+      setErrorMsg("");
     }
   }, [open]);
 
   const handleSubmit = (e: any) => {
+    e.preventDefault();
+
+    setErrorMsg("");
     if (newPassword != confirmPassword) {
-      setErrorMsg("New password and confirm password does not match");
+      setErrorMsg("Oops! The passwords don’t match. Please try again.");
       return;
     }
 
@@ -71,42 +77,24 @@ export function ChangePasswordModal({
           </div>
 
           <div className="relative w-full h-full">
-            <form
-              // onSubmit={onSubmit}
-              className="p-6 space-y-6"
-            >
+            <form className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Password
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="newPassword"
-                    value={newPassword}
-                    disabled
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors border-gray-800 focus:border-[#c89b3c]`}
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Confirm Password
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="lastName"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors border-gray-800 focus:border-[#c89b3c]`}
-                  />
-                  <span className="text-[10px] text-gray-500">
-                    Type Password as seen in the password field
-                  </span>
-                  {errorMsg && (
-                    <p className="text-xs text-red-500 mt-1">{errorMsg}</p>
-                  )}
-                </div>
+                <PasswordInput
+                  label="Temporary Password"
+                  value={newPassword}
+                  disabled
+                  infoText="Copy and share this temporary password with the user"
+                  canCopy={true}
+                />
+
+                <PasswordInput
+                  label="Confirm Password"
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                  infoText="Type the password exactly as displayed to confirm"
+                  error={errorMsg}
+                  blockPaste={true}
+                />
               </div>
             </form>
           </div>
@@ -115,7 +103,7 @@ export function ChangePasswordModal({
           <button
             type="button"
             onClick={onClose}
-            disabled={loading}
+            disabled={isUpdating}
             className="px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 disabled:opacity-50"
           >
             Close
@@ -124,11 +112,11 @@ export function ChangePasswordModal({
           <motion.button
             type="button"
             onClick={handleSubmit}
-            whileHover={!loading ? { scale: 1.02 } : undefined}
-            whileTap={!loading ? { scale: 0.98 } : undefined}
+            whileHover={!isUpdating ? { scale: 1.02 } : undefined}
+            whileTap={!isUpdating ? { scale: 0.98 } : undefined}
             className="px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
           >
-            {loading ? "Updating..." : "Change Password"}
+            {isUpdating ? "Updating..." : "Change Password"}
           </motion.button>
         </div>
       </div>

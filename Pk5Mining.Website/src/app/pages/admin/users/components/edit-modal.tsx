@@ -145,11 +145,12 @@ export function EditModal({
                 {/* Phone Number */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Phone Number <span className="text-red-500">*</span>
+                    Username
+                    <span className="ml-1 text-red-500">*</span>
                   </label>
                   <motion.input
-                    name="phone"
-                    value={form.phone}
+                    name="username"
+                    value={form.username}
                     onChange={onChange}
                     onBlur={() => {
                       if (!form.phone) {
@@ -157,7 +158,7 @@ export function EditModal({
                       } else {
                         setFieldErrors((prev) => {
                           const updated = { ...prev };
-                          delete updated.phone;
+                          delete updated.username;
                           return updated;
                         });
                       }

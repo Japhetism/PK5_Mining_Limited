@@ -48,6 +48,7 @@ export function UserList() {
     confirmEditOpen,
     confirmDeleteOpen,
     changePasswordOpen,
+    isUpdating,
     onChange,
     updateFilter,
     onChangePage,
@@ -374,6 +375,7 @@ export function UserList() {
       <ChangePasswordModal
         user={selectedUser}
         open={changePasswordOpen}
+        isUpdating={isUpdating}
         onClose={handleCloseModal}
         onConfirm={handleChangeUserPassword}
         loading={isProcessing}

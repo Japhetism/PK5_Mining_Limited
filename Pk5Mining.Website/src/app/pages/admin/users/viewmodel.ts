@@ -45,7 +45,7 @@ function useUserViewModel() {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
   const [changePasswordOpen, setChangePasswordOpen] = useState<boolean>(false);
-  
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [form, setForm] = useState(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<UserErrors>({});
 
@@ -66,7 +66,11 @@ function useUserViewModel() {
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.name, debouncedFilters.email, debouncedFilters.userName]);
+  }, [
+    debouncedFilters.name,
+    debouncedFilters.email,
+    debouncedFilters.userName,
+  ]);
 
   const queryParams: UsersQuery = useMemo(() => {
     const raw: UsersQuery = {
@@ -76,7 +80,11 @@ function useUserViewModel() {
       email: debouncedFilters.email,
       userName: debouncedFilters.userName,
       isActive:
-        filterStatus === "inactive" ? false : filterStatus === "active" ? true : "",
+        filterStatus === "inactive"
+          ? false
+          : filterStatus === "active"
+            ? true
+            : "",
     };
     return cleanParams(raw) as UsersQuery;
   }, [pageNumber, pageSize, filterStatus, debouncedFilters]);
@@ -120,13 +128,24 @@ function useUserViewModel() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateUserPayload) => updateUser(String(payload.id), payload),
+    mutationFn: (payload: UpdateUserPayload) => updateUser(payload),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
+      setConfirmEditOpen(false);
       toastUtil.success("User updated successfully");
       handleCloseModal();
     },
-    onError: (err) => toastUtil.error(getAxiosErrorMessage(err)),
+    onError: (error) => {
+      const message = getAxiosErrorMessage(
+        error,
+        "An error occurred while updating user. Please try again.",
+      );
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
   });
 
   const changeUserPasswordMutation = useMutation({
@@ -150,24 +169,31 @@ function useUserViewModel() {
     createMutation.mutate(payload as CreateUserPayload);
   };
 
-  const handleUpdateUser = () => {
-    if (!selectedUser?.id) return;
-    // Remove read-only fields that might cause 500 errors if sent back to the server
-    const { dT_Created, ...payload } = form;
-    updateMutation.mutate({ ...payload, id: selectedUser.id } as UpdateUserPayload);
-  };
-
+ 
   const handleDeleteUser = () => {
     if (!selectedUser?.id) return;
     deleteMutation.mutate(selectedUser.id.toString());
   };
 
-  const handleChangeUserPassword = (password: string) => {
-    if (!selectedUser?.id) return;
-    changeUserPasswordMutation.mutate({
-      userId: selectedUser.id.toString(), // The check above ensures this is safe
-      newPassword: password
-    });
+
+  const handleUpdateUser = () => {
+    if (selectedUser) {
+      const payload: UpdateUserPayload = {
+        ...form,
+        id: String(form.id),
+      };
+
+      updateMutation.mutate(payload);
+    }
+  };
+
+  const onChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCloseModal = () => {
@@ -180,16 +206,19 @@ function useUserViewModel() {
     setFieldErrors({});
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
 
   const updateFilter = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setIsFilter(true);
   };
-
+const handleChangeUserPassword = (password: string) => {
+    if (selectedUser) {
+      changeUserPasswordMutation.mutate({
+        userId: selectedUser?.id?.toString(),
+        newPassword: password,
+      });
+    }
+  };
   return {
     users: data?.data ?? [],
     totalCount: data?.totalCount ?? 0,
@@ -212,6 +241,7 @@ function useUserViewModel() {
     changePasswordOpen,
     form,
     fieldErrors,
+    isUpdating,
     onChange,
     updateFilter,
     onChangePage: (next: number) => setPageNumber(next),
