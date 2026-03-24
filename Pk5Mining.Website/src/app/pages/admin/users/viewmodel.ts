@@ -47,7 +47,7 @@ function useUserViewModel() {
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
 
   const [changePasswordOpen, setChangePasswordOpen] = useState<boolean>(false);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const [form, setForm] = useState(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<UserErrors>({});
@@ -150,7 +150,7 @@ function useUserViewModel() {
   const createMutation = useMutation({
     mutationFn: (payload: CreateUserPayload) => createUser(payload),
     onMutate: () => {
-      setIsUpdating(true);
+      setIsProcessing(true);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -164,13 +164,13 @@ function useUserViewModel() {
       );
       toastUtil.error(message);
     },
-    onSettled: () => setIsUpdating(false),
+    onSettled: () => setIsProcessing(false),
   });
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateUserPayload) => updateUser(payload),
     onMutate: () => {
-      setIsUpdating(true);
+      setIsProcessing(true);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -184,13 +184,13 @@ function useUserViewModel() {
       );
       toastUtil.error(message);
     },
-    onSettled: () => setIsUpdating(false),
+    onSettled: () => setIsProcessing(false),
   });
 
   const changeUserPasswordMutation = useMutation({
     mutationFn: (payload: IChangePasswordPayload) => changePassword(payload),
     onMutate: () => {
-      setIsUpdating(true);
+      setIsProcessing(true);
     },
     onSuccess: () => {
       setChangePasswordOpen(false);
@@ -205,7 +205,7 @@ function useUserViewModel() {
 
       toastUtil.error(message);
     },
-    onSettled: () => setIsUpdating(false),
+    onSettled: () => setIsProcessing(false),
   });
 
   const updateFilter = (key: keyof typeof filters, value: string) => {
@@ -235,7 +235,7 @@ function useUserViewModel() {
     if (selectedUser) {
       const payload: UpdateUserPayload = {
         ...form,
-        id: String(form.id),
+        id: Number(form.id),
       };
 
       updateMutation.mutate(payload);
@@ -261,7 +261,7 @@ function useUserViewModel() {
   };
 
   const handleChangeUserPassword = (password: string) => {
-    if (selectedUser) {
+    if (selectedUser?.id) {
       changeUserPasswordMutation.mutate({
         userId: selectedUser?.id?.toString(),
         newPassword: password,
@@ -290,7 +290,7 @@ function useUserViewModel() {
     form,
     fieldErrors,
     changePasswordOpen,
-    isUpdating,
+    isProcessing,
     onChange,
     updateFilter,
     onChangePage,

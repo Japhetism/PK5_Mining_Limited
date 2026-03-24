@@ -47,7 +47,7 @@ export function UserList() {
     confirmEditOpen,
     confirmDeleteOpen,
     changePasswordOpen,
-    isUpdating,
+    isProcessing,
     onChange,
     updateFilter,
     onChangePage,
@@ -62,7 +62,6 @@ export function UserList() {
     setConfirmEditOpen,
     setConfirmDeleteOpen,
     handleCloseModal,
-    setFilters,
     setFieldErrors,
     setChangePasswordOpen,
     handleChangeUserPassword,
@@ -209,7 +208,7 @@ export function UserList() {
         ),
       },
     ],
-    [],
+    []
   );
 
   return (
@@ -225,7 +224,10 @@ export function UserList() {
         <motion.button
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
-          onClick={() => setConfirmEditOpen(true)}
+          onClick={() => {
+            setSelectedUser(null); // Resets form for "New User"
+            setConfirmEditOpen(true);
+          }}
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
         >
           <Plus className="w-4 h-4" />
@@ -233,6 +235,7 @@ export function UserList() {
         </motion.button>
       </div>
 
+     
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
@@ -314,55 +317,50 @@ export function UserList() {
         emptyTitle="No users found"
         noResultsTitle="No results found. Try changing your filters."
       />
-
-      {/* Delete confirm */}
+    
       <ConfirmModal
         open={confirmDeleteOpen}
         onClose={handleCloseModal}
-        onConfirm={() => handleDeleteUser()}
+        onConfirm={handleDeleteUser}
+        loading={isProcessing}
         title="Delete user"
         description={
           selectedUser
-            ? `Are you sure you want to delete ${selectedUser?.firstName} ${selectedUser?.lastName}?`
+            ? `Are you sure you want to delete ${selectedUser.firstName} ${selectedUser.lastName}?`
             : undefined
         }
         confirmText="Delete"
         cancelText="Cancel"
-        // loading={deleting}
       />
-
-      {/* Activate/Deactivate confirm */}
+    
       <ConfirmModal
-        open={confirmOpen}
+        open={confirmOpen && !!selectedUser}
         onClose={handleCloseModal}
-        onConfirm={() => handleUpdateUser()}
+        onConfirm={handleUpdateUser}
+        loading={isProcessing}
         title={selectedUser?.isActive ? "Deactivate user" : "Activate user"}
         description={
-          selectedUser
-            ? selectedUser?.isActive
-              ? `This will prevent ${selectedUser?.email} from accessing the portal.`
-              : `This will allow ${selectedUser?.email} to access the portal.`
-            : undefined
+          selectedUser?.isActive
+            ? `This will prevent ${selectedUser.email} from accessing the portal.`
+            : `This will allow ${selectedUser?.email} to access the portal.`
         }
         confirmText={selectedUser?.isActive ? "Deactivate" : "Activate"}
         cancelText="Cancel"
-        // loading={updating}
       />
-
+      
       <EditModal
         open={confirmEditOpen}
         form={form}
         fieldErrors={fieldErrors}
-        cancelText="Cancel"
-        loading={isUpdating}
         onClose={handleCloseModal}
         onConfirm={selectedUser ? handleUpdateUser : handleCreateuser}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
+        loading={isProcessing}
       />
-
+   
       <DetailModal
-        open={confirmOpen}
+        open={confirmOpen && !!selectedUser}
         user={form}
         onClose={handleCloseModal}
       />
@@ -370,7 +368,7 @@ export function UserList() {
       <ChangePasswordModal
         user={selectedUser}
         open={changePasswordOpen}
-        isUpdating={isUpdating}
+        isUpdating={isProcessing}
         onClose={handleCloseModal}
         onConfirm={handleChangeUserPassword}
       />
