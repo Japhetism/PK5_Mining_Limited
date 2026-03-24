@@ -4,6 +4,8 @@ import { statuses } from "../constants";
 import { Permission } from "../constants/permissions";
 import { adminRouteItems } from "../routes/admin-config";
 import { UserRole } from "../constants/role";
+import { UserErrors } from "../interfaces/user";
+import { ZodError } from "zod";
 
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
@@ -209,4 +211,19 @@ export const generatePassword = (length = 8): string => {
   return Array.from(crypto.getRandomValues(new Uint32Array(length)))
     .map(n => chars[n % chars.length])
     .join("");
+};
+
+export const mapZodErrors = <T extends Record<string, any>>(error: ZodError<any>): Partial<Record<keyof T, string>> => {
+  const fieldErrors: Partial<Record<keyof T, string>> = {};
+
+  error.issues.forEach((issue) => {
+    if (issue.path && issue.path.length > 0) {
+      const key = issue.path[0] as keyof T;
+      if (!fieldErrors[key]) {
+        fieldErrors[key] = issue.message;
+      }
+    }
+  });
+
+  return fieldErrors;
 };

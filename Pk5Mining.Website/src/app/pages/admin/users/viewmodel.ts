@@ -18,10 +18,11 @@ import {
   UsersQuery,
 } from "@/app/interfaces/user";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
-import { cleanParams, generatePassword, toNumber } from "@/app/utils/helper";
+import { cleanParams, generatePassword, mapZodErrors, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import { ApiError } from "@/app/interfaces";
 import { changePassword } from "@/app/api/auth";
+import { createUserSchema } from "@/app/schemas/user.schema";
 
 const defaultFormData: User = {
   id: 0,
@@ -223,10 +224,14 @@ function useUserViewModel() {
   const handleDeleteUser = () => {};
 
   const handleCreateuser = () => {
-    if (!form.email || !form.username || !form.firstName) {
-      toastUtil.error("Please fill in required fields (*)");
+    const result = createUserSchema.safeParse(form);
+
+    if (!result.success) {
+      const errors = mapZodErrors<CreateUserPayload>(result.error);
+      setFieldErrors(errors as UserErrors);
       return;
     }
+
     const { id, dT_Created, ...payload } = form;
     createMutation.mutate(payload as CreateUserPayload);
   };
