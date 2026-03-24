@@ -203,3 +203,10 @@ export const toTitleCase = (str: string) =>
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+
+export const generatePassword = (length = 8): string => {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$&";
+  return Array.from(crypto.getRandomValues(new Uint32Array(length)))
+    .map(n => chars[n % chars.length])
+    .join("");
+};

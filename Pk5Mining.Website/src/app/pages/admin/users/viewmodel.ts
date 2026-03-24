@@ -11,6 +11,7 @@ import {
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import {
   CreateUserPayload,
+  IChangePasswordPayload,
   UpdateUserPayload,
   User,
   UserErrors,
@@ -19,6 +20,8 @@ import {
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
+import { ApiError } from "@/app/interfaces";
+import { changePassword } from "@/app/api/auth";
 
 const defaultFormData: User = {
   id: 0,
@@ -41,6 +44,9 @@ function useUserViewModel() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
+
+  const [changePasswordOpen, setChangePasswordOpen] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const [form, setForm] = useState(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<UserErrors>({});
@@ -157,6 +163,27 @@ function useUserViewModel() {
     },
   });
 
+  const changeUserPasswordMutation = useMutation({
+    mutationFn: (payload: IChangePasswordPayload) => changePassword(payload),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: () => {
+      setChangePasswordOpen(false);
+      toastUtil.success("Password changed successfully.");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred. Please try again.");
+
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
+
   const updateFilter = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setIsFilter(true);
@@ -190,7 +217,17 @@ function useUserViewModel() {
     setConfirmEditOpen(false);
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
+    setChangePasswordOpen(false);
   };
+
+  const handleChangeUserPassword = (password: string) => {
+    if (selectedUser) {
+      changeUserPasswordMutation.mutate({
+        userId: selectedUser?.id?.toString(),
+        newPassword: password
+      })
+    }
+  }
 
   const users: User[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
@@ -212,6 +249,7 @@ function useUserViewModel() {
     confirmDeleteOpen,
     form,
     fieldErrors,
+    changePasswordOpen,
     onChange,
     updateFilter,
     onChangePage,
@@ -229,6 +267,8 @@ function useUserViewModel() {
     handleCloseModal,
     setFilters,
     setFieldErrors,
+    setChangePasswordOpen,
+    handleChangeUserPassword,
   };
 }
 
