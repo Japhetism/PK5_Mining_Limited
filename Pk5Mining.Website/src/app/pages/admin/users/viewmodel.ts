@@ -250,6 +250,7 @@ function useUserViewModel() {
     form,
     fieldErrors,
     changePasswordOpen,
+    isUpdating,
     onChange,
     updateFilter,
     onChangePage,
