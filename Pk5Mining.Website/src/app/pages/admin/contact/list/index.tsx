@@ -160,9 +160,11 @@ export function ContactMessageList() {
           </button>
         </div>
 
-        <div className="inline-flex items-center gap-1">
-          {appliedAdvanceFilters &&
-            Object.entries(appliedAdvanceFilters)
+        {appliedAdvanceFilters && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-gray-400">Active filters:</span>
+
+            {Object.entries(appliedAdvanceFilters)
               .filter(([key, value]) => value && value !== "all")
               .map(([key, value]) => (
                 <button
@@ -171,13 +173,20 @@ export function ContactMessageList() {
                 >
                   <span>
                     {key
-                      .replace(/([A-Z])/g, " $1") // convert camelCase to words
+                      .replace(/([A-Z])/g, " $1")
                       .replace(/^./, (str) => str.toUpperCase())}
                     : {value}
                   </span>
                 </button>
               ))}
-        </div>
+            <button
+              onClick={handleClearAdvanceFilters}
+              className="text-xs text-[#c89b3c] hover:underline ml-auto"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
 
         <PaginatedTable<ContactMessageDto>
           columns={columns}
