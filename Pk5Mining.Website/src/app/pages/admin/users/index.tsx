@@ -48,6 +48,7 @@ export function UserList() {
     confirmDeleteOpen,
     changePasswordOpen,
     isProcessing,
+    confirmUpdateStatusOpen,
     onChange,
     updateFilter,
     onChangePage,
@@ -65,6 +66,8 @@ export function UserList() {
     setFieldErrors,
     setChangePasswordOpen,
     handleChangeUserPassword,
+    handleActivateDeactivateUser,
+    setConfirmUpdateStatusOpen,
   } = useUserListViewModel();
 
   const columns: PaginatedTableColumn<User>[] = useMemo(
@@ -164,7 +167,7 @@ export function UserList() {
                 <DropdownMenu.Item
                   onSelect={() => {
                     setSelectedUser(user);
-                    setConfirmOpen(true);
+                    setConfirmUpdateStatusOpen(true);
                   }}
                   className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
                 >
@@ -208,7 +211,7 @@ export function UserList() {
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -235,7 +238,6 @@ export function UserList() {
         </motion.button>
       </div>
 
-     
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
@@ -317,7 +319,7 @@ export function UserList() {
         emptyTitle="No users found"
         noResultsTitle="No results found. Try changing your filters."
       />
-    
+
       <ConfirmModal
         open={confirmDeleteOpen}
         onClose={handleCloseModal}
@@ -332,11 +334,11 @@ export function UserList() {
         confirmText="Delete"
         cancelText="Cancel"
       />
-    
+
       <ConfirmModal
-        open={confirmOpen && !!selectedUser}
+        open={confirmUpdateStatusOpen && !!selectedUser}
         onClose={handleCloseModal}
-        onConfirm={handleUpdateUser}
+        onConfirm={() => handleActivateDeactivateUser(!selectedUser?.isActive)}
         loading={isProcessing}
         title={selectedUser?.isActive ? "Deactivate user" : "Activate user"}
         description={
@@ -347,7 +349,7 @@ export function UserList() {
         confirmText={selectedUser?.isActive ? "Deactivate" : "Activate"}
         cancelText="Cancel"
       />
-      
+
       <EditModal
         open={confirmEditOpen}
         form={form}
@@ -358,7 +360,7 @@ export function UserList() {
         onChange={onChange}
         loading={isProcessing}
       />
-   
+
       <DetailModal
         open={confirmOpen && !!selectedUser}
         user={form}
