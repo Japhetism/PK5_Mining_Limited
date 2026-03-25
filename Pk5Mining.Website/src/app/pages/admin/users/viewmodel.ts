@@ -41,6 +41,20 @@ const defaultFormData: User = {
   dT_Created: "",
 };
 
+enum UserAction {
+  Update = "Update",
+  Activate = "Activate",
+  Deactivate = "Deactivate",
+  Delete = "Delete",
+}
+
+const successMessages: Record<UserAction, string> = {
+  [UserAction.Update]: "User updated successfully",
+  [UserAction.Activate]: "User activated successfully",
+  [UserAction.Deactivate]: "User deactivated successfully",
+  [UserAction.Delete]: "User deleted successfully",
+};
+
 function useUserViewModel() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,9 +65,12 @@ function useUserViewModel() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
+  const [confirmUpdateStatusOpen, setConfirmUpdateStatusOpen] =
+    useState<boolean>(false);
 
   const [changePasswordOpen, setChangePasswordOpen] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<UserAction | null>(null);
 
   const [form, setForm] = useState(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<UserErrors | null>(null);
@@ -138,21 +155,6 @@ function useUserViewModel() {
     }
   }, [error]);
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteUser(id),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["users"] });
-      toastUtil.success("User deleted successfully");
-    },
-    onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while deleting user. Please try again.",
-      );
-      toastUtil.error(message);
-    },
-  });
-
   const createMutation = useMutation({
     mutationFn: (payload: CreateUserPayload) => createUser(payload),
     onMutate: () => {
@@ -181,7 +183,11 @@ function useUserViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       setConfirmEditOpen(false);
-      toastUtil.success("User updated successfully");
+      const msg =
+        successMessages[actionType as UserAction] ??
+        successMessages[UserAction.Update];
+      handleCloseModal();
+      toastUtil.success(msg);
     },
     onError: (error) => {
       const message = getAxiosErrorMessage(
@@ -190,7 +196,10 @@ function useUserViewModel() {
       );
       toastUtil.error(message);
     },
-    onSettled: () => setIsProcessing(false),
+    onSettled: () => {
+      setIsProcessing(false);
+      setActionType(null);
+    },
   });
 
   const changeUserPasswordMutation = useMutation({
@@ -226,7 +235,23 @@ function useUserViewModel() {
     setPageNumber(1);
   };
 
-  const handleDeleteUser = () => {};
+  const handleDeleteUser = () => {
+    if (!selectedUser) return;
+
+    const formWithId = { ...form, id: Number(form.id), isDeleted: true };
+
+    setActionType(UserAction.Delete);
+    updateMutation.mutate(formWithId);
+  };
+
+  const handleActivateDeactivateUser = (isActive: boolean) => {
+    if (!selectedUser) return;
+
+    const formWithId = { ...form, id: Number(form.id), isActive: isActive };
+
+    setActionType(isActive ? UserAction.Activate : UserAction.Deactivate);
+    updateMutation.mutate(formWithId);
+  };
 
   const handleCreateUser = () => {
     const result = createUserSchema.safeParse(form);
@@ -254,6 +279,7 @@ function useUserViewModel() {
     }
 
     setFieldErrors({});
+    setActionType(UserAction.Update);
     updateMutation.mutate(result.data);
   };
 
@@ -274,6 +300,7 @@ function useUserViewModel() {
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
     setChangePasswordOpen(false);
+    setConfirmUpdateStatusOpen(false);
   };
 
   const handleChangeUserPassword = (password: string) => {
@@ -307,6 +334,7 @@ function useUserViewModel() {
     fieldErrors,
     changePasswordOpen,
     isProcessing,
+    confirmUpdateStatusOpen,
     onChange,
     updateFilter,
     onChangePage,
@@ -326,6 +354,8 @@ function useUserViewModel() {
     setFieldErrors,
     setChangePasswordOpen,
     handleChangeUserPassword,
+    handleActivateDeactivateUser,
+    setConfirmUpdateStatusOpen,
   };
 }
 
