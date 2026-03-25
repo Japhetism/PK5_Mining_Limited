@@ -164,21 +164,33 @@ export function ContactMessageList() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-gray-400">Active filters:</span>
 
-            {Object.entries(appliedAdvanceFilters)
-              .filter(([key, value]) => value && value !== "all")
-              .map(([key, value]) => (
-                <button
-                  key={key}
-                  className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200"
-                >
-                  <span>
-                    {key
-                      .replace(/([A-Z])/g, " $1")
-                      .replace(/^./, (str) => str.toUpperCase())}
-                    : {value}
-                  </span>
-                </button>
-              ))}
+            {appliedAdvanceFilters &&
+              Object.entries(appliedAdvanceFilters)
+                .filter(([key, value]) => value && value !== "all")
+                .map(([key, value]) => {
+                  let displayValue = value;
+
+                  // Check if the key is startDate or endDate
+                  if (key === "startDate") {
+                    displayValue = formatDateTime(value, false);
+                  } else if (key === "endDate") {
+                    displayValue = formatDateTime(value, false);
+                  }
+
+                  return (
+                    <button
+                      key={key}
+                      className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200"
+                    >
+                      <span>
+                        {key
+                          .replace(/([A-Z])/g, " $1")
+                          .replace(/^./, (str) => str.toUpperCase())}
+                        : {displayValue}
+                      </span>
+                    </button>
+                  );
+                })}
             <button
               onClick={handleClearAdvanceFilters}
               className="text-xs text-[#c89b3c] hover:underline ml-auto"

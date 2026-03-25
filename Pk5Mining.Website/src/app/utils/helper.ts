@@ -227,3 +227,20 @@ export const mapZodErrors = <T extends Record<string, any>>(error: ZodError<any>
 
   return fieldErrors;
 };
+
+export function toBackendDateTimeWithBoundary(
+  dateStr: string,
+  type: "start" | "end" = "start"
+): string {
+  const [day, month, year] = dateStr.split("/").map(Number);
+
+  if (![day, month, year].every(Number.isFinite)) {
+    throw new Error("Invalid date format. Expected DD/MM/YYYY");
+  }
+
+  const hours = type === "start" ? 0 : 23;
+  const minutes = type === "start" ? 0 : 59;
+  const seconds = type === "start" ? 0 : 59;
+
+  return new Date(year, month - 1, day, hours, minutes, seconds).toISOString();
+}

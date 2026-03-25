@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { X, ChevronDown } from "lucide-react";
 import { DatePicker } from "@/app/components/ui/date-picker";
 import { AdvanceFilter, ContactStatus } from "@/app/interfaces";
-import { formatDateTime } from "@/app/utils/helper";
+import { formatDateTime, toBackendDateTimeWithBoundary } from "@/app/utils/helper";
 import {
   contactMsgStatusOptions,
   websites,
@@ -154,7 +154,7 @@ export function ContactMessageFilterPanel({
                         ? formatDateTime(filters.startDate, false)
                         : ""
                     }
-                    onChange={(value) => updateFilters("startDate", value)}
+                    onChange={(value) => updateFilters("startDate", toBackendDateTimeWithBoundary(value))}
                   />
                 </FilterField>
 
@@ -166,7 +166,7 @@ export function ContactMessageFilterPanel({
                         ? formatDateTime(filters.endDate, false)
                         : ""
                     }
-                    onChange={(value) => updateFilters("endDate", value)}
+                    onChange={(value) => updateFilters("endDate", toBackendDateTimeWithBoundary(value, "end"))}
                   />
                 </FilterField>
               </div>
