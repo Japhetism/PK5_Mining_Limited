@@ -225,6 +225,14 @@ export function ContactMessageList() {
         onApply={handleApplyAdanceFilters}
         onClear={handleClearAdvanceFilters}
       />
+
+      {/* View Contact Modal */}
+      <ContactViewModal
+        open={confirmOpen && !!selectedContactMessage}
+        onClose={handleCloseModal}
+        contact={selectedContactMessage}
+      />
+
     </>
   );
 }
