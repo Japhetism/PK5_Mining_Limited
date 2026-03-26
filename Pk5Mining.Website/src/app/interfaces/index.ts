@@ -325,24 +325,14 @@ export type ContactThreadDto = {
 };
 
 export type ContactQuery = {
-  // firstName: string;
-  // lastName: string;
-  startDate: string;
-  endDate: string;
-  id: string;
-  name: string;
-  email: string;
-  company?: string | null;
-  subject: string;
-  website: string;
-  message: string;
-  phoneNumber: string;
-  dT_startDate: string; // keep naming consistent with your backend style
-  dT_endDate?: string | null;
-  pageNumber?: number;
-  pageSize?: number;
-  status?: ContactStatus | "all";
-  search?: string; // search by name/email/subject
+  pageNumber: number;
+  pageSize: number;
+  email?: string;
+  subject?: string;
+  name?: string;
+  appId?: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 export type ReplyToContactBody = {
@@ -415,3 +405,12 @@ export type NavItem = {
   show: boolean;
   end?: boolean;
 };
+
+export type AdvanceFilter = {
+  email?: string;
+  subject?: string;
+  name?: string;
+  appId?: string;
+  startDate?: string;
+  endDate?: string;
+}

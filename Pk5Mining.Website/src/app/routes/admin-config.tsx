@@ -64,12 +64,6 @@ const ContactMessageList = lazy(() =>
   })),
 );
 
-const ContactMessageDetails = lazy(() =>
-  import("@/app/pages/admin/contact/details").then((m) => ({
-    default: m.ContactMessageDetails,
-  })),
-);
-
 const Users = lazy(() =>
   import("@/app/pages/admin/users").then((m) => ({ default: m.UserList })),
 );
@@ -167,17 +161,6 @@ export const adminRouteItems: AdminRouteItem[] = [
       PERMISSIONS.contactMessageUpdate,
     ],
     element: ContactMessageList,
-  },
-  {
-    path: "contact-messages/:id",
-    label: "Contact Message Detail",
-    show: false,
-    canAccess: false,
-    permissions: [
-      PERMISSIONS.contactMessageView,
-      PERMISSIONS.contactMessageUpdate,
-    ],
-    element: ContactMessageDetails,
   },
 
   {
