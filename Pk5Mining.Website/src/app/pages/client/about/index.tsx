@@ -151,7 +151,7 @@ export function About() {
                   </motion.div>
                   <h3 className="text-xl font-bold mb-2">{leader.name}</h3>
                   <p className="text-[#c89b3c] text-sm mb-2">{leader.role}</p>
-                  <p className="text-gray-400 text-sm">{leader.experience} experience</p>
+                  {/* <p className="text-gray-400 text-sm">{leader.experience} experience</p> */}
                 </motion.div>
               </AnimatedSection>
             ))}
