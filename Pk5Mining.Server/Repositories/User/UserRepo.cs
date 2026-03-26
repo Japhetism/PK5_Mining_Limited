@@ -20,75 +20,87 @@ namespace Pk5Mining.Server.Repositories.Admin
 
         public async Task<(User?, string?)> LoginAsync(LoginDTO dto)
         {
-            var admin = await _dbContext.Users.FirstOrDefaultAsync(a => a.Email == dto.Email && a.Password == dto.Password);
-            if (admin == null)
+            var user = await _dbContext.Users.FirstOrDefaultAsync(a => a.Email == dto.Email && a.Password == dto.Password);
+            if (user == null)
             {
                 return (null, "Invalid email or password.");
             }
-            return (admin, null);
+            return (user, null);
         }
         public async Task<(IUser?, string?, bool)> CreateAsync(IUserDTO dto)
         {
             try
             {
-                User admin = _mapper.Map<User>(dto);
-                if (admin == null)
+                User user = _mapper.Map<User>(dto);
+                if (user == null)
                 {
-                    throw new ArgumentNullException(nameof(admin));
+                    throw new ArgumentNullException(nameof(user));
                 }
-                admin.Id = IdGenerator.GenerateUniqueId();
-                admin.Role = "Default User";
-                admin.HasChangedPassword = false;
-                admin.IsActive = true;
-                admin.IsDeleted = false;
-                admin.DT_Created = DateTime.UtcNow;
-                await _dbContext.Users.AddAsync(admin);
+                user.Id = IdGenerator.GenerateUniqueId();
+                user.Role = "Default User";
+                user.HasChangedPassword = false;
+                user.IsActive = true;
+                user.IsDeleted = false;
+                user.DT_Created = DateTime.UtcNow;
+                await _dbContext.Users.AddAsync(user);
                 await _dbContext.SaveChangesAsync();
-                return (admin, null, false);
+                return (user, null, false);
             }
             catch (Exception ex)
             {
                 return (null, ex.Message, true);
             }
         }
-
         public async Task<(IUser?, string?, bool)> UpdatePasswordAsync(long Id, SetPassword dto)
         {
             try
             {
-                var admin = await _dbContext.Users.FindAsync(Id);
-                if (admin == null)
+                var user = await _dbContext.Users.FindAsync(Id);
+                if (user == null)
                 {
                     return (null, "User not found.", true);
                 }
-                admin.Password = dto.NewPassword;
-                admin.HasChangedPassword = true;
-                _dbContext.Users.Update(admin);
+                if (user.Password == dto.NewPassword)
+                {
+                    return (null, "New password cannot be the same as current password.", true);
+                }
+                user.Password = dto.NewPassword;
+                if (dto.ByAdmin)
+                {
+                    user.HasChangedPassword = false;
+                }
+                else
+                {
+                    user.HasChangedPassword = true;
+                }
+                _dbContext.Users.Update(user);
                 await _dbContext.SaveChangesAsync();
-                return (admin, null, false);
+                return (user, null, false);
             }
             catch (Exception ex)
             {
                 return (null, ex.Message, true);
             }
         }
-        public async Task<(IUser?, string?, bool)> GetByIdAsync(long adminId)
+        public async Task<(UserResponseDto?, string?, bool)> GetByIdAsync(long userId)
         {
             try
             {
-                var admin = await _dbContext.Users.FindAsync(adminId);
-                if (admin == null)
+                var user = await _dbContext.Users.FindAsync(userId);
+                if (user == null)
                 {
-                    return (null, "Admin not found.", true);
+                    return (null, "User not found.", true);
                 }
-                return (admin, null, false);
+
+                var result = _mapper.Map<UserResponseDto>(user);
+                return (result, null, false);
             }
             catch (Exception ex)
             {
                 return (null, ex.Message, true);
             }
         }
-        public async Task<(IEnumerable<IUser> User, int TotalCount)> GetFilteredUsers(
+        public async Task<(IEnumerable<UserResponseDto> User, int TotalCount)> GetFilteredUsers(
               int pageNumber,
               int pageSize,
               string? email,
@@ -120,7 +132,8 @@ namespace Pk5Mining.Server.Repositories.Admin
             int totalCount = await query.CountAsync();
 
             var users = await query.OrderByDescending(c => c.DT_Created).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-            return (users, totalCount);
+            var result = _mapper.Map<IEnumerable<UserResponseDto>>(users);
+            return (result, totalCount);
         }
         public async Task<(IUser?, string?, bool)> UpdateUserAsync(UpdateUserDto dto)
         {

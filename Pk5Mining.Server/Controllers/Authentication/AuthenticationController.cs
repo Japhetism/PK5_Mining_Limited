@@ -11,29 +11,39 @@ namespace Pk5Mining.Server.Controllers.Authentication
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IUserRepo _adminRepo;
+        private readonly IUserRepo _userRepo;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
         public AuthenticationController(IUserRepo adminRepo, ITokenService tokenService, IMapper mapper)
         {
-            _adminRepo = adminRepo;
+            _userRepo = adminRepo;
             _tokenService = tokenService;
             _mapper = mapper;
         }
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] LoginDTO dto)
         {
-            var (admin, error) = await _adminRepo.LoginAsync(dto);
+            var (user, error) = await _userRepo.LoginAsync(dto);
 
             if (error != null)
             {
                 return Unauthorized(ApiResponse.AuthorizationException(null, error));
             }
+            if (!user.HasChangedPassword)
+            {
+                var passResponse = _mapper.Map<LoginResponseDTO>(user);
 
-            var response = _mapper.Map<UserResponseDTO>(admin);
+                return Ok(ApiResponse.SuccessMessage(new
+                {
+                    user = passResponse,
+                    mustChangePassword = true
+                }, "Password change required"));
+            }
 
-            response.JwtToken = _tokenService.CreateJWTToken(admin);
+            var response = _mapper.Map<LoginResponseDTO>(user);
+
+            response.JwtToken = _tokenService.CreateJWTToken(user);
 
             return Ok(ApiResponse.SuccessMessage(response, "Login Successful"));
         }
