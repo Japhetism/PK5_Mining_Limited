@@ -73,20 +73,20 @@ export const minerals: IMineral[] = [
 
 export const leadership: ILeader[] = [
   {
-    name: "Prince Nnaemeka Njoku",
-    role: "Chairman",
+    name: "Prince Njoku",
+    role: "CEO/Chairman",
     experience: "20 years",
     image: CEOImg,
   },
   {
     name: "Peter Eziakor",
-    role: "Head of Facilities & Production",
+    role: "Director of Corporate Affairs",
     experience: "25 years",
     image: HOPImg,
   },
   {
     name: "Alozie Okwukanma ",
-    role: "Head of IT",
+    role: "Director of ICT",
     experience: "15 years",
     image: HITImg,
   },
