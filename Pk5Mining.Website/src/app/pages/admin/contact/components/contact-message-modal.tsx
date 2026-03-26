@@ -1,55 +1,43 @@
-import { motion } from "motion/react";
+import {
+  X,
+  Mail,
+  Calendar,
+  User,
+  Phone,
+  Globe,
+  CheckCircle2,
+} from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
-import { X, Mail, CheckCircle2, Calendar, User } from "lucide-react";
 import { formatDateTime } from "@/app/utils/helper";
 import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
-import { ContactReplyModal } from "@/app/components/ui/contact-reply-modal";
-import { ContactDetailsSkeleton } from "@/app/components/ui/contact-details-skeleton";
-import { ConfirmModal } from "@/app/components/ui/confirm-modal";
-import useContactDetailsViewModel from "../details/viewmodel";
 import { ContactMessageDto } from "@/app/interfaces";
 
 type ContactViewModalProps = {
   open: boolean;
+  contact: ContactMessageDto | null;
   onClose: () => void;
-  contactId: string ;
-  contact:ContactMessageDto | null ;
 };
 
-export function ContactViewModal({ open, onClose, contactId, contact }: ContactViewModalProps) {
-  // Pass the contactId to the hook. 
-  // NOTE: This will only work after you apply the ViewModel fix in Step 2.
-  const {
-    thread,
-    isLoading,
-    isReplyOpen,
-    replyMutation,
-    confirmOpen,
-    updating,
-    setConfirmOpen,
-    setIsReplyOpen,
-    handleUpdateStatus,
-  } = useContactDetailsViewModel(contactId);
-
-  // If modal is not open or no ID provided, return null early
-  if (!open || !contactId) return null;
-
+export function ContactViewModal({
+  open,
+  contact,
+  onClose,
+}: ContactViewModalProps) {
   return (
     <Modal
       open={open}
       onClose={onClose}
-      maxWidth="2xl"
+      maxWidth="lg"
       height="h-auto"
       showCloseButton={false}
       panelClassName="bg-[#0a0a0a] border border-gray-800"
     >
-      <div className="flex flex-col max-h-[90vh]">
+      <div className="flex flex-col max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
-          <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-gray-200 truncate">
-              {isLoading ? "Loading message..." : contact?.subject || "No Subject"}
-            </h2>
+          <div className="flex items-center gap-3">
+            <Mail className="w-5 h-5 text-gray-400" />
+            <h2 className="text-lg font-semibold">{contact?.subject}</h2>
           </div>
           <button
             onClick={onClose}
@@ -59,78 +47,88 @@ export function ContactViewModal({ open, onClose, contactId, contact }: ContactV
           </button>
         </div>
 
-        {/* Scrollable Body */}
-        <div className="p-6 overflow-y-auto space-y-6 custom-scrollbar">
-          {isLoading ? (
-            <ContactDetailsSkeleton />
-          ) : contact ? (
-            <>
-              {/* Metadata Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white/5 p-4 rounded-xl border border-gray-800">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Sender</p>
-                  <div className="flex items-center gap-2 text-sm text-gray-200">
-                    <User size={14} className="text-[#c89b3c]" />
-                    <span>{contact?.firstName}</span>
-                  </div>
-                  <p className="text-xs text-gray-400 ml-5">{contact?.email}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Details</p>
-                  <div className="flex items-center gap-2 text-sm text-gray-200">
-                    <Calendar size={14} className="text-[#c89b3c]" />
-                    <span>{formatDateTime(contact.dT_Created)}</span>
-                  </div>
-                  <div className="mt-1 ml-5">
-                    <ContactStatusPill status={contact.status} />
-                  </div>
-                </div>
+        {/* Sender Info & Metadata */}
+        <div className="bg-[#0f0f0f] p-4 sm:p-5 space-y-4 border-b border-gray-800">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            {/* Left side metadata */}
+            <div className="flex flex-col gap-2 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                <span>
+                  {contact?.firstName} {contact?.lastName}
+                </span>
               </div>
+              {contact?.email && (
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="underline text-gray-200"
+                  >
+                    {contact.email}
+                  </a>
+                </div>
+              )}
+              {contact?.company && (
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  <span>{contact.company}</span>
+                </div>
+              )}
+              {contact?.phoneNumber && (
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  <span>{contact.phoneNumber}</span>
+                </div>
+              )}
+              {contact?.appId && (
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4" />
+                  <span>{contact.appId}</span>
+                </div>
+              )}
+              {contact?.dT_Created && (
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>{formatDateTime(contact.dT_Created)}</span>
+                </div>
+              )}
+            </div>
 
-              {/* Message Content */}
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-2">Message</p>
-                <div className="rounded-lg border border-gray-800 bg-black/40 p-4 text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">
-                  {contact.messageBody}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-10 text-gray-500">No message data found.</div>
-          )}
+            {/* Right side status */}
+            <div className="text-sm flex items-start">
+              Status: <ContactStatusPill status={contact?.status ?? "new"} />
+            </div>
+          </div>
+        </div>
+
+        {/* Message Body */}
+        <div className="p-4 sm:p-5 flex-1 overflow-auto">
+          <div className="rounded-lg border border-gray-800 bg-black/20 p-4 text-sm text-gray-100 whitespace-pre-wrap break-words shadow-sm">
+            {contact?.messageBody}
+          </div>
         </div>
 
         {/* Action Footer */}
         <div className="flex justify-end gap-3 p-4 border-t border-gray-800 bg-black/20">
           <button
-            onClick={() => setIsReplyOpen(true)}
-            disabled={isLoading || !contact}
+            onClick={onClose}
+            // disabled={isLoading || !contact}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 transition-colors disabled:opacity-50"
           >
-            <Mail size={14} />
-            Reply
+            Close
           </button>
 
           <button
-            onClick={() => setConfirmOpen(true)}
-            disabled={isLoading || updating || contact?.status === 'resolved' || !contact}
+            //onClick={() => setConfirmOpen(true)}
+            //disabled={isLoading || updating || contact?.status === 'resolved' || !contact}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] transition-transform active:scale-95 disabled:opacity-50"
           >
             <CheckCircle2 size={14} />
-            Mark Resolved
+            Mark as Resolved
           </button>
         </div>
       </div>
-
-      <ConfirmModal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        onConfirm={handleUpdateStatus}
-        title="Resolve Message"
-        description="Are you sure you want to mark this message as resolved? This action will notify the team."
-        confirmText="Confirm"
-        loading={updating}
-      />
     </Modal>
   );
 }
