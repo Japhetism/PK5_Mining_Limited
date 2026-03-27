@@ -138,6 +138,29 @@ function useContactListViewModel() {
   };
 
   const handleApplyAdanceFilters = () => {
+    const { startDate, endDate } = advanceFilters;
+
+    const hasStart = Boolean(startDate);
+    const hasEnd = Boolean(endDate);
+
+    let errorMessage = "";
+
+    if (hasStart !== hasEnd) {
+      errorMessage = "Please select both start and end dates.";
+    } else if (hasStart && hasEnd) {
+      const start = new Date(startDate!);
+      const end = new Date(endDate!);
+
+      if (start > end) {
+        errorMessage = "Start date cannot be later than end date.";
+      }
+    }
+
+    if (errorMessage) {
+      toastUtil.error(errorMessage);
+      return;
+    }
+
     setPageNumber(1);
     updateFilter("email", "");
     setAppliedAdvanceFilters(advanceFilters);
