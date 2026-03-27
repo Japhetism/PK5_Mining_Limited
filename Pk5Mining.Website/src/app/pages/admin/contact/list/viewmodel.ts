@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getContactMessages } from "@/app/api/contact";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getContactMessages, updateContactStatus } from "@/app/api/contact";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import {
@@ -9,6 +9,7 @@ import {
   ContactMessageDto,
   ContactQuery,
   ContactStatus,
+  UpdateContactPayload,
 } from "@/app/interfaces";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
@@ -49,6 +50,7 @@ function useContactListViewModel() {
     useState<AdvanceFilter | null>(null);
   const [applyAdvanceFilters, setApplyAdvanceFilters] =
     useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -102,6 +104,31 @@ function useContactListViewModel() {
     staleTime: 30_000,
   });
 
+  const updateMutation = useMutation({
+    mutationFn: (payload: UpdateContactPayload) => updateContactStatus(payload),
+    onMutate: () => {
+      setIsProcessing(true);
+    },
+    onSuccess: async (data) => {
+      const { status } = data!;
+      await queryClient.invalidateQueries({ queryKey: ["contactMessages"] });
+      setConfirmOpen(false);
+      handleCloseModal();
+      const msg = `contact message has been marked as ${status}`;
+      toastUtil.success(msg);
+    },
+    onError: (error) => {
+      const message = getAxiosErrorMessage(
+        error,
+        "An error occurred while updating contact message status. Please try again.",
+      );
+      toastUtil.error(message);
+    },
+    onSettled: () => {
+      setIsProcessing(false);
+    },
+  });
+
   useEffect(() => {
     if (error) {
       const message = getAxiosErrorMessage(
@@ -138,6 +165,29 @@ function useContactListViewModel() {
   };
 
   const handleApplyAdanceFilters = () => {
+    const { startDate, endDate } = advanceFilters;
+
+    const hasStart = Boolean(startDate);
+    const hasEnd = Boolean(endDate);
+
+    let errorMessage = "";
+
+    if (hasStart !== hasEnd) {
+      errorMessage = "Please select both start and end dates.";
+    } else if (hasStart && hasEnd) {
+      const start = new Date(startDate!);
+      const end = new Date(endDate!);
+
+      if (start > end) {
+        errorMessage = "Start date cannot be later than end date.";
+      }
+    }
+
+    if (errorMessage) {
+      toastUtil.error(errorMessage);
+      return;
+    }
+
     setPageNumber(1);
     updateFilter("email", "");
     setAppliedAdvanceFilters(advanceFilters);
@@ -148,6 +198,23 @@ function useContactListViewModel() {
     setAdvanceFilters(defaultAdvanceFilters);
     setAppliedAdvanceFilters(null);
     setIsFilter(false);
+  };
+
+  const handleUpdateContactStatus = (status: ContactStatus) => {
+    if (!selectedContactMessage) {
+      toastUtil.error("No contact message selected");
+      return;
+    }
+    if (!status) {
+      toastUtil.error("Invalid contact status selected");
+      return;
+    }
+
+    const payload = {
+      id: Number(selectedContactMessage.id),
+      status: status,
+    };
+    updateMutation.mutate(payload);
   };
 
   const contactMessages: ContactMessageDto[] = data?.data ?? [];
@@ -170,6 +237,7 @@ function useContactListViewModel() {
     isFilter,
     advanceFilters,
     appliedAdvanceFilters,
+    isProcessing,
     setConfirmOpen,
     setIsFilterPanelOpen,
     setSelectedContactMessage,
@@ -182,6 +250,7 @@ function useContactListViewModel() {
     updateAdvanceFilters,
     handleApplyAdanceFilters,
     handleClearAdvanceFilters,
+    handleUpdateContactStatus,
   };
 }
 

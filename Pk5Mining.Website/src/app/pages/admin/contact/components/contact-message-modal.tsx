@@ -10,17 +10,21 @@ import {
 import { Modal } from "@/app/components/ui/modal";
 import { formatDateTime } from "@/app/utils/helper";
 import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
-import { ContactMessageDto } from "@/app/interfaces";
+import { ContactMessageDto, ContactStatus } from "@/app/interfaces";
 
 type ContactViewModalProps = {
   open: boolean;
   contact: ContactMessageDto | null;
+  loading: boolean;
+  onUpdateStatus: (status: ContactStatus) => void;
   onClose: () => void;
 };
 
 export function ContactViewModal({
   open,
   contact,
+  loading,
+  onUpdateStatus,
   onClose,
 }: ContactViewModalProps) {
   return (
@@ -113,19 +117,19 @@ export function ContactViewModal({
         <div className="flex justify-end gap-3 p-4 border-t border-gray-800 bg-black/20">
           <button
             onClick={onClose}
-            // disabled={isLoading || !contact}
+            disabled={loading || !contact}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 transition-colors disabled:opacity-50"
           >
             Close
           </button>
 
           <button
-            //onClick={() => setConfirmOpen(true)}
-            //disabled={isLoading || updating || contact?.status === 'resolved' || !contact}
+            onClick={() => onUpdateStatus("resolved")}
+            disabled={loading || !contact}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] transition-transform active:scale-95 disabled:opacity-50"
           >
-            <CheckCircle2 size={14} />
-            Mark as Resolved
+            {!loading && <CheckCircle2 size={14} />}
+            {loading ? "Processing..." : "Mark as Resolved"}
           </button>
         </div>
       </div>

@@ -163,8 +163,6 @@ function useSubsidiaryListViewModel() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log('form is ', form);
   }
 
   const handleCloseModal = () => {

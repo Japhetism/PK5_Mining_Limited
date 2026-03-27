@@ -155,6 +155,7 @@ export function ContactMessageFilterPanel({
                         : ""
                     }
                     onChange={(value) => updateFilters("startDate", toBackendDateTimeWithBoundary(value))}
+                    maxDate={filters.endDate ? new Date(filters.endDate) : new Date()}
                   />
                 </FilterField>
 
@@ -167,6 +168,8 @@ export function ContactMessageFilterPanel({
                         : ""
                     }
                     onChange={(value) => updateFilters("endDate", toBackendDateTimeWithBoundary(value, "end"))}
+                    minDate={filters.startDate ? new Date(filters.startDate) : new Date()}
+                    maxDate={new Date()}
                   />
                 </FilterField>
               </div>

@@ -1,12 +1,9 @@
 import {
   ContactQuery,
-  ContactThreadDto,
-  ReplyToContactBody,
-  ContactStatus,
-  ContactReplyDto,
   ApiResponse,
   ContactResponsePayload,
   InquiryFormDto,
+  UpdateContactPayload,
 } from "../interfaces";
 import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
@@ -30,10 +27,12 @@ export async function getContactMessages(params: ContactQuery) {
   }
 }
 
-export async function updateContactStatus(id: string, status: ContactStatus) {
+export async function updateContactStatus(payload: UpdateContactPayload) {
+  const { id, status } = payload;
+
   try {
-    const { data } = await http.patch<ApiResponse<void>>(
-      `/api/contact/${id}/status`,
+    const { data } = await http.put<ApiResponse<void>>(
+      `/ContactUs/${id}`,
       { status },
     );
 
@@ -46,7 +45,6 @@ export async function updateContactStatus(id: string, status: ContactStatus) {
       );
     }
 
-    console.log("✅ Contact status updated successfully");
     return data.responseData;
   } catch (err) {
     throw new Error(

@@ -62,7 +62,7 @@ export const contactMsgStatusOptions: { label: string; value: ContactStatus | "a
 
 export const websites = [
   { label: "PK5 Mining", value: "com.pk5.mining" },
-  { label: "PK5 Agro", value: "com.agro" }
+  { label: "PK5 Agro", value: "com.pk5.agro" }
 ]
 
 export const agroSubjects = [
