@@ -262,9 +262,11 @@ export const getFilterSubjects = (appId: string | undefined) => {
     "com.pk5.agro": agroSubjects,
   };
 
-  if (!appId) {
-    return [...miningSubjects, ...agroSubjects];
-  }
+  const subjects = !appId
+    ? [...miningSubjects, ...agroSubjects]
+    : (subjectMap[appId] ?? []);
 
-  return subjectMap[appId] ?? [];
+  return Array.from(
+    new Map(subjects.map((item) => [item.value, item])).values(),
+  ).sort((a, b) => a.label.localeCompare(b.label));
 };
