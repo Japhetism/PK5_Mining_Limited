@@ -81,7 +81,7 @@ export function ContactMessageList() {
     },
     {
       key: "appId",
-      header: "Source",
+      header: "Website",
       render: (row) => (
         <span>{row.appId ? getWebsiteName(row.appId) : "-"}</span>
       ),

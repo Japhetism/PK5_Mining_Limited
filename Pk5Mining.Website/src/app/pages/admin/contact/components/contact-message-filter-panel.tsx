@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { X, ChevronDown } from "lucide-react";
 import { DatePicker } from "@/app/components/ui/date-picker";
 import { AdvanceFilter, ContactStatus } from "@/app/interfaces";
-import { formatDateTime, toBackendDateTimeWithBoundary } from "@/app/utils/helper";
+import { formatDateTime, getFilterSubjects, toBackendDateTimeWithBoundary } from "@/app/utils/helper";
 import {
   contactMsgStatusOptions,
   websites,
@@ -134,7 +134,7 @@ export function ContactMessageFilterPanel({
                     className="w-full appearance-none rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
                   >
                     <option value="">All Subjects</option>
-                    {miningSubjects.map((opt) => (
+                    {getFilterSubjects(filters.appId).map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label}
                       </option>

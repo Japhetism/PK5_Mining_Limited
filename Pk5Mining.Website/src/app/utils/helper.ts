@@ -1,6 +1,6 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
 import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
-import { statuses, websites } from "../constants";
+import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
 import { Permission } from "../constants/permissions";
 import { adminRouteItems } from "../routes/admin-config";
 import { UserRole } from "../constants/role";
@@ -207,13 +207,16 @@ export const toTitleCase = (str: string) =>
     .join(" ");
 
 export const generatePassword = (length = 8): string => {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$&";
+  const chars =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$&";
   return Array.from(crypto.getRandomValues(new Uint32Array(length)))
-    .map(n => chars[n % chars.length])
+    .map((n) => chars[n % chars.length])
     .join("");
 };
 
-export const mapZodErrors = <T extends Record<string, any>>(error: ZodError<any>): Partial<Record<keyof T, string>> => {
+export const mapZodErrors = <T extends Record<string, any>>(
+  error: ZodError<any>,
+): Partial<Record<keyof T, string>> => {
   const fieldErrors: Partial<Record<keyof T, string>> = {};
 
   error.issues.forEach((issue) => {
@@ -230,7 +233,7 @@ export const mapZodErrors = <T extends Record<string, any>>(error: ZodError<any>
 
 export function toBackendDateTimeWithBoundary(
   dateStr: string,
-  type: "start" | "end" = "start"
+  type: "start" | "end" = "start",
 ): string {
   const [day, month, year] = dateStr.split("/").map(Number);
 
@@ -246,5 +249,22 @@ export function toBackendDateTimeWithBoundary(
 }
 
 export const getWebsiteName = (appId: string): string => {
-  return websites.find((item: { label: string, value: string}) => item.value === appId)?.label ?? appId;
-}
+  return (
+    websites.find(
+      (item: { label: string; value: string }) => item.value === appId,
+    )?.label ?? appId
+  );
+};
+
+export const getFilterSubjects = (appId: string | undefined) => {
+  const subjectMap: Record<string, typeof miningSubjects> = {
+    "com.pk5.mining": miningSubjects,
+    "com.pk5.agro": agroSubjects,
+  };
+
+  if (!appId) {
+    return [...miningSubjects, ...agroSubjects];
+  }
+
+  return subjectMap[appId] ?? [];
+};
