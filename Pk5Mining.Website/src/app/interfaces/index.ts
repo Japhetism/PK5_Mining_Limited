@@ -335,6 +335,11 @@ export type ContactQuery = {
   endDate?: string;
 };
 
+export type UpdateContactPayload = {
+  id: number;
+  status: ContactStatus;
+}
+
 export type ReplyToContactBody = {
   subject: string;
   message: string;

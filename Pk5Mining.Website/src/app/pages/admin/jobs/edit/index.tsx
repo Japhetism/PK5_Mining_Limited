@@ -20,8 +20,6 @@ export function JobEdit() {
     setForm,
   } = useJobEditViewModel();
 
-  console.log("job details ", form);
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
@@ -157,7 +155,6 @@ export function JobEdit() {
               name="dT_Expiry"
               value={formatDateTime(form.dT_Expiry, false)}
               onChange={(value) => {
-                console.log("selected date is ", value, formatDateTime(value, false))
                 setForm((prev) => ({
                   ...prev,
                   dT_Expiry: value,

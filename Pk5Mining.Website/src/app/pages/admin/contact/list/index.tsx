@@ -25,6 +25,7 @@ export function ContactMessageList() {
     isFilter,
     advanceFilters,
     appliedAdvanceFilters,
+    isProcessing,
     setIsFilterPanelOpen,
     setConfirmOpen,
     setSelectedContactMessage,
@@ -36,6 +37,7 @@ export function ContactMessageList() {
     updateAdvanceFilters,
     handleApplyAdanceFilters,
     handleClearAdvanceFilters,
+    handleUpdateContactStatus,
   } = useContactListViewModel();
 
   const columns: PaginatedTableColumn<ContactMessageDto>[] = [
@@ -234,8 +236,10 @@ export function ContactMessageList() {
       {/* View Contact Modal */}
       <ContactViewModal
         open={confirmOpen && !!selectedContactMessage}
-        onClose={handleCloseModal}
         contact={selectedContactMessage}
+        loading={isProcessing}
+        onClose={handleCloseModal}
+        onUpdateStatus={handleUpdateContactStatus}
       />
     </>
   );

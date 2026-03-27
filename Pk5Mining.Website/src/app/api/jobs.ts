@@ -96,7 +96,6 @@ export async function createJob(payload: CreateJobPayload) {
       dT_Modified: new Date().toISOString(),
     };
 
-    console.log("create job is ", createPayload)
     const { data } = await http.post<ApiResponse<JobDto>>(
       "/Job",
       createPayload,
