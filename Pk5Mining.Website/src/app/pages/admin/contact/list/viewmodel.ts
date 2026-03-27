@@ -217,6 +217,14 @@ function useContactListViewModel() {
     updateMutation.mutate(payload);
   };
 
+  const hasActiveFilters = useMemo(() => {
+    if (!appliedAdvanceFilters) return false;
+
+    return Object.values(appliedAdvanceFilters).some(
+      (value) => value && value !== "" && value !== "all",
+    );
+  }, [appliedAdvanceFilters]);
+
   const contactMessages: ContactMessageDto[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -238,6 +246,7 @@ function useContactListViewModel() {
     advanceFilters,
     appliedAdvanceFilters,
     isProcessing,
+    hasActiveFilters,
     setConfirmOpen,
     setIsFilterPanelOpen,
     setSelectedContactMessage,
