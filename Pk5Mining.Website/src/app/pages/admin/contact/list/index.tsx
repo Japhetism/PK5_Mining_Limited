@@ -26,6 +26,7 @@ export function ContactMessageList() {
     advanceFilters,
     appliedAdvanceFilters,
     isProcessing,
+    hasActiveFilters,
     setIsFilterPanelOpen,
     setConfirmOpen,
     setSelectedContactMessage,
@@ -150,7 +151,7 @@ export function ContactMessageList() {
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters
-            {advanceFilters &&
+            {hasActiveFilters &&
               Object.values(advanceFilters).filter((v) => v && v !== "all")
                 .length > 0 && (
                 <span className="ml-1 inline-block rounded-full bg-[#c89b3c] px-2 py-0.5 text-xs text-black font-medium">
@@ -164,7 +165,7 @@ export function ContactMessageList() {
           </button>
         </div>
 
-        {appliedAdvanceFilters && (
+        {hasActiveFilters && (
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-gray-400">Active filters:</span>
 
