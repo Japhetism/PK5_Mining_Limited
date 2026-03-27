@@ -1,6 +1,6 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
 import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
-import { statuses } from "../constants";
+import { statuses, websites } from "../constants";
 import { Permission } from "../constants/permissions";
 import { adminRouteItems } from "../routes/admin-config";
 import { UserRole } from "../constants/role";
@@ -243,4 +243,8 @@ export function toBackendDateTimeWithBoundary(
   const seconds = type === "start" ? 0 : 59;
 
   return new Date(year, month - 1, day, hours, minutes, seconds).toISOString();
+}
+
+export const getWebsiteName = (appId: string): string => {
+  return websites.find((item: { label: string, value: string}) => item.value === appId)?.label ?? appId;
 }

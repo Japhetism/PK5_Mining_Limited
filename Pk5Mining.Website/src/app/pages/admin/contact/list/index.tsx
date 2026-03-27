@@ -4,7 +4,7 @@ import {
   PaginatedTable,
   PaginatedTableColumn,
 } from "@/app/components/ui/paginated-table";
-import { formatDateTime } from "@/app/utils/helper";
+import { formatDateTime, getWebsiteName } from "@/app/utils/helper";
 import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
 import { ContactMessageFilterPanel } from "../components/contact-message-filter-panel";
 import { ContactViewModal } from "../components/contact-message-modal";
@@ -80,7 +80,9 @@ export function ContactMessageList() {
     {
       key: "appId",
       header: "Source",
-      render: (row) => <span>{row.appId ?? "-"}</span>,
+      render: (row) => (
+        <span>{row.appId ? getWebsiteName(row.appId) : "-"}</span>
+      ),
     },
     {
       key: "dT_Created",
@@ -166,24 +168,27 @@ export function ContactMessageList() {
 
             {appliedAdvanceFilters &&
               Object.entries(appliedAdvanceFilters)
-                .filter(([key, value]) => value && value !== "all")
+                .filter(([_, value]) => value && value !== "all")
                 .map(([key, value]) => {
                   let displayValue = value;
+                  let displayKey = key;
 
-                  // Check if the key is startDate or endDate
-                  if (key === "startDate") {
+                  if (key === "startDate" || key === "endDate") {
                     displayValue = formatDateTime(value, false);
-                  } else if (key === "endDate") {
-                    displayValue = formatDateTime(value, false);
+                  }
+
+                  if (key === "appId") {
+                    displayKey = "Source";
+                    displayValue = getWebsiteName(value);
                   }
 
                   return (
                     <button
                       key={key}
-                      className="inline-flex items-center gap-1 rounded-full bg-gray-800 px-2.5 py-1 text-xs text-gray-200"
+                      className="inline-flex items-center gap-1 rounded-full border border-gray-800 bg-[#1a1a1a] px-2.5 py-1 text-xs text-gray-200"
                     >
                       <span>
-                        {key
+                        {displayKey
                           .replace(/([A-Z])/g, " $1")
                           .replace(/^./, (str) => str.toUpperCase())}
                         : {displayValue}
@@ -232,7 +237,6 @@ export function ContactMessageList() {
         onClose={handleCloseModal}
         contact={selectedContactMessage}
       />
-
     </>
   );
 }

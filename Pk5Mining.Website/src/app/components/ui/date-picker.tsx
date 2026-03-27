@@ -4,6 +4,9 @@ import { CalendarIcon } from "lucide-react";
 import { DayPicker, type Matcher } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
+const startYear = import.meta.env.VITE_START_DATE_YEAR as string;
+const endYear = import.meta.env.VITE_END_DATE_YEAR as string;
+
 type DatePickerProps = {
   value?: string;
   onChange: (value: string) => void;
@@ -25,8 +28,8 @@ export function DatePicker({
   disablePastDates = false,
   minDate,
   maxDate,
-  fromYear = new Date().getFullYear(),
-  toYear = new Date().getFullYear() + 10,
+  fromYear = Number(startYear),
+  toYear = Number(endYear),
   name,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
