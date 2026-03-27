@@ -6,5 +6,6 @@ namespace Pk5Mining.Server.Models.Admin
     {
         [Required]
         public string NewPassword { get; set; } = null!;
+        public bool ByAdmin { get; set; } = false;
     }
 }

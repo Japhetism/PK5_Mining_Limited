@@ -1,0 +1,21 @@
+﻿using Pk5Mining.Server.Models.Admin;
+using Pk5Mining.Server.Models.User;
+
+namespace Pk5Mining.Server.Repositories.Admin
+{
+    public interface IUserRepo
+    {
+        Task<(IUser?, string?, bool)> CreateAsync(IUserDTO dto);
+        Task<(IEnumerable<UserResponseDto> User, int TotalCount)> GetFilteredUsers(
+             int pageNumber,
+             int pageSize,
+             string? email,
+             string? username,
+             string? name,
+             bool? isActive);
+        Task<(UserResponseDto?, string?, bool)> GetByIdAsync(long adminId);
+        Task<(User?, string?)> LoginAsync(LoginDTO dto);
+        Task<(IUser?, string?, bool)> UpdatePasswordAsync(long Id, SetPassword dto);
+        Task<(IUser?, string?, bool)> UpdateUserAsync(UpdateUserDto dto);
+    }
+}

@@ -22,7 +22,7 @@ namespace Pk5Mining.Server
         #region DBsets - Linking our Model classes to the Database table Objects
         public virtual DbSet<JobApplication> JobApplications { get; set; }
         public virtual DbSet<Jobs> Jobs { get; set; }
-        public virtual DbSet<Admins> Admins { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<ContactUs> ContactUs { get; set; }
 
 
@@ -82,17 +82,16 @@ namespace Pk5Mining.Server
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedNever();
             });
-            modelBuilder.Entity<Admins>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("Admins", schema: "pk5");
+                entity.ToTable("Users", schema: "pk5");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedNever();
             });
             modelBuilder.Entity<ContactUs>(entity =>
             {
-                entity.ToTable("ContactUs", schema: "pk5");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
             OnModelCreatingPartial(modelBuilder);
         }

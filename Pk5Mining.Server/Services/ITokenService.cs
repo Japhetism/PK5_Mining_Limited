@@ -4,6 +4,6 @@ namespace Pk5Mining.Server.Services
 {
     public interface ITokenService
     {
-        string CreateJWTToken(Admins admins);
+        string CreateJWTToken(User admins);
     }
 }
