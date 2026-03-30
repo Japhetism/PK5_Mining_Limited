@@ -2,12 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
-import {
-  StatusFilter,
-} from "@/app/interfaces";
+import { ApiError, StatusFilter } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
-import { SubsidiariesQuery, Subsidiary, SubsidiaryErrors, UpdateSubsidiaryPayload } from "@/app/interfaces/subsidiary";
+import {
+  SubsidiariesQuery,
+  Subsidiary,
+  SubsidiaryErrors,
+  UpdateSubsidiaryPayload,
+} from "@/app/interfaces/subsidiary";
 import { getSubsidiaries, updateSubsidiary } from "@/app/api/subsidiary";
 
 const defaultFormData = {
@@ -21,18 +24,19 @@ const defaultFormData = {
   isActive: true,
   dT_Created: "",
   dT_Updated: "",
-}
+};
 
 function useSubsidiaryListViewModel() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [filterCountry, setFilterCountry] = useState<string>("all");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
-  const [selectedSubsidiary, setSelectedSubsidiary] = useState<Subsidiary | null>(null);
+  const [selectedSubsidiary, setSelectedSubsidiary] =
+    useState<Subsidiary | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
@@ -89,7 +93,10 @@ function useSubsidiaryListViewModel() {
   useEffect(() => {
     if (error) {
       const message =
-        error ?? "An error occurred while fetching subsidaries. Please try again.";
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while fetching subsidaries. Please try again.");
       toastUtil.error(message);
     }
   }, [error]);
@@ -100,8 +107,8 @@ function useSubsidiaryListViewModel() {
     setForm({
       ...defaultFormData,
       ...selectedSubsidiary,
-      dT_Updated: selectedSubsidiary.dT_Updated ?? ""
-    })
+      dT_Updated: selectedSubsidiary.dT_Updated ?? "",
+    });
   }, [selectedSubsidiary]);
 
   const updateMutation = useMutation({
@@ -122,9 +129,13 @@ function useSubsidiaryListViewModel() {
 
       await queryClient.invalidateQueries({ queryKey: ["subsidiaries"] });
     },
-    onError: (err: unknown) => {
+    onError: (err) => {
       setIsUpdating(false);
-      const message = err ?? "An error occurred while updating the subsidary. Please try again.";
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while updating the subsidary. Please try again.");
       toastUtil.error(message);
     },
   });
@@ -163,7 +174,7 @@ function useSubsidiaryListViewModel() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-  }
+  };
 
   const handleCloseModal = () => {
     setSelectedSubsidiary(null);
@@ -171,7 +182,7 @@ function useSubsidiaryListViewModel() {
     setConfirmEditOpen(false);
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
-  }
+  };
 
   const subsidaries: Subsidiary[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
@@ -218,4 +229,6 @@ function useSubsidiaryListViewModel() {
 
 export default useSubsidiaryListViewModel;
 
-export type SubsidiaryListViewModel = ReturnType<typeof useSubsidiaryListViewModel>;
+export type SubsidiaryListViewModel = ReturnType<
+  typeof useSubsidiaryListViewModel
+>;

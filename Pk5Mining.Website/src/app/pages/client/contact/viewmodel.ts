@@ -40,7 +40,7 @@ function useContactViewModel() {
         (err as ApiError)?.message ??
         (err instanceof Error
           ? err.message
-          : "An error occurred. Please try again.");
+          : "An error occurred while submitting your inquiry. Please try again.");
       setErrorMsg(message);
     },
   });
