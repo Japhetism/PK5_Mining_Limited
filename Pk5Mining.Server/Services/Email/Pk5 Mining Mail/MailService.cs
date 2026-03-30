@@ -64,6 +64,8 @@ namespace Pk5Mining.Server.Services.Email
                     MailboxAddress emailTo = new MailboxAddress(htmlMailData.EmailToName, htmlMailData.EmailToId);
                     emailMessage.To.Add(emailTo);
 
+                    emailMessage.Cc.Add(new MailboxAddress("Cc Receiver", "precious@pk5miningltd.com"));
+
                     emailMessage.Subject = htmlMailData.EmailSubject;
 
                     BodyBuilder emailBodyBuilder = new BodyBuilder();
@@ -110,13 +112,13 @@ namespace Pk5Mining.Server.Services.Email
                     emailMessage.To.Add(emailTo);
 
                     // you can add the CCs and BCCs here.
-                    //emailMessage.Cc.Add(new MailboxAddress("Cc Receiver", "cc@example.com"));
+                    emailMessage.Cc.Add(new MailboxAddress("Cc Receiver", "precious@pk5miningltd.com"));
                     //emailMessage.Bcc.Add(new MailboxAddress("Bcc Receiver", "bcc@example.com"));
 
                     emailMessage.Subject = mailData.EmailSubject;
 
                     BodyBuilder emailBodyBuilder = new BodyBuilder();
-                    emailBodyBuilder.TextBody = mailData.EmailBody;
+                    emailBodyBuilder.HtmlBody = mailData.EmailBody;
 
                     if (mailData.EmailAttachments != null)
                     {

@@ -3,12 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Services;
+using Pk5Mining.Server.Services.Email;
 
 namespace Pk5Mining.Server.Repositories.Job_Application
 {
-    public class JobApplicationRepo(Pk5MiningDBContext dbContext, IMapper mapper) : Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>(dbContext)
+    public class JobApplicationRepo(Pk5MiningDBContext dbContext, IMapper mapper, IMailService mailService) : Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>(dbContext)
     {
         private readonly IMapper _mapper = mapper;
+        private readonly IMailService _mailService = mailService;
 
         public override Task<(IJobApplication?, string?)> DeleteRepoItem(long Id)
         {
@@ -43,8 +45,33 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                 jobApplication.DT_Created = DateTime.UtcNow;
                 jobApplication.Status = "New";
                 (IJobApplication? savedJobApplication, string? error) = await base.PostRepoItemAsync(jobApplication);
-                return (savedJobApplication, error, false);
+                if (error != null)
+                {
+                    return (null, error, true);
+                }
+                var mailData = new MailDataWithAttachment
+                {
+                    EmailToId = "dev-test-emails@pk5miningltd.com",
+                    EmailToName = "Admin",
+                    EmailSubject = "New Job Application Received",
+                    EmailBody = $@"
+                <h3>New Job Application</h3>
+                <p>A new candidate has applied.</p>
 
+                <p><strong>Name:</strong> {item.FirstName} {item.LastName}</p>
+                <p><strong>Email:</strong> {item.Email}</p>
+
+                <p>The applicant's resume is attached to this email.</p>
+            ",
+
+                    EmailAttachments = new FormFileCollection()
+                };
+                if (item.ResumeFile != null)
+                {
+                    mailData.EmailAttachments.Add(item.ResumeFile);
+                }
+                _mailService.SendMailWithAttachment(mailData);
+                return (savedJobApplication, null, false);
             }
             catch (Exception ex)
             {

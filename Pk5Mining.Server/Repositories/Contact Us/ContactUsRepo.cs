@@ -42,7 +42,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 }
                 var adminMail = new MailData
                 {
-                    EmailToId = "info@pk5miningltd.com",
+                    EmailToId = "dev-test-emails@pk5miningltd.com ",
                     EmailToName = "Admin",
                     EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
                     EmailBody = $@"
@@ -104,7 +104,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 }
                 var adminMail = new MailData
                 {
-                    EmailToId = "Info@pk5agroallied.com",
+                    EmailToId = "dev-test-emails@pk5miningltd.com",
                     EmailToName = "Admin",
                     EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
                     EmailBody = $@"

@@ -2,6 +2,6 @@
 {
     public class MailDataWithAttachment : MailData
     {
-        public required IFormFileCollection EmailAttachments { get; set; }
+        public List<IFormFile> EmailAttachments { get; set; } = new();
     }
 }

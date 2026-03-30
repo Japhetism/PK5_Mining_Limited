@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
+using Pk5Mining.Server.Repositories.Job_Application;
 using Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_Repo;
 using Pk5Mining.Server.Services.Cloud_Service;
 
