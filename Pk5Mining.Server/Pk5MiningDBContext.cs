@@ -30,37 +30,37 @@ namespace Pk5Mining.Server
 
 
         #region OnConfiguring
-        /*        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-                {
-                    if (!optionsBuilder.IsConfigured)
-                    {
-                        optionsBuilder.UseSqlServer("Name=ConnectionStrings:Pk5MiningDB");
-                    }
-                }*/
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", optional: true)
-                    .AddUserSecrets<Pk5MiningDBContext>()
-                    .AddEnvironmentVariables()
-                    .Build();
-
-                // Determine which connection string to use
-                bool useCloudDatabase = bool.Parse(configuration["UseCloudDatabase"] ?? "false");
-                string connectionStringName = useCloudDatabase
-                    ? "ConnectionStrings:CloudPk5MiningDB"
-                    : "ConnectionStrings:Pk5MiningDB";
-                string connectionString = configuration[connectionStringName];
-
-                if (string.IsNullOrEmpty(connectionString))
-                {
-                    throw new InvalidOperationException($"Connection string '{connectionStringName}' is not configured.");
-                }
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer("Name=ConnectionStrings:DevPk5MiningDB");
             }
         }
+        /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+         {
+             if (!optionsBuilder.IsConfigured)
+             {
+                 IConfigurationRoot configuration = new ConfigurationBuilder()
+                     .AddJsonFile("appsettings.json", optional: true)
+                     .AddUserSecrets<Pk5MiningDBContext>()
+                     .AddEnvironmentVariables()
+                     .Build();
+
+                 // Determine which connection string to use
+                 bool useCloudDatabase = bool.Parse(configuration["UseCloudDatabase"] ?? "false");
+                 string connectionStringName = useCloudDatabase
+                     ? "ConnectionStrings:CloudPk5MiningDB"
+                     : "ConnectionStrings:Pk5MiningDB";
+                 string connectionString = configuration[connectionStringName];
+
+                 if (string.IsNullOrEmpty(connectionString))
+                 {
+                     throw new InvalidOperationException($"Connection string '{connectionStringName}' is not configured.");
+                 }
+                 optionsBuilder.UseSqlServer(connectionString);
+             }
+         }*/
 
         #endregion
 
