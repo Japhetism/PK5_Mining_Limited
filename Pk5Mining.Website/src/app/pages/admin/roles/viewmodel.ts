@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
-import { StatusFilter } from "@/app/interfaces";
+import { ApiError, StatusFilter } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import {
@@ -82,7 +82,10 @@ function useRoleViewModel() {
   useEffect(() => {
     if (error) {
       const message =
-        error ?? "An error occurred while fetching roles. Please try again.";
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while fetching roles. Please try again.");
       toastUtil.error(message);
     }
   }, [error]);
@@ -115,10 +118,13 @@ function useRoleViewModel() {
 
       await queryClient.invalidateQueries({ queryKey: ["roles"] });
     },
-    onError: (err: unknown) => {
+    onError: (err) => {
       setIsUpdating(false);
       const message =
-        err ?? "An error occurred while updating role. Please try again.";
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while updating role. Please try again.");
       toastUtil.error(message);
     },
   });

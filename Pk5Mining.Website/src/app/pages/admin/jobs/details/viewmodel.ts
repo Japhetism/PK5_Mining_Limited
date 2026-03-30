@@ -3,7 +3,11 @@ import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobApplicationsByJobId } from "@/app/api/applications";
 import { getJobById } from "@/app/api/jobs";
-import { ApplicationsByJobIdQuery, JobApplicationDto } from "@/app/interfaces";
+import {
+  ApiError,
+  ApplicationsByJobIdQuery,
+  JobApplicationDto,
+} from "@/app/interfaces";
 import { cleanParams } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 
@@ -59,15 +63,19 @@ function useJobDetailsViewModel() {
   useEffect(() => {
     if (fetchError) {
       const message =
-        fetchError ??
-        "An error occurred while fetching job details. Please try again.";
+        (fetchError as ApiError)?.message ??
+        (fetchError instanceof Error
+          ? fetchError.message
+          : "An error occurred while fetching job details. Please try again.");
       toastUtil.error(message);
     }
 
     if (jobApplicationsFetchError) {
       const message =
-        jobApplicationsFetchError ??
-        "An error occurred while fetching job applications. Please try again.";
+        (jobApplicationsFetchError as ApiError)?.message ??
+        (jobApplicationsFetchError instanceof Error
+          ? jobApplicationsFetchError.message
+          : "An error occurred while fetching job applications. Please try again.");
       toastUtil.error(message);
     }
   }, [fetchError, jobApplicationsFetchError]);

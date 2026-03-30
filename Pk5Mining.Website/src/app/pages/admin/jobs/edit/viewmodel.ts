@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createJob, getJobById, updateJob } from "@/app/api/jobs";
 import {
+  ApiError,
   CreateJobPayload,
   JobDto,
   JobErrors,
@@ -44,7 +45,11 @@ function useJobEditViewModel() {
 
   useEffect(() => {
     if (fetchError) {
-      const message = fetchError ?? "An error occurred while fetching job details. Please try again.";
+      const message =
+        (fetchError as ApiError)?.message ??
+        (fetchError instanceof Error
+          ? fetchError.message
+          : "An error occurred while fetching job details. Please try again.");
       toastUtil.error(message);
     }
   }, [fetchError]);
@@ -81,9 +86,14 @@ function useJobEditViewModel() {
       toastUtil.success("Job created successfully");
       navigate(`/admin/jobs/${data?.id}`);
     },
-    onError: (err: unknown) => {
+    onError: (err) => {
       setLoading(false);
-      const message = err ?? "An error occurred while saving the job. Please try again.";
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while saving the job. Please try again.");
+
       toastUtil.error(message);
     },
   });
@@ -103,9 +113,13 @@ function useJobEditViewModel() {
       toastUtil.success("Job updated successfully");
       navigate(`/admin/jobs/${data?.id}`);
     },
-    onError: (err: unknown) => {
+    onError: (err) => {
       setLoading(false);
-      const message = err ?? "An error occurred while updating the job. Please try again.";
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while updating the job. Please try again.");
       toastUtil.error(message);
     },
   });
@@ -137,7 +151,7 @@ function useJobEditViewModel() {
     mutation.mutate({
       ...form,
       dT_Expiry: form.dT_Expiry
-        ? ddmmyyyyToApiDate(form.dT_Expiry) ?? ""
+        ? (ddmmyyyyToApiDate(form.dT_Expiry) ?? "")
         : undefined,
       dT_Modified: jobId ? new Date().toISOString() : undefined,
       isActive: existing?.isActive ?? true,

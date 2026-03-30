@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs, updateJob } from "@/app/api/jobs";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import {
+  ApiError,
   JobDto,
   JobsQuery,
   StatusFilter,
@@ -75,7 +76,10 @@ function useJobListViewModel() {
   useEffect(() => {
     if (error) {
       const message =
-        error ?? "An error occurred while fetching jobs. Please try again.";
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while fetching jobs. Please try again.");
       toastUtil.error(message);
     }
   }, [error]);
@@ -98,9 +102,13 @@ function useJobListViewModel() {
 
       await queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
-    onError: (err: unknown) => {
+    onError: (err) => {
       setIsUpdating(false);
-      const message = err ?? "An error occurred while updating the job. Please try again.";
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while updating the job. Please try again.");
       toastUtil.error(message);
     },
   });
