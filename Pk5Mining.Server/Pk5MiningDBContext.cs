@@ -90,6 +90,7 @@ namespace Pk5Mining.Server
             });
             modelBuilder.Entity<ContactUs>(entity =>
             {
+                entity.ToTable("ContactUs", schema: "pk5");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
