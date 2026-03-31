@@ -1,0 +1,5 @@
+﻿                <h3>Hi {FirstName},</h3>
+                <p>We appreciate you contacting PK5 Mining Nigeria Limited.</p>
+                <p>Your message has been received and is being currently reviewed by our team. We will get back to you as soon as possible. Thank you.</p>
+                <br/>
+                <p>Best Regards,<br/>Pk5 Team</p>

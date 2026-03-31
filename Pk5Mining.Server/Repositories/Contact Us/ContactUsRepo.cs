@@ -40,38 +40,35 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 {
                     return (null, "Failed to save contact request", true);
                 }
+                var pk5admintemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Emails", "AdminPk5Contact.txt");
+                string adminPk5message = await File.ReadAllTextAsync(pk5admintemplatePath);
+                adminPk5message = adminPk5message.Replace("{FirstName}", item.FirstName);
+                adminPk5message = adminPk5message.Replace("{LastName}", item.LastName);
+                adminPk5message = adminPk5message.Replace("{Email}", item.Email);
+                adminPk5message = adminPk5message.Replace("{PhoneNumber}", item.PhoneNumber ?? "N/A");
+                adminPk5message = adminPk5message.Replace("{Company}", item.Company ?? "N/A");
+                adminPk5message = adminPk5message.Replace("{Subject}", item.Subject ?? "N/A");
+                adminPk5message = adminPk5message.Replace("{MessageBody}", item.MessageBody);
+
                 var adminMail = new MailData
                 {
-                    EmailToId = "dev-test-emails@pk5miningltd.com ",
+                    EmailToId = "dev-test-emails@pk5miningltd.com",
                     EmailToName = "Admin",
                     EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
-                    EmailBody = $@"
-                <h3>New Contact Request Received</h3>
-                <p><strong>Name:</strong> {item.FirstName} {item.LastName}</p>
-                <p><strong>Email:</strong> {item.Email}</p>
-                <p><strong>Phone:</strong> {item.PhoneNumber ?? "N/A"}</p>
-                <p><strong>Company:</strong> {item.Company ?? "N/A"}</p>
-                <p><strong>Subject:</strong> {item.Subject ?? "N/A"}</p>
-                <p><strong>Message:</strong><br/>{item.MessageBody}</p>
-            "
+                    EmailBody = adminPk5message,
                 };
                 _mailService.SendHTMLMail(adminMail);
+
+                var pk5clienttemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Emails", "Pk5Contact.txt");
+                string pk5Clientmessage = await File.ReadAllTextAsync(pk5clienttemplatePath);
+                pk5Clientmessage = pk5Clientmessage.Replace("{FirstName}", item.FirstName);
 
                 var guestMail = new MailData
                 {
                     EmailToId = item.Email,
                     EmailToName = $"{item.FirstName} {item.LastName}",
                     EmailSubject = "Thank You For Reaching Out",
-                    EmailBody = $@"
-                <h3>Hi {item.FirstName},</h3>
-                <p>Thank you for contacting Mining Company.</p>
-                <p>We have received your message and our team will get back to you shortly.</p>
-                <br/>
-                <p><strong>Your Message:</strong></p>
-                <p>{item.MessageBody}</p>
-                <br/>
-                <p>Best Regards,<br/>Pk5 Team</p>
-            "
+                    EmailBody = pk5Clientmessage,
                 };
 
                 _mailService.SendHTMLMail(guestMail);
@@ -102,38 +99,35 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 {
                     return (null, "Failed to save contact request", true);
                 }
+                var agroAdmintemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Emails", "AdminAgroContact.txt");
+                string agroAdminmessage = await File.ReadAllTextAsync(agroAdmintemplatePath);
+                agroAdminmessage = agroAdminmessage.Replace("{FirstName}", item.FirstName);
+                agroAdminmessage = agroAdminmessage.Replace("{LastName}", item.LastName);
+                agroAdminmessage = agroAdminmessage.Replace("{Email}", item.Email);
+                agroAdminmessage = agroAdminmessage.Replace("{PhoneNumber}", item.PhoneNumber ?? "N/A");
+                agroAdminmessage = agroAdminmessage.Replace("{Company}", item.Company ?? "N/A");
+                agroAdminmessage = agroAdminmessage.Replace("{Subject}", item.Subject ?? "N/A");
+                agroAdminmessage = agroAdminmessage.Replace("{MessageBody}", item.MessageBody);
+
                 var adminMail = new MailData
                 {
                     EmailToId = "dev-test-emails@pk5miningltd.com",
                     EmailToName = "Admin",
                     EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
-                    EmailBody = $@"
-                <h3>New Contact Request Received</h3>
-                <p><strong>Name:</strong> {item.FirstName} {item.LastName}</p>
-                <p><strong>Email:</strong> {item.Email}</p>
-                <p><strong>Phone:</strong> {item.PhoneNumber ?? "N/A"}</p>
-                <p><strong>Company:</strong> {item.Company ?? "N/A"}</p>
-                <p><strong>Subject:</strong> {item.Subject ?? "N/A"}</p>
-                <p><strong>Message:</strong><br/>{item.MessageBody}</p>
-            "
+                    EmailBody = agroAdminmessage,
                 };
                 _agroMailService.SendHTMLMail(adminMail);
+
+                var clientTemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Emails", "AgroContact.txt");
+                string clientMessage = await File.ReadAllTextAsync(clientTemplatePath);
+                clientMessage = clientMessage.Replace("{FirstName}", item.FirstName);
 
                 var guestMail = new MailData
                 {
                     EmailToId = item.Email,
                     EmailToName = $"{item.FirstName} {item.LastName}",
                     EmailSubject = "Thank You For Reaching Out",
-                    EmailBody = $@"
-                <h3>Hi {item.FirstName},</h3>
-                <p>Thank you for contacting the Agro Company.</p>
-                <p>We have received your message and our team will get back to you shortly.</p>
-                <br/>
-                <p><strong>Your Message:</strong></p>
-                <p>{item.MessageBody}</p>
-                <br/>
-                <p>Best Regards,<br/>Pk5 Agro Allied Team</p>
-            "
+                    EmailBody = clientMessage,
                 };
                 _agroMailService.SendHTMLMail(guestMail);
 

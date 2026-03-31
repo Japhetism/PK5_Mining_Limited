@@ -1,0 +1,10 @@
+﻿                <h3>A new job application has been submitted through the PK5 Mining  Nigeria Limited careers page.</h3>
+                <p>Applicant Details</p>
+                <p><strong>Name:</strong> {FirstName} {LastName}</p>
+                <p><strong>Email:</strong> {Email}</p>
+                <p><strong>Phone Number:</strong> {PhoneNumber}</p>
+                <br/>
+                <p>The applicant's resume is attached to this email for your review.</p>
+                <p>Please review the application and contact the candidate if qualified.</p>
+                 <br/>
+                <p>Best Regards,<br/>PK5 Mining Limited Recruitment Team</p>

@@ -4,6 +4,8 @@ using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Services;
 using Pk5Mining.Server.Services.Email;
+using System.Numerics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Pk5Mining.Server.Repositories.Job_Application
 {
@@ -49,21 +51,19 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                 {
                     return (null, error, true);
                 }
+                var AdminJobTemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Emails", "AdminJobApp.txt");
+                string adminMessage = await File.ReadAllTextAsync(AdminJobTemplatePath);
+                adminMessage = adminMessage.Replace("{FirstName}", item.FirstName);
+                adminMessage = adminMessage.Replace("{LastName}", item.LastName);
+                adminMessage = adminMessage.Replace("{Email}", item.Email);
+                adminMessage = adminMessage.Replace("{PhoneNumber}", item.PhoneNumber ?? "N/A");
+
                 var mailData = new MailDataWithAttachment
                 {
                     EmailToId = "dev-test-emails@pk5miningltd.com",
                     EmailToName = "Admin",
-                    EmailSubject = "New Job Application Received",
-                    EmailBody = $@"
-                <h3>New Job Application</h3>
-                <p>A new candidate has applied.</p>
-
-                <p><strong>Name:</strong> {item.FirstName} {item.LastName}</p>
-                <p><strong>Email:</strong> {item.Email}</p>
-
-                <p>The applicant's resume is attached to this email.</p>
-            ",
-
+                    EmailSubject = "New Job Application Received — PK5 Mining Limited",
+                    EmailBody = adminMessage,
                     EmailAttachments = new FormFileCollection()
                 };
                 if (item.ResumeFile != null)
@@ -71,6 +71,19 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                     mailData.EmailAttachments.Add(item.ResumeFile);
                 }
                 _mailService.SendMailWithAttachment(mailData);
+
+                var clientJobTemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Emails", "ClientJobApp.txt");
+                string jobClientmessage = await File.ReadAllTextAsync(clientJobTemplatePath);
+                jobClientmessage = jobClientmessage.Replace("{FirstName}", item.FirstName);
+                var applicantMail = new MailData
+                {
+                    EmailToId = item.Email,
+                    EmailToName = $"{item.FirstName} {item.LastName}",
+                    EmailSubject = "Application Received",
+                    EmailBody = jobClientmessage,
+                };
+                _mailService.SendHTMLMail(applicantMail);
+
                 return (savedJobApplication, null, false);
             }
             catch (Exception ex)

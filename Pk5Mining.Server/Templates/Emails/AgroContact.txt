@@ -1,0 +1,6 @@
+﻿ <p <h3>Hi {FirstName},</h3></p>
+<br/>
+  <p>We appreciate you for contacting the Agro Allied.</p>
+                <p>Your message has been received and is being currently reviewed by our team. We will get back to you as soon as possible. Thank you.</p>
+                <br/>
+                <p>Best Regards,<br/>Agro Allied Team</p>
