@@ -9,10 +9,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Pk5Mining.Server.Repositories.Job_Application
 {
-    public class JobApplicationRepo(Pk5MiningDBContext dbContext, IMapper mapper, IMailService mailService) : Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>(dbContext)
+    public class JobApplicationRepo(Pk5MiningDBContext dbContext, IMapper mapper, IMailService mailService, IEmailTemplateService templateService) : Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>(dbContext)
     {
         private readonly IMapper _mapper = mapper;
         private readonly IMailService _mailService = mailService;
+        private readonly IEmailTemplateService _templateService = templateService;
 
         public override Task<(IJobApplication?, string?)> DeleteRepoItem(long Id)
         {
@@ -51,39 +52,45 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                 {
                     return (null, error, true);
                 }
-                var AdminJobTemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Emails", "AdminJobApp.txt");
-                string adminMessage = await File.ReadAllTextAsync(AdminJobTemplatePath);
-                adminMessage = adminMessage.Replace("{FirstName}", item.FirstName);
-                adminMessage = adminMessage.Replace("{LastName}", item.LastName);
-                adminMessage = adminMessage.Replace("{Email}", item.Email);
-                adminMessage = adminMessage.Replace("{PhoneNumber}", item.PhoneNumber ?? "N/A");
+  
+                var adminBody = await _templateService.RenderTemplateAsync("AdminJobApp.txt",
+                new Dictionary<string, string>
+                {
+                    { "FirstName", item.FirstName ?? "N/A"},
+                    { "LastName", item.LastName ?? "N/A"},
+                    { "Email", item.Email },
+                    { "PhoneNumber", item.PhoneNumber ?? "N/A" }
+                });
 
                 var mailData = new MailDataWithAttachment
                 {
                     EmailToId = "dev-test-emails@pk5miningltd.com",
                     EmailToName = "Admin",
                     EmailSubject = "New Job Application Received — PK5 Mining Limited",
-                    EmailBody = adminMessage,
+                    EmailBody = adminBody,
                     EmailAttachments = new FormFileCollection()
                 };
+
                 if (item.ResumeFile != null)
                 {
                     mailData.EmailAttachments.Add(item.ResumeFile);
                 }
                 _mailService.SendMailWithAttachment(mailData);
 
-                var clientJobTemplatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Emails", "ClientJobApp.txt");
-                string jobClientmessage = await File.ReadAllTextAsync(clientJobTemplatePath);
-                jobClientmessage = jobClientmessage.Replace("{FirstName}", item.FirstName);
-                var applicantMail = new MailData
+                // Client email
+                var clientBody = await _templateService.RenderTemplateAsync("ClientJobApp.txt",
+                    new Dictionary<string, string>
+                    {
+                          { "FirstName", item.FirstName }
+                    });
+
+                _mailService.SendHTMLMail(new MailData
                 {
                     EmailToId = item.Email,
                     EmailToName = $"{item.FirstName} {item.LastName}",
-                    EmailSubject = "Application Received",
-                    EmailBody = jobClientmessage,
-                };
-                _mailService.SendHTMLMail(applicantMail);
-
+                    EmailSubject = "Job Application Received",
+                    EmailBody = clientBody
+                });
                 return (savedJobApplication, null, false);
             }
             catch (Exception ex)

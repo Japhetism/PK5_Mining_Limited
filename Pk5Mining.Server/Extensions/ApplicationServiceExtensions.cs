@@ -28,6 +28,7 @@ namespace Pk5Mining.Server.Extensions
 
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
             services.AddScoped<IFileAccessor, FileAccessor>();
+            services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
             services.AddScoped<Abs_Pk5Repo<IJobs, IJobsDTO>, JobRepo>();
             services.AddScoped<Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>, JobApplicationRepo>();
