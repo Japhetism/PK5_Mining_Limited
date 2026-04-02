@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { saveContactInquiry } from "@/app/api/contact";
-import { InquiryForm, InquiryFormDto } from "@/app/interfaces";
+import { ApiError, InquiryForm, InquiryFormDto } from "@/app/interfaces";
 
 const AppID = import.meta.env.VITE_APP_ID as string;
 const defaultStatus = "new";
@@ -12,7 +12,7 @@ const defaultFormData = {
   company: "",
   subject: "",
   message: "",
-}
+};
 
 function useContactViewModel() {
   const [submitted, setSubmitted] = useState(false);
@@ -33,10 +33,14 @@ function useContactViewModel() {
         setSubmitted(false);
       }, 3000);
     },
-    onError: (err: string) => {
+    onError: (err) => {
       setLoading(false);
       setSubmitted(false);
-      const message = err ?? "An error occurred while submitting your inquiry. Please try again.";
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while submitting your inquiry. Please try again.");
       setErrorMsg(message);
     },
   });
@@ -61,8 +65,8 @@ function useContactViewModel() {
       messageBody,
       appId: AppID,
       status: defaultStatus,
-    }
-    
+    };
+
     createMutation.mutate(payload);
   };
 
@@ -84,7 +88,7 @@ function useContactViewModel() {
     setFormData,
     handleChange,
     handleSubmit,
-  }
+  };
 }
 
 export default useContactViewModel;

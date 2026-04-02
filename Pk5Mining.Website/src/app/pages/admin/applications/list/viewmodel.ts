@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApplications } from "@/app/api/applications";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import {
+  ApiError,
   ApplicationsQuery,
   ApplicationStatusFilter,
   JobApplicationDto,
@@ -58,7 +59,11 @@ function useApplicationsListViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = error ?? "An error occurred while fetching applications. Please try again.";
+      const message =
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while fetching applications. Please try again.");
       toastUtil.error(message);
     }
   }, [error]);

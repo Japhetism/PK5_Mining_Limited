@@ -6,6 +6,7 @@ import {
   updateJobApplicationStatus,
 } from "@/app/api/applications";
 import { toastUtil } from "@/app/utils/toast";
+import { ApiError } from "@/app/interfaces";
 
 function useApplicationDetailsViewModel() {
   const queryClient = useQueryClient();
@@ -46,10 +47,13 @@ function useApplicationDetailsViewModel() {
       });
       toastUtil.success("Application status updated successfully");
     },
-    onError: (error: unknown) => {
+    onError: (err) => {
       setUpdating(false);
-
-      const message = error ?? "An error occurred while updating application status. Please try again.";
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while updating application status. Please try again.");
       toastUtil.error(message);
     },
   });
@@ -78,7 +82,11 @@ function useApplicationDetailsViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = error ?? "An error occurred while fetching application details. Please try again.";
+      const message =
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while fetching application details. Please try again.");
       toastUtil.error(message);
     }
   }, [error]);
@@ -122,9 +130,11 @@ function useApplicationDetailsViewModel() {
     error,
     handleUpdateStatus,
     updating,
-  }
+  };
 }
 
 export default useApplicationDetailsViewModel;
 
-export type ApplicationDetailsViewModel = ReturnType<typeof useApplicationDetailsViewModel>;
+export type ApplicationDetailsViewModel = ReturnType<
+  typeof useApplicationDetailsViewModel
+>;
