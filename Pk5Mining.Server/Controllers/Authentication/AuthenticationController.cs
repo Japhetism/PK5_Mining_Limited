@@ -30,17 +30,6 @@ namespace Pk5Mining.Server.Controllers.Authentication
             {
                 return Unauthorized(ApiResponse.AuthorizationException(null, error));
             }
-            if (!user.HasChangedPassword)
-            {
-                var passResponse = _mapper.Map<LoginResponseDTO>(user);
-
-                return Ok(ApiResponse.SuccessMessage(new
-                {
-                    user = passResponse,
-                    mustChangePassword = true
-                }, "Password change required"));
-            }
-
             var response = _mapper.Map<LoginResponseDTO>(user);
 
             response.JwtToken = _tokenService.CreateJWTToken(user);

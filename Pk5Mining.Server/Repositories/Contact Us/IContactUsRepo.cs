@@ -9,6 +9,6 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
         Task<(IContactUs?, string?)> GetById(long Id);
         Task<IEnumerable<IContactUs>> GetAll();
         Task<(IContactUs?, string?, bool)> UpdateRepoItem(long id, ContactUsUpdateDTO dto);
-        Task<(IEnumerable<IContactUs> Contacts, int TotalCount)> GetFilteredContacts( int pageNumber, int pageSize, string? email, string? subject, string? name, string? appId, DateTime? startDate, DateTime? endDate);
+        Task<(IEnumerable<IContactUs> Contacts, int TotalCount)> GetFilteredContacts( int pageNumber, int pageSize, string? email, string? subject, string? name, string? status, string? appId, DateTime? startDate, DateTime? endDate);
     }
 }

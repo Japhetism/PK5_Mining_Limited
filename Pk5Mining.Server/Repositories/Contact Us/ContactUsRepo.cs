@@ -164,26 +164,30 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
              string? email,
              string? subject,
              string? name,
+             string? status,
              string? appId,
              DateTime? startDate,
              DateTime? endDate)
         {
             IQueryable<ContactUs> query = _dbContext.ContactUs.AsQueryable();
-
+            
             if (!string.IsNullOrWhiteSpace(email))
             {
-                query = query.Where(c => c.Email.Contains(email));
+                query = query.Where(c => c.Email.StartsWith(email));
             }
             if (!string.IsNullOrWhiteSpace(subject))
             {
-                query = query.Where(c => c.Subject!.Contains(subject));
+                query = query.Where(c => c.Subject!.StartsWith(subject));
             }
 
             if (!string.IsNullOrWhiteSpace(name))
             {
-                query = query.Where(c => c.FirstName.Contains(name) || c.LastName.Contains(name));
+                query = query.Where(c => c.FirstName.StartsWith(name) || c.LastName.StartsWith(name));
             }
-
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                query = query.Where(c => c.Email.StartsWith(status));
+            }
             if (!string.IsNullOrWhiteSpace(appId))
             {
                 query = query.Where(c => c.AppId == appId);

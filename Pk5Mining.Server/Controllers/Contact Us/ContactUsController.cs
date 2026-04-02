@@ -76,6 +76,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
              [FromQuery] string? email = null,
              [FromQuery] string? subject = null,
              [FromQuery] string? name = null,
+             [FromQuery] string? status = null,
              [FromQuery] string? appId = null,
              [FromQuery] DateTime? startDate = null,
              [FromQuery] DateTime? endDate = null)
@@ -89,6 +90,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
                 email,
                 subject,
                 name,
+                status,
                 appId,
                 startDate,
                 endDate);
