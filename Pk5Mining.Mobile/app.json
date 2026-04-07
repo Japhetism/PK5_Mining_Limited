@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "pk5MiningWorkerMgt",
+    "slug": "pk5MiningWorkerMgt",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo.png",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1E1E1E"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.pk5MiningWorkerMgt"
+    },
+    "android": {
+      "package": "com.anonymous.pk5MiningWorkerMgt",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#1E1E1E"
+      },
+      "splash": {
+        "image": "./assets/logo.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#1E1E1E"
+      },
+      "softwareKeyboardLayoutMode": "pan",
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": ["expo-router"],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c001ed09-f65d-4485-af90-689b132b038e"
+      }
+    },
+    "owner": "buba-ltd",
+    "updates": {
+      "url": "https://u.expo.dev/c001ed09-f65d-4485-af90-689b132b038e"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}
