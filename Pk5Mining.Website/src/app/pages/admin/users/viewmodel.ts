@@ -3,10 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createUser,
-  deleteUser,
   getUsers,
   updateUser,
-  updateUserStatus,
 } from "@/app/api/users";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import {

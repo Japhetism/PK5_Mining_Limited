@@ -19,7 +19,7 @@ export function AdminLayout() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
-  const nav = getVisibleNav(user?.permissions ?? []);
+  const nav = getVisibleNav(user?.permissions ?? [], user?.role);
 
   return (
     <div className="h-screen bg-[#0f0f0f] text-white flex flex-col overflow-hidden">
