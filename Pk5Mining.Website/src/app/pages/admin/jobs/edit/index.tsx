@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { Save, ArrowLeft } from "lucide-react";
-import { isValidName } from "@/app/utils/validator";
+import { isValidDepartment, isValidName } from "@/app/utils/validator";
 import { jobTypes, workArrangements } from "@/app/constants";
 import useJobEditViewModel from "./viewmodel";
 import { RichTextEditor } from "@/app/components/ui/rich-text-editor";
@@ -89,7 +89,7 @@ export function JobEdit() {
               value={form.department}
               onChange={onChange}
               onBlur={() => {
-                if (!isValidName(form.department)) {
+                if (!isValidDepartment(form.department)) {
                   setFieldErrors((prev) => ({
                     ...prev,
                     department: "Invalid department name",
