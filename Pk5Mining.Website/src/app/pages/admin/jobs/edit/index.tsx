@@ -5,7 +5,9 @@ import { jobTypes, workArrangements } from "@/app/constants";
 import useJobEditViewModel from "./viewmodel";
 import { RichTextEditor } from "@/app/components/ui/rich-text-editor";
 import { DatePicker } from "@/app/components/ui/date-picker";
-import { formatDateTime } from "@/app/utils/helper";
+import { formatDateTime, limitWords } from "@/app/utils/helper";
+
+const maxWordsBriefDescription = 50;
 
 export function JobEdit() {
   const {
@@ -158,7 +160,7 @@ export function JobEdit() {
                 setForm((prev) => ({
                   ...prev,
                   dT_Expiry: value,
-                }))
+                }));
               }}
               error={!!fieldErrors.dT_Expiry}
               disablePastDates
@@ -308,7 +310,33 @@ export function JobEdit() {
           <motion.textarea
             name="briefDescription"
             value={form.briefDescription}
-            onChange={onChange}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+              const truncated = limitWords(
+                e.target.value,
+                maxWordsBriefDescription,
+              );
+              setForm((prev) => ({ ...prev, briefDescription: truncated }));
+
+              setFieldErrors((prev) => {
+                const updated = { ...prev };
+                delete updated.briefDescription;
+                return updated;
+              });
+            }}
+            onPaste={(e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+              e.preventDefault();
+              const paste = e.clipboardData.getData("text");
+              const combined = form.briefDescription + " " + paste;
+              const truncated = limitWords(combined, maxWordsBriefDescription);
+
+              setForm((prev) => ({ ...prev, briefDescription: truncated }));
+
+              setFieldErrors((prev) => {
+                const updated = { ...prev };
+                delete updated.briefDescription;
+                return updated;
+              });
+            }}
             onBlur={() => {
               if (!form.briefDescription) {
                 setFieldErrors((prev) => ({
@@ -328,9 +356,15 @@ export function JobEdit() {
               ${fieldErrors.briefDescription ? "border-red-500" : "border-gray-800"}
               focus:border-[#c89b3c] resize-none`}
           />
-          <p className="mt-1 text-[11px] text-gray-500">
-            Shown in the careers list view. 1–2 concise sentences works best.
-          </p>
+          <div className="flex justify-between">
+            <p className="mt-1 text-[11px] text-gray-500">
+              Shown in the careers list view. 1–2 concise sentences works best.
+            </p>
+            <p className="text-[11px] text-gray-500">
+              {form.briefDescription.trim().split(/\s+/).filter(Boolean).length}{" "}
+              / {maxWordsBriefDescription} words
+            </p>
+          </div>
           {fieldErrors.briefDescription && (
             <p className="text-xs text-red-500 mt-1">
               {fieldErrors.briefDescription}

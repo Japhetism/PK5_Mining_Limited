@@ -271,3 +271,11 @@ export const getFilterSubjects = (appId: string | undefined) => {
     new Map(subjects.map((item) => [item.value, item])).values(),
   ).sort((a, b) => a.label.localeCompare(b.label));
 };
+
+export const limitWords = (text: string, maxWords: number) => {
+  const words = text.trim().split(/\s+/);
+
+  if (words.length <= maxWords) return text;
+
+  return words.slice(0, maxWords).join(" ");
+};
