@@ -26,13 +26,13 @@ const AdminLayout = lazy(() =>
 
 function AdminAccessGuard({
   canAccess,
-  role,
+  roles,
   permissions = [],
   requireAllPermissions = false,
   children,
 }: {
   canAccess: boolean;
-  role?: UserRole;
+  roles?: UserRole[];
   permissions?: Permission[];
   requireAllPermissions?: boolean;
   children: React.ReactNode;
@@ -41,7 +41,7 @@ function AdminAccessGuard({
 
   const isAllowed =
     canAccess &&
-    hasRole(user?.role, role) &&
+    hasRole(user?.role, roles) &&
     hasPermissions(
       user?.permissions ?? [],
       permissions,
@@ -64,7 +64,7 @@ function mapAdminRoutes(items: AdminRouteItem[]): RouteObject[] {
       element: (
         <AdminAccessGuard
           canAccess={item.canAccess}
-          role={item.role}
+          roles={item.roles}
           permissions={item.permissions}
           requireAllPermissions={item.requireAllPermissions}
         >

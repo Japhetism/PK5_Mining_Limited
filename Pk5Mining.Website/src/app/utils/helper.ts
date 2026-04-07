@@ -156,10 +156,10 @@ export const ddmmyyyyToApiDate = (value?: string | null) => {
 
 export const hasRole = (
   userRole?: UserRole,
-  requiredRole?: UserRole,
+  requiredRoles?: UserRole[],
 ): boolean => {
-  if (!enforceRole || !requiredRole) return true;
-  return userRole === requiredRole;
+  if (!enforceRole || !requiredRoles) return true;
+  return requiredRoles.includes(userRole as UserRole);
 };
 
 export const hasPermissions = (
@@ -180,7 +180,7 @@ export const hasPermissions = (
   );
 };
 
-export const getVisibleNav = (userPermissions: Permission[]): NavItem[] => {
+export const getVisibleNav = (userPermissions: Permission[], userRole?: UserRole): NavItem[] => {
   return adminRouteItems
     .filter(
       (item) =>
@@ -189,7 +189,8 @@ export const getVisibleNav = (userPermissions: Permission[]): NavItem[] => {
           userPermissions,
           item.permissions ?? [],
           item.requireAllPermissions,
-        ),
+        )
+        && hasRole(userRole, item.roles)
     )
     .map((item) => ({
       to: `/admin/${item.path}`,
@@ -269,4 +270,12 @@ export const getFilterSubjects = (appId: string | undefined) => {
   return Array.from(
     new Map(subjects.map((item) => [item.value, item])).values(),
   ).sort((a, b) => a.label.localeCompare(b.label));
+};
+
+export const limitWords = (text: string, maxWords: number) => {
+  const words = text.trim().split(/\s+/);
+
+  if (words.length <= maxWords) return text;
+
+  return words.slice(0, maxWords).join(" ");
 };

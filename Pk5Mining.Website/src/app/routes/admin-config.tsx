@@ -14,6 +14,8 @@ import {
 import type { NavItem } from "../interfaces";
 import { Permission, PERMISSIONS } from "../constants/permissions";
 import { UserRole, USERROLES } from "../constants/role";
+import { hasPermissions, hasRole } from "../utils/helper";
+import { useAuth } from "../context/AuthContext";
 
 export type AdminRouteItem = {
   path: string;
@@ -23,7 +25,7 @@ export type AdminRouteItem = {
   canAccess: boolean;
   end?: boolean;
   element: LazyExoticComponent<ComponentType<any>>;
-  role?: UserRole;
+  roles?: UserRole[];
   permissions?: Permission[];
   requireAllPermissions?: boolean;
 };
@@ -169,7 +171,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     icon: UsersIcon,
     show: true,
     canAccess: true,
-    role: USERROLES.superAdmin,
+    roles: [USERROLES.superAdmin],
     permissions: [PERMISSIONS.userView],
     element: Users,
   },
@@ -206,7 +208,7 @@ export const adminRouteItems: AdminRouteItem[] = [
 ];
 
 export const nav: NavItem[] = adminRouteItems
-  .filter((item) => item.show)
+  .filter((item) => item.show && hasRole() && hasPermissions())
   .map((item) => ({
     to: `/admin/${item.path}`,
     label: item.label,

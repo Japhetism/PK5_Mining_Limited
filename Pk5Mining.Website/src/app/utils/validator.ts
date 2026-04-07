@@ -12,6 +12,17 @@ export const isValidEmail = (email: string) =>
 
 export const isValidPhone = (phone: string) => phone.trim().length >= 7;
 
+export const isValidDepartment = (name: string) => {
+  const trimmed = name.trim();
+
+  if (trimmed.length < 2) return false;
+
+  // Letters, spaces, hyphen, apostrophe, parentheses
+  const nameRegex = /^[A-Za-z\s'-()]+$/;
+
+  return nameRegex.test(trimmed);
+};
+
 export const isValidName = (name: string) => {
   const trimmed = name.trim();
 
