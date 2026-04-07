@@ -44,10 +44,10 @@ export const defaultFormData = {
 
 export const statuses = [
   { value: "new", label: "New", backendKey: "New" },
-  { value: "in_review", label: "In review", backendKey: "InReview" },
+  { value: "in_review", label: "In review", backendKey: "In_Review" },
   { value: "shortlisted", label: "Shortlisted", backendKey: "Shortlisted" },
-  { value: "interview_scheduled", label: "Interview Scheduled", backendKey: "InterviewScheduled" },
-  { value: "offer_sent", label: "Offer Sent", backendKey: "OfferSent" },
+  { value: "interview_scheduled", label: "Interview Scheduled", backendKey: "Interview_Scheduled" },
+  { value: "offer_sent", label: "Offer Sent", backendKey: "Offer_Sent" },
   { value: "rejected", label: "Rejected", backendKey: "Rejected" },
   { value: "hired", label: "Hired", backendKey: "Hired" },
 ] as const;
