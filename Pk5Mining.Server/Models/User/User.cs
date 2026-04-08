@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pk5Mining.Server.Models.Admin
 {
+    [Index(nameof(Email), IsUnique = true)]
     public class User : IUser
     {
         public long Id { get; set; }

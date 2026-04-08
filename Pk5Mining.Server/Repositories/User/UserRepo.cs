@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Generators;
 using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.User;
@@ -20,13 +22,26 @@ namespace Pk5Mining.Server.Repositories.Admin
 
         public async Task<(User?, string?)> LoginAsync(LoginDTO dto)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(a => a.Email == dto.Email && a.Password == dto.Password);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(a => a.Email == dto.Email);
             if (user == null)
+            {
+                return (null, "Invalid email or password.");
+            }
+            if(user.IsDeleted)
+            {
+                return (null, "Invalid email or password.");
+            }
+            if (!user.IsActive)
+            {
+                return (null, "User account is Deactivated. Please contact administrator.");
+            }
+            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
             {
                 return (null, "Invalid email or password.");
             }
             return (user, null);
         }
+
         public async Task<(IUser?, string?, bool)> CreateAsync(IUserDTO dto)
         {
             try
@@ -37,6 +52,9 @@ namespace Pk5Mining.Server.Repositories.Admin
                     throw new ArgumentNullException(nameof(user));
                 }
                 user.Id = IdGenerator.GenerateUniqueId();
+                string PasswordSalt = BCrypt.Net.BCrypt.GenerateSalt();
+                string PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password, PasswordSalt);
+                user.Password = PasswordHash;
                 user.Role = "Default User";
                 user.HasChangedPassword = false;
                 user.IsActive = true;
@@ -45,6 +63,16 @@ namespace Pk5Mining.Server.Repositories.Admin
                 await _dbContext.Users.AddAsync(user);
                 await _dbContext.SaveChangesAsync();
                 return (user, null, false);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx &&
+                    (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    return (null, "Email already exists. Please login instead.", true);
+                }
+
+                return (null, "Database error occurred.", true);
             }
             catch (Exception ex)
             {
