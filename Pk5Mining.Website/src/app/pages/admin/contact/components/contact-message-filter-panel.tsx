@@ -106,6 +106,17 @@ export function ContactMessageFilterPanel({
                 />
               </FilterField>
 
+              {/* PhoneNumber Filter */}
+              <FilterField label="Phone Number">
+                <input
+                  type="phone"
+                  value={filters.phoneNumber}
+                  onChange={(e) => updateFilters("phoneNumber", e.target.value)}
+                  placeholder="Filter by phone number"
+                  className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                />
+              </FilterField>
+
               {/* Website Filter */}
               <FilterField label="Website">
                 <div className="relative">
