@@ -6,6 +6,7 @@ import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import {
   AdvanceFilter,
+  ApiError,
   ContactMessageDto,
   ContactQuery,
   ContactStatus,
@@ -117,11 +118,13 @@ function useContactListViewModel() {
       const msg = `contact message has been marked as ${status}`;
       toastUtil.success(msg);
     },
-    onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while updating contact message status. Please try again.",
-      );
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while updating contact message status. Please try again.");
+
       toastUtil.error(message);
     },
     onSettled: () => {
@@ -131,10 +134,12 @@ function useContactListViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while fetching contact messages. Please try again.",
-      );
+      const message =
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while fetching contact messages. Please try again.");
+
       toastUtil.error(message);
     }
   }, [error, data, applyAdvanceFilters]);

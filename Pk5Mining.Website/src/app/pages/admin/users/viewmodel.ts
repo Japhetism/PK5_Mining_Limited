@@ -141,10 +141,11 @@ function useUserViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while fetching users. Please try again.",
-      );
+      const message =
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while fetching users. Please try again.");
       toastUtil.error(message);
     }
   }, [error]);
@@ -164,7 +165,7 @@ function useUserViewModel() {
         (err as ApiError)?.message ??
         (err instanceof Error
           ? err.message
-          : "An error occurred while saving the job. Please try again.");
+          : "An error occurred while creating a user. Please try again.");
       toastUtil.error(message);
     },
     onSettled: () => setIsProcessing(false),
@@ -185,10 +186,11 @@ function useUserViewModel() {
       toastUtil.success(msg);
     },
     onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while updating user. Please try again.",
-      );
+      const message =
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while updating user. Please try again.");
       toastUtil.error(message);
     },
     onSettled: () => {
