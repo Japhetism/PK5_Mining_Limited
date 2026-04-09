@@ -1,11 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  createUser,
-  getUsers,
-  updateUser,
-} from "@/app/api/users";
+import { createUser, getUsers, updateUser } from "@/app/api/users";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import {
   CreateUserPayload,
@@ -163,11 +159,12 @@ function useUserViewModel() {
       setConfirmEditOpen(false);
       toastUtil.success("User created successfully");
     },
-    onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while creating user. Please try again.",
-      );
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while saving the job. Please try again.");
       toastUtil.error(message);
     },
     onSettled: () => setIsProcessing(false),
