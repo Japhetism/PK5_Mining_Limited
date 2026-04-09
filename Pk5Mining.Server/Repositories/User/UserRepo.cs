@@ -88,11 +88,12 @@ namespace Pk5Mining.Server.Repositories.Admin
                 {
                     return (null, "User not found.", true);
                 }
-                if (user.Password == dto.NewPassword)
+                if (BCrypt.Net.BCrypt.Verify(dto.NewPassword, user.Password))
                 {
                     return (null, "New password cannot be the same as current password.", true);
                 }
-                user.Password = dto.NewPassword;
+                string newHashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+                user.Password = newHashedPassword;
                 if (dto.ByAdmin)
                 {
                     user.HasChangedPassword = false;
