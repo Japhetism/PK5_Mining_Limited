@@ -1,11 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  createUser,
-  getUsers,
-  updateUser,
-} from "@/app/api/users";
+import { createUser, getUsers, updateUser } from "@/app/api/users";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import {
   CreateUserPayload,
@@ -145,10 +141,11 @@ function useUserViewModel() {
 
   useEffect(() => {
     if (error) {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while fetching users. Please try again.",
-      );
+      const message =
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while fetching users. Please try again.");
       toastUtil.error(message);
     }
   }, [error]);
@@ -163,11 +160,12 @@ function useUserViewModel() {
       setConfirmEditOpen(false);
       toastUtil.success("User created successfully");
     },
-    onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while creating user. Please try again.",
-      );
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while creating a user. Please try again.");
       toastUtil.error(message);
     },
     onSettled: () => setIsProcessing(false),
@@ -188,10 +186,11 @@ function useUserViewModel() {
       toastUtil.success(msg);
     },
     onError: (error) => {
-      const message = getAxiosErrorMessage(
-        error,
-        "An error occurred while updating user. Please try again.",
-      );
+      const message =
+        (error as ApiError)?.message ??
+        (error instanceof Error
+          ? error.message
+          : "An error occurred while updating user. Please try again.");
       toastUtil.error(message);
     },
     onSettled: () => {
