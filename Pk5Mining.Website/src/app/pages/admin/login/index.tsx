@@ -2,8 +2,10 @@ import { motion } from "motion/react";
 import { Lock, User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import useLoginViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function Login() {
+  const { colors } = useTenant();
   const {
     email,
     password,
@@ -17,7 +19,7 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center px-6">
+    <div className="min-h-screen text-white flex items-center justify-center px-6" style={{ backgroundColor: colors.bg  }}>
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
