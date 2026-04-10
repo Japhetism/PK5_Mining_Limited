@@ -326,6 +326,7 @@ export type ContactThreadDto = {
 
 export type ContactQuery = {
   pageNumber: number;
+  phoneNumber?: string;
   pageSize: number;
   email?: string;
   subject?: string;
@@ -414,6 +415,7 @@ export type NavItem = {
 export type AdvanceFilter = {
   email?: string;
   subject?: string;
+  phoneNumber?: string;
   name?: string;
   appId?: string;
   startDate?: string;
