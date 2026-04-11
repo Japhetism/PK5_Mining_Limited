@@ -19,8 +19,10 @@ import { JobApplicationDto } from "@/app/interfaces";
 import { ResumeViewerModal } from "@/app/components/ui/resume-viewer-modal";
 import useJobDetailsViewModel from "./viewmodel";
 import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
+import { useTenant } from "@/tenants/useTenant";
 
 export function JobDetail() {
+  const { colors } = useTenant();
   const {
     job,
     isLoading,
@@ -49,7 +51,8 @@ export function JobDetail() {
         <div>
           <button
             onClick={() => navigate("/admin/jobs")}
-            className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200 mb-2"
+            className="inline-flex items-center gap-1 text-xs hover:text-gray-200 mb-2"
+            style={{ color: colors.text }}
           >
             <ArrowLeft className="w-3 h-3" />
             Back
@@ -60,29 +63,31 @@ export function JobDetail() {
                 {job?.department}
               </Badge>
             )}
-            <h1 className="text-2xl font-bold mb-1">{job?.title}</h1>
-            <p className="text-sm">{job?.briefDescription}</p>
+            <h1 className="text-2xl font-bold mb-1" style={{ color: colors.text }}>{job?.title}</h1>
+            <p className="text-sm" style={{ color: colors.text }}>
+              {job?.briefDescription}
+            </p>
             <div className="flex flex-wrap gap-4 text-gray-300 mb-6">
               {job?.location && (
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2" style={{ color: colors.text }}>
                   <MapPin className="w-3 h-3 text-[#c89b3c]" /> {job?.location}
                 </span>
               )}
               {job?.jobType && (
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2" style={{ color: colors.text }}>
                   <Clock className="w-3 h-3 text-[#c89b3c]" />{" "}
                   {job?.jobType && capitalizeFirstLetter(job.jobType)}
                 </span>
               )}
               {job?.workArrangement && (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1" style={{ color: colors.text }}>
                   <LocateIcon className="w-3 h-3 text-[#c89b3c]" />{" "}
                   {job?.workArrangement &&
                     capitalizeFirstLetter(job.workArrangement)}
                 </span>
               )}
               {job?.experience && (
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2" style={{ color: colors.text }}>
                   <span className="w-2 h-2 rounded-full bg-[#c89b3c]" />
                   {job?.experience} experience
                 </span>
@@ -94,24 +99,25 @@ export function JobDetail() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5">
+          <div className="border rounded-xl p-5" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <div
-              className="text-sm text-gray-200 leading-relaxed
+              className="text-sm leading-relaxed
                 [&_p]:mb-3
                 [&_ul]:mb-4 [&_ul]:pl-5 [&_ul]:list-disc
                 [&_li]:mb-1.5
                 [&_p>strong]:block [&_p>strong]:mt-4 [&_p>strong]:mb-2
                 [&_p>strong]:font-semibold"
               dangerouslySetInnerHTML={{ __html: job?.description ?? "" }}
+              style={{ color: colors.text }}
             />
           </div>
         </div>
 
         <div className="space-y-4">
-          <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4 text-sm text-gray-300">
+          <div className="border rounded-xl p-4 text-sm text-gray-300" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             {job && (
               <>
-                <p className="text-xs font-semibold text-gray-400 mb-1">
+                <p className="text-xs font-semibold mb-1" style={{ color: colors.label }}>
                   Status
                 </p>
                 <p className="mb-3">
@@ -131,28 +137,34 @@ export function JobDetail() {
 
             {job?.experience && (
               <>
-                <p className="text-xs font-semibold text-gray-400 mb-1">
+                <p className="text-xs font-semibold mb-1" style={{ color: colors.label }}>
                   Experience
                 </p>
-                <p className="mb-3">{job.experience}</p>
+                <p className="mb-3" style={{ color: colors.text }}>
+                  {job.experience}
+                </p>
               </>
             )}
 
             {job?.dT_Created && (
               <>
-                <p className="text-xs font-semibold text-gray-400 mb-1">
+                <p className="text-xs font-semibold mb-1" style={{ color: colors.label }}>
                   Posted
                 </p>
-                <p className="mb-3">{formatDateTime(job.dT_Created)}</p>
+                <p className="mb-3" style={{ color: colors.text }}>
+                  {formatDateTime(job.dT_Created)}
+                </p>
               </>
             )}
 
             {job?.dT_Modified && (
               <>
-                <p className="text-xs font-semibold text-gray-400 mb-1">
+                <p className="text-xs font-semibold mb-1" style={{ color: colors.label }}>
                   Updated
                 </p>
-                <p className="mb-3">{formatDateTime(job.dT_Modified)}</p>
+                <p className="mb-3" style={{ color: colors.text }}>
+                  {formatDateTime(job.dT_Modified)}
+                </p>
               </>
             )}
 
@@ -169,13 +181,14 @@ export function JobDetail() {
                       title={
                         isExpired ? formatDateTime(job.dT_Expiry, false) : ""
                       }
-                      className="text-xs font-semibold text-gray-400 mb-1"
+                      className="text-xs font-semibold mb-1"
+                      style={{ color: colors.label }}
                     >
                       {isExpired ? "Closed" : "Closing on"}
                     </p>
 
                     {!isExpired && (
-                      <p className="mb-3">
+                      <p className="mb-3" style={{ color: colors.text }}>
                         {formatDateTime(job.dT_Expiry, false)}
                       </p>
                     )}
@@ -214,7 +227,9 @@ export function JobDetail() {
       </div>
 
       <div className="mt-20">
-        <h3 className="mb-2">Applications</h3>
+        <h3 className="mb-2" style={{ color: colors.text }}>
+          Applications
+        </h3>
         <PaginatedCard<JobApplicationDto>
           data={applications}
           isLoading={jobApplicationsLoading}

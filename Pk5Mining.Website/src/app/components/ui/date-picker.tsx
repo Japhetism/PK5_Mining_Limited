@@ -3,6 +3,7 @@ import { format, parse, startOfDay, isValid } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { DayPicker, type Matcher } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { useTenant } from "@/tenants/useTenant";
 
 const startYear = import.meta.env.VITE_START_DATE_YEAR as string;
 const endYear = import.meta.env.VITE_END_DATE_YEAR as string;
@@ -32,6 +33,7 @@ export function DatePicker({
   toYear = Number(endYear),
   name,
 }: DatePickerProps) {
+  const { colors } = useTenant();
   const [open, setOpen] = React.useState(false);
   const [month, setMonth] = React.useState<Date>(new Date());
 
@@ -83,11 +85,10 @@ export function DatePicker({
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className={`flex w-full items-center justify-between rounded-lg border bg-[#0f0f0f] px-4 py-3 text-left transition-colors ${
-          error ? "border-red-500" : "border-gray-800"
-        } focus:border-[#c89b3c] focus:outline-none`}
+        className={`flex w-full items-center justify-between rounded-lg border px-4 py-3 text-left transition-colors focus:border-[#c89b3c] focus:outline-none`}
+        style={{ backgroundColor: colors.bg, color: colors.text, borderColor: error ? "#f87171" : colors.border }}
       >
-        <span className={value ? "text-gray-200" : "text-gray-500"}>
+        <span className={value ? colors.text : "text-gray-500"}>
           {value || placeholder}
         </span>
         <CalendarIcon className="h-4 w-4 text-gray-400" />
@@ -102,7 +103,9 @@ export function DatePicker({
             aria-label="Close date picker"
           />
 
-          <div className="absolute left-0 top-[calc(100%+8px)] z-50 rounded-xl border border-gray-800 bg-[#111111] p-3 shadow-2xl">
+          <div className="absolute left-0 top-[calc(100%+8px)] z-50 rounded-xl border p-3 shadow-2xl"
+            style={{ backgroundColor: colors.bg, border: colors.border }}
+          >
             <DayPicker
               mode="single"
               selected={selectedDate}

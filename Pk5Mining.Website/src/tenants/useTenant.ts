@@ -13,6 +13,8 @@ export const useTenant = () => {
       card: isAgro ? "#ffffff" : "#1a1a1a",
       accent: isAgro ? "#4ade80" : "#c89b3c",
       text: isAgro ? "#1a1a1a" : "#ffffff",
+      border: isAgro ? "#e5e7eb" : "#1f2937",
+      label: isAgro ? "#6b7280" : "#9ca3af",
     }
   };
 };

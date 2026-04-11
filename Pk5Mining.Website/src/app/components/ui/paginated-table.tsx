@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TableSkeleton } from "./table-loader";
+import { useTenant } from "@/tenants/useTenant";
 
 export type PaginatedTableColumn<T> = {
   key: string;
@@ -49,6 +50,8 @@ export function PaginatedTable<T>({
   pageSizeOptions = [5, 10, 20, 50],
 }: PaginatedTableProps<T>) {
 
+  const { colors } = useTenant();
+
   const from =
     totalCount === 0 ? 0 : (pageNumber - 1) * pageSize + 1;
 
@@ -76,7 +79,8 @@ export function PaginatedTable<T>({
           data.map((row, i) => (
             <div
               key={i}
-              className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4 space-y-3"
+              className="border rounded-xl p-4 space-y-3"
+              style={{ backgroundColor: colors.card, borderColor: colors.border }}
             >
 
               {/* Actions */}
@@ -107,7 +111,7 @@ export function PaginatedTable<T>({
       </div>
 
       {/* DESKTOP TABLE */}
-      <div className="hidden md:block bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden">
+      <div className="hidden md:block border rounded-xl overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
         <div className="overflow-x-auto">
 
           {isLoading ? (
@@ -133,7 +137,8 @@ export function PaginatedTable<T>({
                   <tr>
                     <td
                       colSpan={columns.length}
-                      className="px-4 py-6 text-center text-sm text-gray-500"
+                      className="px-4 py-6 text-center text-sm"
+                      style={{ color: colors.text }}
                     >
                       {emptyMessage}
                     </td>
@@ -147,7 +152,8 @@ export function PaginatedTable<T>({
                       {columns.map((col) => (
                         <td
                           key={col.key}
-                          className={`px-4 py-3 align-top text-gray-300 ${col.className ?? ""}`}
+                          className={`px-4 py-3 align-top ${col.className ?? ""}`}
+                          style={{ color: colors.text }}
                         >
                           {col.render(row)}
                         </td>
@@ -164,9 +170,9 @@ export function PaginatedTable<T>({
 
       {/* PAGINATION (MOBILE + DESKTOP) */}
       {!isLoading && totalCount > 0 && (
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-3 border border-gray-800 rounded-xl bg-[#1a1a1a]">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-3 border rounded-xl" style={{ background: colors.card, borderColor: colors.border }}>
 
-          <div className="text-xs text-gray-400">
+          <div className="text-xs" style={{ color: colors.text }}>
             Showing {from}–{to} of {totalCount}
           </div>
 
@@ -179,7 +185,8 @@ export function PaginatedTable<T>({
                 setPageSize(Number(e.target.value));
                 setPageNumber(1);
               }}
-              className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+              className="rounded-lg px-3 py-2 text-sm text-gray-200"
+              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             >
               {pageSizeOptions.map((size) => (
                 <option key={size} value={size}>
@@ -194,7 +201,8 @@ export function PaginatedTable<T>({
                 setPageNumber(Math.max(1, pageNumber - 1))
               }
               disabled={pageNumber === 1}
-              className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-3 py-2 rounded-lg border hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ borderColor: colors.border, color: colors.text }}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -205,7 +213,8 @@ export function PaginatedTable<T>({
                 setPageNumber(Math.min(totalPages, pageNumber + 1))
               }
               disabled={pageNumber === totalPages}
-              className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-3 py-2 rounded-lg border hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ borderColor: colors.border, color: colors.text }}
             >
               <ChevronRight className="w-4 h-4" />
             </button>

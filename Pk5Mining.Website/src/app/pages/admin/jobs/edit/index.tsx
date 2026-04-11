@@ -6,10 +6,12 @@ import useJobEditViewModel from "./viewmodel";
 import { RichTextEditor } from "@/app/components/ui/rich-text-editor";
 import { DatePicker } from "@/app/components/ui/date-picker";
 import { formatDateTime, limitWords } from "@/app/utils/helper";
+import { useTenant } from "@/tenants/useTenant";
 
 const maxWordsBriefDescription = 50;
 
 export function JobEdit() {
+  const { colors } = useTenant();
   const {
     existing,
     form,
@@ -29,12 +31,13 @@ export function JobEdit() {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200 mb-2"
+            className="inline-flex items-center gap-1 text-xs hover:text-gray-200 mb-2"
+            style={{ color: colors.text }}
           >
-            <ArrowLeft className="w-3 h-3" />
+            <ArrowLeft className="w-3 h-3" style={{ color: colors.text }} />
             Back
           </button>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
             {existing ? "Edit Job" : "Create Job"}
           </h1>
           <p className="text-sm text-gray-400">
@@ -45,11 +48,12 @@ export function JobEdit() {
 
       <form
         onSubmit={onSubmit}
-        className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 space-y-6"
+        className="border rounded-xl p-6 space-y-6"
+        style={{ backgroundColor: colors.card, borderColor: colors.border }}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Job title
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -71,16 +75,15 @@ export function JobEdit() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.title ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+              className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+              style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.title ? "#f87171" : colors.border }}
             />
             {fieldErrors.title && (
               <p className="text-xs text-red-500 mt-1">{fieldErrors.title}</p>
             )}
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Department
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -102,9 +105,8 @@ export function JobEdit() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.department ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+              className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+              style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.department ? "#f87171" : colors.border }}
             />
             {fieldErrors.department && (
               <p className="text-xs text-red-500 mt-1">
@@ -114,7 +116,7 @@ export function JobEdit() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Location
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -136,9 +138,8 @@ export function JobEdit() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.location ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+              className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+              style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.location ? "#f87171" : colors.border }}
             />
             {fieldErrors.location && (
               <p className="text-xs text-red-500 mt-1">
@@ -150,7 +151,7 @@ export function JobEdit() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Close Date
             </label>
             <DatePicker
@@ -173,7 +174,7 @@ export function JobEdit() {
             )}
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Experience
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -196,9 +197,8 @@ export function JobEdit() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.experience ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+              className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+              style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.experience ? "#f87171" : colors.border }}
             />
             {fieldErrors.experience && (
               <p className="text-xs text-red-500 mt-1">
@@ -208,7 +208,7 @@ export function JobEdit() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-2">
+              <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
                 Type
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -236,9 +236,8 @@ export function JobEdit() {
                     }));
                   }
                 }}
-                className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                  ${fieldErrors.jobType ? "border-red-500" : "border-gray-800"}
-                  focus:border-[#c89b3c]`}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+                style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.jobType ? "#f87171" : colors.border }}
               >
                 <option value="">Select</option>
                 {jobTypes.map((t) => (
@@ -254,7 +253,7 @@ export function JobEdit() {
               )}
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-2">
+              <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
                 Work Arrangement
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -282,9 +281,8 @@ export function JobEdit() {
                     }));
                   }
                 }}
-                className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                  ${fieldErrors.workArrangement ? "border-red-500" : "border-gray-800"}
-                  focus:border-[#c89b3c]`}
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+                style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.workArrangement ? "#f87171" : colors.border }}
               >
                 <option value="">Select</option>
                 {workArrangements.map((w) => (
@@ -303,7 +301,7 @@ export function JobEdit() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-300 mb-2">
+          <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
             Brief Description
             <span className="ml-1 text-red-500">*</span>
           </label>
@@ -352,9 +350,8 @@ export function JobEdit() {
               }
             }}
             rows={3}
-            className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-              ${fieldErrors.briefDescription ? "border-red-500" : "border-gray-800"}
-              focus:border-[#c89b3c] resize-none`}
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c] resize-none`}
+            style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.briefDescription ? "#f87171" : colors.border }}
           />
           <div className="flex justify-between">
             <p className="mt-1 text-[11px] text-gray-500">
@@ -373,7 +370,7 @@ export function JobEdit() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-300 mb-2">
+          <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
             Full Description (rich text)
             <span className="ml-1 text-red-500">*</span>
           </label>
