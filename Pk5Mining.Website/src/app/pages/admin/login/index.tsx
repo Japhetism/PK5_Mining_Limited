@@ -2,8 +2,10 @@ import { motion } from "motion/react";
 import { Lock, User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import useLoginViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function Login() {
+  const { colors } = useTenant();
   const {
     email,
     password,
@@ -17,22 +19,23 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center px-6">
+    <div className="min-h-screen text-white flex items-center justify-center px-6" style={{ backgroundColor: colors.bg  }}>
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-[#1a1a1a] border border-gray-800 rounded-xl p-8"
+        className="w-full max-w-md border border-gray-800 rounded-xl p-8"
+        style={{ backgroundColor: colors.card }}
       >
         <div className="flex items-center gap-3 mb-6">
           <Lock className="w-6 h-6 text-[#c89b3c]" />
-          <h1 className="text-2xl font-bold">Admin Login</h1>
+          <h1 className="text-2xl font-bold" style={{ color: colors.text}}>Admin Login</h1>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-5">
           {/* Username */}
           <div>
-            <label className="block text-sm font-medium mb-2">Email Address</label>
-            <div className="flex items-center gap-2 bg-[#0f0f0f] border border-gray-800 rounded-lg px-3">
+            <label className="block text-sm font-medium mb-2" style={{ color: colors.text}}>Email Address</label>
+            <div className="flex items-center gap-2 border border-gray-800 rounded-lg px-3" style={{ backgroundColor: colors.bg }}>
               <User className="w-4 h-4 text-gray-400" />
               <input
                 name="email"
@@ -42,14 +45,15 @@ export function Login() {
                 required
                 className="w-full bg-transparent py-3 outline-none"
                 autoComplete="off"
+                style={{ color: colors.text}}
               />
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium mb-2">Password</label>
-            <div className="flex items-center bg-[#0f0f0f] border border-gray-800 rounded-lg px-3">
+            <label className="block text-sm font-medium mb-2" style={{ color: colors.text}}>Password</label>
+            <div className="flex items-center border border-gray-800 rounded-lg px-3" style={{ backgroundColor: colors.bg }}>
               <Lock className="w-4 h-4 text-gray-400 mr-2" />
               <input
                 value={password}
@@ -58,6 +62,7 @@ export function Login() {
                 type={showPassword ? "text" : "password"}
                 className="w-full bg-transparent py-3 outline-none"
                 autoComplete="current-password"
+                style={{ color: colors.text}}
               />
 
               <button

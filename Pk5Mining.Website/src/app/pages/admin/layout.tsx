@@ -6,8 +6,10 @@ import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting, getVisibleNav } from "@/app/utils/helper";
 import Logo from "../../../assets/images/logo.png";
 import { UserMenu } from "@/app/components/ui/userMenu";
+import { useTenant } from "@/tenants/useTenant";
 
 export function AdminLayout() {
+  const { colors } = useTenant();
   const { logout, user } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -22,9 +24,9 @@ export function AdminLayout() {
   const nav = getVisibleNav(user?.permissions ?? [], user?.role);
 
   return (
-    <div className="h-screen bg-[#0f0f0f] text-white flex flex-col overflow-hidden">
+    <div className="h-screen text-white flex flex-col overflow-hidden" style={{ backgroundColor: colors.bg }}>
       {/* HEADER */}
-      <header className="border-b border-gray-800 bg-[#0f0f0f]/95 backdrop-blur shrink-0">
+      <header className="border-b backdrop-blur shrink-0" style={{ backgroundColor: `${colors.bg}/500`, borderColor: colors.border }}>
         <div className="w-full px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <button
@@ -43,7 +45,7 @@ export function AdminLayout() {
                 loading="lazy"
                 className="w-14 sm:w-20 h-auto object-contain shrink-0"
               />
-              <span className="font-bold text-sm sm:text-base truncate">
+              <span className="font-bold text-sm sm:text-base truncate" style={{ color: colors.text}} >
                 Admin Portal
               </span>
             </Link>
@@ -82,7 +84,7 @@ export function AdminLayout() {
         <div className="w-full h-full">
           <div className="h-full grid grid-cols-1 lg:grid-cols-[260px_1fr] overflow-hidden">
             {/* DESKTOP SIDEBAR */}
-            <aside className="hidden lg:flex h-full bg-[#1a1a1a] border-r border-gray-800 p-4 flex-col overflow-hidden">
+            <aside className="hidden lg:flex h-full border-r p-4 flex-col overflow-hidden" style={{ backgroundColor: colors.bg, borderColor: colors.border }}>
               <nav className="flex-1 overflow-y-auto space-y-1 pr-1">
                 {nav.map((item) => {
                   if (!item.show) return null;
@@ -101,8 +103,8 @@ export function AdminLayout() {
                         ].join(" ")
                       }
                     >
-                      <item.icon className="w-4 h-4 shrink-0" />
-                      <span className="truncate">{item.label}</span>
+                      <item.icon className="w-4 h-4 shrink-0" style={{ color: colors.text}} />
+                      <span className="truncate" style={{ color: colors.text }}>{item.label}</span>
                     </NavLink>
                   );
                 })}

@@ -16,6 +16,9 @@ export const PERMISSIONS = {
   roleView: "role.view",
   roleCreate: "role.create",
   roleUpdate: "role.update",
+  departmentView: "department.view",
+  departmentCreate: "department.create",
+  departmentUpdate: "department.update",
 } as const;
 
 export type Permission =

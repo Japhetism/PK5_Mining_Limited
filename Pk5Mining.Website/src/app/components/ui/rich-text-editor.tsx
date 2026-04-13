@@ -1,3 +1,4 @@
+import { useTenant } from "@/tenants/useTenant";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -14,6 +15,7 @@ export function RichTextEditor({
   placeholder = "",
   error = false,
 }: Props) {
+  const { colors } = useTenant();
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -38,10 +40,8 @@ export function RichTextEditor({
 
   return (
     <div
-      className={`w-full bg-[#0f0f0f] border border-gray-800 rounded-lg overflow-hidden
+      className={`w-full border rounded-lg overflow-hidden
         transition-colors focus-within:border-[#c89b3c]
-        ${error ? "border-red-500" : "border-gray-800"}
-
         [&_.ql-toolbar]:border-0
         [&_.ql-toolbar]:border-b
         [&_.ql-toolbar]:border-gray-800
@@ -64,6 +64,7 @@ export function RichTextEditor({
         [&_.ql-picker-options]:border
         [&_.ql-picker-options]:border-gray-800
       `}
+      style={{ backgroundColor: colors.card, borderColor: error ? "#f87171" : colors.border }}
     >
       <ReactQuill
         theme="snow"
