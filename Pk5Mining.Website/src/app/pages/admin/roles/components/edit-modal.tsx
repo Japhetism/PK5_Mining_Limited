@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
-import { X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
-import { Role, RoleErrors } from "@/app/interfaces/role";
+import { Permission, Role, RoleErrors } from "@/app/interfaces/role";
+import { getGroupedPermissions } from "@/app/utils/helper";
 
 type EditModalProps = {
   form: Role;
@@ -20,6 +21,7 @@ type EditModalProps = {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
   ) => void;
+  handlePermissionToggle: (newPermissions: string[]) => void;
 };
 
 export function EditModal({
@@ -31,7 +33,9 @@ export function EditModal({
   onConfirm,
   setFieldErrors,
   onChange,
+  handlePermissionToggle,
 }: EditModalProps) {
+  const groupedPermissions = getGroupedPermissions();
   return (
     <Modal
       open={open}
@@ -133,6 +137,140 @@ export function EditModal({
                       {fieldErrors.description}
                     </p>
                   )}
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-gray-800 pb-2">
+                    <label className="text-xs font-semibold text-gray-300 tracking-wider">
+                      Permissions
+                    </label>
+                    <span className="text-[10px] text-gray-500 italic">
+                      {form.permissions?.length || 0} selected
+                    </span>
+                  </div>
+
+                  <div className="max-h-[450px] overflow-y-auto pr-2 custom-scrollbar border border-gray-800 rounded-lg">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="sticky top-0 bg-[#0f0f0f] z-10 shadow-sm">
+                        <tr className="border-b border-gray-800">
+                          <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest w-1/3">
+                            Resource / Group
+                          </th>
+                          <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-800/50">
+                        {groupedPermissions.map((group) => {
+                          const currentPerms = form.permissions || [];
+                          const selectedInGroup = group.permissions.filter(
+                            (p) => currentPerms.includes(p),
+                          );
+                          const isAllSelected =
+                            selectedInGroup.length === group.permissions.length;
+                          const isIndeterminate =
+                            selectedInGroup.length > 0 && !isAllSelected;
+
+                          return (
+                            <tr
+                              key={group.key}
+                              className="hover:bg-white/[0.02] transition-colors group/row"
+                            >
+                              {/* Group Label & Select All Cell */}
+                              <td className="px-4 py-4 align-top">
+                                <div
+                                  className="flex items-center gap-3 cursor-pointer"
+                                  onClick={() => {
+                                    const next = isAllSelected
+                                      ? currentPerms.filter(
+                                          (p: any) =>
+                                            !group.permissions.includes(p),
+                                        )
+                                      : Array.from(
+                                          new Set([
+                                            ...currentPerms,
+                                            ...group.permissions,
+                                          ]),
+                                        );
+                                    handlePermissionToggle(next);
+                                  }}
+                                >
+                                  <div
+                                    className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                                      isAllSelected || isIndeterminate
+                                        ? "bg-[#c89b3c] border-[#c89b3c]"
+                                        : "border-gray-600 group-hover/row:border-gray-400"
+                                    }`}
+                                  >
+                                    {isAllSelected && (
+                                      <Check className="w-3 h-3 text-black stroke-[3px]" />
+                                    )}
+                                    {isIndeterminate && (
+                                      <div className="w-2 h-0.5 bg-black" />
+                                    )}
+                                  </div>
+                                  <span className="text-xs font-bold text-gray-200 group-hover/row:text-[#c89b3c] transition-colors">
+                                    {group.name}
+                                  </span>
+                                </div>
+                              </td>
+
+                              {/* Individual Permissions Cell */}
+                              <td className="px-4 py-4">
+                                <div className="flex flex-wrap gap-x-6 gap-y-3">
+                                  {group.permissions.map((perm) => {
+                                    const isChecked =
+                                      currentPerms.includes(perm);
+                                    return (
+                                      <label
+                                        key={perm}
+                                        className="flex items-center gap-2.5 cursor-pointer group/item"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          className="sr-only"
+                                          checked={isChecked}
+                                          onChange={() => {
+                                            const next = isChecked
+                                              ? currentPerms.filter(
+                                                  (p) => p !== perm,
+                                                )
+                                              : [...currentPerms, perm];
+                                            handlePermissionToggle(next);
+                                          }}
+                                        />
+                                        <div
+                                          className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center transition-all ${
+                                            isChecked
+                                              ? "bg-[#c89b3c] border-[#c89b3c]"
+                                              : "border-gray-700 group-hover/item:border-gray-500"
+                                          }`}
+                                        >
+                                          {isChecked && (
+                                            <Check className="w-2.5 h-2.5 text-black stroke-[4px]" />
+                                          )}
+                                        </div>
+                                        <span
+                                          className={`text-[11px] transition-colors ${
+                                            isChecked
+                                              ? "text-gray-200"
+                                              : "text-gray-500 group-hover/item:text-gray-300"
+                                          }`}
+                                        >
+                                          {perm.split(".")[1].toUpperCase()}
+                                        </span>
+                                      </label>
+                                    );
+                                  })}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </form>
