@@ -241,7 +241,7 @@ export function Departments() {
       </div>
 
       {/* Table */}
-      <div className="min-w-0 overflow-x-auto rounded-xl border border-gray-800">
+      <div className="min-w-0 overflow-x-auto rounded-xl">
         <PaginatedTable<Department>
           data={departments}
           columns={columns}
