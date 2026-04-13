@@ -20,6 +20,3 @@ export const PERMISSIONS = {
   departmentCreate: "department.create",
   departmentUpdate: "department.update",
 } as const;
-
-export type Permission =
-  (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

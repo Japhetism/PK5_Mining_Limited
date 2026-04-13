@@ -1,11 +1,12 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
 import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
 import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
-import { Permission } from "../constants/permissions";
+import { PERMISSIONS } from "../constants/permissions";
 import { adminRouteItems } from "../routes/admin-config";
 import { UserRole } from "../constants/role";
 import { UserErrors } from "../interfaces/user";
 import { ZodError } from "zod";
+import { PermissionGroup, Permission } from "../interfaces/role";
 
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
@@ -278,4 +279,25 @@ export const limitWords = (text: string, maxWords: number) => {
   if (words.length <= maxWords) return text;
 
   return words.slice(0, maxWords).join(" ");
+};
+
+export const getGroupedPermissions = (): PermissionGroup[] => {
+  const allPermissions = Object.values(PERMISSIONS) as Permission[];
+  const groups: Record<string, Permission[]> = {};
+
+  allPermissions.forEach((perm) => {
+    // Extract the group name (e.g., "job" from "job.view")
+    const groupName = perm.split(".")[0];
+    if (!groups[groupName]) {
+      groups[groupName] = [];
+    }
+    groups[groupName].push(perm);
+  });
+
+  return Object.entries(groups).map(([key, perms]) => ({
+    key,
+    // Format name: "contact-message" -> "Contact Message"
+    name: key.split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" "),
+    permissions: perms,
+  }));
 };

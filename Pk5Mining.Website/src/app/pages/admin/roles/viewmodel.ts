@@ -173,6 +173,13 @@ function useRoleViewModel() {
     setConfirmDeleteOpen(false);
   };
 
+  const handlePermissionToggle = (newPermissions: string[]) => {
+    // We simulate a change event to stay compatible with your existing onChange
+    onChange({
+      target: { name: "permissions", value: newPermissions },
+    } as any);
+  };
+
   const roles: Role[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -210,6 +217,7 @@ function useRoleViewModel() {
     setFieldErrors,
     setForm,
     handleCloseModal,
+    handlePermissionToggle,
   };
 }
 

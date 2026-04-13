@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
@@ -18,11 +17,10 @@ import {
 } from "@/app/components/ui/paginated-table";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { statusOptions } from "@/app/constants";
-import useRoleViewModel from "./viewmodel";
-import { Subsidiary } from "@/app/interfaces/subsidiary";
 import { Role } from "@/app/interfaces/role";
 import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
+import useRoleViewModel from "./viewmodel";
 
 export function Roles() {
   const {
@@ -58,6 +56,7 @@ export function Roles() {
     setFieldErrors,
     onChange,
     handleCloseModal,
+    handlePermissionToggle,
   } = useRoleViewModel();
 
   const columns: PaginatedTableColumn<Role>[] = [
@@ -295,6 +294,7 @@ export function Roles() {
         onConfirm={handleUpdateStatus}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
+        handlePermissionToggle={handlePermissionToggle}
       />
 
       <DetailModal
