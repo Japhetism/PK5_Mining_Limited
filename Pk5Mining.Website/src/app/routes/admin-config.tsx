@@ -4,7 +4,9 @@ import {
   BarChart3,
   Briefcase,
   Building,
+  Building2,
   FileText,
+  House,
   Mail,
   ShieldCheck,
   User,
@@ -79,6 +81,12 @@ const Subsidiaries = lazy(() =>
 const Roles = lazy(() =>
   import("@/app/pages/admin/roles").then((m) => ({
     default: m.Roles,
+  })),
+);
+
+const Departments = lazy(() =>
+  import("@/app/pages/admin/departments").then((m) => ({
+    default: m.Departments,
   })),
 );
 
@@ -180,8 +188,8 @@ export const adminRouteItems: AdminRouteItem[] = [
     path: "subsidiaries",
     label: "Subsidiaries",
     icon: Building,
-    show: false,
-    canAccess: false,
+    show: true,
+    canAccess: true,
     permissions: [PERMISSIONS.subsidiarView],
     element: Subsidiaries,
   },
@@ -190,10 +198,20 @@ export const adminRouteItems: AdminRouteItem[] = [
     path: "roles",
     label: "Roles",
     icon: ShieldCheck,
-    show: false,
-    canAccess: false,
+    show: true,
+    canAccess: true,
     permissions: [PERMISSIONS.roleView],
     element: Roles,
+  },
+
+  {
+    path: "departments",
+    label: "Departments",
+    icon: Building2,
+    show: true,
+    canAccess: true,
+    permissions: [PERMISSIONS.departmentView],
+    element: Departments,
   },
 
   {
