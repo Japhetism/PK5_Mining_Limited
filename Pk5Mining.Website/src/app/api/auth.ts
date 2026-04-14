@@ -3,8 +3,20 @@ import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 import { IChangePasswordPayload } from "../interfaces/user";
 import { mockAuthenticationResonsePayload } from "../fixtures/user.fixture";
+import axiosRetry from 'axios-retry';
 
 const useMockAuth = import.meta.env.VITE_USE_MOCK_AUTHENTICATION === "true";
+
+axiosRetry(http, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (error) => {
+    return (
+      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+      !!(error.response?.status)
+    );
+  }
+});
 
 export async function login(payload: ILoginPayload) {
   if (useMockAuth) {
@@ -13,7 +25,7 @@ export async function login(payload: ILoginPayload) {
   try {
     const { data } = await http.post<ApiResponse<IUser>>("/Authentication/login", payload);
 
-     if (data.responseStatus !== "SUCCESS") {
+    if (data.responseStatus !== "SUCCESS") {
       throw new Error(
         getAxiosErrorMessage(
           data.responseMessage,
