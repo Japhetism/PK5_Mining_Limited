@@ -3,8 +3,10 @@ import { BarChart3, Briefcase, FileText, PieChart } from "lucide-react";
 import { DashboardSkeleton } from "@/app/components/ui/dashboard-skeleton";
 import useDashboardViewModel from "./viewmodel";
 import { statuses } from "@/app/constants";
+import { useTenant } from "@/tenants/useTenant";
 
 export function Dashboard() {
+  const { colors } = useTenant();
   const {
     openJobs,
     closedJobs,
@@ -21,7 +23,9 @@ export function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold mb-2">Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-2" style={{ color: colors.text }}>
+          Dashboard
+        </h1>
         <p className="text-sm text-gray-400">
           High-level view of job openings and incoming applications.
         </p>
@@ -58,7 +62,7 @@ export function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5">
+        <div className="border rounded-xl p-5" style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.border }}>
           <h2 className="text-sm font-semibold mb-4">Applications by role</h2>
           {byJob.length === 0 ? (
             <p className="text-xs text-gray-500">
@@ -89,7 +93,7 @@ export function Dashboard() {
           )}
         </div>
 
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5">
+        <div className="border rounded-xl p-5" style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.border }}>
           <h2 className="text-sm font-semibold mb-4">Application Pipelines</h2>
           <div className="grid grid-cols-2 gap-4 text-xs">
             {statuses.map((s) => {
@@ -119,10 +123,12 @@ type StatProps = {
 };
 
 function StatCard({ icon: Icon, label, value, subtitle, suffix }: StatProps) {
+  const { colors } = useTenant();
   return (
     <motion.div
       whileHover={{ y: -2, scale: 1.01 }}
-      className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4 flex items-center gap-3"
+      className="border rounded-xl p-4 flex items-center gap-3"
+      style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.border }}
     >
       <div className="w-9 h-9 rounded-lg bg-[#c89b3c]/10 flex items-center justify-center">
         <Icon className="w-4 h-4 text-[#c89b3c]" />

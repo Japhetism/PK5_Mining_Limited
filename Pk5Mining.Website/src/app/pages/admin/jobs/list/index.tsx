@@ -18,8 +18,10 @@ import {
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { jobTypes, statusOptions } from "@/app/constants";
 import useJobListViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function JobList() {
+  const { colors } = useTenant();
   const {
     jobs,
     filters,
@@ -128,7 +130,8 @@ export function JobList() {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="inline-flex h-8 w-8 items-center justify-center text-gray-300"
+              className="inline-flex h-8 w-8 items-center justify-center"
+              style={{ color: colors.text }}
             >
               <MoreVerticalIcon className="h-4 w-4" />
             </button>
@@ -138,7 +141,8 @@ export function JobList() {
             <DropdownMenu.Content
               align="end"
               sideOffset={6}
-              className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
+              className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
+              style={{ backgroundColor: colors.bg, border: colors.border }}
             >
               <DropdownMenu.Item asChild>
                 <Link
@@ -146,7 +150,8 @@ export function JobList() {
                   onClick={() => {
                     queryClient.setQueryData(["jobs", String(job.id)], job);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                  style={{ color: colors.text }}
                 >
                   <Eye className="w-4 h-4" />
                   View details
@@ -159,7 +164,8 @@ export function JobList() {
                   onClick={() => {
                     queryClient.setQueryData(["jobs", String(job.id)], job);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                  style={{ color: colors.text }}
                 >
                   <Pencil className="w-4 h-4" />
                   Edit Job
@@ -171,7 +177,8 @@ export function JobList() {
                   setSelectedJob(job);
                   setConfirmOpen(true);
                 }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                style={{ color: colors.text }}
               >
                 {job.isActive ? (
                   <>
@@ -197,7 +204,7 @@ export function JobList() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold mb-1">Job openings</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-1" style={{ color: colors.text }}>Job openings</h1>
           <p className="text-sm text-gray-400">
             Create, update, and close job postings.
           </p>
@@ -219,7 +226,7 @@ export function JobList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Department
             </label>
             <input
@@ -228,12 +235,13 @@ export function JobList() {
               value={filters.department}
               onChange={(e) => updateFilter("department", e.target.value)}
               placeholder="Search by department"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Location
             </label>
             <input
@@ -242,12 +250,13 @@ export function JobList() {
               value={filters.location}
               onChange={(e) => updateFilter("location", e.target.value)}
               placeholder="Search by location"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Status
             </label>
             <select
@@ -256,7 +265,8 @@ export function JobList() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -268,7 +278,7 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
               Job Type
             </label>
             <select
@@ -277,7 +287,8 @@ export function JobList() {
                 setFilterJobType(e.target.value);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             >
               <option value="">All Job Type</option>
               {jobTypes.map((opt) => (
@@ -291,7 +302,7 @@ export function JobList() {
       </div>
 
       {/* Table */}
-      <div className="min-w-0 overflow-x-auto rounded-xl border border-gray-800">
+      <div className="min-w-0 overflow-x-auto rounded-xl">
         <PaginatedTable<JobDto>
           data={jobs}
           columns={columns}

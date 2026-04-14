@@ -13,6 +13,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     server: {
+      host: true, 
+      port: 5173,
+      allowedHosts: [
+        "pk5miningltd.local",
+        "pk5agroallied.local"
+      ],
       proxy: {
         "/api": {
           target: baseURL,

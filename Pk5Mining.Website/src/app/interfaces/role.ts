@@ -1,4 +1,5 @@
 import { PaginationInfo } from ".";
+import { PERMISSIONS } from "../constants/permissions";
 
 export type Role = {
   id: string;
@@ -20,8 +21,6 @@ export type CreateRolePayload = Omit<Role, "id" | "dT_Created" | "dT_Updated">;
 
 export type UpdateRolePayload = Partial<CreateRolePayload>;
 
-export type Permission = { id: string; key: string; description?: string };
-
 export type RoleErrors = {
   [K in keyof CreateRolePayload]?: string;
 };
@@ -30,4 +29,13 @@ export type RolesQuery = {
   pageNumber: number;
   pageSize: number;
   isActive?: boolean | string;
+};
+
+export type Permission =
+  (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
+
+export type PermissionGroup = {
+  name: string;
+  key: string;
+  permissions: Permission[];
 };

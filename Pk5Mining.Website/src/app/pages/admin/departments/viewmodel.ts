@@ -6,25 +6,23 @@ import { ApiError, StatusFilter } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import {
-  Role,
-  RoleErrors,
-  RolesQuery,
-  UpdateRolePayload,
-} from "@/app/interfaces/role";
-import { getRoles, updateRole } from "@/app/api/roles";
+  Department,
+  DepartmentErrors,
+  DepartmentsQuery,
+  UpdateDepartmentPayload,
+} from "@/app/interfaces/department";
+import { getDepartments, updateDepartment } from "@/app/api/departments";
 
-const defaultFormData: Role = {
+const defaultFormData: Department = {
   id: "",
   name: "",
   description: "",
-  isSystem: false,
   isActive: true,
-  permissions: [],
   dT_Created: "",
   dT_Updated: "",
 };
 
-function useRoleViewModel() {
+function useDepartmentViewModel() {
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,12 +30,13 @@ function useRoleViewModel() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [confirmViewOpen, setConfirmViewOpen] = useState<boolean>(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
-  const [form, setForm] = useState<Role>(defaultFormData);
-  const [fieldErrors, setFieldErrors] = useState<RoleErrors>({});
+  const [form, setForm] = useState<Department>(defaultFormData);
+  const [fieldErrors, setFieldErrors] = useState<DepartmentErrors>({});
 
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -56,8 +55,8 @@ function useRoleViewModel() {
     setPageNumber(1);
   }, [debouncedFilters.search]);
 
-  const queryParams: RolesQuery = useMemo(() => {
-    const raw: RolesQuery = {
+  const queryParams: DepartmentsQuery = useMemo(() => {
+    const raw: DepartmentsQuery = {
       pageNumber,
       pageSize,
       isActive:
@@ -65,17 +64,17 @@ function useRoleViewModel() {
     };
 
     // clean out empty strings
-    return cleanParams(raw) as RolesQuery;
+    return cleanParams(raw) as DepartmentsQuery;
   }, [pageNumber, pageSize, debouncedFilters, filterStatus]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
-      "roles",
+      "departments",
       queryParams.pageNumber,
       queryParams.pageSize,
       queryParams.isActive ?? "",
     ],
-    queryFn: () => getRoles(queryParams),
+    queryFn: () => getDepartments(queryParams),
     staleTime: 30_000,
   });
 
@@ -85,38 +84,38 @@ function useRoleViewModel() {
         (error as ApiError)?.message ??
         (error instanceof Error
           ? error.message
-          : "An error occurred while fetching roles. Please try again.");
+          : "An error occurred while fetching departments. Please try again.");
       toastUtil.error(message);
     }
   }, [error]);
 
   useEffect(() => {
-    if (!selectedRole) return;
+    if (!selectedDepartment) return;
 
     setForm({
       ...defaultFormData,
-      ...selectedRole,
-      dT_Updated: selectedRole.dT_Updated ?? "",
+      ...selectedDepartment,
+      dT_Updated: selectedDepartment.dT_Updated ?? "",
     });
-  }, [selectedRole]);
+  }, [selectedDepartment]);
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateRolePayload) => {
+    mutationFn: (payload: UpdateDepartmentPayload) => {
       if (
-        !selectedRole ||
-        !("id" in selectedRole) ||
-        typeof selectedRole.id !== "number"
+        !selectedDepartment ||
+        !("id" in selectedDepartment) ||
+        typeof selectedDepartment.id !== "number"
       ) {
-        throw new Error("Cannot update: missing role id");
+        throw new Error("Cannot update: missing department id");
       }
-      return updateRole(selectedRole.id, payload);
+      return updateDepartment(selectedDepartment.id, payload);
     },
     onSuccess: async () => {
       setIsUpdating(false);
       setConfirmOpen(false);
-      setSelectedRole(null);
+      setSelectedDepartment(null);
 
-      await queryClient.invalidateQueries({ queryKey: ["roles"] });
+      await queryClient.invalidateQueries({ queryKey: ["departments"] });
     },
     onError: (err) => {
       setIsUpdating(false);
@@ -124,7 +123,7 @@ function useRoleViewModel() {
         (err as ApiError)?.message ??
         (err instanceof Error
           ? err.message
-          : "An error occurred while updating role. Please try again.");
+          : "An error occurred while updating department. Please try again.");
       toastUtil.error(message);
     },
   });
@@ -142,13 +141,13 @@ function useRoleViewModel() {
   };
 
   const handleUpdateStatus = () => {
-    if (!selectedRole) return;
+    if (!selectedDepartment) return;
 
     setIsUpdating(true);
 
     updateMutation.mutate({
-      ...selectedRole,
-      isActive: !selectedRole.isActive,
+      ...selectedDepartment,
+      isActive: !selectedDepartment.isActive,
     });
   };
 
@@ -166,31 +165,25 @@ function useRoleViewModel() {
   };
 
   const handleCloseModal = () => {
-    setSelectedRole(null);
+    setSelectedDepartment(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
+    setConfirmViewOpen(false);
   };
 
-  const handlePermissionToggle = (newPermissions: string[]) => {
-    // We simulate a change event to stay compatible with your existing onChange
-    onChange({
-      target: { name: "permissions", value: newPermissions },
-    } as any);
-  };
-
-  const roles: Role[] = data?.data ?? [];
+  const departments: Department[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
 
   return {
-    roles,
+    departments,
     isLoading,
     error,
     filterStatus,
     isFilter,
-    selectedRole,
+    selectedDepartment,
     totalCount,
     totalPages,
     pageNumber,
@@ -199,6 +192,7 @@ function useRoleViewModel() {
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
+    confirmViewOpen,
     filters,
     queryClient,
     form,
@@ -207,20 +201,20 @@ function useRoleViewModel() {
     setIsFilter,
     setFilterStatus,
     handleUpdateStatus,
-    setSelectedRole,
+    setSelectedDepartment,
     updateFilter,
     onChangePage,
     onChangePageSize,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
+    setConfirmViewOpen,
     setFieldErrors,
     setForm,
     handleCloseModal,
-    handlePermissionToggle,
   };
 }
 
-export default useRoleViewModel;
+export default useDepartmentViewModel;
 
-export type RoleViewModel = ReturnType<typeof useRoleViewModel>;
+export type DepartmentViewModel = ReturnType<typeof useDepartmentViewModel>;

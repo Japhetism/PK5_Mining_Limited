@@ -17,14 +17,14 @@ import {
 } from "@/app/components/ui/paginated-table";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { statusOptions } from "@/app/constants";
-import { Role } from "@/app/interfaces/role";
+import { Department } from "@/app/interfaces/department";
+import { DetailModal } from "./components/details-modal";
 import { EditModal } from "./components/edit-modal";
-import { DetailModal } from "./components/detail-modal";
-import useRoleViewModel from "./viewmodel";
+import useDepartmentViewModel from "./viewmodel";
 
-export function Roles() {
+export function Departments() {
   const {
-    roles,
+    departments,
     filters,
     filterStatus,
     isLoading,
@@ -39,13 +39,15 @@ export function Roles() {
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
-    selectedRole,
+    confirmViewOpen,
+    selectedDepartment,
     isUpdating,
     queryClient,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
-    setSelectedRole,
+    setConfirmViewOpen,
+    setSelectedDepartment,
     updateFilter,
     setIsFilter,
     setFilterStatus,
@@ -56,63 +58,57 @@ export function Roles() {
     setFieldErrors,
     onChange,
     handleCloseModal,
-    handlePermissionToggle,
-  } = useRoleViewModel();
+  } = useDepartmentViewModel();
 
-  const columns: PaginatedTableColumn<Role>[] = [
+  const columns: PaginatedTableColumn<Department>[] = [
     {
       key: "name",
       header: "Name",
-      render: (role) => (
+      render: (dept) => (
         <div>
           <div className="flex-1">
-            <div className="font-semibold text-[#c89b3c]">{role.name}</div>
+            <div className="font-semibold text-[#c89b3c]">{dept.name}</div>
           </div>
           <div className="text-xs text-gray-500 line-clamp-2">
-            {role.description}
+            {dept.description}
           </div>
         </div>
       ),
     },
     {
-      key: "isSystem",
-      header: "System Role",
-      render: (role) => role.isSystem ?? "-",
-    },
-    {
       key: "isActive",
       header: "Status",
-      render: (role) => (
+      render: (dept) => (
         <span
           className={
-            role.isActive
+            dept.isActive
               ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
               : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
           }
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {role.isActive ? "Active" : "Inactive"}
+          {dept.isActive ? "Active" : "Inactive"}
         </span>
       ),
     },
     {
       key: "dT_Created",
       header: "Date Added",
-      render: (role) =>
-        role.dT_Created ? formatDateTime(role.dT_Created) : "-",
+      render: (dept) =>
+        dept.dT_Created ? formatDateTime(dept.dT_Created) : "-",
     },
     {
       key: "dT_Updated",
       header: "Date Modified",
-      render: (role) =>
-        role.dT_Updated ? formatDateTime(role.dT_Updated) : "-",
+      render: (dept) =>
+        dept.dT_Updated ? formatDateTime(dept.dT_Updated) : "-",
     },
     {
       key: "actions",
       header: "Actions",
       headerClassName: "text-right",
       className: "text-right",
-      render: (role) => (
+      render: (dept) => (
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button
@@ -131,8 +127,8 @@ export function Roles() {
             >
               <DropdownMenu.Item
                 onClick={() => {
-                  setSelectedRole(role);
-                  setConfirmOpen(true);
+                  setSelectedDepartment(dept);
+                  setConfirmViewOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
@@ -142,23 +138,23 @@ export function Roles() {
 
               <DropdownMenu.Item
                 onClick={() => {
-                  setSelectedRole(role);
+                  setSelectedDepartment(dept);
                   setConfirmEditOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
                 <Pencil className="w-4 h-4" />
-                Edit Role
+                Edit Department
               </DropdownMenu.Item>
 
               <DropdownMenu.Item
                 onSelect={() => {
-                  setSelectedRole(role);
+                  setSelectedDepartment(dept);
                   setConfirmOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
-                {role.isActive ? (
+                {dept.isActive ? (
                   <>
                     <XCircle className="w-4 h-4 text-red-400" />
                     <span className="text-red-400">Deactivate</span>
@@ -173,13 +169,13 @@ export function Roles() {
 
               <DropdownMenu.Item
                 onSelect={() => {
-                  setSelectedRole(role);
+                  setSelectedDepartment(dept);
                   setConfirmDeleteOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
                 <Trash className="w-4 h-4 text-red-400" />
-                <span className="text-red-400">Delete Role</span>
+                <span className="text-red-400">Delete Department</span>
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
@@ -193,9 +189,9 @@ export function Roles() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold mb-1">Roles</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-1">Departments</h1>
           <p className="text-sm text-gray-400">
-            Manage roles and permission assignments.
+            Manage departments and their configurations.
           </p>
         </div>
 
@@ -206,7 +202,7 @@ export function Roles() {
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
         >
           <Plus className="w-4 h-4" />
-          New Role
+          New Department
         </motion.button>
       </div>
 
@@ -245,13 +241,13 @@ export function Roles() {
       </div>
 
       {/* Table */}
-      <div className="min-w-0 overflow-x-auto rounded-xl border border-gray-800">
-        <PaginatedTable<Role>
-          data={roles}
+      <div className="min-w-0 overflow-x-auto rounded-xl">
+        <PaginatedTable<Department>
+          data={departments}
           columns={columns}
           isLoading={isLoading}
           isFilter={isFilter}
-          emptyTitle="No role yet. Click “New role” to create one."
+          emptyTitle="No department yet. Click “New department” to create one."
           noResultsTitle="No results found. Try changing your filters."
           setPageNumber={onChangePage}
           setPageSize={onChangePageSize}
@@ -266,9 +262,9 @@ export function Roles() {
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleUpdateStatus}
-        title={selectedRole?.isActive ? "Deactivate Role" : "Activate Role"}
-        description={`Are you sure you want to ${selectedRole?.isActive ? "deactivate" : "activate"} "${selectedRole?.name}"?`}
-        confirmText={`Yes, ${selectedRole?.isActive ? "deactivate" : "activate"}`}
+        title={selectedDepartment?.isActive ? "Deactivate Department" : "Activate Department"}
+        description={`Are you sure you want to ${selectedDepartment?.isActive ? "deactivate" : "activate"} "${selectedDepartment?.name}"?`}
+        confirmText={`Yes, ${selectedDepartment?.isActive ? "deactivate" : "activate"}`}
         cancelText="No"
         loading={isUpdating}
       />
@@ -277,8 +273,8 @@ export function Roles() {
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleUpdateStatus}
-        title="Delete Role"
-        description={`Are you sure you want to delete "${selectedRole?.name}"?`}
+        title="Delete Department"
+        description={`Are you sure you want to delete "${selectedDepartment?.name}"?`}
         confirmText={`Yes, delete`}
         cancelText="No"
         loading={isUpdating}
@@ -294,12 +290,11 @@ export function Roles() {
         onConfirm={handleUpdateStatus}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
-        handlePermissionToggle={handlePermissionToggle}
       />
 
       <DetailModal
-        open={confirmOpen}
-        role={form}
+        open={confirmViewOpen}
+        department={form}
         onClose={handleCloseModal}
       />
     </div>
