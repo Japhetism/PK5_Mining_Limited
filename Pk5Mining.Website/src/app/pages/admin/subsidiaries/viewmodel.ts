@@ -3,7 +3,12 @@ import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import { ApiError, StatusFilter } from "@/app/interfaces";
-import { cleanParams, mapZodErrors, toNumber } from "@/app/utils/helper";
+import {
+  cleanParams,
+  generateAppId,
+  mapZodErrors,
+  toNumber,
+} from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import {
   CreateSubsidiaryPayload,
@@ -199,7 +204,12 @@ function useSubsidiaryListViewModel() {
     >,
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "name" && { code: generateAppId(value) }),
+    }));
   };
 
   const onSubmit = (e: React.FormEvent) => {
@@ -227,7 +237,7 @@ function useSubsidiaryListViewModel() {
     const payload: CreateSubsidiaryPayload = {
       ...result.data,
       status: "Active",
-    }
+    };
 
     createMutation.mutate(payload);
   };

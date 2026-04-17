@@ -181,7 +181,10 @@ export const hasPermissions = (
   );
 };
 
-export const getVisibleNav = (userPermissions: Permission[], userRole?: UserRole): NavItem[] => {
+export const getVisibleNav = (
+  userPermissions: Permission[],
+  userRole?: UserRole,
+): NavItem[] => {
   return adminRouteItems
     .filter(
       (item) =>
@@ -190,8 +193,8 @@ export const getVisibleNav = (userPermissions: Permission[], userRole?: UserRole
           userPermissions,
           item.permissions ?? [],
           item.requireAllPermissions,
-        )
-        && hasRole(userRole, item.roles)
+        ) &&
+        hasRole(userRole, item.roles),
     )
     .map((item) => ({
       to: `/admin/${item.path}`,
@@ -297,7 +300,25 @@ export const getGroupedPermissions = (): PermissionGroup[] => {
   return Object.entries(groups).map(([key, perms]) => ({
     key,
     // Format name: "contact-message" -> "Contact Message"
-    name: key.split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" "),
+    name: key
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" "),
     permissions: perms,
   }));
+};
+
+export const generateAppId = (name: string): string => {
+  if (!name) return "";
+
+  return (
+    "com." +
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim()
+      .split(" ")
+      .join(".")
+  );
 };

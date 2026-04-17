@@ -109,6 +109,7 @@ export function EditModal({
                   <motion.input
                     name="code"
                     value={form.code}
+                    disabled={true}
                     onChange={onChange}
                     onBlur={() => {
                       if (!isValidName(form.code)) {
