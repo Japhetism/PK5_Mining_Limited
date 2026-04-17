@@ -10,21 +10,12 @@ import {
 } from "../interfaces/subsidiary";
 import { mock_subsidiaries } from "../fixtures/subsidiary.fixture";
 
-const useMock = import.meta.env.VITE_USE_MOCK_DATA === "true";
+const useMock = import.meta.env.VITE_USE_MOCK_DATA === "false";
 
-export async function getSubsidiaries(queryParams: SubsidiariesQuery) {
+export async function getSubsidiaries(params: SubsidiariesQuery) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_subsidiaries,
-        totalCount: mock_subsidiaries.length,
-        totalPages: 1,
-      };
-    }
-
     const { data } =
-      await http.get<ApiResponse<SubsidiaryResponsePayload>>("/Subsidairy");
+      await http.get<ApiResponse<SubsidiaryResponsePayload>>("/Subsidiary/all", { params });
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(

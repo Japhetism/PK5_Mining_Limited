@@ -84,11 +84,6 @@ export function SubsidiaryList() {
       render: (subsidiary) => subsidiary.country ?? "-",
     },
     {
-      key: "timezone",
-      header: "Time Zone",
-      render: (subsidiary) => subsidiary.timezone ?? "-",
-    },
-    {
       key: "address",
       header: "Address",
       render: (subsidiary) => subsidiary.address ?? "-",
@@ -99,18 +94,18 @@ export function SubsidiaryList() {
       render: (subsidiary) => subsidiary.email ?? "-",
     },
     {
-      key: "isActive",
+      key: "status",
       header: "Status",
       render: (subsidiary) => (
         <span
           className={
-            subsidiary.isActive
+            subsidiary.status === "Active"
               ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
               : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
           }
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {subsidiary.isActive ? "Active" : "Inactive"}
+          {subsidiary.status}
         </span>
       ),
     },
@@ -121,10 +116,10 @@ export function SubsidiaryList() {
         subsidiary.dT_Created ? formatDateTime(subsidiary.dT_Created) : "-",
     },
     {
-      key: "dT_Updated",
+      key: "dT_Modified",
       header: "Date Modified",
       render: (subsidiary) =>
-        subsidiary.dT_Updated ? formatDateTime(subsidiary.dT_Updated) : "-",
+        subsidiary.dT_Modified ? formatDateTime(subsidiary.dT_Modified) : "-",
     },
     {
       key: "actions",

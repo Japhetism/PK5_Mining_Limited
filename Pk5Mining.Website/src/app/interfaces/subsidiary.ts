@@ -3,16 +3,15 @@ import { PaginationInfo } from ".";
 export type SubsidiaryStatus = "active" | "inactive";
 
 export type Subsidiary = {
-  id: string;
+  id: string | number;
   name: string;
   code: string;
   country: string;
-  timezone: string;
   address?: string;
   email?: string;
-  isActive?: boolean;
+  status?: "Active" | "Inactive";
   dT_Created: string;
-  dT_Updated?: string | null;
+  dT_Modified?: string | null;
 }
 
 export type SubsidiaryResponsePayload = {
