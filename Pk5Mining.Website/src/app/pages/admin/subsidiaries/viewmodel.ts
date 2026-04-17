@@ -157,15 +157,16 @@ function useSubsidiaryListViewModel() {
       }
       return updateSubsidiary(selectedSubsidiary.id, payload);
     },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
     onSuccess: async () => {
-      setIsUpdating(false);
-      setConfirmOpen(false);
-      setSelectedSubsidiary(null);
-
       await queryClient.invalidateQueries({ queryKey: ["subsidiaries"] });
+      setConfirmEditOpen(false);
+      setSelectedSubsidiary(null);
+      toastUtil.success("Subsidiary updated successfully");
     },
     onError: (err) => {
-      setIsUpdating(false);
       const message =
         (err as ApiError)?.message ??
         (err instanceof Error
@@ -173,6 +174,7 @@ function useSubsidiaryListViewModel() {
           : "An error occurred while updating the subsidary. Please try again.");
       toastUtil.error(message);
     },
+    onSettled: () => setIsUpdating(false),
   });
 
   const onChangePage = (next: number) => setPageNumber(next);
@@ -254,8 +256,13 @@ function useSubsidiaryListViewModel() {
       return;
     }
 
+    const payload = {
+      ...result.data,
+      status: selectedSubsidiary.status
+    }
+
     setFieldErrors({});
-    updateMutation.mutate(result.data);
+    updateMutation.mutate(payload);
   };
 
   const subsidaries: Subsidiary[] = data?.data ?? [];

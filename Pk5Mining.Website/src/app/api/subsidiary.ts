@@ -56,13 +56,6 @@ export async function getSubsidiariesForDropdown() {
 
 export async function getSubsidiaryById(id: string) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_subsidiaries[0],
-      };
-    }
-
     const { data } = await http.get<ApiResponse<Subsidiary>>(
       `/Subsidiary/${id}`,
     );
@@ -108,15 +101,8 @@ export async function updateSubsidiary(
   payload: UpdateSubsidiaryPayload,
 ) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_subsidiaries[0],
-      };
-    }
-
     const { data } = await http.put<ApiResponse<Subsidiary>>(
-      `/Subsidiaries/${id}`,
+      `/Subsidiary/Update`,
       payload,
     );
 
@@ -137,15 +123,8 @@ export async function updateSubsidiary(
 
 export async function deleteSubsidiary(id: number) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_subsidiaries[0],
-      };
-    }
-
     const { data } = await http.delete<ApiResponse<Subsidiary>>(
-      `/Subsidiaries/${id}`,
+      `/Subsidiary/${id}`,
     );
 
     if (data.responseStatus !== "SUCCESS") {
