@@ -24,9 +24,11 @@ export function AdminLayout() {
   const nav = getVisibleNav(user?.permissions ?? [], user?.role);
 
   return (
-    <div className="h-screen text-white flex flex-col overflow-hidden" style={{ backgroundColor: colors.bg }}>
+    <div className="h-screen text-black flex flex-col bg-white overflow-hidden">
+    {/* <div className="h-screen text-white flex flex-col overflow-hidden" style={{ backgroundColor: colors.bg }}> */}
       {/* HEADER */}
-      <header className="border-b backdrop-blur shrink-0" style={{ backgroundColor: `${colors.bg}/500`, borderColor: colors.border }}>
+      <header className="border-b backdrop-blur shrink-0 bg-white" style={{borderColor: colors.border }}>
+      {/* <header className="border-b backdrop-blur shrink-0" style={{ backgroundColor: `${colors.bg}/500`, borderColor: colors.border }}> */}
         <div className="w-full px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <button
@@ -45,7 +47,8 @@ export function AdminLayout() {
                 loading="lazy"
                 className="w-14 sm:w-20 h-auto object-contain shrink-0"
               />
-              <span className="font-bold text-sm sm:text-base truncate" style={{ color: colors.text}} >
+              <span className="font-bold text-sm sm:text-base truncate text-black">
+              {/* <span className="font-bold text-sm sm:text-base truncate" style={{ color: colors.text}} > */}
                 Admin Portal
               </span>
             </Link>
@@ -98,7 +101,7 @@ export function AdminLayout() {
                         [
                           "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                           isActive
-                            ? "bg-[#c89b3c]/10 text-[#c89b3c] border border-[#c89b3c]/30"
+                            ? "bg-[#c89b3c] text-[#c89b3c] border border-[#c89b3c]/30" 
                             : "text-gray-300 hover:bg-white/5",
                         ].join(" ")
                       }
