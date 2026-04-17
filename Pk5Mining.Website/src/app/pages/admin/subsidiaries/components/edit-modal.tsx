@@ -1,10 +1,12 @@
 import { motion } from "motion/react";
 import { X } from "lucide-react";
 import useSubsidiaryListViewModel from "../viewmodel";
+import { countries } from "countries-list";
 import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
-import { countries } from "@/app/constants";
+// import { countries } from "@/app/constants";
 import { Subsidiary, SubsidiaryErrors } from "@/app/interfaces/subsidiary";
+import { SearchableSelect } from "@/app/components/searchable-select";
 
 type EditModalProps = {
   form: Subsidiary;
@@ -34,6 +36,12 @@ export function EditModal({
   setFieldErrors,
   onChange,
 }: EditModalProps) {
+  
+  const countryList = Object.entries(countries).map(([code, country]) => ({
+    label: country.name,
+    value: country.name,
+  }));
+
   return (
     <Modal
       open={open}
@@ -139,47 +147,6 @@ export function EditModal({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Country
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.select
-                    name="country"
-                    value={form.country}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.country) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          country: "Country is required",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.country;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                      ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
-                      focus:border-[#c89b3c]`}
-                  >
-                    <option value="">Select Country</option>
-                    {countries.map((country) => (
-                      <option key={country} value={country}>
-                        {country}
-                      </option>
-                    ))}
-                  </motion.select>
-                  {fieldErrors.country && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.country}
-                    </p>
-                  )}
-                </div>
-
-                <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Email
                     <span className="ml-1 text-red-500">*</span>
@@ -212,7 +179,18 @@ export function EditModal({
                     </p>
                   )}
                 </div>
+
+                <SearchableSelect
+                  label="Country"
+                  name="country"
+                  value={form.country}
+                  options={countryList}
+                  required
+                  error={fieldErrors.country}
+                  onChange={onChange}
+                />
               </div>
+
               <div>
                 <label className="block text-xs font-semibold text-gray-300 mb-2">
                   Address
