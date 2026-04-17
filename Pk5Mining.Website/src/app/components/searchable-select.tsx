@@ -12,6 +12,8 @@ type Props = {
   options: Option[];
   required?: boolean;
   error?: string;
+  className: string;
+  placeholder?: string;
   onChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -27,37 +29,40 @@ export const SearchableSelect = ({
   options,
   required,
   error,
+  className,
+  placeholder,
   onChange,
   onBlur,
 }: Props) => {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Find selected option
   const selectedOption = options.find((opt) => opt.value === value);
 
-  // Sync input display with selected label
   useEffect(() => {
     if (selectedOption) {
       setQuery(selectedOption.label);
     } else {
       setQuery("");
     }
+    setIsTyping(false);
   }, [value, selectedOption]);
 
-  // Filter options
   const filteredOptions = useMemo(() => {
+    if (!isTyping) return options;
+
     return options.filter((opt) =>
       opt.label.toLowerCase().includes(query.toLowerCase()),
     );
-  }, [query, options]);
+  }, [query, options, isTyping]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!containerRef.current?.contains(e.target as Node)) {
         setOpen(false);
+        setIsTyping(false);
       }
     };
 
@@ -69,7 +74,6 @@ export const SearchableSelect = ({
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Label */}
       {label && (
         <label className="block text-sm font-medium mb-2">
           {label}
@@ -77,21 +81,50 @@ export const SearchableSelect = ({
         </label>
       )}
 
-      {/* Input */}
-      <input
-        name={name}
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          setOpen(true);
-        }}
-        onFocus={() => setOpen(true)}
-        onBlur={onBlur}
-        placeholder={`Search ${label ? label : ''}`}
-        className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-          ${error ? "border-red-500" : "border-gray-800"}
-          focus:border-[#c89b3c]`}
-      />
+      {/* Input Wrapper */}
+      <div className="relative">
+        <input
+          name={name}
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setIsTyping(true);
+            setOpen(true);
+          }}
+          onFocus={() => {
+            setOpen(true);
+            setIsTyping(false);
+          }}
+          onBlur={onBlur}
+          placeholder={placeholder ?? `Search ${label ? label : ""}`}
+          className={`${className} pr-10`}
+        />
+
+        {/* Dropdown Icon */}
+        <div
+          className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+          onClick={() => {
+            setOpen((prev) => !prev);
+            setIsTyping(false);
+          }}
+        >
+          <svg
+            className={`w-4 h-4 text-gray-400 transition-transform ${
+              open ? "rotate-180" : ""
+            }`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
 
       {/* Dropdown */}
       {open && (
@@ -100,9 +133,8 @@ export const SearchableSelect = ({
             filteredOptions.map((opt) => (
               <div
                 key={opt.value}
-                onMouseDown={(e) => e.preventDefault()} // prevent blur before click
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
-                  // 🔥 Emit synthetic event (compatible with your onChange)
                   const syntheticEvent = {
                     target: {
                       name,
@@ -114,8 +146,11 @@ export const SearchableSelect = ({
 
                   setQuery(opt.label);
                   setOpen(false);
+                  setIsTyping(false);
                 }}
-                className="px-4 py-2 cursor-pointer hover:bg-[#1a1a1a]"
+                className={`px-4 py-2 cursor-pointer hover:bg-[#1a1a1a] ${
+                  value === opt.value ? "bg-[#1a1a1a]" : ""
+                }`}
               >
                 {opt.label}
               </div>
@@ -126,7 +161,6 @@ export const SearchableSelect = ({
         </div>
       )}
 
-      {/* Error */}
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
     </div>
   );

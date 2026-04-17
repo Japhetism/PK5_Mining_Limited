@@ -34,7 +34,6 @@ export function EditModal({
   setFieldErrors,
   onChange,
 }: EditModalProps) {
-  
   const countryList = Object.entries(countries).map(([code, country]) => ({
     label: country.name,
     value: country.name,
@@ -185,7 +184,11 @@ export function EditModal({
                   options={countryList}
                   required
                   error={fieldErrors.country}
+                  placeholder="Select Country"
                   onChange={onChange}
+                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
+                    focus:border-[#c89b3c]`}
                 />
               </div>
 
