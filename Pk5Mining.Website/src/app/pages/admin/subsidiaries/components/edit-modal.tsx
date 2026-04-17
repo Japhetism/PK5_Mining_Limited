@@ -18,7 +18,9 @@ type EditModalProps = {
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<SubsidiaryErrors>>;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => void;
 };
 
@@ -92,8 +94,8 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                      ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
                   />
                   {fieldErrors.name && (
                     <p className="text-xs text-red-500 mt-1">
@@ -126,8 +128,8 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.code ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                      ${fieldErrors.code ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
                   />
                   {fieldErrors.code && (
                     <p className="text-xs text-red-500 mt-1">
@@ -160,8 +162,8 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                                            ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
-                                            focus:border-[#c89b3c]`}
+                      ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
                   >
                     <option value="">Select Country</option>
                     {countries.map((country) => (
@@ -201,8 +203,8 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.email ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                      ${fieldErrors.email ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
                   />
                   {fieldErrors.email && (
                     <p className="text-xs text-red-500 mt-1">
@@ -210,41 +212,39 @@ export function EditModal({
                     </p>
                   )}
                 </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Address
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.textarea
-                    name="address"
-                    value={form.address}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.address) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          location: "Address is required",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.address;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.address ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.address && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.address}
-                    </p>
-                  )}
-                </div>
-
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-300 mb-2">
+                  Address
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
+                <motion.textarea
+                  name="address"
+                  value={form.address}
+                  onChange={onChange}
+                  onBlur={() => {
+                    if (!form.address) {
+                      setFieldErrors((prev) => ({
+                        ...prev,
+                        location: "Address is required",
+                      }));
+                    } else {
+                      setFieldErrors((prev) => {
+                        const updated = { ...prev };
+                        delete updated.address;
+                        return updated;
+                      });
+                    }
+                  }}
+                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    ${fieldErrors.address ? "border-red-500" : "border-gray-800"}
+                    focus:border-[#c89b3c]`}
+                />
+                {fieldErrors.address && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {fieldErrors.address}
+                  </p>
+                )}
               </div>
             </form>
           </div>

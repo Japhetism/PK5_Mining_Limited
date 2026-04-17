@@ -64,10 +64,9 @@ export function DetailModal({ subsidiary, open, onClose }: DetailModalProps) {
               <DetailItem label="Email" value={subsidiary.email} />
               <DetailItem label="Address" value={subsidiary.address} />
               <DetailItem label="Country" value={subsidiary.country} />
-              <DetailItem label="Time Zone" value={subsidiary.timezone} />
               <DetailItem
                 label="Status"
-                value={subsidiary.isActive ? "Active" : "Inactive"}
+                value={subsidiary.status}
               />
               <DetailItem
                 label="Date Added"
@@ -80,8 +79,8 @@ export function DetailModal({ subsidiary, open, onClose }: DetailModalProps) {
               <DetailItem
                 label="Date Modified"
                 value={
-                  subsidiary.dT_Updated
-                    ? formatDateTime(subsidiary.dT_Updated)
+                  subsidiary.dT_Modified
+                    ? formatDateTime(subsidiary.dT_Modified)
                     : "-"
                 }
               />
