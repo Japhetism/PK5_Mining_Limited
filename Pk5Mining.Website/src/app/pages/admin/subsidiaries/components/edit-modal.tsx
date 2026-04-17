@@ -1,10 +1,8 @@
 import { motion } from "motion/react";
 import { X } from "lucide-react";
-import useSubsidiaryListViewModel from "../viewmodel";
 import { countries } from "countries-list";
 import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
-// import { countries } from "@/app/constants";
 import { Subsidiary, SubsidiaryErrors } from "@/app/interfaces/subsidiary";
 import { SearchableSelect } from "@/app/components/searchable-select";
 

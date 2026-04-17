@@ -6,7 +6,7 @@ type Option = {
 };
 
 type Props = {
-  label: string;
+  label?: string;
   name: string;
   value: string;
   options: Option[];
@@ -70,10 +70,12 @@ export const SearchableSelect = ({
   return (
     <div ref={containerRef} className="relative">
       {/* Label */}
-      <label className="block text-sm font-medium mb-2">
-        {label}
-        {required && <span className="ml-1 text-red-500">*</span>}
-      </label>
+      {label && (
+        <label className="block text-sm font-medium mb-2">
+          {label}
+          {required && <span className="ml-1 text-red-500">*</span>}
+        </label>
+      )}
 
       {/* Input */}
       <input
@@ -85,7 +87,7 @@ export const SearchableSelect = ({
         }}
         onFocus={() => setOpen(true)}
         onBlur={onBlur}
-        placeholder={`Search ${label}`}
+        placeholder={`Search ${label ? label : ''}`}
         className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
           ${error ? "border-red-500" : "border-gray-800"}
           focus:border-[#c89b3c]`}
