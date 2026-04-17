@@ -40,6 +40,7 @@ export function SubsidiaryList() {
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
+    confirmUpdateStatusOpen,
     selectedSubsidiary,
     isUpdating,
     queryClient,
@@ -47,6 +48,7 @@ export function SubsidiaryList() {
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
+    setConfirmUpdateStatusOpen,
     setSelectedSubsidiary,
     updateFilter,
     setIsFilter,
@@ -170,7 +172,7 @@ export function SubsidiaryList() {
               <DropdownMenu.Item
                 onSelect={() => {
                   setSelectedSubsidiary(subsidiary);
-                  setConfirmOpen(true);
+                  setConfirmUpdateStatusOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
@@ -320,9 +322,12 @@ export function SubsidiaryList() {
       </div>
 
       <ConfirmModal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        onConfirm={handleUpdateStatus}
+        open={confirmUpdateStatusOpen}
+        onClose={() => setConfirmUpdateStatusOpen(false)}
+        onConfirm={() => {
+          const status = selectedSubsidiary?.status === "Active" ? "Inactive" : "Active";
+          handleUpdateStatus(status)
+        }}
         title={
           selectedSubsidiary?.status === "Active"
             ? "Deactivate Subsidiary"
@@ -337,7 +342,7 @@ export function SubsidiaryList() {
       <ConfirmModal
         open={confirmDeleteOpen}
         onClose={() => handleCloseModal}
-        onConfirm={handleUpdateStatus}
+        onConfirm={() => handleUpdateStatus("Inactive")}
         title="Delete Subsidiary"
         description={`Are you sure you want to delete "${selectedSubsidiary?.name}"?`}
         confirmText={`Yes, delete`}

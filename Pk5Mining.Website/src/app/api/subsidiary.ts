@@ -121,6 +121,31 @@ export async function updateSubsidiary(
   }
 }
 
+export async function updateSubsidiaryStatus(
+  id: number,
+  status: "Active" | "Inactive",
+) {
+  try {
+    const { data } = await http.put<ApiResponse<Subsidiary>>(
+      `/Subsidiary/update-status/${id}`,
+      { status },
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          `Failed to update subsidiary status to ${status}`,
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(getAxiosErrorMessage(err, `Failed to update subsidiary status to ${status}`));
+  }
+}
+
 export async function deleteSubsidiary(id: number) {
   try {
     const { data } = await http.delete<ApiResponse<Subsidiary>>(

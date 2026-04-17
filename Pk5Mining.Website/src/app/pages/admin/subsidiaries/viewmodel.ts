@@ -21,6 +21,7 @@ import {
   createSubsidiary,
   getSubsidiaries,
   updateSubsidiary,
+  updateSubsidiaryStatus,
 } from "@/app/api/subsidiary";
 import {
   createSubsidiarySchema,
@@ -46,6 +47,7 @@ function useSubsidiaryListViewModel() {
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [filterCountry, setFilterCountry] = useState<string>("all");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [confirmUpdateStatusOpen, setConfirmUpdateStatusOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
   const [selectedSubsidiary, setSelectedSubsidiary] =
@@ -177,6 +179,37 @@ function useSubsidiaryListViewModel() {
     onSettled: () => setIsUpdating(false),
   });
 
+  const updateStatusMutation = useMutation({
+    mutationFn: (status: "Active" | "Inactive") => {
+      if (
+        !selectedSubsidiary ||
+        !("id" in selectedSubsidiary) ||
+        typeof selectedSubsidiary.id !== "number"
+      ) {
+        throw new Error("Cannot update: missing subsidiary id");
+      }
+      return updateSubsidiaryStatus(selectedSubsidiary.id, status);
+    },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ["subsidiaries"] });
+      setConfirmUpdateStatusOpen(false);
+      setSelectedSubsidiary(null);
+      toastUtil.success(`Subsidiary status updated to ${data?.status} successfully`);
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while updating the subsidary status. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
+
   const onChangePage = (next: number) => setPageNumber(next);
 
   const onChangePageSize = (size: number) => {
@@ -189,15 +222,12 @@ function useSubsidiaryListViewModel() {
     setIsFilter(true);
   };
 
-  const handleUpdateStatus = () => {
+  const handleUpdateStatus = (status: "Active" | "Inactive") => {
     if (!selectedSubsidiary) return;
 
     setIsUpdating(true);
 
-    updateMutation.mutate({
-      ...selectedSubsidiary,
-      status: selectedSubsidiary.status,
-    });
+    updateStatusMutation.mutate(status);
   };
 
   const onChange = (
@@ -214,16 +244,13 @@ function useSubsidiaryListViewModel() {
     }));
   };
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
   const handleCloseModal = () => {
     setSelectedSubsidiary(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
+    setConfirmUpdateStatusOpen(false);
   };
 
   const handleCreateSubsidiary = () => {
@@ -284,6 +311,7 @@ function useSubsidiaryListViewModel() {
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
+    confirmUpdateStatusOpen,
     filters,
     queryClient,
     form,
@@ -301,6 +329,7 @@ function useSubsidiaryListViewModel() {
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
+    setConfirmUpdateStatusOpen,
     setFieldErrors,
     setForm,
     handleCloseModal,
