@@ -18,7 +18,7 @@ export type SubsidiaryResponsePayload = {
   data: Subsidiary[];
 } & PaginationInfo;
 
-export type CreateSubsidiaryPayload = Omit<Subsidiary, "id" | "dT_Created" | "dT_Updated">;
+export type CreateSubsidiaryPayload = Omit<Subsidiary, "id" | "dT_Created" | "dT_Modified">;
 
 export type UpdateSubsidiaryPayload = Partial<CreateSubsidiaryPayload>;
 

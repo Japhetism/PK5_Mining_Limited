@@ -34,13 +34,6 @@ export async function getSubsidiaries(params: SubsidiariesQuery) {
 
 export async function getSubsidiariesForDropdown() {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_subsidiaries,
-      };
-    }
-
     const { data } =
       await http.get<ApiResponse<Subsidiary[]>>("/Subsidiary/light");
 
@@ -71,7 +64,7 @@ export async function getSubsidiaryById(id: string) {
     }
 
     const { data } = await http.get<ApiResponse<Subsidiary>>(
-      `/Subsidiaries/${id}`,
+      `/Subsidiary/${id}`,
     );
 
     if (data.responseStatus !== "SUCCESS") {
@@ -93,15 +86,8 @@ export async function getSubsidiaryById(id: string) {
 
 export async function createSubsidiary(payload: CreateSubsidiaryPayload) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_subsidiaries[0],
-      };
-    }
-
     const { data } = await http.post<ApiResponse<Subsidiary>>(
-      "/Subsidiaries",
+      "/Subsidiary/create",
       payload,
     );
 

@@ -18,7 +18,7 @@ type EditModalProps = {
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<SubsidiaryErrors>>;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => void;
 };
 
@@ -178,74 +178,6 @@ export function EditModal({
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Time Zone
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="timezone"
-                    value={form.timezone}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.timezone) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          location: "Time zone is required",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.timezone;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.timezone ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.timezone && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.timezone}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Address
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="address"
-                    value={form.address}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.address) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          location: "Address is required",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.address;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.address ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.address && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.address}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Email
                     <span className="ml-1 text-red-500">*</span>
                   </label>
@@ -277,6 +209,41 @@ export function EditModal({
                     </p>
                   )}
                 </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Address
+                    <span className="ml-1 text-red-500">*</span>
+                  </label>
+                  <motion.textarea
+                    name="address"
+                    value={form.address}
+                    onChange={onChange}
+                    onBlur={() => {
+                      if (!form.address) {
+                        setFieldErrors((prev) => ({
+                          ...prev,
+                          location: "Address is required",
+                        }));
+                      } else {
+                        setFieldErrors((prev) => {
+                          const updated = { ...prev };
+                          delete updated.address;
+                          return updated;
+                        });
+                      }
+                    }}
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                ${fieldErrors.address ? "border-red-500" : "border-gray-800"}
+                focus:border-[#c89b3c]`}
+                  />
+                  {fieldErrors.address && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {fieldErrors.address}
+                    </p>
+                  )}
+                </div>
+
               </div>
             </form>
           </div>

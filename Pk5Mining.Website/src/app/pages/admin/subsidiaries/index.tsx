@@ -59,6 +59,8 @@ export function SubsidiaryList() {
     onChange,
     handleCloseModal,
     setFilterCountry,
+    handleCreateSubsidiary,
+    handleUpdateSubsidiary,
   } = useSubsidiaryListViewModel();
 
   const columns: PaginatedTableColumn<Subsidiary>[] = [
@@ -172,7 +174,7 @@ export function SubsidiaryList() {
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
-                {subsidiary.isActive ? (
+                {subsidiary.status === "Active" ? (
                   <>
                     <XCircle className="w-4 h-4 text-red-400" />
                     <span className="text-red-400">Deactivate Subsidiary</span>
@@ -322,12 +324,12 @@ export function SubsidiaryList() {
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleUpdateStatus}
         title={
-          selectedSubsidiary?.isActive
+          selectedSubsidiary?.status === "Active"
             ? "Deactivate Subsidiary"
             : "Activate Subsidiary"
         }
-        description={`Are you sure you want to ${selectedSubsidiary?.isActive ? "deactivate" : "activate"} "${selectedSubsidiary?.name}"?`}
-        confirmText={`Yes, ${selectedSubsidiary?.isActive ? "deactivate" : "activate"}`}
+        description={`Are you sure you want to ${selectedSubsidiary?.status === "Active" ? "deactivate" : "activate"} "${selectedSubsidiary?.name}"?`}
+        confirmText={`Yes, ${selectedSubsidiary?.status === "Active" ? "deactivate" : "activate"}`}
         cancelText="No"
         loading={isUpdating}
       />
@@ -350,7 +352,7 @@ export function SubsidiaryList() {
         cancelText="Cancel"
         loading={isUpdating}
         onClose={handleCloseModal}
-        onConfirm={handleUpdateStatus}
+        onConfirm={selectedSubsidiary ? handleUpdateSubsidiary : handleCreateSubsidiary}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
       />

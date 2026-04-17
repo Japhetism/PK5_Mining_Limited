@@ -3,27 +3,35 @@ import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import { ApiError, StatusFilter } from "@/app/interfaces";
-import { cleanParams, toNumber } from "@/app/utils/helper";
+import { cleanParams, mapZodErrors, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import {
+  CreateSubsidiaryPayload,
   SubsidiariesQuery,
   Subsidiary,
   SubsidiaryErrors,
   UpdateSubsidiaryPayload,
 } from "@/app/interfaces/subsidiary";
-import { getSubsidiaries, updateSubsidiary } from "@/app/api/subsidiary";
+import {
+  createSubsidiary,
+  getSubsidiaries,
+  updateSubsidiary,
+} from "@/app/api/subsidiary";
+import {
+  createSubsidiarySchema,
+  updateSubsidiarySchema,
+} from "@/app/schemas/subsidiary.schema";
 
 const defaultFormData = {
   id: "",
   name: "",
   code: "",
   country: "",
-  timezone: "",
   address: "",
   email: "",
   isActive: true,
   dT_Created: "",
-  dT_Updated: "",
+  dT_Modified: "",
 };
 
 function useSubsidiaryListViewModel() {
@@ -107,9 +115,31 @@ function useSubsidiaryListViewModel() {
     setForm({
       ...defaultFormData,
       ...selectedSubsidiary,
-      dT_Updated: selectedSubsidiary.dT_Updated ?? "",
+      id: String(selectedSubsidiary.id),
+      dT_Modified: selectedSubsidiary.dT_Modified ?? "",
     });
   }, [selectedSubsidiary]);
+
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateSubsidiaryPayload) => createSubsidiary(payload),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["subsidiaries"] });
+      setConfirmEditOpen(false);
+      toastUtil.success("Subsidiary created successfully");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while creating a subsidiary. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateSubsidiaryPayload) => {
@@ -159,7 +189,7 @@ function useSubsidiaryListViewModel() {
 
     updateMutation.mutate({
       ...selectedSubsidiary,
-      isActive: !selectedSubsidiary.isActive,
+      status: selectedSubsidiary.status,
     });
   };
 
@@ -182,6 +212,40 @@ function useSubsidiaryListViewModel() {
     setConfirmEditOpen(false);
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
+  };
+
+  const handleCreateSubsidiary = () => {
+    const result = createSubsidiarySchema.safeParse(form);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<CreateSubsidiaryPayload>(result.error));
+      return;
+    }
+
+    setFieldErrors({});
+
+    const payload: CreateSubsidiaryPayload = {
+      ...result.data,
+      status: "Active",
+    }
+
+    createMutation.mutate(payload);
+  };
+
+  const handleUpdateSubsidiary = () => {
+    if (!selectedSubsidiary) return;
+
+    const formWithId = { ...form, id: Number(form.id) };
+
+    const result = updateSubsidiarySchema.safeParse(formWithId);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<UpdateSubsidiaryPayload>(result.error));
+      return;
+    }
+
+    setFieldErrors({});
+    updateMutation.mutate(result.data);
   };
 
   const subsidaries: Subsidiary[] = data?.data ?? [];
@@ -224,6 +288,8 @@ function useSubsidiaryListViewModel() {
     setForm,
     handleCloseModal,
     setFilters,
+    handleCreateSubsidiary,
+    handleUpdateSubsidiary,
   };
 }
 
