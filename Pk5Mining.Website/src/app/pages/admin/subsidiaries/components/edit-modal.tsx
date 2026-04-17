@@ -5,6 +5,7 @@ import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
 import { Subsidiary, SubsidiaryErrors } from "@/app/interfaces/subsidiary";
 import { SearchableSelect } from "@/app/components/searchable-select";
+import AddressAutocomplete from "@/app/components/address-autocomplete";
 
 type EditModalProps = {
   form: Subsidiary;
@@ -192,7 +193,7 @@ export function EditModal({
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-xs font-semibold text-gray-300 mb-2">
                   Address
                   <span className="ml-1 text-red-500">*</span>
@@ -224,7 +225,17 @@ export function EditModal({
                     {fieldErrors.address}
                   </p>
                 )}
-              </div>
+              </div> */}
+              <AddressAutocomplete
+                name="address"
+                label="Address"
+                required
+                value={form.address ?? ""}
+                onChange={(e) =>
+                  onChange(e as React.ChangeEvent<HTMLInputElement>)
+                }
+                error={fieldErrors.address}
+              />
             </form>
           </div>
         </div>
