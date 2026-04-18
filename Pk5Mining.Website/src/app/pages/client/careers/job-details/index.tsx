@@ -1,19 +1,20 @@
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { MapPin, Clock, Linkedin, LocateIcon, ArrowLeft } from "lucide-react";
+import { Linkedin, ArrowLeft, MapPin, Clock, LocateIcon } from "lucide-react";
+import { countries } from "countries-list";
 import { AnimatedSection } from "@/app/components/animated-section";
 import AnimatedDots from "@/app/components/ui/animated-dots";
-import { Badge } from "@/app/components/ui/badge";
-import { capitalizeFirstLetter, formatDate } from "@/app/utils/helper";
 import { JobDetailsLoader } from "@/app/components/ui/job-details-loader";
+import { ApplicationSubmitted } from "@/app/components/ui/application-submitted";
+import { SearchableSelect } from "@/app/components/searchable-select";
+import { Badge } from "@/app/components/ui/badge";
 import {
   isValidEmail,
   isValidLinkedIn,
   isValidName,
   isValidPhoneForCountry,
 } from "@/app/utils/validator";
-import { ApplicationSubmitted } from "@/app/components/ui/application-submitted";
-import { countries } from "@/app/constants";
+import { capitalizeFirstLetter, formatDate } from "@/app/utils/helper";
 import useJobDetailsViewModel from "./viewmodel";
 
 export function JobDetails() {
@@ -33,6 +34,11 @@ export function JobDetails() {
     setFormData,
     setFieldErrors,
   } = useJobDetailsViewModel();
+
+  const countryList = Object.entries(countries).map(([code, country]) => ({
+    label: country.name,
+    value: country.name,
+  }));
 
   if (isLoading) {
     return <JobDetailsLoader />;
@@ -260,46 +266,19 @@ export function JobDetails() {
                           </p>
                         )}
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          Country
-                          <span className="ml-1 text-red-500">*</span>
-                        </label>
-                        <motion.select
-                          name="country"
-                          value={formData.country}
-                          onChange={handleChange}
-                          onBlur={() => {
-                            if (!formData.country) {
-                              setFieldErrors((prev) => ({
-                                ...prev,
-                                country: "Country is required",
-                              }));
-                            } else {
-                              setFieldErrors((prev) => {
-                                const updated = { ...prev };
-                                delete updated.country;
-                                return updated;
-                              });
-                            }
-                          }}
-                          className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                            ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
-                            focus:border-[#c89b3c]`}
-                        >
-                          <option value="">Select Country</option>
-                          {countries.map((country) => (
-                            <option key={country} value={country}>
-                              {country}
-                            </option>
-                          ))}
-                        </motion.select>
-                        {fieldErrors.country && (
-                          <p className="text-xs text-red-500 mt-1">
-                            {fieldErrors.country}
-                          </p>
-                        )}
-                      </div>
+                      <SearchableSelect
+                        label="Country"
+                        name="country"
+                        value={formData.country}
+                        options={countryList}
+                        required
+                        error={fieldErrors.country}
+                        placeholder="Select Country"
+                        onChange={handleChange}
+                        className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                        ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
+                        focus:border-[#c89b3c]`}
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
