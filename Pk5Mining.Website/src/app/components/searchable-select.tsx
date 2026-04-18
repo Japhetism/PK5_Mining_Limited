@@ -128,7 +128,7 @@ export const SearchableSelect = ({
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-[#0f0f0f] border border-gray-800 rounded-lg shadow-lg">
+        <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-[#0f0f0f] border border-gray-800 rounded-lg shadow-lg scrollbar-black">
           {filteredOptions.length > 0 ? (
             filteredOptions.map((opt) => (
               <div
