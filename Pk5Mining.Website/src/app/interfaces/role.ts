@@ -8,7 +8,7 @@ export type Role = {
   subsidiaryId?: string;
   isSystem?: boolean;
   isActive?: boolean;
-  permissions?: Array<string>;
+  permissions?: Array<number>;
   dT_Created: string;
   dT_Updated: string;
 };

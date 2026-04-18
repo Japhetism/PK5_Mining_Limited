@@ -1,12 +1,14 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
 import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
 import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
-import { PERMISSIONS } from "../constants/permissions";
 import { adminRouteItems } from "../routes/admin-config";
 import { UserRole } from "../constants/role";
-import { UserErrors } from "../interfaces/user";
 import { ZodError } from "zod";
-import { PermissionGroup, Permission } from "../interfaces/role";
+import { Permission } from "../interfaces/role";
+import {
+  Permission as BackendPermission,
+  BackendPermissionGroup,
+} from "../interfaces/permission";
 
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
@@ -284,26 +286,32 @@ export const limitWords = (text: string, maxWords: number) => {
   return words.slice(0, maxWords).join(" ");
 };
 
-export const getGroupedPermissions = (): PermissionGroup[] => {
-  const allPermissions = Object.values(PERMISSIONS) as Permission[];
-  const groups: Record<string, Permission[]> = {};
+export const getGroupedPermissions = (
+  permissions: BackendPermission[],
+): BackendPermissionGroup[] => {
+  const groups: Record<string, BackendPermission[]> = {};
 
-  allPermissions.forEach((perm) => {
-    // Extract the group name (e.g., "job" from "job.view")
-    const groupName = perm.split(".")[0];
-    if (!groups[groupName]) {
-      groups[groupName] = [];
+  permissions.forEach((perm) => {
+    const groupKey = perm.name.split(".")[0];
+
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
     }
-    groups[groupName].push(perm);
+
+    groups[groupKey].push({
+      id: perm.id,
+      name: perm.name,
+    });
   });
 
   return Object.entries(groups).map(([key, perms]) => ({
     key,
-    // Format name: "contact-message" -> "Contact Message"
+
     name: key
       .split("-")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" "),
+
     permissions: perms,
   }));
 };

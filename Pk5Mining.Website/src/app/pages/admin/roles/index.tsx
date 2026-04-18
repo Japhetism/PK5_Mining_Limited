@@ -42,6 +42,8 @@ export function Roles() {
     selectedRole,
     isUpdating,
     queryClient,
+    permissions,
+    permissionError,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -290,6 +292,8 @@ export function Roles() {
         fieldErrors={fieldErrors}
         cancelText="Cancel"
         loading={isUpdating}
+        permissions={permissions}
+        permissionError={permissionError}
         onClose={handleCloseModal}
         onConfirm={handleUpdateStatus}
         setFieldErrors={setFieldErrors}

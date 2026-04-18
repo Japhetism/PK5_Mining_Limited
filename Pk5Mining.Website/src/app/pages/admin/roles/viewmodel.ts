@@ -11,7 +11,9 @@ import {
   RolesQuery,
   UpdateRolePayload,
 } from "@/app/interfaces/role";
+import { Permission } from "@/app/interfaces/permission";
 import { getRoles, updateRole } from "@/app/api/roles";
+import { getPermissions } from "@/app/api/permissions";
 
 const defaultFormData: Role = {
   id: "",
@@ -76,6 +78,14 @@ function useRoleViewModel() {
       queryParams.isActive ?? "",
     ],
     queryFn: () => getRoles(queryParams),
+    staleTime: 30_000,
+  });
+
+  const { data: permissionData, isLoading: isLoadingPermission, error: permissionError } = useQuery({
+    queryKey: [
+      "permissions",
+    ],
+    queryFn: () => getPermissions(),
     staleTime: 30_000,
   });
 
@@ -173,7 +183,7 @@ function useRoleViewModel() {
     setConfirmDeleteOpen(false);
   };
 
-  const handlePermissionToggle = (newPermissions: string[]) => {
+  const handlePermissionToggle = (newPermissions: number[]) => {
     // We simulate a change event to stay compatible with your existing onChange
     onChange({
       target: { name: "permissions", value: newPermissions },
@@ -183,6 +193,8 @@ function useRoleViewModel() {
   const roles: Role[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
+
+  const permissions: Permission[] = permissionData ?? [];
 
   return {
     roles,
@@ -203,6 +215,8 @@ function useRoleViewModel() {
     queryClient,
     form,
     fieldErrors,
+    permissions,
+    permissionError,
     onChange,
     setIsFilter,
     setFilterStatus,

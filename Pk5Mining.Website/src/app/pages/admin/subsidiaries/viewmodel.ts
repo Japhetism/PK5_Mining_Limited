@@ -22,7 +22,7 @@ import {
   getSubsidiaries,
   updateSubsidiary,
   updateSubsidiaryStatus,
-} from "@/app/api/subsidiary";
+} from "@/app/api/subsidiaries";
 import {
   createSubsidiarySchema,
   updateSubsidiarySchema,

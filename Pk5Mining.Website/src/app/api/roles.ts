@@ -214,31 +214,3 @@ export async function updateRolePermissions(roleId: number, permissions: Array<s
     throw new Error(getAxiosErrorMessage(err, "Failed to update role permissions"));
   }
 }
-
-export async function getPermissions() {
-  try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_roles[0],
-      };
-    }
-
-    const { data } = await http.delete<ApiResponse<Permission[]>>(
-      `/Role/Permissions`,
-    );
-
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(
-          data.responseMessage,
-          "Failed to update role permissions",
-        ),
-      );
-    }
-
-    return data.responseData;
-  } catch (err) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to update role permissions"));
-  }
-}
