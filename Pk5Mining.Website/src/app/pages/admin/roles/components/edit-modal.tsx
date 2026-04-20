@@ -86,6 +86,27 @@ export function EditModal({
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Subsidiary
+                    <span className="ml-1 text-red-500">*</span>
+                  </label>
+                  <SearchableSelect
+                    name="subsidiaryId"
+                    value={form.subsidiaryId ?? ""}
+                    options={subsidiaries.map((s) => ({
+                      value: s.id,
+                      label: s.name,
+                    }))}
+                    error={fieldErrors.subsidiaryId}
+                    onChange={onChange}
+                    placeholder="Select subsidiary"
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                      ${fieldErrors.subsidiaryId ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Name
                     <span className="ml-1 text-red-500">*</span>
                   </label>
@@ -117,7 +138,9 @@ export function EditModal({
                     </p>
                   )}
                 </div>
-                <div className="space-y-4">
+
+                <div className="space-y-4 flex flex-col">
+                  {/* Header */}
                   <div className="flex items-center justify-between border-b border-gray-800 pb-2">
                     <label className="text-xs font-semibold text-gray-300 tracking-wider">
                       Permissions
@@ -127,8 +150,10 @@ export function EditModal({
                     </span>
                   </div>
 
-                  <div className="max-h-[450px] overflow-y-auto pr-2 custom-scrollbar border border-gray-800 rounded-lg">
+                  {/* Scrollable Table */}
+                  <div className="h-[350px] overflow-y-auto pr-2 scrollbar-black border border-gray-800 rounded-lg">
                     <table className="w-full text-left border-collapse">
+                      {/* Sticky Header */}
                       <thead className="sticky top-0 bg-[#0f0f0f] z-10 shadow-sm">
                         <tr className="border-b border-gray-800">
                           <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest w-1/3">
@@ -139,6 +164,8 @@ export function EditModal({
                           </th>
                         </tr>
                       </thead>
+
+                      {/* Body */}
                       <tbody className="divide-y divide-gray-800/50">
                         {groupedPermissions.map((group) => {
                           const currentPerms = form.permissionIds || [];
@@ -266,24 +293,6 @@ export function EditModal({
                       </tbody>
                     </table>
                   </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Subsidiary
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <SearchableSelect
-                    name="subsidiaryId"
-                    value={form.subsidiaryId ?? ""}
-                    options={subsidiaries.map((s) => ({ value: s.id, label: s.name }))}
-                    error={fieldErrors.subsidiaryId}
-                    onChange={onChange}
-                    placeholder="Select subsidiary"
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                      ${fieldErrors.subsidiaryId ? "border-red-500" : "border-gray-800"}
-                      focus:border-[#c89b3c]`}
-                  />
                 </div>
               </div>
             </form>
