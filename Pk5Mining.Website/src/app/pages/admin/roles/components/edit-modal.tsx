@@ -46,8 +46,6 @@ export function EditModal({
 }: EditModalProps) {
   const groupedPermissions = getGroupedPermissions(permissions);
 
-  console.log("subsidiaries in modal", subsidiaries);
-
   return (
     <Modal
       open={open}
@@ -104,7 +102,7 @@ export function EditModal({
                       focus:border-[#c89b3c]`}
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Name

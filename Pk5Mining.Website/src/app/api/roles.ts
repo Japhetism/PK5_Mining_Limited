@@ -116,15 +116,8 @@ export async function updateRole(
   payload: UpdateRolePayload,
 ) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_roles[0],
-      };
-    }
-
     const { data } = await http.put<ApiResponse<Role>>(
-      `/Role/${id}`,
+      `/Role/Update`,
       payload,
     );
 

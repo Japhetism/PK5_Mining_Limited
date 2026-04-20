@@ -16,7 +16,7 @@ import { Permission } from "@/app/interfaces/permission";
 import { createRole, getRoles, updateRole } from "@/app/api/roles";
 import { getPermissions } from "@/app/api/permissions";
 import { getSubsidiaries } from "@/app/api/subsidiaries";
-import { createRoleSchema } from "@/app/schemas/role.schema";
+import { createRoleSchema, updateRoleSchema } from "@/app/schemas/role.schema";
 
 const defaultFormData: Role = {
   id: "",
@@ -119,9 +119,12 @@ function useRoleViewModel() {
   useEffect(() => {
     if (!selectedRole) return;
 
+    const permissionIds = selectedRole.permissions?.map((p) => p.id) || [];
+
     setForm({
       ...defaultFormData,
       ...selectedRole,
+      permissionIds: permissionIds,
       dT_Modified: selectedRole.dT_Modified ?? "",
     });
   }, [selectedRole]);
@@ -158,15 +161,16 @@ function useRoleViewModel() {
       }
       return updateRole(selectedRole.id, payload);
     },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
     onSuccess: async () => {
-      setIsUpdating(false);
-      setConfirmOpen(false);
-      setSelectedRole(null);
-
       await queryClient.invalidateQueries({ queryKey: ["roles"] });
+      setConfirmEditOpen(false);
+      setSelectedRole(null);
+      toastUtil.success("Role updated successfully");
     },
     onError: (err) => {
-      setIsUpdating(false);
       const message =
         (err as ApiError)?.message ??
         (err instanceof Error
@@ -174,6 +178,7 @@ function useRoleViewModel() {
           : "An error occurred while updating role. Please try again.");
       toastUtil.error(message);
     },
+    onSettled: () => setIsUpdating(false),
   });
 
   const onChangePage = (next: number) => setPageNumber(next);
@@ -228,6 +233,27 @@ function useRoleViewModel() {
     };
 
     createMutation.mutate(payload);
+  };
+
+  const handleUpdateRole = () => {
+    if (!selectedRole) return;
+
+    const formWithId = { ...form, id: Number(form.id) };
+
+    const result = updateRoleSchema.safeParse(formWithId);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<UpdateRolePayload>(result.error));
+      return;
+    }
+
+    const payload = {
+      ...result.data,
+      status: selectedRole.status,
+    };
+
+    setFieldErrors({});
+    updateMutation.mutate(payload);
   };
 
   const handleCloseModal = () => {
@@ -291,6 +317,7 @@ function useRoleViewModel() {
     handleCloseModal,
     handlePermissionToggle,
     handleCreateRole,
+    handleUpdateRole,
   };
 }
 

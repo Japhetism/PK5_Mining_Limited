@@ -61,6 +61,7 @@ export function Roles() {
     handleCloseModal,
     handlePermissionToggle,
     handleCreateRole,
+    handleUpdateRole,
   } = useRoleViewModel();
 
   const columns: PaginatedTableColumn<Role>[] = [
@@ -298,17 +299,13 @@ export function Roles() {
         permissionError={permissionError}
         subsidiaries={subsidiaries}
         onClose={handleCloseModal}
-        onConfirm={handleCreateRole}
+        onConfirm={selectedRole ? handleUpdateRole : handleCreateRole}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
         handlePermissionToggle={handlePermissionToggle}
       />
 
-      <DetailModal
-        open={confirmOpen}
-        role={form}
-        onClose={handleCloseModal}
-      />
+      <DetailModal open={confirmOpen} role={form} onClose={handleCloseModal} />
     </div>
   );
 }
