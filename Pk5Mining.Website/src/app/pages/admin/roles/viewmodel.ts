@@ -13,7 +13,7 @@ import {
   UpdateRolePayload,
 } from "@/app/interfaces/role";
 import { Permission } from "@/app/interfaces/permission";
-import { createRole, getRoles, updateRole } from "@/app/api/roles";
+import { createRole, getRoles, updateRole, updateRoleStatus } from "@/app/api/roles";
 import { getPermissions } from "@/app/api/permissions";
 import { getSubsidiaries } from "@/app/api/subsidiaries";
 import { createRoleSchema, updateRoleSchema } from "@/app/schemas/role.schema";
@@ -35,6 +35,7 @@ function useRoleViewModel() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [confirmUpdateStatusOpen, setConfirmUpdateStatusOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
@@ -181,6 +182,39 @@ function useRoleViewModel() {
     onSettled: () => setIsUpdating(false),
   });
 
+  const updateStatusMutation = useMutation({
+    mutationFn: (status: "Active" | "Inactive") => {
+      if (
+        !selectedRole ||
+        !("id" in selectedRole) ||
+        typeof selectedRole.id !== "number"
+      ) {
+        throw new Error("Cannot update: missing role id");
+      }
+      return updateRoleStatus(selectedRole.id, status);
+    },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ["roles"] });
+      setConfirmUpdateStatusOpen(false);
+      setSelectedRole(null);
+      toastUtil.success(
+        `Role status updated to ${data?.status} successfully`,
+      );
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while updating the role status. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
+
   const onChangePage = (next: number) => setPageNumber(next);
 
   const onChangePageSize = (size: number) => {
@@ -193,16 +227,16 @@ function useRoleViewModel() {
     setIsFilter(true);
   };
 
-  const handleUpdateStatus = () => {
-    if (!selectedRole) return;
+  // const handleUpdateStatus = () => {
+  //   if (!selectedRole) return;
 
-    setIsUpdating(true);
+  //   setIsUpdating(true);
 
-    updateMutation.mutate({
-      ...selectedRole,
-      isActive: !selectedRole.isActive,
-    });
-  };
+  //   updateMutation.mutate({
+  //     ...selectedRole,
+  //     isActive: !selectedRole.isActive,
+  //   });
+  // };
 
   const onChange = (
     e: React.ChangeEvent<
@@ -256,6 +290,16 @@ function useRoleViewModel() {
     updateMutation.mutate(payload);
   };
 
+  const handleUpdateStatus = () => {
+    if (!selectedRole) return;
+
+    setIsUpdating(true);
+
+    const status = selectedRole?.status === "Active" ? "Inactive" : "Active"
+
+    updateStatusMutation.mutate(status);
+  };
+
   const handleCloseModal = () => {
     setSelectedRole(null);
     setForm(defaultFormData);
@@ -294,6 +338,7 @@ function useRoleViewModel() {
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
+    confirmUpdateStatusOpen,
     filters,
     queryClient,
     form,
@@ -312,6 +357,7 @@ function useRoleViewModel() {
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
+    setConfirmUpdateStatusOpen,
     setFieldErrors,
     setForm,
     handleCloseModal,

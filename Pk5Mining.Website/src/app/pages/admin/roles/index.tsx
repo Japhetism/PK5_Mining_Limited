@@ -39,6 +39,7 @@ export function Roles() {
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
+    confirmUpdateStatusOpen,
     selectedRole,
     isUpdating,
     queryClient,
@@ -48,6 +49,7 @@ export function Roles() {
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
+    setConfirmUpdateStatusOpen,
     setSelectedRole,
     updateFilter,
     setIsFilter,
@@ -159,7 +161,7 @@ export function Roles() {
               <DropdownMenu.Item
                 onSelect={() => {
                   setSelectedRole(role);
-                  setConfirmOpen(true);
+                  setConfirmUpdateStatusOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
@@ -268,8 +270,8 @@ export function Roles() {
       </div>
 
       <ConfirmModal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
+        open={confirmUpdateStatusOpen}
+        onClose={() => setConfirmUpdateStatusOpen(false)}
         onConfirm={handleUpdateStatus}
         title={selectedRole?.isActive ? "Deactivate Role" : "Activate Role"}
         description={`Are you sure you want to ${selectedRole?.isActive ? "deactivate" : "activate"} "${selectedRole?.name}"?`}

@@ -136,6 +136,31 @@ export async function updateRole(
   }
 }
 
+export async function updateRoleStatus(
+  id: number,
+  status: "Active" | "Inactive",
+) {
+  try {
+    const { data } = await http.put<ApiResponse<Role>>(
+      `/Role/update-status/${id}`,
+      { status },
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          `Failed to update role status to ${status}`,
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(getAxiosErrorMessage(err, `Failed to update role status to ${status}`));
+  }
+}
+
 export async function deleteRole(id: number) {
   try {
     if (useMock) {
