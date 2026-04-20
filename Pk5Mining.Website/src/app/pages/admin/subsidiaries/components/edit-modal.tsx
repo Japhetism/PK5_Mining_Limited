@@ -1,10 +1,11 @@
 import { motion } from "motion/react";
 import { X } from "lucide-react";
-import useSubsidiaryListViewModel from "../viewmodel";
+import { countries } from "countries-list";
 import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
-import { countries } from "@/app/constants";
 import { Subsidiary, SubsidiaryErrors } from "@/app/interfaces/subsidiary";
+import { SearchableSelect } from "@/app/components/searchable-select";
+import AddressAutocomplete from "@/app/components/address-autocomplete";
 
 type EditModalProps = {
   form: Subsidiary;
@@ -18,7 +19,9 @@ type EditModalProps = {
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<SubsidiaryErrors>>;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => void;
 };
 
@@ -32,6 +35,11 @@ export function EditModal({
   setFieldErrors,
   onChange,
 }: EditModalProps) {
+  const countryList = Object.entries(countries).map(([code, country]) => ({
+    label: country.name,
+    value: country.name,
+  }));
+
   return (
     <Modal
       open={open}
@@ -92,8 +100,8 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                      ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
                   />
                   {fieldErrors.name && (
                     <p className="text-xs text-red-500 mt-1">
@@ -109,6 +117,7 @@ export function EditModal({
                   <motion.input
                     name="code"
                     value={form.code}
+                    disabled={true}
                     onChange={onChange}
                     onBlur={() => {
                       if (!isValidName(form.code)) {
@@ -125,121 +134,12 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.code ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                      ${fieldErrors.code ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
                   />
                   {fieldErrors.code && (
                     <p className="text-xs text-red-500 mt-1">
                       {fieldErrors.code}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Country
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.select
-                    name="country"
-                    value={form.country}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.country) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          country: "Country is required",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.country;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                                            ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
-                                            focus:border-[#c89b3c]`}
-                  >
-                    <option value="">Select Country</option>
-                    {countries.map((country) => (
-                      <option key={country} value={country}>
-                        {country}
-                      </option>
-                    ))}
-                  </motion.select>
-                  {fieldErrors.country && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.country}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Time Zone
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="timezone"
-                    value={form.timezone}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.timezone) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          location: "Time zone is required",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.timezone;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.timezone ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.timezone && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.timezone}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Address
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.input
-                    name="address"
-                    value={form.address}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!form.address) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          location: "Address is required",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.address;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.address ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.address && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.address}
                     </p>
                   )}
                 </div>
@@ -268,8 +168,8 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.email ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                      ${fieldErrors.email ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
                   />
                   {fieldErrors.email && (
                     <p className="text-xs text-red-500 mt-1">
@@ -277,7 +177,65 @@ export function EditModal({
                     </p>
                   )}
                 </div>
+
+                <SearchableSelect
+                  label="Country"
+                  name="country"
+                  value={form.country}
+                  options={countryList}
+                  required
+                  error={fieldErrors.country}
+                  placeholder="Select Country"
+                  onChange={onChange}
+                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
+                    focus:border-[#c89b3c]`}
+                />
               </div>
+
+              {/* <div>
+                <label className="block text-xs font-semibold text-gray-300 mb-2">
+                  Address
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
+                <motion.textarea
+                  name="address"
+                  value={form.address}
+                  onChange={onChange}
+                  onBlur={() => {
+                    if (!form.address) {
+                      setFieldErrors((prev) => ({
+                        ...prev,
+                        location: "Address is required",
+                      }));
+                    } else {
+                      setFieldErrors((prev) => {
+                        const updated = { ...prev };
+                        delete updated.address;
+                        return updated;
+                      });
+                    }
+                  }}
+                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    ${fieldErrors.address ? "border-red-500" : "border-gray-800"}
+                    focus:border-[#c89b3c]`}
+                />
+                {fieldErrors.address && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {fieldErrors.address}
+                  </p>
+                )}
+              </div> */}
+              <AddressAutocomplete
+                name="address"
+                label="Address"
+                required
+                value={form.address ?? ""}
+                onChange={(e) =>
+                  onChange(e as React.ChangeEvent<HTMLInputElement>)
+                }
+                error={fieldErrors.address}
+              />
             </form>
           </div>
         </div>

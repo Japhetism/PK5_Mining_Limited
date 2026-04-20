@@ -2,8 +2,11 @@ import { motion } from "motion/react";
 import { Check, X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
-import { Permission, Role, RoleErrors } from "@/app/interfaces/role";
+import { Role, RoleErrors } from "@/app/interfaces/role";
 import { getGroupedPermissions } from "@/app/utils/helper";
+import { Permission } from "@/app/interfaces/permission";
+import { Subsidiary } from "@/app/interfaces/subsidiary";
+import { SearchableSelect } from "@/app/components/searchable-select";
 
 type EditModalProps = {
   form: Role;
@@ -13,6 +16,9 @@ type EditModalProps = {
   cancelText?: string;
   loading?: boolean;
   fieldErrors: any;
+  permissions: Permission[];
+  permissionError: any;
+  subsidiaries: Subsidiary[];
   onClose: () => void;
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<RoleErrors>>;
@@ -21,7 +27,7 @@ type EditModalProps = {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
   ) => void;
-  handlePermissionToggle: (newPermissions: string[]) => void;
+  handlePermissionToggle: (newPermissions: number[]) => void;
 };
 
 export function EditModal({
@@ -29,13 +35,17 @@ export function EditModal({
   open,
   loading = false,
   fieldErrors,
+  permissions,
+  permissionError,
+  subsidiaries,
   onClose,
   onConfirm,
   setFieldErrors,
   onChange,
   handlePermissionToggle,
 }: EditModalProps) {
-  const groupedPermissions = getGroupedPermissions();
+  const groupedPermissions = getGroupedPermissions(permissions);
+
   return (
     <Modal
       open={open}
@@ -74,6 +84,27 @@ export function EditModal({
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Subsidiary
+                    <span className="ml-1 text-red-500">*</span>
+                  </label>
+                  <SearchableSelect
+                    name="subsidiaryId"
+                    value={form.subsidiaryId ?? ""}
+                    options={subsidiaries.map((s) => ({
+                      value: s.id,
+                      label: s.name,
+                    }))}
+                    error={fieldErrors.subsidiaryId}
+                    onChange={onChange}
+                    placeholder="Select subsidiary"
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                      ${fieldErrors.subsidiaryId ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Name
                     <span className="ml-1 text-red-500">*</span>
                   </label>
@@ -105,52 +136,22 @@ export function EditModal({
                     </p>
                   )}
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Description
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.textarea
-                    name="description"
-                    value={form.description}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!isValidName(form.description ?? "")) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          department: "Invalid role description",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.description;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.description ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.description && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.description}
-                    </p>
-                  )}
-                </div>
 
-                <div className="space-y-4">
+                <div className="space-y-4 flex flex-col">
+                  {/* Header */}
                   <div className="flex items-center justify-between border-b border-gray-800 pb-2">
                     <label className="text-xs font-semibold text-gray-300 tracking-wider">
                       Permissions
                     </label>
                     <span className="text-[10px] text-gray-500 italic">
-                      {form.permissions?.length || 0} selected
+                      {form.permissionIds?.length || 0} selected
                     </span>
                   </div>
 
-                  <div className="max-h-[450px] overflow-y-auto pr-2 custom-scrollbar border border-gray-800 rounded-lg">
+                  {/* Scrollable Table */}
+                  <div className="h-[350px] overflow-y-auto pr-2 scrollbar-black border border-gray-800 rounded-lg">
                     <table className="w-full text-left border-collapse">
+                      {/* Sticky Header */}
                       <thead className="sticky top-0 bg-[#0f0f0f] z-10 shadow-sm">
                         <tr className="border-b border-gray-800">
                           <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest w-1/3">
@@ -161,14 +162,19 @@ export function EditModal({
                           </th>
                         </tr>
                       </thead>
+
+                      {/* Body */}
                       <tbody className="divide-y divide-gray-800/50">
                         {groupedPermissions.map((group) => {
-                          const currentPerms = form.permissions || [];
+                          const currentPerms = form.permissionIds || [];
+
                           const selectedInGroup = group.permissions.filter(
-                            (p) => currentPerms.includes(p),
+                            (p) => currentPerms.includes(p.id),
                           );
+
                           const isAllSelected =
                             selectedInGroup.length === group.permissions.length;
+
                           const isIndeterminate =
                             selectedInGroup.length > 0 && !isAllSelected;
 
@@ -177,22 +183,26 @@ export function EditModal({
                               key={group.key}
                               className="hover:bg-white/[0.02] transition-colors group/row"
                             >
-                              {/* Group Label & Select All Cell */}
+                              {/* Group Label & Select All */}
                               <td className="px-4 py-4 align-top">
                                 <div
                                   className="flex items-center gap-3 cursor-pointer"
                                   onClick={() => {
+                                    const groupIds = group.permissions.map(
+                                      (p) => p.id,
+                                    );
+
                                     const next = isAllSelected
                                       ? currentPerms.filter(
-                                          (p: any) =>
-                                            !group.permissions.includes(p),
+                                          (id) => !groupIds.includes(id),
                                         )
                                       : Array.from(
                                           new Set([
                                             ...currentPerms,
-                                            ...group.permissions,
+                                            ...groupIds,
                                           ]),
                                         );
+
                                     handlePermissionToggle(next);
                                   }}
                                 >
@@ -210,21 +220,28 @@ export function EditModal({
                                       <div className="w-2 h-0.5 bg-black" />
                                     )}
                                   </div>
+
                                   <span className="text-xs font-bold text-gray-200 group-hover/row:text-[#c89b3c] transition-colors">
                                     {group.name}
                                   </span>
                                 </div>
                               </td>
 
-                              {/* Individual Permissions Cell */}
+                              {/* Individual Permissions */}
                               <td className="px-4 py-4">
                                 <div className="flex flex-wrap gap-x-6 gap-y-3">
                                   {group.permissions.map((perm) => {
-                                    const isChecked =
-                                      currentPerms.includes(perm);
+                                    const isChecked = currentPerms.includes(
+                                      perm.id,
+                                    );
+
+                                    const label =
+                                      perm.name?.split(".")[1]?.toUpperCase() ||
+                                      perm.name.toUpperCase();
+
                                     return (
                                       <label
-                                        key={perm}
+                                        key={perm.id}
                                         className="flex items-center gap-2.5 cursor-pointer group/item"
                                       >
                                         <input
@@ -234,12 +251,14 @@ export function EditModal({
                                           onChange={() => {
                                             const next = isChecked
                                               ? currentPerms.filter(
-                                                  (p) => p !== perm,
+                                                  (id) => id !== perm.id,
                                                 )
-                                              : [...currentPerms, perm];
+                                              : [...currentPerms, perm.id];
+
                                             handlePermissionToggle(next);
                                           }}
                                         />
+
                                         <div
                                           className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center transition-all ${
                                             isChecked
@@ -251,6 +270,7 @@ export function EditModal({
                                             <Check className="w-2.5 h-2.5 text-black stroke-[4px]" />
                                           )}
                                         </div>
+
                                         <span
                                           className={`text-[11px] transition-colors ${
                                             isChecked
@@ -258,7 +278,7 @@ export function EditModal({
                                               : "text-gray-500 group-hover/item:text-gray-300"
                                           }`}
                                         >
-                                          {perm.split(".")[1].toUpperCase()}
+                                          {label}
                                         </span>
                                       </label>
                                     );

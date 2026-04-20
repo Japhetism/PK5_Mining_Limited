@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
+import { countries } from "countries-list";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   Plus,
@@ -17,11 +18,13 @@ import {
   PaginatedTableColumn,
 } from "@/app/components/ui/paginated-table";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
-import { countries, statusOptions } from "@/app/constants";
 import useSubsidiaryListViewModel from "./viewmodel";
 import { Subsidiary } from "@/app/interfaces/subsidiary";
 import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
+import { SearchableSelect } from "@/app/components/searchable-select";
+import { statusOptions } from "@/app/constants";
+import { useMemo } from "react";
 
 export function SubsidiaryList() {
   const {
@@ -40,6 +43,7 @@ export function SubsidiaryList() {
     confirmOpen,
     confirmDeleteOpen,
     confirmEditOpen,
+    confirmUpdateStatusOpen,
     selectedSubsidiary,
     isUpdating,
     queryClient,
@@ -47,6 +51,7 @@ export function SubsidiaryList() {
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
+    setConfirmUpdateStatusOpen,
     setSelectedSubsidiary,
     updateFilter,
     setIsFilter,
@@ -59,7 +64,19 @@ export function SubsidiaryList() {
     onChange,
     handleCloseModal,
     setFilterCountry,
+    handleCreateSubsidiary,
+    handleUpdateSubsidiary,
   } = useSubsidiaryListViewModel();
+
+  const countryList = useMemo(() => {
+    return [
+      { label: "All Countries", value: "all" },
+      ...Object.entries(countries).map(([code, country]) => ({
+        label: country.name,
+        value: country.name,
+      })),
+    ];
+  }, []);
 
   const columns: PaginatedTableColumn<Subsidiary>[] = [
     {
@@ -84,11 +101,6 @@ export function SubsidiaryList() {
       render: (subsidiary) => subsidiary.country ?? "-",
     },
     {
-      key: "timezone",
-      header: "Time Zone",
-      render: (subsidiary) => subsidiary.timezone ?? "-",
-    },
-    {
       key: "address",
       header: "Address",
       render: (subsidiary) => subsidiary.address ?? "-",
@@ -99,18 +111,18 @@ export function SubsidiaryList() {
       render: (subsidiary) => subsidiary.email ?? "-",
     },
     {
-      key: "isActive",
+      key: "status",
       header: "Status",
       render: (subsidiary) => (
         <span
           className={
-            subsidiary.isActive
+            subsidiary.status === "Active"
               ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
               : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
           }
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {subsidiary.isActive ? "Active" : "Inactive"}
+          {subsidiary.status}
         </span>
       ),
     },
@@ -121,10 +133,10 @@ export function SubsidiaryList() {
         subsidiary.dT_Created ? formatDateTime(subsidiary.dT_Created) : "-",
     },
     {
-      key: "dT_Updated",
+      key: "dT_Modified",
       header: "Date Modified",
       render: (subsidiary) =>
-        subsidiary.dT_Updated ? formatDateTime(subsidiary.dT_Updated) : "-",
+        subsidiary.dT_Modified ? formatDateTime(subsidiary.dT_Modified) : "-",
     },
     {
       key: "actions",
@@ -173,11 +185,11 @@ export function SubsidiaryList() {
               <DropdownMenu.Item
                 onSelect={() => {
                   setSelectedSubsidiary(subsidiary);
-                  setConfirmOpen(true);
+                  setConfirmUpdateStatusOpen(true);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
-                {subsidiary.isActive ? (
+                {subsidiary.status === "Active" ? (
                   <>
                     <XCircle className="w-4 h-4 text-red-400" />
                     <span className="text-red-400">Deactivate Subsidiary</span>
@@ -242,7 +254,7 @@ export function SubsidiaryList() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
@@ -256,7 +268,7 @@ export function SubsidiaryList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
@@ -270,7 +282,7 @@ export function SubsidiaryList() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -285,21 +297,18 @@ export function SubsidiaryList() {
             <label className="block text-xs font-semibold text-gray-300 mb-2">
               Country
             </label>
-            <select
+            <SearchableSelect
+              name="country"
               value={filterCountry}
+              options={countryList}
+              error={fieldErrors.country}
               onChange={(e) => {
                 setFilterCountry(e.target.value);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-            >
-              <option value="">All Countries</option>
-              {countries.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
+              placeholder="All Countries"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+            />
           </div>
         </div>
       </div>
@@ -323,16 +332,20 @@ export function SubsidiaryList() {
       </div>
 
       <ConfirmModal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        onConfirm={handleUpdateStatus}
+        open={confirmUpdateStatusOpen}
+        onClose={() => setConfirmUpdateStatusOpen(false)}
+        onConfirm={() => {
+          const status =
+            selectedSubsidiary?.status === "Active" ? "Inactive" : "Active";
+          handleUpdateStatus(status);
+        }}
         title={
-          selectedSubsidiary?.isActive
+          selectedSubsidiary?.status === "Active"
             ? "Deactivate Subsidiary"
             : "Activate Subsidiary"
         }
-        description={`Are you sure you want to ${selectedSubsidiary?.isActive ? "deactivate" : "activate"} "${selectedSubsidiary?.name}"?`}
-        confirmText={`Yes, ${selectedSubsidiary?.isActive ? "deactivate" : "activate"}`}
+        description={`Are you sure you want to ${selectedSubsidiary?.status === "Active" ? "deactivate" : "activate"} "${selectedSubsidiary?.name}"?`}
+        confirmText={`Yes, ${selectedSubsidiary?.status === "Active" ? "deactivate" : "activate"}`}
         cancelText="No"
         loading={isUpdating}
       />
@@ -340,7 +353,7 @@ export function SubsidiaryList() {
       <ConfirmModal
         open={confirmDeleteOpen}
         onClose={() => handleCloseModal}
-        onConfirm={handleUpdateStatus}
+        onConfirm={() => handleUpdateStatus("Inactive")}
         title="Delete Subsidiary"
         description={`Are you sure you want to delete "${selectedSubsidiary?.name}"?`}
         confirmText={`Yes, delete`}
@@ -355,7 +368,9 @@ export function SubsidiaryList() {
         cancelText="Cancel"
         loading={isUpdating}
         onClose={handleCloseModal}
-        onConfirm={handleUpdateStatus}
+        onConfirm={
+          selectedSubsidiary ? handleUpdateSubsidiary : handleCreateSubsidiary
+        }
         setFieldErrors={setFieldErrors}
         onChange={onChange}
       />

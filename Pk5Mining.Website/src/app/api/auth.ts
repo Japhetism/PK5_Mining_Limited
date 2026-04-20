@@ -3,43 +3,58 @@ import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 import { IChangePasswordPayload } from "../interfaces/user";
 import { mockAuthenticationResonsePayload } from "../fixtures/user.fixture";
-import axiosRetry from 'axios-retry';
 
 const useMockAuth = import.meta.env.VITE_USE_MOCK_AUTHENTICATION === "true";
-
-axiosRetry(http, {
-  retries: 3,
-  retryDelay: axiosRetry.exponentialDelay,
-  retryCondition: (error) => {
-    return (
-      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
-      !!(error.response?.status)
-    );
-  }
-});
 
 export async function login(payload: ILoginPayload) {
   if (useMockAuth) {
     return mockAuthenticationResonsePayload.responseData;
   }
-  try {
-    const { data } = await http.post<ApiResponse<IUser>>("/Authentication/login", payload);
 
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(
-          data.responseMessage,
-          "Failed to fetch job application details",
-        ),
+  const maxAttempts = 3;
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const { data } = await http.post<ApiResponse<IUser>>(
+        "/Authentication/login",
+        payload
       );
-    }
 
-    return data.responseData;
-  } catch (err) {
-    throw new Error(
-      getAxiosErrorMessage(err, "Failed to authenticate user")
-    );
+      if (data.responseStatus !== "SUCCESS") {
+        throw new Error(
+          getAxiosErrorMessage(
+            data.responseMessage,
+            "Failed to authenticate user"
+          )
+        );
+      }
+
+      return data.responseData;
+    } catch (err: unknown) {
+      lastError = err;
+
+      const axiosErr = err as any;
+
+      const isTimeout =
+        axiosErr?.code === "ECONNABORTED";
+
+      const isCancelled =
+        axiosErr?.code === "ERR_CANCELED" ||
+        axiosErr?.name === "CanceledError";
+
+      const shouldRetry = isTimeout || isCancelled;
+
+      // If not retryable OR last attempt → throw
+      if (!shouldRetry || attempt === maxAttempts) {
+        throw new Error(
+          getAxiosErrorMessage(err, "Failed to authenticate user")
+        );
+      }
+    }
   }
+
+  throw lastError;
 }
 
 export async function changePassword(payload: IChangePasswordPayload) {
