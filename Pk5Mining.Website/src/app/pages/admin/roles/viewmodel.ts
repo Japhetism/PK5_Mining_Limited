@@ -199,6 +199,7 @@ function useRoleViewModel() {
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["roles"] });
       setConfirmUpdateStatusOpen(false);
+      setConfirmDeleteOpen(false);
       setSelectedRole(null);
       toastUtil.success(
         `Role status updated to ${data?.status} successfully`,
@@ -226,17 +227,6 @@ function useRoleViewModel() {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setIsFilter(true);
   };
-
-  // const handleUpdateStatus = () => {
-  //   if (!selectedRole) return;
-
-  //   setIsUpdating(true);
-
-  //   updateMutation.mutate({
-  //     ...selectedRole,
-  //     isActive: !selectedRole.isActive,
-  //   });
-  // };
 
   const onChange = (
     e: React.ChangeEvent<
@@ -306,6 +296,7 @@ function useRoleViewModel() {
     setConfirmEditOpen(false);
     setConfirmOpen(false);
     setConfirmDeleteOpen(false);
+    setConfirmUpdateStatusOpen(false);
   };
 
   const handlePermissionToggle = (newPermissions: number[]) => {
