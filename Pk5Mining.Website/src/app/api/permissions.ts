@@ -1,9 +1,7 @@
 import { ApiResponse } from "../interfaces";
 import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
-import {
-  PermissionResponsePayload,
-} from "../interfaces/permission";
+import { PermissionResponsePayload } from "../interfaces/permission";
 
 export async function getPermissions() {
   try {

@@ -8,14 +8,13 @@ import {
   SubsidiaryResponsePayload,
   UpdateSubsidiaryPayload,
 } from "../interfaces/subsidiary";
-import { mock_subsidiaries } from "../fixtures/subsidiary.fixture";
-
-const useMock = import.meta.env.VITE_USE_MOCK_DATA === "false";
 
 export async function getSubsidiaries(params: SubsidiariesQuery) {
   try {
-    const { data } =
-      await http.get<ApiResponse<SubsidiaryResponsePayload>>("/Subsidiary/all", { params });
+    const { data } = await http.get<ApiResponse<SubsidiaryResponsePayload>>(
+      "/Subsidiary/all",
+      { params },
+    );
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
@@ -29,51 +28,6 @@ export async function getSubsidiaries(params: SubsidiariesQuery) {
     return data.responseData;
   } catch (err) {
     throw new Error(getAxiosErrorMessage(err, "Failed to fetch subsidiaries"));
-  }
-}
-
-export async function getSubsidiariesForDropdown() {
-  try {
-    const { data } =
-      await http.get<ApiResponse<Subsidiary[]>>("/Subsidiary/light");
-
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(
-          data.responseMessage,
-          "Failed to fetch subsidiaries for dropdown",
-        ),
-      );
-    }
-
-    return data.responseData;
-  } catch (err) {
-    throw new Error(
-      getAxiosErrorMessage(err, "Failed to fetch subsidiaries for dropdown"),
-    );
-  }
-}
-
-export async function getSubsidiaryById(id: string) {
-  try {
-    const { data } = await http.get<ApiResponse<Subsidiary>>(
-      `/Subsidiary/${id}`,
-    );
-
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(
-          data.responseMessage,
-          "Failed to fetch subsidiary details",
-        ),
-      );
-    }
-
-    return data.responseData;
-  } catch (err) {
-    throw new Error(
-      getAxiosErrorMessage(err, "Failed to fetch subsidiary details"),
-    );
   }
 }
 
@@ -142,27 +96,11 @@ export async function updateSubsidiaryStatus(
 
     return data.responseData;
   } catch (err) {
-    throw new Error(getAxiosErrorMessage(err, `Failed to update subsidiary status to ${status}`));
-  }
-}
-
-export async function deleteSubsidiary(id: number) {
-  try {
-    const { data } = await http.delete<ApiResponse<Subsidiary>>(
-      `/Subsidiary/${id}`,
+    throw new Error(
+      getAxiosErrorMessage(
+        err,
+        `Failed to update subsidiary status to ${status}`,
+      ),
     );
-
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(
-          data.responseMessage,
-          "Failed to delete subsidiary",
-        ),
-      );
-    }
-
-    return data.responseData;
-  } catch (err) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to delete subsidiary"));
   }
 }
