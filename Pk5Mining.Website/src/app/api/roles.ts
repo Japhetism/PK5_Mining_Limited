@@ -13,19 +13,10 @@ import { CreateRolePayload, Permission, Role, RoleResponsePayload, RolesQuery, U
 
 const useMock = import.meta.env.VITE_USE_MOCK_DATA === "true";
 
-export async function getRoles(queryParams: RolesQuery) {
+export async function getRoles(params: RolesQuery) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_roles,
-        totalCount: mock_roles.length,
-        totalPages: 1,
-      };
-    }
-
     const { data } =
-      await http.get<ApiResponse<RoleResponsePayload>>("/Role");
+      await http.get<ApiResponse<RoleResponsePayload>>("/Role/all", { params });
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
@@ -103,15 +94,8 @@ export async function getRoleById(id: string) {
 
 export async function createRole(payload: CreateRolePayload) {
   try {
-    if (useMock) {
-      // Simulate mock response structure
-      return {
-        data: mock_roles[0],
-      };
-    }
-
     const { data } = await http.post<ApiResponse<Subsidiary>>(
-      "/Role",
+      "/Role/create",
       payload,
     );
 

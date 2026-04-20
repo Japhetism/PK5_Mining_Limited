@@ -1,14 +1,14 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 
 type Option = {
-  label: string;
-  value: string;
+  label: string | number;
+  value: string | number;
 };
 
 type Props = {
   label?: string;
   name: string;
-  value: string;
+  value: string | number;
   options: Option[];
   required?: boolean;
   error?: string;
@@ -34,7 +34,7 @@ export const SearchableSelect = ({
   onChange,
   onBlur,
 }: Props) => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState<string | number>("");
   const [open, setOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -54,7 +54,7 @@ export const SearchableSelect = ({
     if (!isTyping) return options;
 
     return options.filter((opt) =>
-      opt.label.toLowerCase().includes(query.toLowerCase()),
+      opt.label.toString().toLowerCase().includes(query.toString().toLowerCase()),
     );
   }, [query, options, isTyping]);
 

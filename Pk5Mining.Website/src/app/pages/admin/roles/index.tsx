@@ -44,6 +44,7 @@ export function Roles() {
     queryClient,
     permissions,
     permissionError,
+    subsidiaries,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -59,6 +60,7 @@ export function Roles() {
     onChange,
     handleCloseModal,
     handlePermissionToggle,
+    handleCreateRole,
   } = useRoleViewModel();
 
   const columns: PaginatedTableColumn<Role>[] = [
@@ -82,18 +84,18 @@ export function Roles() {
       render: (role) => role.isSystem ?? "-",
     },
     {
-      key: "isActive",
+      key: "status",
       header: "Status",
       render: (role) => (
         <span
           className={
-            role.isActive
+            role.status === "Active"
               ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
               : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
           }
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {role.isActive ? "Active" : "Inactive"}
+          {role.status}
         </span>
       ),
     },
@@ -104,10 +106,10 @@ export function Roles() {
         role.dT_Created ? formatDateTime(role.dT_Created) : "-",
     },
     {
-      key: "dT_Updated",
+      key: "dT_Modified",
       header: "Date Modified",
       render: (role) =>
-        role.dT_Updated ? formatDateTime(role.dT_Updated) : "-",
+        role.dT_Modified ? formatDateTime(role.dT_Modified) : "-",
     },
     {
       key: "actions",
@@ -160,7 +162,7 @@ export function Roles() {
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
               >
-                {role.isActive ? (
+                {role.status === "Active" ? (
                   <>
                     <XCircle className="w-4 h-4 text-red-400" />
                     <span className="text-red-400">Deactivate</span>
@@ -294,8 +296,9 @@ export function Roles() {
         loading={isUpdating}
         permissions={permissions}
         permissionError={permissionError}
+        subsidiaries={subsidiaries}
         onClose={handleCloseModal}
-        onConfirm={handleUpdateStatus}
+        onConfirm={handleCreateRole}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
         handlePermissionToggle={handlePermissionToggle}

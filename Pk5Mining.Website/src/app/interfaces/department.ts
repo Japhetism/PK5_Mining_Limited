@@ -7,14 +7,14 @@ export type Department = {
   subsidiaryId?: string;
   isActive?: boolean;
   dT_Created: string;
-  dT_Updated: string;
+  dT_Modified: string;
 };
 
 export type DepartmentResponsePayload = {
   data: Department[];
 } & PaginationInfo;
 
-export type CreateDepartmentPayload = Omit<Department, "id" | "dT_Created" | "dT_Updated">;
+export type CreateDepartmentPayload = Omit<Department, "id" | "dT_Created" | "dT_Modified">;
 
 export type UpdateDepartmentPayload = Partial<CreateDepartmentPayload>;
 

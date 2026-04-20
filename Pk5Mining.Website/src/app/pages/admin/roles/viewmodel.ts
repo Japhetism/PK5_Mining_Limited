@@ -3,27 +3,30 @@ import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import { ApiError, StatusFilter } from "@/app/interfaces";
-import { cleanParams, toNumber } from "@/app/utils/helper";
+import { cleanParams, mapZodErrors, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import {
+  CreateRolePayload,
   Role,
   RoleErrors,
   RolesQuery,
   UpdateRolePayload,
 } from "@/app/interfaces/role";
 import { Permission } from "@/app/interfaces/permission";
-import { getRoles, updateRole } from "@/app/api/roles";
+import { createRole, getRoles, updateRole } from "@/app/api/roles";
 import { getPermissions } from "@/app/api/permissions";
+import { getSubsidiaries } from "@/app/api/subsidiaries";
+import { createRoleSchema } from "@/app/schemas/role.schema";
 
 const defaultFormData: Role = {
   id: "",
   name: "",
   description: "",
   isSystem: false,
-  isActive: true,
-  permissions: [],
+  status: "Active",
+  permissionIds: [],
   dT_Created: "",
-  dT_Updated: "",
+  dT_Modified: "",
 };
 
 function useRoleViewModel() {
@@ -81,11 +84,24 @@ function useRoleViewModel() {
     staleTime: 30_000,
   });
 
-  const { data: permissionData, isLoading: isLoadingPermission, error: permissionError } = useQuery({
-    queryKey: [
-      "permissions",
-    ],
+  const {
+    data: permissionData,
+    isLoading: isLoadingPermission,
+    error: permissionError,
+  } = useQuery({
+    queryKey: ["permissions"],
     queryFn: () => getPermissions(),
+    staleTime: 30_000,
+  });
+
+  // intended to be a light version of subsidiary for dropdown, so we can avoid unnecessary data fetching and processing
+  const {
+    data: subsidiaryData,
+    isLoading: isLoadingSubsidiary,
+    error: subsidiaryError,
+  } = useQuery({
+    queryKey: ["subsidiaries"],
+    queryFn: () => getSubsidiaries({ pageNumber: 1, pageSize: 9999 }),
     staleTime: 30_000,
   });
 
@@ -106,9 +122,30 @@ function useRoleViewModel() {
     setForm({
       ...defaultFormData,
       ...selectedRole,
-      dT_Updated: selectedRole.dT_Updated ?? "",
+      dT_Modified: selectedRole.dT_Modified ?? "",
     });
   }, [selectedRole]);
+
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateRolePayload) => createRole(payload),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["roles"] });
+      setConfirmEditOpen(false);
+      toastUtil.success("Role created successfully");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while creating a role. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
 
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateRolePayload) => {
@@ -175,6 +212,24 @@ function useRoleViewModel() {
     e.preventDefault();
   };
 
+  const handleCreateRole = () => {
+    const result = createRoleSchema.safeParse(form);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<CreateRolePayload>(result.error));
+      return;
+    }
+
+    setFieldErrors({});
+
+    const payload: CreateRolePayload = {
+      ...result.data,
+      status: "Active",
+    };
+
+    createMutation.mutate(payload);
+  };
+
   const handleCloseModal = () => {
     setSelectedRole(null);
     setForm(defaultFormData);
@@ -186,7 +241,7 @@ function useRoleViewModel() {
   const handlePermissionToggle = (newPermissions: number[]) => {
     // We simulate a change event to stay compatible with your existing onChange
     onChange({
-      target: { name: "permissions", value: newPermissions },
+      target: { name: "permissionIds", value: newPermissions },
     } as any);
   };
 
@@ -195,6 +250,8 @@ function useRoleViewModel() {
   const totalPages: number = data?.totalPages ?? 0;
 
   const permissions: Permission[] = permissionData ?? [];
+
+  const subsidiaries = subsidiaryData?.data ?? [];
 
   return {
     roles,
@@ -217,6 +274,7 @@ function useRoleViewModel() {
     fieldErrors,
     permissions,
     permissionError,
+    subsidiaries,
     onChange,
     setIsFilter,
     setFilterStatus,
@@ -232,6 +290,7 @@ function useRoleViewModel() {
     setForm,
     handleCloseModal,
     handlePermissionToggle,
+    handleCreateRole,
   };
 }
 

@@ -5,6 +5,8 @@ import { isValidName } from "@/app/utils/validator";
 import { Role, RoleErrors } from "@/app/interfaces/role";
 import { getGroupedPermissions } from "@/app/utils/helper";
 import { Permission } from "@/app/interfaces/permission";
+import { Subsidiary } from "@/app/interfaces/subsidiary";
+import { SearchableSelect } from "@/app/components/searchable-select";
 
 type EditModalProps = {
   form: Role;
@@ -16,6 +18,7 @@ type EditModalProps = {
   fieldErrors: any;
   permissions: Permission[];
   permissionError: any;
+  subsidiaries: Subsidiary[];
   onClose: () => void;
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<RoleErrors>>;
@@ -34,15 +37,17 @@ export function EditModal({
   fieldErrors,
   permissions,
   permissionError,
+  subsidiaries,
   onClose,
   onConfirm,
   setFieldErrors,
   onChange,
   handlePermissionToggle,
 }: EditModalProps) {
-  
   const groupedPermissions = getGroupedPermissions(permissions);
-  
+
+  console.log("subsidiaries in modal", subsidiaries);
+
   return (
     <Modal
       open={open}
@@ -112,47 +117,13 @@ export function EditModal({
                     </p>
                   )}
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Description
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <motion.textarea
-                    name="description"
-                    value={form.description}
-                    onChange={onChange}
-                    onBlur={() => {
-                      if (!isValidName(form.description ?? "")) {
-                        setFieldErrors((prev) => ({
-                          ...prev,
-                          department: "Invalid role description",
-                        }));
-                      } else {
-                        setFieldErrors((prev) => {
-                          const updated = { ...prev };
-                          delete updated.description;
-                          return updated;
-                        });
-                      }
-                    }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.description ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
-                  />
-                  {fieldErrors.description && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {fieldErrors.description}
-                    </p>
-                  )}
-                </div>
-
                 <div className="space-y-4">
                   <div className="flex items-center justify-between border-b border-gray-800 pb-2">
                     <label className="text-xs font-semibold text-gray-300 tracking-wider">
                       Permissions
                     </label>
                     <span className="text-[10px] text-gray-500 italic">
-                      {form.permissions?.length || 0} selected
+                      {form.permissionIds?.length || 0} selected
                     </span>
                   </div>
 
@@ -170,7 +141,7 @@ export function EditModal({
                       </thead>
                       <tbody className="divide-y divide-gray-800/50">
                         {groupedPermissions.map((group) => {
-                          const currentPerms = form.permissions || [];
+                          const currentPerms = form.permissionIds || [];
 
                           const selectedInGroup = group.permissions.filter(
                             (p) => currentPerms.includes(p.id),
@@ -295,6 +266,24 @@ export function EditModal({
                       </tbody>
                     </table>
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Subsidiary
+                    <span className="ml-1 text-red-500">*</span>
+                  </label>
+                  <SearchableSelect
+                    name="subsidiaryId"
+                    value={form.subsidiaryId ?? ""}
+                    options={subsidiaries.map((s) => ({ value: s.id, label: s.name }))}
+                    error={fieldErrors.subsidiaryId}
+                    onChange={onChange}
+                    placeholder="Select subsidiary"
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                      ${fieldErrors.subsidiaryId ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                  />
                 </div>
               </div>
             </form>
