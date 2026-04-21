@@ -4,12 +4,11 @@ import { motion, AnimatePresence } from "motion/react";
 import { LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting, getVisibleNav } from "@/app/utils/helper";
-import Logo from "../../../assets/images/pk5miningimage.png";
 import { UserMenu } from "@/app/components/ui/userMenu";
 import { useTenant } from "@/tenants/useTenant";
 
 export function AdminLayout() {
-  const { colors } = useTenant();
+  const { colors, logo } = useTenant();
   const { logout, user } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,7 +41,7 @@ export function AdminLayout() {
 
             <Link to="/admin" className="flex items-center gap-2 min-w-0">
               <img
-                src={Logo}
+                src={logo}
                 alt="PK5 Mining Logo"
                 loading="lazy"
                 className="w-14 sm:w-20 h-auto object-contain shrink-0"
@@ -155,7 +154,7 @@ export function AdminLayout() {
                         onClick={closeMobileMenu}
                       >
                         <img
-                          src={Logo}
+                          src={logo}
                           alt="PK5 Mining Logo"
                           loading="lazy"
                           className="w-14 h-auto object-contain shrink-0"
