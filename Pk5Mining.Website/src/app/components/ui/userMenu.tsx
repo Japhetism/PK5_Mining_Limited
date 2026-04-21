@@ -60,7 +60,8 @@ export function UserMenu({
             : "gap-2 px-3 py-2 text-xs sm:text-sm",
         ].join(" ")}
       >
-        <div className="min-w-0 text-left" style={{ color: colors.text }}>
+        <div className="min-w-0 text-left text-black">
+        {/* <div className="min-w-0 text-left" style={{ color: colors.text }}> */}
           <span>{greeting}, </span>
           <span className="font-bold truncate">
             {firstName} {lastName}
@@ -68,10 +69,10 @@ export function UserMenu({
         </div>
 
         <ChevronDown
-          className={`w-4 h-4 shrink-0 transition-transform ${
+          className={`w-4 h-4 shrink-0 transition-transform textblack ${
             open ? "rotate-180" : ""
           }`}
-          style={{ color: colors.text }}
+          // style={{ color: colors.text }}
         />
       </button>
 

@@ -23,7 +23,8 @@ export function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold mb-2" style={{ color: colors.text }}>
+        <h1 className="text-2xl text-black font-bold mb-2">
+        {/* <h1 className="text-2xl font-bold mb-2" style={{ color: colors.text }}> */}
           Dashboard
         </h1>
         <p className="text-sm text-gray-400">
@@ -76,7 +77,7 @@ export function Dashboard() {
                     <span className="truncate">{row.title}</span>
                     <span className="text-gray-400">{row.count}</span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden">
+                  <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: colors.progressBgColor}}>
                     <div
                       className="h-full bg-[#c89b3c]"
                       style={{
