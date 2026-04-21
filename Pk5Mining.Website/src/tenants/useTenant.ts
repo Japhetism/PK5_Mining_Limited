@@ -7,7 +7,8 @@ export const useTenant = () => {
   return {
     isAgro,
     name: isAgro ? "PK5 Agro-Allied" : "PK5 Mining Ltd",
-    favicon: isAgro ? "/agro-favicon.ico" : "/mining-favicon.ico",
+    favicon: isAgro ? "/favicon.ico" : "/favicon.png",
+    logo: isAgro ? "/src/assets/images/pk5agroimage.png" : "/src/assets/images/pk5miningimage.png",
     colors: {
       bg: isAgro ? "#041A12" : "#0F0F0F",
       card: isAgro ? "#072C1E" : "#1a1a1a",
@@ -15,6 +16,9 @@ export const useTenant = () => {
       text: isAgro ? "#ffffff" : "#ffffff",
       border: isAgro ? "#e5e7eb" : "#1f2937",
       label: isAgro ? "#041A12" : "#9ca3af",
+      progressBgColor: isAgro ? "#4D6F47" : "#0F0F0F",
+      iconColor: isAgro ? "#C89B3C" : "#5A5324",
+      primaryAccentColor: isAgro ? "#C89B3C" : "#C89B3C70",
     }
   };
 };

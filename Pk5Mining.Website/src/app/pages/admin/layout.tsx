@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting, getVisibleNav } from "@/app/utils/helper";
-import Logo from "../../../assets/images/logo.png";
+import Logo from "../../../assets/images/pk5miningimage.png";
 import { UserMenu } from "@/app/components/ui/userMenu";
 import { useTenant } from "@/tenants/useTenant";
 
@@ -25,10 +25,10 @@ export function AdminLayout() {
 
   return (
     <div className="h-screen text-black flex flex-col bg-white overflow-hidden">
-    {/* <div className="h-screen text-white flex flex-col overflow-hidden" style={{ backgroundColor: colors.bg }}> */}
+      {/* <div className="h-screen text-white flex flex-col overflow-hidden" style={{ backgroundColor: colors.bg }}> */}
       {/* HEADER */}
-      <header className="border-b backdrop-blur shrink-0 bg-white" style={{borderColor: colors.border }}>
-      {/* <header className="border-b backdrop-blur shrink-0" style={{ backgroundColor: `${colors.bg}/500`, borderColor: colors.border }}> */}
+      <header className="border-b backdrop-blur shrink-0 bg-white" style={{ borderColor: colors.border }}>
+        {/* <header className="border-b backdrop-blur shrink-0" style={{ backgroundColor: `${colors.bg}/500`, borderColor: colors.border }}> */}
         <div className="w-full px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <button
@@ -48,7 +48,7 @@ export function AdminLayout() {
                 className="w-14 sm:w-20 h-auto object-contain shrink-0"
               />
               <span className="font-bold text-sm sm:text-base truncate text-black">
-              {/* <span className="font-bold text-sm sm:text-base truncate" style={{ color: colors.text}} > */}
+                {/* <span className="font-bold text-sm sm:text-base truncate" style={{ color: colors.text}} > */}
                 Admin Portal
               </span>
             </Link>
@@ -101,12 +101,15 @@ export function AdminLayout() {
                         [
                           "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
                           isActive
-                            ? "bg-[#c89b3c] text-[#c89b3c] border border-[#c89b3c]/30" 
+                            ? "text-[#c89b3c] border border-[#c89b3c]/30" 
                             : "text-gray-300 hover:bg-white/5",
                         ].join(" ")
                       }
+                      style={({ isActive }) => (
+                        isActive ? { backgroundColor: colors.primaryAccentColor } : {}
+                      )}
                     >
-                      <item.icon className="w-4 h-4 shrink-0" style={{ color: colors.text}} />
+                      <item.icon className="w-4 h-4 shrink-0" style={{ color: colors.text }} />
                       <span className="truncate" style={{ color: colors.text }}>{item.label}</span>
                     </NavLink>
                   );

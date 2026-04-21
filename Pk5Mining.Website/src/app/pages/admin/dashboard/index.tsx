@@ -77,7 +77,7 @@ export function Dashboard() {
                     <span className="truncate">{row.title}</span>
                     <span className="text-gray-400">{row.count}</span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden">
+                  <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: colors.progressBgColor}}>
                     <div
                       className="h-full bg-[#c89b3c]"
                       style={{
