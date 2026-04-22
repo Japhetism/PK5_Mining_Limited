@@ -15,7 +15,7 @@ import {
 import { Permission } from "@/app/interfaces/permission";
 import { createRole, getRoles, updateRole, updateRoleStatus } from "@/app/api/roles";
 import { getPermissions } from "@/app/api/permissions";
-import { getSubsidiaries } from "@/app/api/subsidiaries";
+import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 import { createRoleSchema, updateRoleSchema } from "@/app/schemas/role.schema";
 
 const defaultFormData: Role = {
@@ -101,8 +101,8 @@ function useRoleViewModel() {
     isLoading: isLoadingSubsidiary,
     error: subsidiaryError,
   } = useQuery({
-    queryKey: ["subsidiaries"],
-    queryFn: () => getSubsidiaries({ pageNumber: 1, pageSize: 9999 }),
+    queryKey: ["light-subsidiaries"],
+    queryFn: () => getLightSubsidiaries(),
     staleTime: 30_000,
   });
 
@@ -138,6 +138,7 @@ function useRoleViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["roles"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       toastUtil.success("Role created successfully");
     },
     onError: (err) => {
@@ -169,6 +170,7 @@ function useRoleViewModel() {
       await queryClient.invalidateQueries({ queryKey: ["roles"] });
       setConfirmEditOpen(false);
       setSelectedRole(null);
+      setForm(defaultFormData);
       toastUtil.success("Role updated successfully");
     },
     onError: (err) => {
@@ -312,7 +314,7 @@ function useRoleViewModel() {
 
   const permissions: Permission[] = permissionData ?? [];
 
-  const subsidiaries = subsidiaryData?.data ?? [];
+  const subsidiaries = subsidiaryData ?? [];
 
   return {
     roles,

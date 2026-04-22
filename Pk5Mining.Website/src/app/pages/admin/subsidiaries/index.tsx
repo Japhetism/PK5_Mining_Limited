@@ -66,6 +66,7 @@ export function SubsidiaryList() {
     setFilterCountry,
     handleCreateSubsidiary,
     handleUpdateSubsidiary,
+    handleDeleteSubsidiary,
   } = useSubsidiaryListViewModel();
 
   const countryList = useMemo(() => {
@@ -352,8 +353,8 @@ export function SubsidiaryList() {
 
       <ConfirmModal
         open={confirmDeleteOpen}
-        onClose={() => handleCloseModal}
-        onConfirm={() => handleUpdateStatus("Inactive")}
+        onClose={handleCloseModal}
+        onConfirm={handleDeleteSubsidiary}
         title="Delete Subsidiary"
         description={`Are you sure you want to delete "${selectedSubsidiary?.name}"?`}
         confirmText={`Yes, delete`}

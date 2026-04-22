@@ -19,6 +19,7 @@ import {
 } from "@/app/interfaces/subsidiary";
 import {
   createSubsidiary,
+  deleteSubsidiary,
   getSubsidiaries,
   updateSubsidiary,
   updateSubsidiaryStatus,
@@ -82,7 +83,7 @@ function useSubsidiaryListViewModel() {
       pageSize,
       name: debouncedFilters.name,
       email: debouncedFilters.email,
-      country: filterCountry,
+      country: filterCountry === "all" ? "" : filterCountry,
       isActive:
         filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
     };
@@ -174,6 +175,37 @@ function useSubsidiaryListViewModel() {
         (err instanceof Error
           ? err.message
           : "An error occurred while updating the subsidary. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (payload: Subsidiary) => {
+      if (
+        !selectedSubsidiary ||
+        !("id" in selectedSubsidiary) ||
+        typeof selectedSubsidiary.id !== "number"
+      ) {
+        throw new Error("Cannot delete: missing subsidiary id");
+      }
+      return deleteSubsidiary(selectedSubsidiary.id);
+    },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["subsidiaries"] });
+      setConfirmDeleteOpen(false);
+      setSelectedSubsidiary(null);
+      toastUtil.success("Subsidiary deleted successfully");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while deleting the subsidary. Please try again.");
       toastUtil.error(message);
     },
     onSettled: () => setIsUpdating(false),
@@ -292,6 +324,12 @@ function useSubsidiaryListViewModel() {
     updateMutation.mutate(payload);
   };
 
+  const handleDeleteSubsidiary = () => {
+    if (!selectedSubsidiary) return;
+
+    deleteMutation.mutate(selectedSubsidiary);
+  }
+
   const subsidaries: Subsidiary[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -336,6 +374,7 @@ function useSubsidiaryListViewModel() {
     setFilters,
     handleCreateSubsidiary,
     handleUpdateSubsidiary,
+    handleDeleteSubsidiary,
   };
 }
 
