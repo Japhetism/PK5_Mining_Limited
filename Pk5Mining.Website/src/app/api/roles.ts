@@ -28,6 +28,29 @@ export async function getRoles(params: RolesQuery) {
   }
 }
 
+export async function getLightRoles() {
+  try {
+    const { data } = await http.get<ApiResponse<Role[]>>(
+      "/Role/light-responses",
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to fetch roles for dropdown",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to fetch roles for dropdown"),
+    );
+  }
+}
+
 export async function createRole(payload: CreateRolePayload) {
   try {
     const { data } = await http.post<ApiResponse<Role>>(

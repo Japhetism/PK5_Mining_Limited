@@ -95,7 +95,7 @@ function useRoleViewModel() {
     staleTime: 30_000,
   });
 
-  // intended to be a light version of subsidiary for dropdown, so we can avoid unnecessary data fetching and processing
+  // for dropdown
   const {
     data: subsidiaryData,
     isLoading: isLoadingSubsidiary,

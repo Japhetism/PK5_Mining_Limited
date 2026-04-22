@@ -22,6 +22,7 @@ import { toastUtil } from "@/app/utils/toast";
 import { ApiError } from "@/app/interfaces";
 import { changePassword } from "@/app/api/auth";
 import { createUserSchema, updateUserSchema } from "@/app/schemas/user.schema";
+import { getLightRoles } from "@/app/api/roles";
 
 const defaultFormData: User = {
   id: 0,
@@ -124,6 +125,17 @@ function useUserViewModel() {
     queryFn: () => getUsers(queryParams),
     staleTime: 30_000,
   });
+
+  // for dropdown
+    const {
+      data: rolesData,
+      isLoading: isLoadingRoles,
+      error: rolesError,
+    } = useQuery({
+      queryKey: ["light-roles"],
+      queryFn: () => getLightRoles(),
+      staleTime: 30_000,
+    });
 
   useEffect(() => {
     if (confirmEditOpen) {
@@ -312,6 +324,8 @@ function useUserViewModel() {
   const users: User[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
+
+  const roles = rolesData ?? [];
 
   return {
     users,
