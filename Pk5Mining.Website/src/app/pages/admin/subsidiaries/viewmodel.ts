@@ -182,13 +182,13 @@ function useSubsidiaryListViewModel() {
   const deleteMutation = useMutation({
     mutationFn: (payload: Subsidiary) => {
       if (
-        !selectedSubsidiary ||
-        !("id" in selectedSubsidiary) ||
-        typeof selectedSubsidiary.id !== "number"
+        !payload ||
+        !("id" in payload) ||
+        typeof payload.id !== "number"
       ) {
         throw new Error("Cannot delete: missing subsidiary id");
       }
-      return deleteSubsidiary(selectedSubsidiary.id);
+      return deleteSubsidiary(payload.id);
     },
     onMutate: () => {
       setIsUpdating(true);

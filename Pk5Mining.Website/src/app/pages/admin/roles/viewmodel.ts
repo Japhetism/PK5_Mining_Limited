@@ -221,13 +221,13 @@ function useRoleViewModel() {
   const deleteMutation = useMutation({
       mutationFn: (payload: Role) => {
         if (
-          !selectedRole ||
-          !("id" in selectedRole) ||
-          typeof selectedRole.id !== "number"
+          !payload ||
+          !("id" in payload) ||
+          typeof payload.id !== "number"
         ) {
           throw new Error("Cannot delete: missing role id");
         }
-        return deleteRole(selectedRole.id);
+        return deleteRole(payload.id);
       },
       onMutate: () => {
         setIsUpdating(true);
