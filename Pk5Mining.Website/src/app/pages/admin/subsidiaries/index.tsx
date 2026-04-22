@@ -66,6 +66,7 @@ export function SubsidiaryList() {
     setFilterCountry,
     handleCreateSubsidiary,
     handleUpdateSubsidiary,
+    handleDeleteSubsidiary,
   } = useSubsidiaryListViewModel();
 
   const countryList = useMemo(() => {
@@ -279,15 +280,15 @@ export function SubsidiaryList() {
             <select
               value={filterStatus}
               onChange={(e) => {
-                setFilterStatus(e.target.value as StatusFilter);
+                setFilterStatus(e.target.value);
                 setIsFilter(true);
               }}
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             >
               <option value="">All Statuses</option>
-              {statusOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+              {["Active", "Inactive"].map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
                 </option>
               ))}
             </select>
@@ -352,8 +353,8 @@ export function SubsidiaryList() {
 
       <ConfirmModal
         open={confirmDeleteOpen}
-        onClose={() => handleCloseModal}
-        onConfirm={() => handleUpdateStatus("Inactive")}
+        onClose={handleCloseModal}
+        onConfirm={handleDeleteSubsidiary}
         title="Delete Subsidiary"
         description={`Are you sure you want to delete "${selectedSubsidiary?.name}"?`}
         confirmText={`Yes, delete`}

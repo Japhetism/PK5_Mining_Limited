@@ -14,7 +14,7 @@ export async function login(payload: ILoginPayload) {
   const maxAttempts = 3;
   let lastError: unknown;
 
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+  for (let attempt = 0; attempt <= maxAttempts; attempt++) {
     try {
       const { data } = await http.post<ApiResponse<IUser>>(
         "/Authentication/login",

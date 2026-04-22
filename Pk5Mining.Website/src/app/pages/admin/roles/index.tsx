@@ -64,6 +64,7 @@ export function Roles() {
     handlePermissionToggle,
     handleCreateRole,
     handleUpdateRole,
+    handleDeleteRole,
   } = useRoleViewModel();
 
   const columns: PaginatedTableColumn<Role>[] = [
@@ -84,7 +85,13 @@ export function Roles() {
     {
       key: "isSystem",
       header: "System Role",
-      render: (role) => role.isSystem ?? "-",
+      render: (role) => (
+        <span
+          className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs text-grey-400"
+        >
+          {role.isSystem ? "Yes" : "No"}
+        </span>
+      ),
     },
     {
       key: "status",
@@ -101,6 +108,11 @@ export function Roles() {
           {role.status}
         </span>
       ),
+    },
+    {
+      key: "subsidiary",
+      header: "Subsidiary",
+      render: (role) => role.subsidiary?.name
     },
     {
       key: "dT_Created",
@@ -283,7 +295,7 @@ export function Roles() {
       <ConfirmModal
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
-        onConfirm={handleUpdateStatus}
+        onConfirm={handleDeleteRole}
         title="Delete Role"
         description={`Are you sure you want to delete "${selectedRole?.name}"?`}
         confirmText={`Yes, delete`}

@@ -31,6 +31,29 @@ export async function getSubsidiaries(params: SubsidiariesQuery) {
   }
 }
 
+export async function getLightSubsidiaries() {
+  try {
+    const { data } = await http.get<ApiResponse<Subsidiary[]>>(
+      "/Subsidiary/light-responses",
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to fetch subsidiaries for dropdown",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to fetch subsidiaries for dropdown"),
+    );
+  }
+}
+
 export async function createSubsidiary(payload: CreateSubsidiaryPayload) {
   try {
     const { data } = await http.post<ApiResponse<Subsidiary>>(
@@ -102,5 +125,26 @@ export async function updateSubsidiaryStatus(
         `Failed to update subsidiary status to ${status}`,
       ),
     );
+  }
+}
+
+export async function deleteSubsidiary(id: number) {
+  try {
+    const { data } = await http.delete<ApiResponse<Subsidiary>>("/Subsidiary", {
+      params: { id },
+    });
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          `Failed to delete subsidiary`,
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(getAxiosErrorMessage(err, `Failed to delete subsidiary`));
   }
 }

@@ -13,9 +13,9 @@ import {
   UpdateRolePayload,
 } from "@/app/interfaces/role";
 import { Permission } from "@/app/interfaces/permission";
-import { createRole, getRoles, updateRole, updateRoleStatus } from "@/app/api/roles";
+import { createRole, deleteRole, getRoles, updateRole, updateRoleStatus } from "@/app/api/roles";
 import { getPermissions } from "@/app/api/permissions";
-import { getSubsidiaries } from "@/app/api/subsidiaries";
+import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 import { createRoleSchema, updateRoleSchema } from "@/app/schemas/role.schema";
 
 const defaultFormData: Role = {
@@ -95,14 +95,14 @@ function useRoleViewModel() {
     staleTime: 30_000,
   });
 
-  // intended to be a light version of subsidiary for dropdown, so we can avoid unnecessary data fetching and processing
+  // for dropdown
   const {
     data: subsidiaryData,
     isLoading: isLoadingSubsidiary,
     error: subsidiaryError,
   } = useQuery({
-    queryKey: ["subsidiaries"],
-    queryFn: () => getSubsidiaries({ pageNumber: 1, pageSize: 9999 }),
+    queryKey: ["light-subsidiaries"],
+    queryFn: () => getLightSubsidiaries(),
     staleTime: 30_000,
   });
 
@@ -138,6 +138,7 @@ function useRoleViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["roles"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       toastUtil.success("Role created successfully");
     },
     onError: (err) => {
@@ -169,6 +170,7 @@ function useRoleViewModel() {
       await queryClient.invalidateQueries({ queryKey: ["roles"] });
       setConfirmEditOpen(false);
       setSelectedRole(null);
+      setForm(defaultFormData);
       toastUtil.success("Role updated successfully");
     },
     onError: (err) => {
@@ -215,6 +217,37 @@ function useRoleViewModel() {
     },
     onSettled: () => setIsUpdating(false),
   });
+
+  const deleteMutation = useMutation({
+      mutationFn: (payload: Role) => {
+        if (
+          !payload ||
+          !("id" in payload) ||
+          typeof payload.id !== "number"
+        ) {
+          throw new Error("Cannot delete: missing role id");
+        }
+        return deleteRole(payload.id);
+      },
+      onMutate: () => {
+        setIsUpdating(true);
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["roles"] });
+        setConfirmDeleteOpen(false);
+        setSelectedRole(null);
+        toastUtil.success("Role deleted successfully");
+      },
+      onError: (err) => {
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while deleting the role. Please try again.");
+        toastUtil.error(message);
+      },
+      onSettled: () => setIsUpdating(false),
+    });
 
   const onChangePage = (next: number) => setPageNumber(next);
 
@@ -290,6 +323,12 @@ function useRoleViewModel() {
     updateStatusMutation.mutate(status);
   };
 
+  const handleDeleteRole = () => {
+    if (!selectedRole) return;
+
+    deleteMutation.mutate(selectedRole);
+  }
+
   const handleCloseModal = () => {
     setSelectedRole(null);
     setForm(defaultFormData);
@@ -312,7 +351,7 @@ function useRoleViewModel() {
 
   const permissions: Permission[] = permissionData ?? [];
 
-  const subsidiaries = subsidiaryData?.data ?? [];
+  const subsidiaries = subsidiaryData ?? [];
 
   return {
     roles,
@@ -355,6 +394,7 @@ function useRoleViewModel() {
     handlePermissionToggle,
     handleCreateRole,
     handleUpdateRole,
+    handleDeleteRole,
   };
 }
 

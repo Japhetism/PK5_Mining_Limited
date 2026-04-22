@@ -19,6 +19,7 @@ import {
 } from "@/app/interfaces/subsidiary";
 import {
   createSubsidiary,
+  deleteSubsidiary,
   getSubsidiaries,
   updateSubsidiary,
   updateSubsidiaryStatus,
@@ -27,6 +28,7 @@ import {
   createSubsidiarySchema,
   updateSubsidiarySchema,
 } from "@/app/schemas/subsidiary.schema";
+import { getLightRoles } from "@/app/api/roles";
 
 const defaultFormData = {
   id: "",
@@ -44,8 +46,8 @@ function useSubsidiaryListViewModel() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
-  const [filterCountry, setFilterCountry] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("");
+  const [filterCountry, setFilterCountry] = useState<string>("");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmUpdateStatusOpen, setConfirmUpdateStatusOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
@@ -82,9 +84,8 @@ function useSubsidiaryListViewModel() {
       pageSize,
       name: debouncedFilters.name,
       email: debouncedFilters.email,
-      country: filterCountry,
-      isActive:
-        filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
+      country: filterCountry === "all" ? "" : filterCountry,
+      status: filterStatus,
     };
 
     // clean out empty strings
@@ -99,7 +100,7 @@ function useSubsidiaryListViewModel() {
       queryParams.country,
       queryParams.email,
       queryParams.name,
-      queryParams.isActive ?? "",
+      queryParams.status,
     ],
     queryFn: () => getSubsidiaries(queryParams),
     staleTime: 30_000,
@@ -174,6 +175,37 @@ function useSubsidiaryListViewModel() {
         (err instanceof Error
           ? err.message
           : "An error occurred while updating the subsidary. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (payload: Subsidiary) => {
+      if (
+        !payload ||
+        !("id" in payload) ||
+        typeof payload.id !== "number"
+      ) {
+        throw new Error("Cannot delete: missing subsidiary id");
+      }
+      return deleteSubsidiary(payload.id);
+    },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["subsidiaries"] });
+      setConfirmDeleteOpen(false);
+      setSelectedSubsidiary(null);
+      toastUtil.success("Subsidiary deleted successfully");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while deleting the subsidary. Please try again.");
       toastUtil.error(message);
     },
     onSettled: () => setIsUpdating(false),
@@ -292,6 +324,12 @@ function useSubsidiaryListViewModel() {
     updateMutation.mutate(payload);
   };
 
+  const handleDeleteSubsidiary = () => {
+    if (!selectedSubsidiary) return;
+
+    deleteMutation.mutate(selectedSubsidiary);
+  }
+
   const subsidaries: Subsidiary[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -336,6 +374,7 @@ function useSubsidiaryListViewModel() {
     setFilters,
     handleCreateSubsidiary,
     handleUpdateSubsidiary,
+    handleDeleteSubsidiary,
   };
 }
 

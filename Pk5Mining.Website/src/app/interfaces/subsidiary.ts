@@ -28,7 +28,7 @@ export type SubsidiariesQuery = {
   name?: string;
   email?: string;
   country?: string;
-  isActive?: boolean | string;
+  status?: "Active" | "Inactive" | string;
 };
 
 export type SubsidiaryErrors = {
