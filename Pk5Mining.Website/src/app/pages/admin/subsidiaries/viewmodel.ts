@@ -45,8 +45,8 @@ function useSubsidiaryListViewModel() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
-  const [filterCountry, setFilterCountry] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("");
+  const [filterCountry, setFilterCountry] = useState<string>("");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmUpdateStatusOpen, setConfirmUpdateStatusOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
@@ -84,8 +84,7 @@ function useSubsidiaryListViewModel() {
       name: debouncedFilters.name,
       email: debouncedFilters.email,
       country: filterCountry === "all" ? "" : filterCountry,
-      isActive:
-        filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
+      status: filterStatus,
     };
 
     // clean out empty strings
@@ -100,7 +99,7 @@ function useSubsidiaryListViewModel() {
       queryParams.country,
       queryParams.email,
       queryParams.name,
-      queryParams.isActive ?? "",
+      queryParams.status,
     ],
     queryFn: () => getSubsidiaries(queryParams),
     staleTime: 30_000,
