@@ -13,7 +13,7 @@ import {
   UpdateRolePayload,
 } from "@/app/interfaces/role";
 import { Permission } from "@/app/interfaces/permission";
-import { createRole, getRoles, updateRole, updateRoleStatus } from "@/app/api/roles";
+import { createRole, deleteRole, getRoles, updateRole, updateRoleStatus } from "@/app/api/roles";
 import { getPermissions } from "@/app/api/permissions";
 import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 import { createRoleSchema, updateRoleSchema } from "@/app/schemas/role.schema";
@@ -218,6 +218,37 @@ function useRoleViewModel() {
     onSettled: () => setIsUpdating(false),
   });
 
+  const deleteMutation = useMutation({
+      mutationFn: (payload: Role) => {
+        if (
+          !selectedRole ||
+          !("id" in selectedRole) ||
+          typeof selectedRole.id !== "number"
+        ) {
+          throw new Error("Cannot delete: missing role id");
+        }
+        return deleteRole(selectedRole.id);
+      },
+      onMutate: () => {
+        setIsUpdating(true);
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["roles"] });
+        setConfirmDeleteOpen(false);
+        setSelectedRole(null);
+        toastUtil.success("Role deleted successfully");
+      },
+      onError: (err) => {
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while deleting the role. Please try again.");
+        toastUtil.error(message);
+      },
+      onSettled: () => setIsUpdating(false),
+    });
+
   const onChangePage = (next: number) => setPageNumber(next);
 
   const onChangePageSize = (size: number) => {
@@ -292,6 +323,12 @@ function useRoleViewModel() {
     updateStatusMutation.mutate(status);
   };
 
+  const handleDeleteRole = () => {
+    if (!selectedRole) return;
+
+    deleteMutation.mutate(selectedRole);
+  }
+
   const handleCloseModal = () => {
     setSelectedRole(null);
     setForm(defaultFormData);
@@ -357,6 +394,7 @@ function useRoleViewModel() {
     handlePermissionToggle,
     handleCreateRole,
     handleUpdateRole,
+    handleDeleteRole,
   };
 }
 

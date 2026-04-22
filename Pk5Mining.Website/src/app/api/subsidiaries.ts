@@ -33,7 +33,7 @@ export async function getSubsidiaries(params: SubsidiariesQuery) {
 
 export async function getLightSubsidiaries() {
   try {
-    const { data } = await http.get<ApiResponse<SubsidiaryResponsePayload>>(
+    const { data } = await http.get<ApiResponse<Subsidiary[]>>(
       "/Subsidiary/light-responses",
     );
 
@@ -130,7 +130,7 @@ export async function updateSubsidiaryStatus(
 
 export async function deleteSubsidiary(id: number) {
   try {
-    const { data } = await http.delete<ApiResponse<Subsidiary>>(`/Subsidiary`, {
+    const { data } = await http.delete<ApiResponse<Subsidiary>>("/Subsidiary", {
       params: { id },
     });
 
@@ -138,7 +138,7 @@ export async function deleteSubsidiary(id: number) {
       throw new Error(
         getAxiosErrorMessage(
           data.responseMessage,
-          `Failed to delte subsidiary`,
+          `Failed to delete subsidiary`,
         ),
       );
     }

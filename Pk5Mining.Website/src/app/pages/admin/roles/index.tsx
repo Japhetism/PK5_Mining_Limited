@@ -64,6 +64,7 @@ export function Roles() {
     handlePermissionToggle,
     handleCreateRole,
     handleUpdateRole,
+    handleDeleteRole,
   } = useRoleViewModel();
 
   const columns: PaginatedTableColumn<Role>[] = [
@@ -294,7 +295,7 @@ export function Roles() {
       <ConfirmModal
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
-        onConfirm={handleUpdateStatus}
+        onConfirm={handleDeleteRole}
         title="Delete Role"
         description={`Are you sure you want to delete "${selectedRole?.name}"?`}
         confirmText={`Yes, delete`}

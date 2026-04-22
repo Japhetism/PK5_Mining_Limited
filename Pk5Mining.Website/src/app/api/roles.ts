@@ -89,3 +89,24 @@ export async function updateRoleStatus(
     );
   }
 }
+
+export async function deleteRole(id: number) {
+  try {
+    const { data } = await http.delete<ApiResponse<Role>>("/Role", {
+      params: { id },
+    });
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          `Failed to delete role`,
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(getAxiosErrorMessage(err, `Failed to delete role`));
+  }
+}
