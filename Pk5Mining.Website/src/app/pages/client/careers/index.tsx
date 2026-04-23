@@ -186,7 +186,6 @@ export function Careers() {
             <p className="text-xl text-gray-400">
               Find your next opportunity with KP5 Mining
             </p>
-            :
           </AnimatedSection>
 
           {/* Filters */}
