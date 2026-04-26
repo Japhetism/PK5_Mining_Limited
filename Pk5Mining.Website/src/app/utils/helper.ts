@@ -330,3 +330,19 @@ export const generateAppId = (name: string): string => {
       .join(".")
   );
 };
+
+export const isEmailAuthorized = (email: string, hostname: string): boolean => {
+  if (!email) return false;
+
+  const emailDomain = email.split("@")[1]?.toLowerCase();
+  const adminDomain = import.meta.env.VITE_ADMIN_DOMAIN?.toLowerCase();
+
+  if (adminDomain && emailDomain === adminDomain) {
+    return true;
+  }
+
+  if (!hostname) return false;
+  const hostBrand = hostname.split(".")[0].toLowerCase();
+  
+  return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
+};
