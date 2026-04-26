@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
+import { authService } from "@/app/services/sso/authService";
 import { ApiError } from "@/app/interfaces";
 
 function useLoginViewModel() {
@@ -47,6 +48,14 @@ function useLoginViewModel() {
     mutation.mutate({ email, password });
   };
 
+  const handleSSOSignin = async () => {
+    await authService.initialize();
+    const result = await authService.login();
+    if (result) {
+      console.log("Welcome,", result.account.name);
+    }
+  };
+
   return {
     email,
     password,
@@ -55,6 +64,7 @@ function useLoginViewModel() {
     setEmail,
     setPassword,
     onSubmit,
+    handleSSOSignin,
   };
 }
 
