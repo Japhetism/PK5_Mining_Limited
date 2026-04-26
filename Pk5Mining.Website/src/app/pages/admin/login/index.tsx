@@ -14,12 +14,16 @@ export function Login() {
     setEmail,
     setPassword,
     onSubmit,
+    handleSSOSignin,
   } = useLoginViewModel();
 
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="min-h-screen text-white flex items-center justify-center px-6" style={{ backgroundColor: colors.bg  }}>
+    <div
+      className="min-h-screen text-white flex items-center justify-center px-6"
+      style={{ backgroundColor: colors.bg }}
+    >
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
@@ -28,14 +32,24 @@ export function Login() {
       >
         <div className="flex items-center gap-3 mb-6">
           <Lock className="w-6 h-6 text-[#c89b3c]" />
-          <h1 className="text-2xl font-bold" style={{ color: colors.text}}>Admin Login</h1>
+          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+            Admin Login
+          </h1>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-5">
           {/* Username */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: colors.text}}>Email Address</label>
-            <div className="flex items-center gap-2 border border-gray-800 rounded-lg px-3" style={{ backgroundColor: colors.bg }}>
+            <label
+              className="block text-sm font-medium mb-2"
+              style={{ color: colors.text }}
+            >
+              Email Address
+            </label>
+            <div
+              className="flex items-center gap-2 border border-gray-800 rounded-lg px-3"
+              style={{ backgroundColor: colors.bg }}
+            >
               <User className="w-4 h-4 text-gray-400" />
               <input
                 name="email"
@@ -45,15 +59,23 @@ export function Login() {
                 required
                 className="w-full bg-transparent py-3 outline-none"
                 autoComplete="off"
-                style={{ color: colors.text}}
+                style={{ color: colors.text }}
               />
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: colors.text}}>Password</label>
-            <div className="flex items-center border border-gray-800 rounded-lg px-3" style={{ backgroundColor: colors.bg }}>
+            <label
+              className="block text-sm font-medium mb-2"
+              style={{ color: colors.text }}
+            >
+              Password
+            </label>
+            <div
+              className="flex items-center border border-gray-800 rounded-lg px-3"
+              style={{ backgroundColor: colors.bg }}
+            >
               <Lock className="w-4 h-4 text-gray-400 mr-2" />
               <input
                 value={password}
@@ -62,7 +84,7 @@ export function Login() {
                 type={showPassword ? "text" : "password"}
                 className="w-full bg-transparent py-3 outline-none"
                 autoComplete="current-password"
-                style={{ color: colors.text}}
+                style={{ color: colors.text }}
               />
 
               <button
@@ -93,6 +115,21 @@ export function Login() {
             disabled={loading}
           >
             {loading ? "Signing in..." : "Sign in"}
+          </motion.button>
+          <div className="relative flex items-center py-5">
+            <div className="flex-grow border-t border-gray-600"></div>
+            <span className="flex-shrink mx-4 text-gray-400 font-bold">OR</span>
+            <div className="flex-grow border-t border-gray-600"></div>
+          </div>
+          <motion.button
+            type="button"
+            whileHover={!loading ? { scale: 1.02 } : undefined}
+            whileTap={!loading ? { scale: 0.98 } : undefined}
+            className="w-full px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-white transition-colors disabled:opacity-70"
+            disabled={loading}
+            onClick={handleSSOSignin}
+          >
+            Sign in with SSO
           </motion.button>
         </form>
       </motion.div>
