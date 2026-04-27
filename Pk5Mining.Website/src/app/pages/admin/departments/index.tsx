@@ -43,6 +43,7 @@ export function Departments() {
     selectedDepartment,
     isUpdating,
     queryClient,
+    subsidiaries,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -58,6 +59,9 @@ export function Departments() {
     setFieldErrors,
     onChange,
     handleCloseModal,
+    handleDeleteDepartment,
+    handleUpdateDepartment,
+    handleCreateDepartment,
   } = useDepartmentViewModel();
 
   const columns: PaginatedTableColumn<Department>[] = [
@@ -90,6 +94,11 @@ export function Departments() {
           {dept.isActive ? "Active" : "Inactive"}
         </span>
       ),
+    },
+    {
+      key: "subsidiary",
+      header: "Subsidiary",
+      render: (role) => role.subsidiary?.name
     },
     {
       key: "dT_Created",
@@ -272,7 +281,7 @@ export function Departments() {
       <ConfirmModal
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
-        onConfirm={handleUpdateStatus}
+        onConfirm={handleDeleteDepartment}
         title="Delete Department"
         description={`Are you sure you want to delete "${selectedDepartment?.name}"?`}
         confirmText={`Yes, delete`}
@@ -285,9 +294,10 @@ export function Departments() {
         form={form}
         fieldErrors={fieldErrors}
         cancelText="Cancel"
+        subsidiaries={subsidiaries}
         loading={isUpdating}
         onClose={handleCloseModal}
-        onConfirm={handleUpdateStatus}
+        onConfirm={selectedDepartment ? handleUpdateDepartment : handleCreateDepartment}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
       />

@@ -3,23 +3,29 @@ import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import { ApiError, StatusFilter } from "@/app/interfaces";
-import { cleanParams, toNumber } from "@/app/utils/helper";
+import { cleanParams, mapZodErrors, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import {
   Department,
   DepartmentErrors,
   DepartmentsQuery,
   UpdateDepartmentPayload,
+  CreateDepartmentPayload,
 } from "@/app/interfaces/department";
-import { getDepartments, updateDepartment } from "@/app/api/departments";
+import { getDepartments, updateDepartment, createDepartment, deleteDepartment } from "@/app/api/departments";
+import { createDepartmentSchema } from "@/app/schemas/department.shcema";
+import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
+
 
 const defaultFormData: Department = {
   id: "",
   name: "",
   description: "",
   isActive: true,
+  status: "Active",
   dT_Created: "",
   dT_Updated: "",
+  dT_Modified: ""
 };
 
 function useDepartmentViewModel() {
@@ -99,6 +105,38 @@ function useDepartmentViewModel() {
     });
   }, [selectedDepartment]);
 
+  // for dropdown
+    const {
+      data: subsidiaryData,
+      isLoading: isLoadingSubsidiary,
+      error: subsidiaryError,
+    } = useQuery({
+      queryKey: ["light-subsidiaries"],
+      queryFn: () => getLightSubsidiaries(),
+      staleTime: 30_000,
+    });
+
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateDepartmentPayload) => createDepartment(payload),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["departments"] });
+      setConfirmEditOpen(false);
+      toastUtil.success("Department created successfully");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while creating a department. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
+
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateDepartmentPayload) => {
       if (
@@ -128,6 +166,37 @@ function useDepartmentViewModel() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (payload: Department) => {
+      if (
+        !payload ||
+        !("id" in payload) ||
+        typeof payload.id !== "number"
+      ) {
+        throw new Error("Cannot delete: missing department id");
+      }
+      return deleteDepartment(payload.id);
+    },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["departments"] });
+      setConfirmDeleteOpen(false);
+      setSelectedDepartment(null);
+      toastUtil.success("Department deleted successfully");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while deleting the department. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
+
   const onChangePage = (next: number) => setPageNumber(next);
 
   const onChangePageSize = (size: number) => {
@@ -151,6 +220,56 @@ function useDepartmentViewModel() {
     });
   };
 
+  const handleCreateDepartment = () => {
+    const result = createDepartmentSchema.safeParse(form);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<CreateDepartmentPayload>(result.error));
+      return;
+    }
+
+    setFieldErrors({});
+
+    const payload: CreateDepartmentPayload = {
+      ...result.data,
+      subsidiaryId: result.data.subsidiaryId ? Number(result.data.subsidiaryId) : undefined,
+      status: "Active",
+      dT_Updated: new Date().toISOString(),
+
+    };
+
+    createMutation.mutate(payload);
+  };
+
+  const handleUpdateDepartment = () => {
+    if (!selectedDepartment) return;
+
+    const formWithId = { ...form, id: Number(form.id) };
+
+    const result = createDepartmentSchema.safeParse(formWithId);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<CreateDepartmentPayload>(result.error));
+      return;
+    }
+
+    const payload: CreateDepartmentPayload = {
+      ...result.data,
+      subsidiaryId: result.data.subsidiaryId ? Number(result.data.subsidiaryId) : undefined,
+      status: "Active",
+      dT_Updated: new Date().toISOString(),
+    };
+    setFieldErrors({});
+
+    updateMutation.mutate(payload);
+  };
+
+  const handleDeleteDepartment = () => {
+    if (!selectedDepartment) return;
+
+    deleteMutation.mutate(selectedDepartment);
+  };
+
   const onChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -158,10 +277,6 @@ function useDepartmentViewModel() {
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
   };
 
   const handleCloseModal = () => {
@@ -173,6 +288,7 @@ function useDepartmentViewModel() {
     setConfirmViewOpen(false);
   };
 
+  const subsidiaries = subsidiaryData ?? [];
   const departments: Department[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -197,6 +313,7 @@ function useDepartmentViewModel() {
     queryClient,
     form,
     fieldErrors,
+    subsidiaries,
     onChange,
     setIsFilter,
     setFilterStatus,
@@ -212,6 +329,9 @@ function useDepartmentViewModel() {
     setFieldErrors,
     setForm,
     handleCloseModal,
+    handleCreateDepartment,
+    handleUpdateDepartment,
+    handleDeleteDepartment,
   };
 }
 
