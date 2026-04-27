@@ -102,6 +102,7 @@ export const validateJob = (data: CreateJobPayload): JobErrors => {
 export const validateApplication = (
   data: IApplicantBioData,
   resumeFile: File | null,
+  hasAgreedToTerms: boolean,
 ): ApplicationErrors => {
   const errors: ApplicationErrors = {};
 
@@ -146,6 +147,10 @@ export const validateApplication = (
   if (data.linkedinUrl && !isValidLinkedIn(data.linkedinUrl)) {
     errors.linkedinUrl =
       "Please provide a valid LinkedIn profile URL (linkedin.com).";
+  }
+
+  if (!hasAgreedToTerms) {
+    errors.agreedToTerms = true
   }
 
   return errors;

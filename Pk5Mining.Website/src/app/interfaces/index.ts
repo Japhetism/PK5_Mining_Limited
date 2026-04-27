@@ -196,6 +196,7 @@ export type ApplicationErrors = Partial<
   Record<keyof IApplicantBioData, string>
 > & {
   resume?: string;
+  agreedToTerms?: boolean;
 };
 
 export interface IUser {
