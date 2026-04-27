@@ -6,6 +6,7 @@ import { AppRoutes } from "./routes";
 import Logo from '../assets/images/logo.png';
 import { useTenant } from "@/tenants/useTenant";
 import { CookieBanner } from "./components/cookie-banner";
+import { LegalModal } from "./components/legal-modal";
 
 function AppLoader() {
   return (
@@ -42,6 +43,7 @@ export function App() {
       </Suspense>
       <Toaster position="top-right" richColors closeButton expand />
       <CookieBanner />
+      <LegalModal />
     </BrowserRouter>
   );
 }

@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cookie } from "lucide-react";
+import { useLegalModalState } from "../hooks/useLegalModalState";
 
 export function CookieBanner() {
+  const { openModal } = useLegalModalState();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export function CookieBanner() {
                   PK5 Mining uses cookies to enhance your experience and analyze
                   site traffic. By clicking "Accept", you agree to our use of
                   cookies as described in our
-                  <span className="text-[#c89b3c] cursor-pointer hover:underline ml-1">
+                  <span className="text-[#c89b3c] cursor-pointer hover:underline ml-1 cursor-pointer" onClick={() => openModal("privacy")}>
                     Privacy Policy
                   </span>
                   .

@@ -1,13 +1,10 @@
 import { X, Scale, Fingerprint } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
+import { useLegalModalState } from "../hooks/useLegalModalState";
 
-type LegalModalProps = {
-  open: boolean;
-  onClose: () => void;
-  mode: "privacy" | "terms";
-};
+export function LegalModal() {
+  const { isOpen, mode, closeModal } = useLegalModalState();
 
-export function LegalModal({ open, onClose, mode }: LegalModalProps) {
   const privacyContent = [
     {
       subtitle: "1. Data Collection & Scope",
@@ -58,8 +55,8 @@ export function LegalModal({ open, onClose, mode }: LegalModalProps) {
 
   return (
     <Modal
-      open={open}
-      onClose={onClose}
+      open={isOpen}
+      onClose={closeModal}
       maxWidth="lg"
       height="md"
       showCloseButton={false}
@@ -87,7 +84,7 @@ export function LegalModal({ open, onClose, mode }: LegalModalProps) {
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={closeModal}
             className="p-2 rounded-md hover:bg-white/10 text-gray-300 transition-colors"
           >
             <X className="w-4 h-4" />
@@ -120,7 +117,7 @@ export function LegalModal({ open, onClose, mode }: LegalModalProps) {
           </p>
           <button
             type="button"
-            onClick={onClose}
+            onClick={closeModal}
             className="px-8 py-2.5 rounded-md bg-[#c89b3c] text-black text-[11px] font-bold uppercase tracking-wider hover:bg-[#d4a84a] transition-all"
           >
             I Acknowledge
