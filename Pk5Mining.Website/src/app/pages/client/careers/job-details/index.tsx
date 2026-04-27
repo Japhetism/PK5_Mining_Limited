@@ -28,11 +28,13 @@ export function JobDetails() {
     loading,
     submitted,
     error,
+    hasAgreedToTerms,
     handleChange,
     handleFileChange,
     handleSubmit,
     setFormData,
     setFieldErrors,
+    setHasAgreedToTerms,
   } = useJobDetailsViewModel();
 
   const countryList = Object.entries(countries).map(([code, country]) => ({
@@ -384,6 +386,40 @@ export function JobDetails() {
                         {error}
                       </p>
                     )}
+
+                    <div className="mt-6">
+                      <div className="flex items-start gap-3">
+                        <div className="flex items-center h-5">
+                          <motion.input
+                            id="terms"
+                            name="terms"
+                            type="checkbox"
+                            checked={hasAgreedToTerms}
+                            onChange={(e) => setHasAgreedToTerms(e.target.checked)}
+                            whileTap={{ scale: 0.9 }}
+                            className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-[#c89b3c] focus:ring-[#c89b3c] focus:ring-2 cursor-pointer"
+                          />
+                        </div>
+                        <label
+                          htmlFor="terms"
+                          className="text-xs text-white leading-relaxed cursor-pointer select-none"
+                        >
+                          We value your privacy. We will only use your data to
+                          contact you regarding this application and will never
+                          sell your information to third parties. By submitting,
+                          you agree that the information provided is yours and
+                          is accurate.
+                          <span className="ml-1 text-red-500">*</span>
+                        </label>
+                      </div>
+
+                      {/* Optional: Error message if they try to submit without checking */}
+                      {!hasAgreedToTerms && fieldErrors.agreedToTerms && (
+                        <p className="text-xs text-red-500 mt-2">
+                          You must agree to the terms to proceed.
+                        </p>
+                      )}
+                    </div>
 
                     <motion.button
                       type="submit"

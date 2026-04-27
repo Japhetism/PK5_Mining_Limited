@@ -36,6 +36,7 @@ function useJobDetailsViewModel() {
 
   const job: JobDto | undefined = data;
 
+  const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
   const [formData, setFormData] = useState(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<ApplicationErrors>({});
 
@@ -79,7 +80,7 @@ function useJobDetailsViewModel() {
       return;
     }
 
-    const errors = validateApplication(formData, resumeFile);
+    const errors = validateApplication(formData, resumeFile, hasAgreedToTerms);
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -115,11 +116,13 @@ function useJobDetailsViewModel() {
     loading,
     submitted,
     error,
+    hasAgreedToTerms,
     handleChange,
     handleFileChange,
     handleSubmit,
     setFormData,
     setFieldErrors,
+    setHasAgreedToTerms,
   };
 }
 
