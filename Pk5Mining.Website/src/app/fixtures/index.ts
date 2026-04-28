@@ -131,7 +131,7 @@ export const locations: ILocation[] = [
   },
 ]
 
-export const telephone: string = "+2348026133205";
+export const telephone: string = "+2348081254905";
 
 export const email: string = "info@pk5miningltd.com";
 
