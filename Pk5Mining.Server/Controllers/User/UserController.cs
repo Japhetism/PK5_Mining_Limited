@@ -18,7 +18,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             _repo = adminRepo;
         }
 
-        [Authorize]
+       /* [Authorize]*/
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] UserDTO dto)
         {

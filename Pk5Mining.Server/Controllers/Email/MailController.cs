@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿/*using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Services.Email;
 using Pk5Mining.Server.Services.Email.Agro_Mail;
@@ -46,3 +46,4 @@ namespace Pk5Mining.Server.Controllers.Email
         }
     }
 }
+*/

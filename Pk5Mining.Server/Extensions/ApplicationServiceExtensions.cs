@@ -7,10 +7,14 @@ using Pk5Mining.Server.Repositories;
 using Pk5Mining.Server.Repositories.Admin;
 using Pk5Mining.Server.Repositories.Contact_Us;
 using Pk5Mining.Server.Repositories.Dashboard;
+using Pk5Mining.Server.Repositories.Departments;
 using Pk5Mining.Server.Repositories.Job;
 using Pk5Mining.Server.Repositories.Job.Job_Specific_Repo;
 using Pk5Mining.Server.Repositories.Job_Application;
 using Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_Repo;
+using Pk5Mining.Server.Repositories.Permissions;
+using Pk5Mining.Server.Repositories.Roles;
+using Pk5Mining.Server.Repositories.Subsidiaries;
 using Pk5Mining.Server.Services;
 using Pk5Mining.Server.Services.Cloud_Service;
 using Pk5Mining.Server.Services.Email;
@@ -37,6 +41,12 @@ namespace Pk5Mining.Server.Extensions
             services.AddScoped<IDashboardRepo , DashboardRepo>();
             services.AddScoped<IJobApplicationSpecificRepo, JobApplicationSpecificRepo>();
             services.AddScoped<IUserRepo,  UserRepo>();
+            services.AddScoped<ISubsidiaryRepo, SubsidiaryRepo>();
+            services.AddScoped<IPermissionRepo, PermissionRepo>();
+            services.AddScoped<IUserRoleRepo, UserRoleRepo>();
+            services.AddScoped<IDepartmentRepo, DepartmentRepo>();
+
+
             services.AddScoped<ITokenService , TokenService>();
             services.AddTransient<IMailService  , MailService>();
             services.AddTransient<IAgroMailService, AgroMailService>();
