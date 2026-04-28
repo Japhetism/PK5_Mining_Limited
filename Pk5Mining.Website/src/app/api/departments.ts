@@ -141,7 +141,7 @@ export async function updateDepartment(id: number, payload: UpdateDepartmentPayl
     // }
 
     const { data } = await http.put<ApiResponse<Department>>(
-      `/Department/update-status/{id}`,
+      `/Department/update`,
       payload,
     );
 
@@ -160,6 +160,33 @@ export async function updateDepartment(id: number, payload: UpdateDepartmentPayl
   }
 }
 
+export async function updateDepartmentStatus(
+  id: number,
+  status: "Active" | "Inactive",
+) {
+  try {
+    const { data } = await http.put<ApiResponse<Department>>(
+      `/Department/update-status/${id}`,
+      { status },
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          `Failed to update Department status to ${status}`,
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, `Failed to update Department status to ${status}`),
+    );
+  }
+}
+
 export async function deleteDepartment(id: number) {
   try {
     // if (useMock) {
@@ -170,7 +197,7 @@ export async function deleteDepartment(id: number) {
     // }
 
     const { data } = await http.delete<ApiResponse<Department>>(
-      `/Department`,
+      `/Department`,  { params: { id },}
     );
 
     if (data.responseStatus !== "SUCCESS") {

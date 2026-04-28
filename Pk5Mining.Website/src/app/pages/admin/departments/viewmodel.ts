@@ -12,7 +12,7 @@ import {
   UpdateDepartmentPayload,
   CreateDepartmentPayload,
 } from "@/app/interfaces/department";
-import { getDepartments, updateDepartment, createDepartment, deleteDepartment } from "@/app/api/departments";
+import { getDepartments,updateDepartment,  updateDepartmentStatus, createDepartment, deleteDepartment } from "@/app/api/departments";
 import { createDepartmentSchema } from "@/app/schemas/department.shcema";
 import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 
@@ -28,6 +28,20 @@ const defaultFormData: Department = {
   dT_Modified: ""
 };
 
+enum DepartmentAction {
+  Update = "Update",
+  Activate = "Activate",
+  Deactivate = "Deactivate",
+  Delete = "Delete",
+}
+
+const successMessages: Record<DepartmentAction, string> = {
+  [DepartmentAction.Update]: "Department updated successfully",
+  [DepartmentAction.Activate]: "Department activated successfully",
+  [DepartmentAction.Deactivate]: "Department deactivated successfully",
+  [DepartmentAction.Delete]: "Department deleted successfully",
+};
+
 function useDepartmentViewModel() {
   const queryClient = useQueryClient();
 
@@ -40,6 +54,7 @@ function useDepartmentViewModel() {
   const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<DepartmentAction | null>(null);
 
   const [form, setForm] = useState<Department>(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<DepartmentErrors>({});
@@ -106,15 +121,15 @@ function useDepartmentViewModel() {
   }, [selectedDepartment]);
 
   // for dropdown
-    const {
-      data: subsidiaryData,
-      isLoading: isLoadingSubsidiary,
-      error: subsidiaryError,
-    } = useQuery({
-      queryKey: ["light-subsidiaries"],
-      queryFn: () => getLightSubsidiaries(),
-      staleTime: 30_000,
-    });
+  const {
+    data: subsidiaryData,
+    isLoading: isLoadingSubsidiary,
+    error: subsidiaryError,
+  } = useQuery({
+    queryKey: ["light-subsidiaries"],
+    queryFn: () => getLightSubsidiaries(),
+    staleTime: 30_000,
+  });
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateDepartmentPayload) => createDepartment(payload),
@@ -150,10 +165,16 @@ function useDepartmentViewModel() {
     },
     onSuccess: async () => {
       setIsUpdating(false);
-      setConfirmOpen(false);
       setSelectedDepartment(null);
 
       await queryClient.invalidateQueries({ queryKey: ["departments"] });
+
+      setConfirmEditOpen(false);
+      const msg =
+        successMessages[actionType as DepartmentAction] ??
+        successMessages[DepartmentAction.Update];
+      handleCloseModal();
+      toastUtil.success(msg);
     },
     onError: (err) => {
       setIsUpdating(false);
@@ -165,6 +186,40 @@ function useDepartmentViewModel() {
       toastUtil.error(message);
     },
   });
+
+  const updateStatusMutation = useMutation({
+      mutationFn: (status: "Active" | "Inactive") => {
+        if (
+          !selectedDepartment ||
+          !("id" in selectedDepartment) ||
+          typeof selectedDepartment.id !== "number"
+        ) {
+          throw new Error("Cannot update: missing department id");
+        }
+        return updateDepartmentStatus(selectedDepartment.id, status);
+      },
+      onMutate: () => {
+        setIsUpdating(true);
+      },
+      onSuccess: async (data) => {
+        await queryClient.invalidateQueries({ queryKey: ["departments"] });
+        // setConfirmUpdateStatusOpen(false);
+        setConfirmDeleteOpen(false);
+        setSelectedDepartment(null);
+        toastUtil.success(
+          `Department status updated to ${data?.status} successfully`,
+        );
+      },
+      onError: (err) => {
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating the department status. Please try again.");
+        toastUtil.error(message);
+      },
+      onSettled: () => setIsUpdating(false),
+    });
 
   const deleteMutation = useMutation({
     mutationFn: (payload: Department) => {
@@ -270,6 +325,16 @@ function useDepartmentViewModel() {
     deleteMutation.mutate(selectedDepartment);
   };
 
+  const handleUpdateDepartmentStatus = () => {
+    if (!selectedDepartment) return;
+
+    setIsUpdating(true);
+
+    const status = selectedDepartment?.status === "Active" ? "Inactive" : "Active"
+
+    updateStatusMutation.mutate(status);
+  };
+
   const onChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -332,6 +397,8 @@ function useDepartmentViewModel() {
     handleCreateDepartment,
     handleUpdateDepartment,
     handleDeleteDepartment,
+    handleUpdateDepartmentStatus,
+    // handleActivateDeactivateUser,
   };
 }
 
