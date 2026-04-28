@@ -12,6 +12,9 @@ namespace Pk5Mining.Server.Models.Admin
         public string Username { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
+        public long? SubsidiaryId { get; set; }
+        public long? DepartmentId { get; set; }
+        public long? RoleId { get; set; }
         public bool? HasChangedPassword { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Pk5Mining.Server.Models.Job;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pk5Mining.Server.Models.Job_Application
@@ -11,6 +12,7 @@ namespace Pk5Mining.Server.Models.Job_Application
         public long JobId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        [EmailAddress (ErrorMessage = "Invalid Email Address")]
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Country { get; set; }

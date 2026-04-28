@@ -164,6 +164,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
              string? email,
              string? subject,
              string? name,
+             string? phoneNumber,
              string? status,
              string? appId,
              DateTime? startDate,
@@ -184,9 +185,13 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
             {
                 query = query.Where(c => c.FirstName.StartsWith(name) || c.LastName.StartsWith(name));
             }
+            if (!string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                query = query.Where(c => c.PhoneNumber!.StartsWith(phoneNumber));
+            }
             if (!string.IsNullOrWhiteSpace(status))
             {
-                query = query.Where(c => c.Email.StartsWith(status));
+                query = query.Where(c => c.Status!.StartsWith(status));
             }
             if (!string.IsNullOrWhiteSpace(appId))
             {
