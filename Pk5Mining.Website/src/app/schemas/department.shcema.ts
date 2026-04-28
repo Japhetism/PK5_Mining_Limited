@@ -20,14 +20,5 @@ const baseDepartmentSchema = z.object({
 export const createDepartmentSchema = baseDepartmentSchema;
 
 export const updateDepartmentSchema = baseDepartmentSchema.partial().extend({
-  id: z.string({ message: "Invalid department ID format" }),
+  id: z.number(),
 });
-
-export const departmentSchema = baseDepartmentSchema.extend({
-  id: z.string().uuid({ message: "Invalid department ID format" }),
-  dT_Created: z.string().datetime({ message: "Invalid creation timestamp" }),
-  dT_Modified: z.string().datetime({ message: "Invalid modification timestamp" }),
-  dT_Updated: z.string().datetime({ message: "Invalid update timestamp" }),
-});
-
-export type Department = z.infer<typeof departmentSchema>;

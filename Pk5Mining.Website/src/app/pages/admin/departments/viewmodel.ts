@@ -13,7 +13,7 @@ import {
   CreateDepartmentPayload,
 } from "@/app/interfaces/department";
 import { getDepartments,updateDepartment,  updateDepartmentStatus, createDepartment, deleteDepartment } from "@/app/api/departments";
-import { createDepartmentSchema } from "@/app/schemas/department.shcema";
+import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.shcema";
 import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 
 
@@ -301,18 +301,16 @@ function useDepartmentViewModel() {
 
     const formWithId = { ...form, id: Number(form.id) };
 
-    const result = createDepartmentSchema.safeParse(formWithId);
+    const result = updateDepartmentSchema.safeParse(formWithId);
 
     if (!result.success) {
       setFieldErrors(mapZodErrors<CreateDepartmentPayload>(result.error));
       return;
     }
 
-    const payload: CreateDepartmentPayload = {
+    const payload = {
       ...result.data,
-      subsidiaryId: result.data.subsidiaryId ? Number(result.data.subsidiaryId) : undefined,
-      status: "Active",
-      dT_Updated: new Date().toISOString(),
+      status: selectedDepartment.status,
     };
     setFieldErrors({});
 

@@ -189,13 +189,6 @@ export async function updateDepartmentStatus(
 
 export async function deleteDepartment(id: number) {
   try {
-    // if (useMock) {
-    //   // Simulate mock response structure
-    //   return {
-    //     data: mock_departments[0],
-    //   };
-    // }
-
     const { data } = await http.delete<ApiResponse<Department>>(
       `/Department`,  { params: { id },}
     );
