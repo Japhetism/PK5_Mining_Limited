@@ -48,7 +48,7 @@ export function LegalModal() {
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-8 bg-[#0a0a0a] scrollbar-thin scrollbar-thumb-gray-800">
+        <div className="flex-1 overflow-y-auto p-8 bg-[#0a0a0a] scrollbar-black">
           <div className="space-y-8">
             {(isPrivacy ? privacyContent : termsContent).map(
               (item: LegalContent, index) => (
