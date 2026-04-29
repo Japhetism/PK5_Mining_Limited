@@ -37,6 +37,7 @@ import {
   ISocialLink,
   ITimelineEvent,
   IUser,
+  LegalContent,
 } from "../interfaces";
 import CEOImg from "../../assets/images/CEO.png";
 import HOOImg from "../../assets/images/HOO.png";
@@ -112,24 +113,27 @@ export const timeline: ITimelineEvent[] = [
     year: "2025",
     event: "Lithium Operations",
     description: "Entered lithium market for EV battery supply",
-  }
+  },
 ];
 
 export const locations: ILocation[] = [
   {
-    "displayAddress": "5901 Peachtree Dunwoody Road, Suite A310, Atlanta, GA 30328, USA",
-    "actualAddress": "5901 Peachtree Dunwoody Rd, Atlanta, GA 30328, USA",
-    "type": "Head Office",
+    displayAddress:
+      "5901 Peachtree Dunwoody Road, Suite A310, Atlanta, GA 30328, USA",
+    actualAddress: "5901 Peachtree Dunwoody Rd, Atlanta, GA 30328, USA",
+    type: "Head Office",
   },
   {
-    "displayAddress": "2/5, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
-    "actualAddress": "2/5, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
+    displayAddress:
+      "2/5, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
+    actualAddress:
+      "2/5, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
   },
   {
-    "displayAddress": "No. 5B, Ikosi Road, Oregun, Ikeja, Lagos, Nigeria",
-    "actualAddress": "No. 5B, Ikosi Road, Oregun, Ikeja, Lagos, Nigeria",
+    displayAddress: "No. 5B, Ikosi Road, Oregun, Ikeja, Lagos, Nigeria",
+    actualAddress: "No. 5B, Ikosi Road, Oregun, Ikeja, Lagos, Nigeria",
   },
-]
+];
 
 export const telephone: string = "+2348081254905";
 
@@ -301,23 +305,78 @@ export const socialLinks: ISocialLink[] = [
     name: "Instagram",
     url: "https://www.instagram.com/pk5miningltd/",
     icon: Instagram,
-  }
-]
+  },
+];
 
 export const slideShowContent: ISlideShowContent[] = [
   {
     title: "Powering Industry Through",
     subTitle: "Responsible Mining",
-    description: "PK5 Mining delivers high-quality iron ore, tin ore, copper, and strategic minerals for global industries.",
+    description:
+      "PK5 Mining delivers high-quality iron ore, tin ore, copper, and strategic minerals for global industries.",
   },
   {
     title: "A Strategic Mining Brand of",
     subTitle: "PK5 Holdings Inc. (USA)",
-    description: "PK5 Mining is an Africa-focused mining platform backed by PK5 Holdings Inc., USA, with initial operations in Tanzania and a strategic expansion focus on Nigeria as part of its long-term continental growth strategy.",
+    description:
+      "PK5 Mining is an Africa-focused mining platform backed by PK5 Holdings Inc., USA, with initial operations in Tanzania and a strategic expansion focus on Nigeria as part of its long-term continental growth strategy.",
   },
   {
     title: "Africa-Focused • Expansion Focus",
     subTitle: "on Nigeria",
-    description: "Our African journey began in Tanzania, with a strategic expansion focus on key mineral-rich regions of the continent, including Nigeria.",
-  }
-]
+    description:
+      "Our African journey began in Tanzania, with a strategic expansion focus on key mineral-rich regions of the continent, including Nigeria.",
+  },
+];
+
+export const privacyContent: LegalContent[] = [
+  {
+    subtitle: "1. Data Collection & Scope",
+    text: "PK5 Mining Nigeria Limited collects personal identification data, including but not limited to: full legal names, contact information, National Identity Numbers (NIN), professional history, and educational qualifications. We also collect metadata related to your submission for security purposes.",
+  },
+  {
+    subtitle: "2. Purpose of Processing",
+    text: "Your data is processed under the legal basis of Contractual Necessity. This includes:",
+    points: [
+      "Verifying identity for site access.",
+      "Evaluating suitability for mining operations.",
+      "Conducting background checks required by the Ministry of Mines and Steel Development.",
+      "Maintaining emergency records.",
+    ],
+  },
+  {
+    subtitle: "3. Data Retention Policy",
+    text: "In accordance with the NDPR, PK5 Mining Nigeria Limited will retain applicant data for 24 months. Successfully engaged candidate data will move to the employee record system. Unsuccessful data is purged unless explicit consent is given for future role notifications.",
+  },
+  {
+    subtitle: "4. Third-Party Disclosures",
+    text: "We do not sell your personal information. Data may be shared with regulatory bodies, government agencies, or secure cloud infrastructure providers solely for the purpose of hosting our digital ecosystem and ensuring compliance with Nigerian law.",
+  },
+  {
+    subtitle: "5. Your Rights",
+    text: "Under the Nigeria Data Protection Regulation, you have the right to access, rectify, or request deletion of your data. For any data-related inquiries, please contact our Data Protection Officer at privacy@pk5miningltd.com.",
+  },
+];
+
+export const termsContent: LegalContent[] = [
+  {
+    subtitle: "1. Accuracy and Verification",
+    text: "By submitting this application, you certify that all statements are true and complete. You authorize PK5 Mining Nigeria Limited to investigate all statements contained in your application. Any misrepresentation is cause for immediate disqualification.",
+  },
+  {
+    subtitle: "2. Intellectual Property",
+    text: "All content, logos, and portal architecture provided on this website are the exclusive property of PK5 Mining Nigeria Limited. Users are prohibited from scraping, reverse-engineering, or attempting to breach the security of the PK5 Mining Nigeria Limited Digital Ecosystem.",
+  },
+  {
+    subtitle: "3. Site Safety & Conduct",
+    text: "Applicants acknowledge that mining operations involve inherent risks. Subsequent site visits require strict adherence to PK5 Mining Nigeria Limited Health, Safety, and Environment (HSE) protocols and local mining regulations.",
+  },
+  {
+    subtitle: "4. Limitation of Liability",
+    text: "PK5 Mining Nigeria Limited shall not be liable for any damages arising from the use of this portal, including transmission errors, data loss, or system downtime. We do not guarantee that every application will receive a response.",
+  },
+  {
+    subtitle: "5. Governing Law",
+    text: "These terms are governed by the laws of the Federal Republic of Nigeria. Any disputes shall be subject to the exclusive jurisdiction of the courts located in Lagos, Nigeria.",
+  },
+];
