@@ -6,10 +6,14 @@ import { tokenStore } from "../auth/token";
 
 const baseURL = "/api";
 
+const HEADER_NAME = import.meta.env.VITE_API_KEY_NAME;
+const API_VALUE = import.meta.env.VITE_API_KEY_VALUE;
+
 export const http = axios.create({
   baseURL,
   headers: {
     "Content-Type": "application/json",
+    ...(HEADER_NAME && { [HEADER_NAME]: API_VALUE }),
   },
   timeout: 15000,
 });
