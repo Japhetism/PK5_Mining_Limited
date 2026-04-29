@@ -85,7 +85,7 @@ export function Departments() {
       render: (dept) => (
         <span
           className={
-            dept.isActive
+            dept.isActive === true
               ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
               : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
           }
@@ -107,10 +107,10 @@ export function Departments() {
         dept.dT_Created ? formatDateTime(dept.dT_Created) : "-",
     },
     {
-      key: "dT_Updated",
+      key: "dT_Modified",
       header: "Date Modified",
       render: (dept) =>
-        dept.dT_Updated ? formatDateTime(dept.dT_Updated) : "-",
+        dept.dT_Modified ? formatDateTime(dept.dT_Modified) : "-",
     },
     {
       key: "actions",

@@ -49,6 +49,7 @@ function useDepartmentViewModel() {
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
+  const [confirmUpdateDepartmentOpen, setConfirmUpdateDepartmentOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
   const [confirmViewOpen, setConfirmViewOpen] = useState<boolean>(false);
   const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
@@ -203,7 +204,7 @@ function useDepartmentViewModel() {
       },
       onSuccess: async (data) => {
         await queryClient.invalidateQueries({ queryKey: ["departments"] });
-        // setConfirmUpdateStatusOpen(false);
+        setConfirmUpdateDepartmentOpen(false);
         setConfirmDeleteOpen(false);
         setSelectedDepartment(null);
         toastUtil.success(
@@ -372,6 +373,7 @@ function useDepartmentViewModel() {
     confirmDeleteOpen,
     confirmEditOpen,
     confirmViewOpen,
+    confirmUpdateDepartmentOpen,
     filters,
     queryClient,
     form,

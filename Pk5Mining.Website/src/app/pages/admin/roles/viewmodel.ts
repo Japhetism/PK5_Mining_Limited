@@ -293,7 +293,6 @@ function useRoleViewModel() {
   };
 
   const handleUpdateRole = () => {
-    // We need to ensure the ID is included for updates, so we merge it into the form data before validation
     if (!selectedRole) return;
 
     const formWithId = { ...form, id: Number(form.id) };
