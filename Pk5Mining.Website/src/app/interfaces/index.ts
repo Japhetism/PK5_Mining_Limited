@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { statuses } from "../constants";
-import { Permission } from "../constants/permissions";
 import { UserRole } from "../constants/role";
+import { Permission } from "./permission";
 
 export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 
@@ -421,4 +421,10 @@ export type AdvanceFilter = {
   appId?: string;
   startDate?: string;
   endDate?: string;
+}
+
+export type LegalContent = {
+  subtitle: string;
+  text: string;
+  points?: Array<string>;
 }
