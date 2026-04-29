@@ -69,18 +69,21 @@ function useDepartmentViewModel() {
 
   const [filters, setFilters] = useState({
     search: searchParams.get("search") ?? "",
+    name: searchParams.get("name") ?? "",
   });
 
   const debouncedFilters = useDebouncedValue(filters, 400);
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.search]);
+  }, [debouncedFilters.search, debouncedFilters.name]);
 
   const queryParams: DepartmentsQuery = useMemo(() => {
     const raw: DepartmentsQuery = {
       pageNumber,
       pageSize,
+      name: debouncedFilters.name,
+      search: debouncedFilters.search,
       isActive:
         filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
     };
@@ -94,6 +97,8 @@ function useDepartmentViewModel() {
       "departments",
       queryParams.pageNumber,
       queryParams.pageSize,
+      queryParams.name,
+      queryParams.search,
       queryParams.isActive ?? "",
     ],
     queryFn: () => getDepartments(queryParams),
@@ -189,7 +194,7 @@ function useDepartmentViewModel() {
   });
 
   const updateStatusMutation = useMutation({
-      mutationFn: (status: "Active" | "Inactive") => {
+      mutationFn: (isActive: boolean) => {
         if (
           !selectedDepartment ||
           !("id" in selectedDepartment) ||
@@ -197,7 +202,7 @@ function useDepartmentViewModel() {
         ) {
           throw new Error("Cannot update: missing department id");
         }
-        return updateDepartmentStatus(selectedDepartment.id, status);
+        return updateDepartmentStatus(selectedDepartment.id, isActive);
       },
       onMutate: () => {
         setIsUpdating(true);
@@ -205,10 +210,11 @@ function useDepartmentViewModel() {
       onSuccess: async (data) => {
         await queryClient.invalidateQueries({ queryKey: ["departments"] });
         setConfirmUpdateDepartmentOpen(false);
+        setConfirmOpen(false);
         setConfirmDeleteOpen(false);
         setSelectedDepartment(null);
         toastUtil.success(
-          `Department status updated to ${data?.status} successfully`,
+          `Department status updated to ${data?.isActive} successfully`,
         );
       },
       onError: (err) => {
@@ -265,17 +271,6 @@ function useDepartmentViewModel() {
     setIsFilter(true);
   };
 
-  // const handleUpdateStatus = () => {
-  //   if (!selectedDepartment) return;
-
-  //   setIsUpdating(true);
-
-  //   updateMutation.mutate({
-  //     ...selectedDepartment,
-  //     isActive: !selectedDepartment.isActive,
-  //   });
-  // };
-
   const handleCreateDepartment = () => {
     const result = createDepartmentSchema.safeParse(form);
 
@@ -329,9 +324,10 @@ function useDepartmentViewModel() {
 
     setIsUpdating(true);
 
-    const status = selectedDepartment?.status === "Active" ? "Inactive" : "Active"
+    const isActive = !selectedDepartment?.isActive ;
+    console.log("Updating status to:", isActive);
 
-    updateStatusMutation.mutate(status);
+    updateStatusMutation.mutate(isActive);
   };
 
   const onChange = (
@@ -382,7 +378,6 @@ function useDepartmentViewModel() {
     onChange,
     setIsFilter,
     setFilterStatus,
-    // handleUpdateStatus,
     setSelectedDepartment,
     updateFilter,
     onChangePage,

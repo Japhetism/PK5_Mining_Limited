@@ -29,5 +29,7 @@ export type DepartmentErrors = {
 export type DepartmentsQuery = {
   pageNumber: number;
   pageSize: number;
+  name?: string;
+  search?: string;
   isActive?: boolean | string;
 };
