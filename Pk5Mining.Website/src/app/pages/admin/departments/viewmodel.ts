@@ -265,16 +265,16 @@ function useDepartmentViewModel() {
     setIsFilter(true);
   };
 
-  const handleUpdateStatus = () => {
-    if (!selectedDepartment) return;
+  // const handleUpdateStatus = () => {
+  //   if (!selectedDepartment) return;
 
-    setIsUpdating(true);
+  //   setIsUpdating(true);
 
-    updateMutation.mutate({
-      ...selectedDepartment,
-      isActive: !selectedDepartment.isActive,
-    });
-  };
+  //   updateMutation.mutate({
+  //     ...selectedDepartment,
+  //     isActive: !selectedDepartment.isActive,
+  //   });
+  // };
 
   const handleCreateDepartment = () => {
     const result = createDepartmentSchema.safeParse(form);
@@ -382,7 +382,7 @@ function useDepartmentViewModel() {
     onChange,
     setIsFilter,
     setFilterStatus,
-    handleUpdateStatus,
+    // handleUpdateStatus,
     setSelectedDepartment,
     updateFilter,
     onChangePage,
@@ -398,7 +398,6 @@ function useDepartmentViewModel() {
     handleUpdateDepartment,
     handleDeleteDepartment,
     handleUpdateDepartmentStatus,
-    // handleActivateDeactivateUser,
   };
 }
 

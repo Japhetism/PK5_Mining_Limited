@@ -54,7 +54,8 @@ export function Departments() {
     setFilterStatus,
     onChangePage,
     onChangePageSize,
-    handleUpdateStatus,
+    // handleUpdateStatus,
+    handleUpdateDepartmentStatus,  
     setForm,
     setFieldErrors,
     onChange,
@@ -270,7 +271,8 @@ export function Departments() {
       <ConfirmModal
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={handleUpdateStatus}
+        // onConfirm={handleUpdateStatus}
+        onConfirm={handleUpdateDepartmentStatus}
         title={selectedDepartment?.isActive ? "Deactivate Department" : "Activate Department"}
         description={`Are you sure you want to ${selectedDepartment?.isActive ? "deactivate" : "activate"} "${selectedDepartment?.name}"?`}
         confirmText={`Yes, ${selectedDepartment?.isActive ? "deactivate" : "activate"}`}
