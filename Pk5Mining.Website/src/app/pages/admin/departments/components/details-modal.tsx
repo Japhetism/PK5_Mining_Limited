@@ -60,6 +60,7 @@ export function DetailModal({ department, open, onClose }: DetailModalProps) {
           <div className="relative w-full h-full mt-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <DetailItem label="Name" value={department.name} />
+              <DetailItem label="Subsidiary" value={department.subsidiary?.name} />
               <DetailItem label="Description" value={department.description} />
               <DetailItem
                 label="Status"
@@ -76,8 +77,8 @@ export function DetailModal({ department, open, onClose }: DetailModalProps) {
               <DetailItem
                 label="Date Modified"
                 value={
-                  department.dT_Updated
-                    ? formatDateTime(department.dT_Updated)
+                  department.dT_Modified
+                    ? formatDateTime(department.dT_Modified)
                     : "-"
                 }
               />

@@ -3,23 +3,43 @@ import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
 import { ApiError, StatusFilter } from "@/app/interfaces";
-import { cleanParams, toNumber } from "@/app/utils/helper";
+import { cleanParams, mapZodErrors, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import {
   Department,
   DepartmentErrors,
   DepartmentsQuery,
   UpdateDepartmentPayload,
+  CreateDepartmentPayload,
 } from "@/app/interfaces/department";
-import { getDepartments, updateDepartment } from "@/app/api/departments";
+import { getDepartments,updateDepartment,  updateDepartmentStatus, createDepartment, deleteDepartment } from "@/app/api/departments";
+import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.shcema";
+import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
+
 
 const defaultFormData: Department = {
   id: "",
   name: "",
   description: "",
   isActive: true,
+  status: "Active",
   dT_Created: "",
   dT_Updated: "",
+  dT_Modified: ""
+};
+
+enum DepartmentAction {
+  Update = "Update",
+  Activate = "Activate",
+  Deactivate = "Deactivate",
+  Delete = "Delete",
+}
+
+const successMessages: Record<DepartmentAction, string> = {
+  [DepartmentAction.Update]: "Department updated successfully",
+  [DepartmentAction.Activate]: "Department activated successfully",
+  [DepartmentAction.Deactivate]: "Department deactivated successfully",
+  [DepartmentAction.Delete]: "Department deleted successfully",
 };
 
 function useDepartmentViewModel() {
@@ -29,11 +49,13 @@ function useDepartmentViewModel() {
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
+  const [confirmUpdateDepartmentOpen, setConfirmUpdateDepartmentOpen] = useState<boolean>(false);
   const [confirmEditOpen, setConfirmEditOpen] = useState<boolean>(false);
   const [confirmViewOpen, setConfirmViewOpen] = useState<boolean>(false);
   const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<DepartmentAction | null>(null);
 
   const [form, setForm] = useState<Department>(defaultFormData);
   const [fieldErrors, setFieldErrors] = useState<DepartmentErrors>({});
@@ -47,18 +69,21 @@ function useDepartmentViewModel() {
 
   const [filters, setFilters] = useState({
     search: searchParams.get("search") ?? "",
+    name: searchParams.get("name") ?? "",
   });
 
   const debouncedFilters = useDebouncedValue(filters, 400);
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.search]);
+  }, [debouncedFilters.search, debouncedFilters.name]);
 
   const queryParams: DepartmentsQuery = useMemo(() => {
     const raw: DepartmentsQuery = {
       pageNumber,
       pageSize,
+      name: debouncedFilters.name,
+      search: debouncedFilters.search,
       isActive:
         filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
     };
@@ -72,6 +97,8 @@ function useDepartmentViewModel() {
       "departments",
       queryParams.pageNumber,
       queryParams.pageSize,
+      queryParams.name,
+      queryParams.search,
       queryParams.isActive ?? "",
     ],
     queryFn: () => getDepartments(queryParams),
@@ -99,6 +126,38 @@ function useDepartmentViewModel() {
     });
   }, [selectedDepartment]);
 
+  // for dropdown
+  const {
+    data: subsidiaryData,
+    isLoading: isLoadingSubsidiary,
+    error: subsidiaryError,
+  } = useQuery({
+    queryKey: ["light-subsidiaries"],
+    queryFn: () => getLightSubsidiaries(),
+    staleTime: 30_000,
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateDepartmentPayload) => createDepartment(payload),
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["departments"] });
+      setConfirmEditOpen(false);
+      toastUtil.success("Department created successfully");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while creating a department. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
+  });
+
   const updateMutation = useMutation({
     mutationFn: (payload: UpdateDepartmentPayload) => {
       if (
@@ -112,10 +171,16 @@ function useDepartmentViewModel() {
     },
     onSuccess: async () => {
       setIsUpdating(false);
-      setConfirmOpen(false);
       setSelectedDepartment(null);
 
       await queryClient.invalidateQueries({ queryKey: ["departments"] });
+
+      setConfirmEditOpen(false);
+      const msg =
+        successMessages[actionType as DepartmentAction] ??
+        successMessages[DepartmentAction.Update];
+      handleCloseModal();
+      toastUtil.success(msg);
     },
     onError: (err) => {
       setIsUpdating(false);
@@ -126,6 +191,72 @@ function useDepartmentViewModel() {
           : "An error occurred while updating department. Please try again.");
       toastUtil.error(message);
     },
+  });
+
+  const updateStatusMutation = useMutation({
+      mutationFn: (isActive: boolean) => {
+        if (
+          !selectedDepartment ||
+          !("id" in selectedDepartment) ||
+          typeof selectedDepartment.id !== "number"
+        ) {
+          throw new Error("Cannot update: missing department id");
+        }
+        return updateDepartmentStatus(selectedDepartment.id, isActive);
+      },
+      onMutate: () => {
+        setIsUpdating(true);
+      },
+      onSuccess: async (data) => {
+        await queryClient.invalidateQueries({ queryKey: ["departments"] });
+        setConfirmUpdateDepartmentOpen(false);
+        setConfirmOpen(false);
+        setConfirmDeleteOpen(false);
+        setSelectedDepartment(null);
+        toastUtil.success(
+          `Department status updated to ${data?.isActive} successfully`,
+        );
+      },
+      onError: (err) => {
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating the department status. Please try again.");
+        toastUtil.error(message);
+      },
+      onSettled: () => setIsUpdating(false),
+    });
+
+  const deleteMutation = useMutation({
+    mutationFn: (payload: Department) => {
+      if (
+        !payload ||
+        !("id" in payload) ||
+        typeof payload.id !== "number"
+      ) {
+        throw new Error("Cannot delete: missing department id");
+      }
+      return deleteDepartment(payload.id);
+    },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["departments"] });
+      setConfirmDeleteOpen(false);
+      setSelectedDepartment(null);
+      toastUtil.success("Department deleted successfully");
+    },
+    onError: (err) => {
+      const message =
+        (err as ApiError)?.message ??
+        (err instanceof Error
+          ? err.message
+          : "An error occurred while deleting the department. Please try again.");
+      toastUtil.error(message);
+    },
+    onSettled: () => setIsUpdating(false),
   });
 
   const onChangePage = (next: number) => setPageNumber(next);
@@ -140,15 +271,63 @@ function useDepartmentViewModel() {
     setIsFilter(true);
   };
 
-  const handleUpdateStatus = () => {
+  const handleCreateDepartment = () => {
+    const result = createDepartmentSchema.safeParse(form);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<CreateDepartmentPayload>(result.error));
+      return;
+    }
+
+    setFieldErrors({});
+
+    const payload: CreateDepartmentPayload = {
+      ...result.data,
+      subsidiaryId: result.data.subsidiaryId ? Number(result.data.subsidiaryId) : undefined,
+      status: "Active",
+      dT_Updated: new Date().toISOString(),
+
+    };
+
+    createMutation.mutate(payload);
+  };
+
+  const handleUpdateDepartment = () => {
+    if (!selectedDepartment) return;
+
+    const formWithId = { ...form, id: Number(form.id) };
+
+    const result = updateDepartmentSchema.safeParse(formWithId);
+
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<CreateDepartmentPayload>(result.error));
+      return;
+    }
+
+    const payload = {
+      ...result.data,
+      status: selectedDepartment.status,
+    };
+    setFieldErrors({});
+
+    updateMutation.mutate(payload);
+  };
+
+  const handleDeleteDepartment = () => {
+    if (!selectedDepartment) return;
+
+    deleteMutation.mutate(selectedDepartment);
+  };
+
+  const handleUpdateDepartmentStatus = () => {
     if (!selectedDepartment) return;
 
     setIsUpdating(true);
 
-    updateMutation.mutate({
-      ...selectedDepartment,
-      isActive: !selectedDepartment.isActive,
-    });
+    const isActive = !selectedDepartment?.isActive ;
+    console.log("Updating status to:", isActive);
+
+    updateStatusMutation.mutate(isActive);
   };
 
   const onChange = (
@@ -160,10 +339,6 @@ function useDepartmentViewModel() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
   const handleCloseModal = () => {
     setSelectedDepartment(null);
     setForm(defaultFormData);
@@ -173,6 +348,7 @@ function useDepartmentViewModel() {
     setConfirmViewOpen(false);
   };
 
+  const subsidiaries = subsidiaryData ?? [];
   const departments: Department[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -193,14 +369,15 @@ function useDepartmentViewModel() {
     confirmDeleteOpen,
     confirmEditOpen,
     confirmViewOpen,
+    confirmUpdateDepartmentOpen,
     filters,
     queryClient,
     form,
     fieldErrors,
+    subsidiaries,
     onChange,
     setIsFilter,
     setFilterStatus,
-    handleUpdateStatus,
     setSelectedDepartment,
     updateFilter,
     onChangePage,
@@ -212,6 +389,10 @@ function useDepartmentViewModel() {
     setFieldErrors,
     setForm,
     handleCloseModal,
+    handleCreateDepartment,
+    handleUpdateDepartment,
+    handleDeleteDepartment,
+    handleUpdateDepartmentStatus,
   };
 }
 
