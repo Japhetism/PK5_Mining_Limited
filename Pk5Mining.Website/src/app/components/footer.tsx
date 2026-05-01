@@ -163,7 +163,10 @@ export function Footer() {
             >
               Terms of Service
             </a>
-            <a className="hover:text-[#c89b3c] transition-colors cursor-pointer">
+            <a
+              onClick={() => openModal("cookies")}
+              className="hover:text-[#c89b3c] transition-colors cursor-pointer"
+            >
               Cookie Policy
             </a>
           </div>
