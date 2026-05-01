@@ -7,6 +7,8 @@ import Logo from '../assets/images/logo.png';
 import { useTenant } from "@/tenants/useTenant";
 import { CookieBanner } from "./components/cookie-banner";
 import { LegalModal } from "./components/legal-modal";
+import { CookieBannerWithOptions } from "./components/cookie-banner-with-options";
+import { CookieBannerDefaultColorWithOptions } from "./components/cookie-banner-default-color-with-options";
 
 function AppLoader() {
   return (
@@ -42,7 +44,9 @@ export function App() {
         <AppRoutes />
       </Suspense>
       <Toaster position="top-right" richColors closeButton expand />
-      <CookieBanner />
+      {/* <CookieBanner /> */}
+      <CookieBannerWithOptions />
+      {/* <CookieBannerDefaultColorWithOptions /> */}
       <LegalModal />
     </BrowserRouter>
   );
