@@ -16,7 +16,9 @@ export async function getActiveJobs() {
     if (!displayJobs) {
       return [];
     }
-    const { data } = await http.get<ApiResponse<JobDto[]>>("/Job");
+    const { data } = await http.get<ApiResponse<JobDto[]>>("/Job", {
+      requiresApiKey: true,
+    });
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(

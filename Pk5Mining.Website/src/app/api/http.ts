@@ -9,11 +9,16 @@ const baseURL = "/api";
 const HEADER_NAME = import.meta.env.VITE_API_KEY_NAME;
 const API_VALUE = import.meta.env.VITE_API_KEY_VALUE;
 
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    requiresApiKey?: boolean;
+  }
+}
+
 export const http = axios.create({
   baseURL,
   headers: {
     "Content-Type": "application/json",
-    ...(HEADER_NAME && { [HEADER_NAME]: API_VALUE }),
   },
   timeout: 15000,
 });
@@ -37,6 +42,11 @@ http.interceptors.request.use((config) => {
   } else if (config.headers) {
     delete (config.headers as any).Authorization;
   }
+
+  if (config.requiresApiKey && HEADER_NAME) {
+    config.headers[HEADER_NAME] = API_VALUE;
+  }
+  
   return config;
 });
 
