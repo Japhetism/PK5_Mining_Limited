@@ -4,13 +4,16 @@ export function useLegalModalState() {
   const queryClient = useQueryClient();
   const queryKey = ["legal-modal-state"];
 
+  const initialData = {
+    isLegalModalOpen: false,
+    isCookiesModalOpen: false,
+    mode: "privacy" as "privacy" | "terms",
+  };
+
   const { data } = useQuery({
     queryKey,
-    initialData: {
-      isLegalModalOpen: false,
-      isCookiesModalOpen: false,
-      mode: "privacy" as "privacy" | "terms",
-    },
+    queryFn: () => initialData,
+    initialData,
     staleTime: Infinity,
     gcTime: Infinity,
   });
@@ -43,9 +46,9 @@ export function useLegalModalState() {
   };
 
   return {
-    isLegalModalOpen: data.isLegalModalOpen,
-    isCookiesModalOpen: data.isCookiesModalOpen,
-    mode: data.mode,
+    isLegalModalOpen: data?.isLegalModalOpen ?? false,
+    isCookiesModalOpen: data?.isCookiesModalOpen ?? false,
+    mode: data?.mode ?? "privacy",
     openModal,
     closeModal,
   };
