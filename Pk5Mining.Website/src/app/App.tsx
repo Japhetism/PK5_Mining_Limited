@@ -7,6 +7,7 @@ import Logo from '../assets/images/logo.png';
 import { useTenant } from "@/tenants/useTenant";
 import { LegalModal } from "./components/legal-modal";
 import { CookieBannerWithOptions } from "./components/cookie-banner-with-options";
+import { LegalModalNew } from "./components/legal-modal-new";
 
 function AppLoader() {
   return (
@@ -43,7 +44,7 @@ export function App() {
       </Suspense>
       <Toaster position="top-right" richColors closeButton expand />
       <CookieBannerWithOptions />
-      <LegalModal />
+      <LegalModalNew />
     </BrowserRouter>
   );
 }
