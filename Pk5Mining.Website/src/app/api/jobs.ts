@@ -74,7 +74,7 @@ export async function getJobsForDropdown() {
 
 export async function getJobById(id: string) {
   try {
-    const { data } = await http.get<ApiResponse<JobDto>>(`/Job/${id}`);
+    const { data } = await http.get<ApiResponse<JobDto>>(`/Job/${id}`, { requiresApiKey: true });
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
