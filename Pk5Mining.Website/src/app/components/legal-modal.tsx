@@ -5,14 +5,14 @@ import { privacyContent, termsContent } from "../fixtures";
 import { LegalContent } from "../interfaces";
 
 export function LegalModal() {
-  const { isOpen, mode, closeModal } = useLegalModalState();
+  const { isLegalModalOpen, mode, closeModal } = useLegalModalState();
 
   const isPrivacy = mode === "privacy";
-
+  
   return (
     <Modal
-      open={isOpen}
-      onClose={closeModal}
+      open={isLegalModalOpen}
+      onClose={() => closeModal("modal")}
       maxWidth="lg"
       height="md"
       showCloseButton={false}
@@ -40,7 +40,7 @@ export function LegalModal() {
           </div>
           <button
             type="button"
-            onClick={closeModal}
+            onClick={() => closeModal("modal")}
             className="p-2 rounded-md hover:bg-white/10 text-gray-300 transition-colors"
           >
             <X className="w-4 h-4" />
@@ -92,7 +92,7 @@ export function LegalModal() {
           </p>
           <button
             type="button"
-            onClick={closeModal}
+            onClick={() => closeModal("modal")}
             className="px-8 py-2.5 rounded-md bg-[#c89b3c] text-black text-[11px] font-bold uppercase tracking-wider hover:bg-[#d4a84a] transition-all"
           >
             I Acknowledge

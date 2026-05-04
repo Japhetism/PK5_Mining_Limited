@@ -58,6 +58,7 @@ export async function saveContactInquiry(body: InquiryFormDto) {
     const { data } = await http.post<ApiResponse<InquiryFormDto>>(
       `/contactUs/contact-us`,
       body,
+      { requiresApiKey: true }
     );
 
     if (data.responseStatus !== "SUCCESS") {
