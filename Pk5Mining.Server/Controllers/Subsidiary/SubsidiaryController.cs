@@ -18,7 +18,7 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             _repo = repo;
         }
 
-        /* [Authorize]*/
+        [Authorize]
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] SubsidiaryDto dto)
         {
@@ -30,7 +30,7 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(data, "Subsidiary created successfully"));
         }
 
-        /*[Authorize]*/
+        [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> Get(
             [FromQuery] int pageNumber = 1,
@@ -57,7 +57,7 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(response, "Subsidiaries retrieved successfully."));
         }
 
-        /*[Authorize]*/
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
         {
@@ -76,7 +76,7 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(data, "Subsidiary retrieved successfully"));
         }
 
-        /*[Authorize]*/
+        [Authorize]
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] SubsidiaryDto dto)
         {
@@ -90,7 +90,7 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(data, "Subsidiary updated successfully"));
         }
 
-        /* [Authorize]*/
+        [Authorize]
         [HttpPut("update-status/{id}")]
         public async Task<IActionResult> UpdateStatus(long id, [FromBody] SubsidiaryStatusUpdateDto dto)
         {
@@ -101,6 +101,8 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             }
             return Ok(ApiResponse.SuccessMessage(data, "Status updated successfully"));
         }
+
+        [Authorize]
         [HttpGet("light-responses")]
         public async Task<IActionResult> GetLightResponses()
         {
@@ -111,6 +113,8 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             }
             return Ok(ApiResponse.SuccessMessage(data, "Subsidiaries retrieved successfully"));
         }
+
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> Delete(long id)
         {

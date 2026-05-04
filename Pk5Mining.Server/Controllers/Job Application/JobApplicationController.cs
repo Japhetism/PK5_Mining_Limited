@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pk5Mining.Server.Middleware;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
@@ -83,6 +84,7 @@ namespace Pk5Mining.Server.Controllers.Job_Application
             return Ok(ApiResponse.SuccessMessage(response, "Jobs retrieved successfully."));
         }
 
+        [RequireApiKey]
         [HttpPost]
         public async Task<ActionResult<IJobApplication>> Post([FromForm] JobApplicationDTO value)
         {

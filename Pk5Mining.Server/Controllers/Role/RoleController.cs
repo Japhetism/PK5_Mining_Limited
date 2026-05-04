@@ -33,6 +33,7 @@ namespace Pk5Mining.Server.Controllers.Role
             return Ok(ApiResponse.SuccessMessage(data, "Role created successfully"));
         }
 
+        [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> Get( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -53,6 +54,7 @@ namespace Pk5Mining.Server.Controllers.Role
             return Ok(ApiResponse.SuccessMessage(response, "Roles retrieved successfully."));
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
         {
@@ -97,6 +99,8 @@ namespace Pk5Mining.Server.Controllers.Role
             }
             return Ok(ApiResponse.SuccessMessage(data, "Status updated successfully"));
         }
+
+        [Authorize]
         [HttpGet("light-responses")]
         public async Task<IActionResult> GetLightResponses()
         {
@@ -107,6 +111,8 @@ namespace Pk5Mining.Server.Controllers.Role
             }
             return Ok(ApiResponse.SuccessMessage(data, "Roles retrieved successfully"));
         }
+
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> Delete(long id)
         {

@@ -18,7 +18,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             _repo = adminRepo;
         }
 
-       /* [Authorize]*/
+        [Authorize]
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] UserDTO dto)
         {
@@ -29,7 +29,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             }
             return Ok(ApiResponse.SuccessMessage(admin, "Account created successfully"));
         }
-        /*[Authorize]*/
+
         [HttpPut("update-password/{id}")]
         public async Task<ActionResult> UpdatePassword(long id, [FromBody] SetPassword newPassword)
         {
@@ -40,7 +40,8 @@ namespace Pk5Mining.Server.Controllers.Admin
             }
             return Ok(ApiResponse.SuccessMessage(admin, "Password updated successfully"));
         }
-        /*[Authorize]*/
+
+        [Authorize]
         [HttpGet("filter")]
         public async Task<IActionResult> Get( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? email = null, [FromQuery] string? userName = null,
              [FromQuery] string? name = null,
@@ -65,7 +66,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             };
             return Ok(ApiResponse.SuccessMessage(response, "Users retrieved successfully."));
         }
-        /*[Authorize]*/
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult> Ge(long id)
         {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Pk5Mining.Server.Middleware;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
@@ -24,23 +25,25 @@ namespace Pk5Mining.Server.Controllers.Job
             _mapper = mapper;
         }
 
+        [RequireApiKey]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IJobs>>> Get()
         {
-            var jobs = await _jobRepo.GetRepoItems();
+            IEnumerable<IJobs> jobs = await _jobRepo.GetRepoItems();
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
         [Authorize]
         [HttpGet("light")]
         public async Task<ActionResult<IEnumerable<JobLightResponseDTO>>> GetLight()
         {
-            var (jobs, error) = await _jobSpecificRepo.GetJob();
+            (IEnumerable<JobLightResponseDTO>? jobs, string? error) = await _jobSpecificRepo.GetJob();
 
             if (error != null)
                 return BadRequest(error);
 
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
+        [RequireApiKey]
         [HttpGet("{id}")]
         public async Task<ActionResult<IJobs>> Get(long id)
         {

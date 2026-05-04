@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pk5Mining.Server.Middleware;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
@@ -18,6 +19,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
         {
             _repo = repo;
         }
+        [RequireApiKey]
         [HttpPost("contact-us")]
         public async Task<IActionResult> Post([FromBody] ContactUsDTO dto)
         {
@@ -34,6 +36,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             }
             return Ok(ApiResponse.SuccessMessage(contact, "Your message has been sent successfully."));
         }
+        [RequireApiKey]
         [HttpPost("agro-contact-us")]
         public async Task<IActionResult> PostAgro([FromBody] ContactUsDTO dto)
         {
