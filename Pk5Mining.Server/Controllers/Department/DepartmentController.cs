@@ -37,12 +37,13 @@ namespace Pk5Mining.Server.Controllers.Department
         public async Task<IActionResult> Get(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
-            [FromQuery] string? name = null)
+            [FromQuery] string? name = null,
+            [FromQuery] bool? isActive = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var (data, totalCount) = await _repo.GetAllAsync(pageNumber, pageSize, name);
+            var (data, totalCount) = await _repo.GetAllAsync(pageNumber, pageSize, name, isActive);
 
             var response = new
             {
