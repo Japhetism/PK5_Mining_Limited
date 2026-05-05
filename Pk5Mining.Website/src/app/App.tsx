@@ -5,7 +5,6 @@ import { ScrollToTop } from "@/app/components/scrollToTop";
 import { AppRoutes } from "./routes";
 import Logo from '../assets/images/logo.png';
 import { useTenant } from "@/tenants/useTenant";
-import { LegalModal } from "./components/legal-modal";
 import { CookieBannerWithOptions } from "./components/cookie-banner-with-options";
 import { LegalModalNew } from "./components/legal-modal-new";
 
