@@ -5,17 +5,32 @@ import { getActiveJobs } from "@/app/api/jobs";
 import { JobDto } from "@/app/interfaces";
 import { toTitleCase } from "@/app/utils/helper";
 
+const defaultFilters = {
+  title: "",
+  department: "",
+  location: "",
+};
+
 function useCareersViewModel() {
   const queryClient = useQueryClient();
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const openPositionsRef = useRef<HTMLElement | null>(null);
   const { hash } = useLocation();
-  const [filters, setFilters] = useState({
-    title: "",
-    department: "",
-    location: "",
-  });
-  const [filteredJobs, setFilteredJobs] = useState<JobDto[]>([]);
+  const [filters, setFilters] = useState(defaultFilters);
+  const [appliedFilters, setAppliedFilters] = useState(defaultFilters);
+  const [canSearch, setCanSearch] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (hash === "#open-positions") {
+      // wait a tick so layout/sections mount first
+      requestAnimationFrame(() => {
+        openPositionsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    }
+  }, [hash]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["jobs"],
@@ -56,47 +71,28 @@ function useCareersViewModel() {
     });
   };
 
-  const handleSearch = () => {
-    // If no filters, show all jobs
-    if (!filters.title && !filters.department && !filters.location) {
-      setFilteredJobs(jobs);
-      return;
-    }
-
-    const result = jobs.filter((job) => {
+  const filteredJobs = useMemo(() => {
+    return jobs.filter((job) => {
       const matchesTitle = job.title
         .toLowerCase()
-        .includes(filters.title.toLowerCase());
+        .includes(appliedFilters.title.toLowerCase());
 
-      const matchesDepartment = filters.department
-        ? job.department?.toLowerCase() === filters.department.toLowerCase()
+      const matchesDepartment = appliedFilters.department
+        ? job.department?.toLowerCase() ===
+          appliedFilters.department.toLowerCase()
         : true;
 
-      const matchesLocation = filters.location
-        ? job.location?.toLowerCase() === filters.location.toLowerCase()
+      const matchesLocation = appliedFilters.location
+        ? job.location?.toLowerCase() === appliedFilters.location.toLowerCase()
         : true;
 
       return matchesTitle && matchesDepartment && matchesLocation;
     });
+  }, [jobs, appliedFilters]);
 
-    setFilteredJobs(result);
+  const handleSearch = () => {
+    setAppliedFilters(filters);
   };
-
-  useEffect(() => {
-    setFilteredJobs(jobs);
-  }, [jobs]);
-
-  useEffect(() => {
-    if (hash === "#open-positions") {
-      // wait a tick so layout/sections mount first
-      requestAnimationFrame(() => {
-        openPositionsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      });
-    }
-  }, [hash]);
 
   return {
     jobs,
