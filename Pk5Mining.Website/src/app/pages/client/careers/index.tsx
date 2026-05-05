@@ -349,13 +349,13 @@ export function Careers() {
                                 );
                               }}
                             >
-                              <motion.button
+                              <motion.span
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className="px-4 py-2 bg-[#c89b3c] text-xs text-black font-bold rounded hover:bg-[#d4a84a] transition-colors"
                               >
                                 Apply Now
-                              </motion.button>
+                              </motion.span>
                             </Link>
                           </motion.button>
                         </motion.div>
