@@ -25,6 +25,15 @@ const AdminLayout = lazy(() =>
   import("@/app/pages/admin/layout").then((m) => ({ default: m.AdminLayout }))
 );
 
+const SSO = lazy(() =>
+  import("@/app/pages/admin/sso").then((m) => ({ default: m.SSO })),
+);
+
+const Dashboard = lazy(() =>
+  import("@/app/pages/admin/dashboard").then((m) => ({ default: m.Dashboard })),
+);
+
+
 function AdminAccessGuard({
   canAccess,
   roles,
@@ -79,6 +88,10 @@ function mapAdminRoutes(items: AdminRouteItem[]): RouteObject[] {
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
   { path: "/admin/change/password", element: <ChangePassword /> },
+  { 
+    path: "/admin", 
+    element: <SSO /> 
+  },
   {
     path: "/admin",
     element: <ProtectedRoute />,
@@ -87,6 +100,7 @@ export const adminRoutes: RouteObject[] = [
         element: <AdminLayout />,
         children: [
           { index: true, element: <Navigate to="/admin/dashboard" replace /> },
+          { index: true, element: <Dashboard /> },
           ...mapAdminRoutes(adminRouteItems),
         ],
       },

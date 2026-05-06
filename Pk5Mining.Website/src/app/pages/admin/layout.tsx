@@ -14,33 +14,23 @@ export function AdminLayout() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-useEffect(() => {
-  const handleAuth = async () => {
-    console.log("--- Starting Auth Check ---");
-    
-    const result = await authService.initialize();
-    
-    // Check account from the library's perspective
+  useEffect(() => {
+    // 1. Get the account that was successfully captured by main.tsx
     const account = authService.getAccount();
 
-    console.log("Result object:", result);
-    console.log("Account object:", account);
-
     if (account) {
-      console.log("Bingo! User is:", account.username);
-      
-      // Stop the redirect loop by checking path
+      console.log(
+        "🚀 Router: User detected, executing redirect to dashboard...",
+      );
+
+      // 2. Only redirect if we aren't already on the dashboard to prevent loops
       if (window.location.pathname !== "/admin/dashboard") {
-        console.log("Redirecting to dashboard...");
         navigate("/admin/dashboard", { replace: true });
       }
     } else {
-      console.log("Final state: No user found. This means handleRedirectPromise was null AND storage was empty.");
+      console.log("ℹ️ Router: No active session found in Layout.");
     }
-  };
-
-  handleAuth();
-}, [navigate]);
+  }, [navigate]);
 
   const onLogout = () => {
     logout();
@@ -50,6 +40,9 @@ useEffect(() => {
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   const nav = getVisibleNav(user?.permissions ?? [], user?.role);
+
+  const account = authService.getAccount();
+  console.log("Current User:", account?.username);
 
   return (
     <div className="h-screen text-black flex flex-col bg-white overflow-hidden">

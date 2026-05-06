@@ -16,15 +16,15 @@ function useLoginViewModel() {
   const [loading, setLoading] = useState(false);
 
   // Redirect automatically when authUser changes
-  // useEffect(() => {
-  //   if (!authUser) return;
+  useEffect(() => {
+    if (!authUser) return;
 
-  //   if (authUser.hasChangedPassword) {
-  //     navigate("/admin/dashboard", { replace: true });
-  //   } else {
-  //     navigate("/admin/change/password", { replace: true });
-  //   }
-  // }, [authUser, navigate]);
+    if (authUser.hasChangedPassword) {
+      navigate("/admin/dashboard", { replace: true });
+    } else {
+      navigate("/admin/change/password", { replace: true });
+    }
+  }, [authUser, navigate]);
 
   const mutation = useMutation({
     mutationFn: (payload: { email: string; password: string }) =>
@@ -57,14 +57,6 @@ function useLoginViewModel() {
 
     mutation.mutate({ email, password });
   };
-
-  // const handleSSOSignin = async () => {
-  //   await authService.initialize();
-  //   const result = await authService.login();
-  //   if (result) {
-  //     console.log("Welcome,", result.account.name);
-  //   }
-  // };
 
   const handleSSOSignin = async () => {
     // No need to initialize here; the app-level useEffect handles it
