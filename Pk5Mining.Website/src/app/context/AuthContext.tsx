@@ -52,6 +52,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setUser(null);
+
+    const cleanLoginUrl = `${window.location.origin}/admin/login`;
+  window.location.href = cleanLoginUrl;
   }
 
   logoutRef.current = logout;

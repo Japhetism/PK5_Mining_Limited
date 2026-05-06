@@ -76,7 +76,6 @@ class AuthService {
     const account = this.getAccount();
     await this.msalInstance.logoutRedirect({
       account: account,
-      postLogoutRedirectUri: window.location.origin,
     });
   }
 

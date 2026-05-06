@@ -5,6 +5,7 @@ export const msalConfig: Configuration = {
     clientId: "f1bf005d-f0d5-4013-9faf-63bce3f7fb1e", // From Entra Admin Center
     authority: "https://login.microsoftonline.com/common",
     redirectUri: "https://pk5miningltd.local:5173/admin",
+    postLogoutRedirectUri: "https://pk5miningltd.local:5173/admin/login",
     // REMOVE navigateToLoginRequestUrl if it causes an error. 
     // Default is true. If you need it false, MSAL v5+ usually
     // prefers you handle this in the handleRedirectPromise logic.
