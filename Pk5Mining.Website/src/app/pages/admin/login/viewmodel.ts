@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
 import { authService } from "@/app/services/sso/authService";
@@ -8,12 +8,29 @@ import { isEmailAuthorized } from "@/app/utils/helper";
 
 function useLoginViewModel() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login: authLogin, user: authUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Check if the URL has MSAL breadcrumbs (?state= or #)
+    const hasMsalParams = 
+      window.location.search.includes("state=") || 
+      window.location.hash.includes("state=") ||
+      window.location.hash.includes("#");
+
+    if (hasMsalParams) {
+      console.log("🧹 Cleaning messy SSO URL...");
+      
+      // Navigate to the exact same path but without the search/hash params
+      // 'replace: true' ensures the messy URL is deleted from browser history
+      navigate("/admin/login", { replace: true });
+    }
+  }, [location, navigate]);
 
   // Redirect automatically when authUser changes
   useEffect(() => {
