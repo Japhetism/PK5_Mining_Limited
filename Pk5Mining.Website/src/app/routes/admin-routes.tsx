@@ -2,9 +2,10 @@ import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router-dom";
 import { adminRouteItems, type AdminRouteItem } from "./admin-config";
 import { hasPermissions, hasRole } from "../utils/helper";
-import { Permission } from "../constants/permissions";
+import { Permission } from "../interfaces/permission";
 import { useAuth } from "../context/AuthContext";
 import { UserRole } from "../constants/role";
+import { RolePermission } from "../interfaces/role";
 
 const Login = lazy(() =>
   import("@/app/pages/admin/login").then((m) => ({ default: m.Login }))
@@ -33,7 +34,7 @@ function AdminAccessGuard({
 }: {
   canAccess: boolean;
   roles?: UserRole[];
-  permissions?: Permission[];
+  permissions?: RolePermission[];
   requireAllPermissions?: boolean;
   children: React.ReactNode;
 }) {

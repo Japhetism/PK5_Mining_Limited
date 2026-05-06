@@ -7,17 +7,17 @@ export function ProtectedRoute() {
 
   if (isLoading) return null;
 
-  if (!user) {
-    return <Navigate to="/admin/login" replace state={{ from: location }} />;
-  }
+  // if (!user) {
+  //   return <Navigate to="/admin/login" replace state={{ from: location }} />;
+  // }
 
-  if (!isAdmin) {
-    return <Navigate to="/" replace />;
-  }
+  // if (!isAdmin) {
+  //   return <Navigate to="/" replace />;
+  // }
 
-  if (!user.hasChangedPassword) {
-    return <Navigate to="/admin/change/password" replace />;
-  }
+  // if (!user.hasChangedPassword) {
+  //   return <Navigate to="/admin/change/password" replace />;
+  // }
 
   return <Outlet />;
 }

@@ -4,7 +4,7 @@ import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
 import { adminRouteItems } from "../routes/admin-config";
 import { UserRole } from "../constants/role";
 import { ZodError } from "zod";
-import { Permission } from "../interfaces/role";
+import { RolePermission } from "../interfaces/role";
 import {
   Permission as BackendPermission,
   BackendPermissionGroup,
@@ -166,8 +166,8 @@ export const hasRole = (
 };
 
 export const hasPermissions = (
-  userPermissions: Permission[] = [],
-  requiredPermissions: Permission[] = [],
+  userPermissions: RolePermission[] = [],
+  requiredPermissions: RolePermission[] = [],
   requireAll = false,
 ) => {
   if (!enforcePermission || !requiredPermissions.length) return true;
@@ -184,7 +184,7 @@ export const hasPermissions = (
 };
 
 export const getVisibleNav = (
-  userPermissions: Permission[],
+  userPermissions: RolePermission[],
   userRole?: UserRole,
 ): NavItem[] => {
   return adminRouteItems
