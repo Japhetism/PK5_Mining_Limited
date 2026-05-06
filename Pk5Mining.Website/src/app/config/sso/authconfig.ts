@@ -4,7 +4,8 @@ export const msalConfig: Configuration = {
   auth: {
     clientId: "f1bf005d-f0d5-4013-9faf-63bce3f7fb1e", // From Entra Admin Center
     authority: "https://login.microsoftonline.com/common", // or your Tenant ID
-    redirectUri: "https://pk5miningltd.local:5173/admin",
+    redirectUri: "https://pk5miningltd-test.vercel.app/admin"
+    // redirectUri: "https://pk5miningltd.local:5173/admin",
     // authority: "https://login.microsoftonline.com/b01b2107-79a7-4edf-8e08-06012176f58f", // or your Tenant ID
     /// redirectUri: "https://localhost:5173",
   },
