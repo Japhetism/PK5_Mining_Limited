@@ -26,7 +26,6 @@ export function AdminLayout() {
 
   const onLogout = () => {
     logout();
-    navigate("/admin/login", { replace: true });
   };
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
