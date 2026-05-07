@@ -11,10 +11,13 @@ export function Login() {
     password,
     error,
     loading,
+    formType,
+    setFormType,
     setEmail,
     setPassword,
     onSubmit,
     handleSSOSignin,
+    handleContinue,
   } = useLoginViewModel();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -37,69 +40,73 @@ export function Login() {
           </h1>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-5">
+        <form className="space-y-5">
           {/* Username */}
-          <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
-              Email Address
-            </label>
-            <div
-              className="flex items-center gap-2 border border-gray-800 rounded-lg px-3"
-              style={{ backgroundColor: colors.bg }}
-            >
-              <User className="w-4 h-4 text-gray-400" />
-              <input
-                name="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full bg-transparent py-3 outline-none"
-                autoComplete="off"
+          {formType === "emailForm" && (
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
                 style={{ color: colors.text }}
-              />
+              >
+                Email Address
+              </label>
+              <div
+                className="flex items-center gap-2 border border-gray-800 rounded-lg px-3"
+                style={{ backgroundColor: colors.bg }}
+              >
+                <User className="w-4 h-4 text-gray-400" />
+                <input
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full bg-transparent py-3 outline-none"
+                  autoComplete="off"
+                  style={{ color: colors.text }}
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Password */}
-          <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
-              Password
-            </label>
-            <div
-              className="flex items-center border border-gray-800 rounded-lg px-3"
-              style={{ backgroundColor: colors.bg }}
-            >
-              <Lock className="w-4 h-4 text-gray-400 mr-2" />
-              <input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                type={showPassword ? "text" : "password"}
-                className="w-full bg-transparent py-3 outline-none"
-                autoComplete="current-password"
+          {formType === "passwordForm" && (
+            <div>
+              <label
+                className="block text-sm font-medium mb-2"
                 style={{ color: colors.text }}
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="text-gray-400 hover:text-white transition-colors"
               >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
-              </button>
+                Password
+              </label>
+              <div
+                className="flex items-center border border-gray-800 rounded-lg px-3"
+                style={{ backgroundColor: colors.bg }}
+              >
+                <Lock className="w-4 h-4 text-gray-400 mr-2" />
+                <input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  type={showPassword ? "text" : "password"}
+                  className="w-full bg-transparent py-3 outline-none"
+                  autoComplete="current-password"
+                  style={{ color: colors.text }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {error && (
             <div className="text-sm text-red-500 bg-red-500/10 border border-red-500/40 rounded-md px-3 py-2">
@@ -108,29 +115,52 @@ export function Login() {
           )}
 
           <motion.button
-            type="submit"
+            type="button"
+            onClick={() => {
+              if (formType === "emailForm") {
+                handleContinue();
+              } else {
+                onSubmit();
+              }
+            }}
             whileHover={!loading ? { scale: 1.02 } : undefined}
             whileTap={!loading ? { scale: 0.98 } : undefined}
             className="w-full px-6 py-3 bg-[#c89b3c] text-black font-bold rounded-lg hover:bg-[#d4a84a] transition-colors disabled:opacity-70"
             disabled={loading}
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? "Signing in..." : formType === "emailForm" ? "Continue" : "Sign In"}
           </motion.button>
-          <div className="relative flex items-center py-5">
+          {formType === "emailForm" && (<div className="relative flex items-center py-5">
             <div className="flex-grow border-t border-gray-600"></div>
             <span className="flex-shrink mx-4 text-gray-400 font-bold">OR</span>
             <div className="flex-grow border-t border-gray-600"></div>
-          </div>
-          <motion.button
-            type="button"
-            whileHover={!loading ? { scale: 1.02 } : undefined}
-            whileTap={!loading ? { scale: 0.98 } : undefined}
-            className="w-full px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-white transition-colors disabled:opacity-70"
-            disabled={loading}
-            onClick={handleSSOSignin}
-          >
-            Sign in with SSO
-          </motion.button>
+          </div>)}
+          {formType === "emailForm" && (
+            <motion.button
+              type="button"
+              whileHover={!loading ? { scale: 1.02 } : undefined}
+              whileTap={!loading ? { scale: 0.98 } : undefined}
+              className="w-full px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-white transition-colors disabled:opacity-70"
+              disabled={loading}
+              onClick={handleSSOSignin}
+            >
+              Sign in with SSO
+            </motion.button>
+          )}
+          {formType === "passwordForm" && (
+            <motion.button
+              type="button"
+              whileHover={!loading ? { scale: 1.02 } : undefined}
+              whileTap={!loading ? { scale: 0.98 } : undefined}
+              className="w-full px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-white transition-colors disabled:opacity-70"
+              disabled={loading}
+              onClick={() => {
+                setFormType("emailForm");
+              }}
+            >
+              Back
+            </motion.button>
+          )}
         </form>
       </motion.div>
     </div>

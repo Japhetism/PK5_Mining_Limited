@@ -62,6 +62,28 @@ class AuthService {
     }
   }
 
+  public async loginByEmail(email?: string): Promise<void> {
+  try {
+    if (!this.isInitialized) await this.initialize();
+
+    // Prepare the request dynamically
+    const request = {
+      ...loginRequest,
+      // If email is provided, MSAL will pre-fill it and skip the "Enter email" screen
+      loginHint: email, 
+      // Force the specific PK5 tenant branding
+      extraQueryParameters: { 
+        ...loginRequest.extraQueryParameters,
+        domain_hint: "pk5miningltd.com" 
+      }
+    };
+
+    await this.msalInstance.loginRedirect(request);
+  } catch (error) {
+    console.error("❌ MSAL: Login trigger error", error);
+  }
+}
+
   public getAccount(): AccountInfo | null {
     return this.msalInstance.getActiveAccount();
   }

@@ -15,13 +15,10 @@ function useLoginViewModel() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [formType, setFormType] = useState<"emailForm" | "passwordForm">(
-    "emailForm",
-  );
 
   useEffect(() => {
-    const hasMsalParams =
-      window.location.search.includes("state=") ||
+    const hasMsalParams = 
+      window.location.search.includes("state=") || 
       window.location.hash.includes("state=") ||
       window.location.hash.includes("#");
 
@@ -59,7 +56,9 @@ function useLoginViewModel() {
     onSettled: () => setLoading(false),
   });
 
-  const onSubmit = () => {
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (!isEmailAuthorized(email, window.location.hostname)) {
       return setError(
         "Access Denied: Please sign in with an authorized organizational account.",
@@ -75,34 +74,15 @@ function useLoginViewModel() {
     await authService.login();
   };
 
-  const handleSSOSigninByEmail = async () => {
-    if (email.trim()) {
-      await authService.loginByEmail(email);
-    }
-  };
-
-  const handleContinue = () => {
-    const domain = email.split("@")[1];
-
-    if (domain !== "pk5miningltd.com") {
-      setFormType("passwordForm");
-    } else {
-      handleSSOSigninByEmail();
-    }
-  };
-
   return {
     email,
     password,
     error,
     loading,
-    formType,
-    setFormType,
     setEmail,
     setPassword,
     onSubmit,
     handleSSOSignin,
-    handleContinue,
   };
 }
 
