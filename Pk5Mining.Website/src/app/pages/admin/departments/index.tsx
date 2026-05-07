@@ -43,6 +43,7 @@ export function Departments() {
     selectedDepartment,
     isUpdating,
     queryClient,
+    subsidiaries,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -53,11 +54,15 @@ export function Departments() {
     setFilterStatus,
     onChangePage,
     onChangePageSize,
-    handleUpdateStatus,
+    // handleUpdateStatus,
+    handleUpdateDepartmentStatus,  
     setForm,
     setFieldErrors,
     onChange,
     handleCloseModal,
+    handleDeleteDepartment,
+    handleUpdateDepartment,
+    handleCreateDepartment,
   } = useDepartmentViewModel();
 
   const columns: PaginatedTableColumn<Department>[] = [
@@ -81,7 +86,7 @@ export function Departments() {
       render: (dept) => (
         <span
           className={
-            dept.isActive
+            dept.isActive === true
               ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
               : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
           }
@@ -92,16 +97,21 @@ export function Departments() {
       ),
     },
     {
+      key: "subsidiary",
+      header: "Subsidiary",
+      render: (role) => role.subsidiary?.name
+    },
+    {
       key: "dT_Created",
       header: "Date Added",
       render: (dept) =>
         dept.dT_Created ? formatDateTime(dept.dT_Created) : "-",
     },
     {
-      key: "dT_Updated",
+      key: "dT_Modified",
       header: "Date Modified",
       render: (dept) =>
-        dept.dT_Updated ? formatDateTime(dept.dT_Updated) : "-",
+        dept.dT_Modified ? formatDateTime(dept.dT_Modified) : "-",
     },
     {
       key: "actions",
@@ -211,10 +221,10 @@ export function Departments() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="w-full sm:w-[760px]">
             <input
-              name="search"
-              type="search"
-              value={filters.search}
-              onChange={(e) => updateFilter("search", e.target.value)}
+              name="name"
+              type="text"
+              value={filters.name}
+              onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
@@ -232,7 +242,7 @@ export function Departments() {
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                  {opt.label2}
                 </option>
               ))}
             </select>
@@ -261,7 +271,8 @@ export function Departments() {
       <ConfirmModal
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={handleUpdateStatus}
+        // onConfirm={handleUpdateStatus}
+        onConfirm={handleUpdateDepartmentStatus}
         title={selectedDepartment?.isActive ? "Deactivate Department" : "Activate Department"}
         description={`Are you sure you want to ${selectedDepartment?.isActive ? "deactivate" : "activate"} "${selectedDepartment?.name}"?`}
         confirmText={`Yes, ${selectedDepartment?.isActive ? "deactivate" : "activate"}`}
@@ -272,7 +283,7 @@ export function Departments() {
       <ConfirmModal
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
-        onConfirm={handleUpdateStatus}
+        onConfirm={handleDeleteDepartment}
         title="Delete Department"
         description={`Are you sure you want to delete "${selectedDepartment?.name}"?`}
         confirmText={`Yes, delete`}
@@ -285,9 +296,10 @@ export function Departments() {
         form={form}
         fieldErrors={fieldErrors}
         cancelText="Cancel"
+        subsidiaries={subsidiaries}
         loading={isUpdating}
         onClose={handleCloseModal}
-        onConfirm={handleUpdateStatus}
+        onConfirm={selectedDepartment ? handleUpdateDepartment : handleCreateDepartment}
         setFieldErrors={setFieldErrors}
         onChange={onChange}
       />

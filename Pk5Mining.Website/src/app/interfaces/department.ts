@@ -1,13 +1,17 @@
 import { PaginationInfo } from ".";
+import { Subsidiary } from "./subsidiary";
 
 export type Department = {
   id: string;
   name: string;
   description?: string;
-  subsidiaryId?: string;
+  subsidiaryId?: number;
+  subsidiary?: Subsidiary | null;
   isActive?: boolean;
+  status: "Active" | "Inactive";
   dT_Created: string;
   dT_Modified: string;
+  dT_Updated: string,
 };
 
 export type DepartmentResponsePayload = {
@@ -25,5 +29,7 @@ export type DepartmentErrors = {
 export type DepartmentsQuery = {
   pageNumber: number;
   pageSize: number;
+  name?: string;
+  search?: string;
   isActive?: boolean | string;
 };

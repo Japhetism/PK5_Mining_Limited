@@ -5,8 +5,8 @@ import { ScrollToTop } from "@/app/components/scrollToTop";
 import { AppRoutes } from "./routes";
 import Logo from '../assets/images/logo.png';
 import { useTenant } from "@/tenants/useTenant";
-import { CookieBanner } from "./components/cookie-banner";
-import { LegalModal } from "./components/legal-modal";
+import { CookieBannerWithOptions } from "./components/cookie-banner-with-options";
+import { LegalModalNew } from "./components/legal-modal-new";
 
 function AppLoader() {
   return (
@@ -42,8 +42,8 @@ export function App() {
         <AppRoutes />
       </Suspense>
       <Toaster position="top-right" richColors closeButton expand />
-      <CookieBanner />
-      <LegalModal />
+      <CookieBannerWithOptions />
+      <LegalModalNew />
     </BrowserRouter>
   );
 }

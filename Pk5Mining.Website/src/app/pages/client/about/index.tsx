@@ -32,7 +32,7 @@ export function About() {
           >
             About <span className="text-[#c89b3c]">PK5 Mining</span>
           </motion.h1>
-          <motion.p
+          <motion.div
             className="text-md md:text-xl text-gray-300 md:w-3/6 xs:w-5/6 mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ export function About() {
           >
             <p>PK5 Mining is a strategic mining brand of PK5 Holdings Inc., USA , established to develop and operate responsible mining assets across Africa.</p><br/>
             <p>The company began its African journey in Tanzania and is strategically expanding its focus to Nigeria, aligning with national development priorities, local content participation, and international best practices in environmental, social, and governance (ESG) standards.</p>
-          </motion.p>
+          </motion.div>
         </div>
       </section>
 

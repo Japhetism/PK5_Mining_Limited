@@ -13,7 +13,10 @@ export async function applyToJob(payload: FormData) {
     const { data } = await http.post<ApiResponse<JobApplicationDto>>(
       "/JobApplication",
       payload,
-      { headers: { "Content-Type": "multipart/form-data" } },
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        requiresApiKey: true,
+      },
     );
 
     if (data.responseStatus !== "SUCCESS") {

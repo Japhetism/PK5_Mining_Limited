@@ -16,8 +16,8 @@ export const workArrangements = [
 ] as const;
 
 export const statusOptions = [
-  { label: "Open", value: "open" },
-  { label: "Closed", value: "closed" },
+  { label: "Open", value: "open", label2: "Active"},
+  { label: "Closed", value: "closed", label2: "Inactive" },
 ] as const;
 
 export const countries = [

@@ -11,59 +11,37 @@ export async function login(payload: ILoginPayload) {
     return mockAuthenticationResonsePayload.responseData;
   }
 
-  const maxAttempts = 3;
-  let lastError: unknown;
+  try {
+    const { data } = await http.post<ApiResponse<IUser>>(
+      "/Authentication/login",
+      payload,
+    );
 
-  for (let attempt = 0; attempt <= maxAttempts; attempt++) {
-    try {
-      const { data } = await http.post<ApiResponse<IUser>>(
-        "/Authentication/login",
-        payload
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to authenticate user",
+        ),
       );
-
-      if (data.responseStatus !== "SUCCESS") {
-        throw new Error(
-          getAxiosErrorMessage(
-            data.responseMessage,
-            "Failed to authenticate user"
-          )
-        );
-      }
-
-      return data.responseData;
-    } catch (err: unknown) {
-      lastError = err;
-
-      const axiosErr = err as any;
-
-      const isTimeout =
-        axiosErr?.code === "ECONNABORTED";
-
-      const isCancelled =
-        axiosErr?.code === "ERR_CANCELED" ||
-        axiosErr?.name === "CanceledError";
-
-      const shouldRetry = isTimeout || isCancelled;
-
-      // If not retryable OR last attempt → throw
-      if (!shouldRetry || attempt === maxAttempts) {
-        throw new Error(
-          getAxiosErrorMessage(err, "Failed to authenticate user")
-        );
-      }
     }
-  }
 
-  throw lastError;
+    return data.responseData;
+  } catch (err: unknown) {
+    throw new Error(getAxiosErrorMessage(err, "Failed to authenticate user"));
+  }
 }
 
 export async function changePassword(payload: IChangePasswordPayload) {
   try {
     const changePasswordPayload = {
-      newPassword: payload.newPassword
-    }
+      newPassword: payload.newPassword,
+    };
 
-    const { data } = await http.put<ApiResponse<IUser>>(`User/update-password/${payload.userId}`, changePasswordPayload);
+    const { data } = await http.put<ApiResponse<IUser>>(
+      `User/update-password/${payload.userId}`,
+      changePasswordPayload,
+    );
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
@@ -76,8 +54,6 @@ export async function changePassword(payload: IChangePasswordPayload) {
 
     return data.responseData;
   } catch (err) {
-    throw new Error(
-      getAxiosErrorMessage(err, "Failed to authenticate user")
-    );
+    throw new Error(getAxiosErrorMessage(err, "Failed to authenticate user"));
   }
 }
