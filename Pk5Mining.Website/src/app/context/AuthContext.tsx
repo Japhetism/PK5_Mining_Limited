@@ -40,12 +40,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     import.meta.env.VITE_INACTIVITY_TIMEOUT_MS ?? DEFAULT_INACTIVITY_TIMEOUT_MS;
 
   function logout() {
-    // Clear Traditional Auth
     sessionStorage.removeItem(AUTH_KEY);
     tokenStore.clear();
     setAuthToken(undefined);
-    
-    // Clear SSO Auth
+
     const ssoAccount = authService.getAccount();
     if (ssoAccount) {
       authService.logout();
@@ -59,39 +57,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   logoutRef.current = logout;
 
-  // Unified Auth Restore Logic
   useEffect(() => {
     const initAuth = async () => {
       try {
-        // 1. Check Traditional JWT Auth
         const token = tokenStore.get();
         const rawUser = sessionStorage.getItem(AUTH_KEY);
 
         if (token && rawUser && !isJwtExpired(token)) {
           setAuthToken(token);
           setUser(JSON.parse(rawUser) as IUser);
-          return; // Found user, exit early
+          return;
         }
 
-        // 2. Check SSO Auth (MSAL)
-        // main.tsx already ran initialize(), so this is a synchronous check
         const ssoAccount = authService.getAccount();
         if (ssoAccount) {
+          const nameArray = ssoAccount.name ? ssoAccount.name.split(" ") : null;
           const mappedUser: IUser = {
             id: ssoAccount.localAccountId,
             username: ssoAccount.username,
-            firstName: ssoAccount.name || "",
-            lastName: ssoAccount.name || "",
+            firstName: nameArray?.[0] || "",
+            lastName: nameArray?.[1] || "",
             email: ssoAccount.username,
-            role: USERROLES.superAdmin, // Default role for SSO users
-            // Map other fields as required by your IUser interface
+            role: USERROLES.superAdmin,
             jwtToken: ssoAccount.idToken || "",
             hasChangedPassword: true,
           };
           setUser(mappedUser);
-          
-          // Note: If your backend requires a JWT even for SSO users,
-          // you would call your "SSO-Login" API endpoint here to get one.
         } else {
           setUser(null);
         }
@@ -106,14 +97,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth();
   }, []);
 
-  // Unauthorized (401) Listener
   useEffect(() => {
     const handler = () => logoutRef.current();
     window.addEventListener("unauthorized", handler);
     return () => window.removeEventListener("unauthorized", handler);
   }, []);
 
-  // Inactivity Timer
   useEffect(() => {
     let timer: number | undefined;
 
@@ -123,7 +112,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const reset = () => {
-      // Logic: If there's no user, don't run the timer
       if (!user) {
         clear();
         return;
@@ -148,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     reset();
 
     events.forEach((e) =>
-      window.addEventListener(e, onActivity, { passive: true })
+      window.addEventListener(e, onActivity, { passive: true }),
     );
 
     const onVisibility = () => {
@@ -164,7 +152,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [user, INACTIVITY_TIMEOUT_MS]);
 
-  // Traditional Login Function
   async function login(email: string, password: string) {
     const nextUser = await loginApi({ email, password });
 
@@ -181,7 +168,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     tokenStore.set(nextUser.jwtToken);
     setAuthToken(nextUser.jwtToken);
 
-    // Reset inactivity timer
     window.dispatchEvent(new Event("mousemove"));
   }
 
@@ -189,7 +175,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return {
       user,
       isLoading,
-      isAdmin: true, // Customize based on your role logic
+      isAdmin: true,
       isAuthenticated: !!user,
       login,
       logout,

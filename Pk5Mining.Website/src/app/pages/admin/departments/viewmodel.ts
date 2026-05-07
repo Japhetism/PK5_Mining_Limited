@@ -325,8 +325,7 @@ function useDepartmentViewModel() {
     setIsUpdating(true);
 
     const isActive = !selectedDepartment?.isActive ;
-    console.log("Updating status to:", isActive);
-
+    
     updateStatusMutation.mutate(isActive);
   };
 

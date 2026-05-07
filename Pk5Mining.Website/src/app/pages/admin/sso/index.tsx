@@ -6,18 +6,10 @@ export function SSO() {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
 
-  console.log("user is from SSO ", user);
-
   useEffect(() => {
-    // Only act once the AuthProvider has finished checking all storage (JWT and SSO)
     if (!isLoading) {
-      if (user) {
-        console.log("✅ AuthHandler: Identity confirmed, moving to dashboard");
-        navigate("/admin/dashboard", { replace: true });
-      } else {
-        console.log("❌ AuthHandler: No identity found, redirecting to login");
-        navigate("/admin/login", { replace: true });
-      }
+      const targetPath = user ? "/admin/dashboard" : "/admin/login";
+      navigate(targetPath, { replace: true });
     }
   }, [user, isLoading, navigate]);
 

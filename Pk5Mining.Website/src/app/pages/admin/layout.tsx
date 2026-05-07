@@ -15,20 +15,12 @@ export function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    // 1. Get the account that was successfully captured by main.tsx
     const account = authService.getAccount();
 
     if (account) {
-      console.log(
-        "🚀 Router: User detected, executing redirect to dashboard...",
-      );
-
-      // 2. Only redirect if we aren't already on the dashboard to prevent loops
       if (window.location.pathname !== "/admin/dashboard") {
         navigate("/admin/dashboard", { replace: true });
       }
-    } else {
-      console.log("ℹ️ Router: No active session found in Layout.");
     }
   }, [navigate]);
 
@@ -41,18 +33,12 @@ export function AdminLayout() {
 
   const nav = getVisibleNav(user?.permissions ?? [], user?.role);
 
-  const account = authService.getAccount();
-  console.log("Current User:", account?.username);
-
   return (
     <div className="h-screen text-black flex flex-col bg-white overflow-hidden">
-      {/* <div className="h-screen text-white flex flex-col overflow-hidden" style={{ backgroundColor: colors.bg }}> */}
-      {/* HEADER */}
       <header
         className="border-b backdrop-blur shrink-0 bg-white"
         style={{ borderColor: colors.border }}
       >
-        {/* <header className="border-b backdrop-blur shrink-0" style={{ backgroundColor: `${colors.bg}/500`, borderColor: colors.border }}> */}
         <div className="w-full px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <button
@@ -72,7 +58,6 @@ export function AdminLayout() {
                 className="w-14 sm:w-20 h-auto object-contain shrink-0"
               />
               <span className="font-bold text-sm sm:text-base truncate text-black">
-                {/* <span className="font-bold text-sm sm:text-base truncate" style={{ color: colors.text}} > */}
                 Admin Portal
               </span>
             </Link>

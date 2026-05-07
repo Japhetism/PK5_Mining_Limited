@@ -89,7 +89,7 @@ export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
   { path: "/admin/change/password", element: <ChangePassword /> },
   { 
-    path: "/admin", 
+    path: "/admin/sso", 
     element: <SSO /> 
   },
   {

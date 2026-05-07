@@ -24,7 +24,6 @@ class AuthService {
   }
 
   public async initialize(): Promise<AuthenticationResult | null> {
-    // 1. Initialize MSAL if not already done
     if (!this.isInitialized) {
       if (!this.initializingPromise) {
         this.initializingPromise = this.msalInstance.initialize();
@@ -34,27 +33,22 @@ class AuthService {
     }
 
     try {
-      // 2. Capture the result from the redirect
       const response = await this.msalInstance.handleRedirectPromise();
 
       if (response) {
-        console.log("✅ MSAL: Redirect response captured");
         this.msalInstance.setActiveAccount(response.account);
         return response;
       }
 
-      // 3. Fallback: If no response, but we have accounts in storage
       const accounts = this.msalInstance.getAllAccounts();
       if (accounts.length > 0) {
         if (!this.msalInstance.getActiveAccount()) {
           this.msalInstance.setActiveAccount(accounts[0]);
         }
-        console.log("✅ MSAL: Session restored from storage");
       }
 
       return null;
     } catch (error) {
-      console.error("❌ MSAL: Initialization error", error);
       return null;
     }
   }

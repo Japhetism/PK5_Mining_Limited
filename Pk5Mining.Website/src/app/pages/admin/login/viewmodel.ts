@@ -17,17 +17,12 @@ function useLoginViewModel() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Check if the URL has MSAL breadcrumbs (?state= or #)
     const hasMsalParams = 
       window.location.search.includes("state=") || 
       window.location.hash.includes("state=") ||
       window.location.hash.includes("#");
 
     if (hasMsalParams) {
-      console.log("🧹 Cleaning messy SSO URL...");
-      
-      // Navigate to the exact same path but without the search/hash params
-      // 'replace: true' ensures the messy URL is deleted from browser history
       navigate("/admin/login", { replace: true });
     }
   }, [location, navigate]);
@@ -76,7 +71,6 @@ function useLoginViewModel() {
   };
 
   const handleSSOSignin = async () => {
-    // No need to initialize here; the app-level useEffect handles it
     await authService.login();
   };
 

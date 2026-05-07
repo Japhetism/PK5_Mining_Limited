@@ -5,17 +5,6 @@ export function ProtectedRoute() {
   const location = useLocation();
   const { user, isAdmin, isLoading } = useAuth();
 
-  console.log("user from protected route ", user)
-
-  // const isReturningFromAuth =
-  //   window.location.hash.includes("code=") ||
-  //   window.location.hash.includes("id_token=");
-
-  // // While we are loading OR if we see a login token, do NOT redirect to login.
-  // if (isLoading || isReturningFromAuth) {
-  //   return <div className="loading-spinner">Verifying...</div>;
-  // }
-
   if (isLoading) return null;
 
   if (!user) {
