@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pk5Mining.Server.Extensions;
@@ -78,6 +80,13 @@ builder.Services.Configure<MailSettings>(
 builder.Services.Configure<AgroMailSettings>(
             builder.Configuration.GetSection("AgroMailSettings")
  );
+
+var authenticationBuilder = builder.Services.AddAuthentication();
+
+authenticationBuilder.AddMicrosoftIdentityWebApi(
+    builder.Configuration.GetSection("MicrosoftSSO"),
+    jwtBearerScheme: "SSOScheme");
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {

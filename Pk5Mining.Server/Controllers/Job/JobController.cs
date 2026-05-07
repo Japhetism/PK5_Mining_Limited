@@ -25,7 +25,7 @@ namespace Pk5Mining.Server.Controllers.Job
             _mapper = mapper;
         }
 
-        [RequireApiKey]
+        /*[RequireApiKey]*/
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IJobs>>> Get()
         {

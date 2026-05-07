@@ -206,5 +206,18 @@ namespace Pk5Mining.Server.Repositories.Admin
                 return (null, ex.Message, true);
             }
         }
+        public async Task<(User?, string?)> GetByEmailForSSOAsync(string email)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            if (user == null || user.IsDeleted)
+            {
+                return (null, "You do not have access to this application.");
+            }
+            if (!user.IsActive)
+            {
+                return (null, "Your account is deactivated. Contact admin.");
+            }
+            return (user, null);
+        }
     }
 }

@@ -17,5 +17,6 @@ namespace Pk5Mining.Server.Repositories.Admin
         Task<(User?, string?)> LoginAsync(LoginDTO dto);
         Task<(IUser?, string?, bool)> UpdatePasswordAsync(long Id, SetPassword dto);
         Task<(IUser?, string?, bool)> UpdateUserAsync(UpdateUserDto dto);
+        Task<(User?, string?)> GetByEmailForSSOAsync(string email);
     }
 }
