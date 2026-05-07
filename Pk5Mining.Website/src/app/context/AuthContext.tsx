@@ -6,7 +6,7 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { login as loginApi } from "../api/auth";
+import { login as loginApi, microsoftLogin } from "../api/auth"; // Added microsoftLogin
 import { IUser } from "../interfaces";
 import { AUTH_KEY } from "../constants";
 import { setAuthToken } from "../api/http";
@@ -14,7 +14,6 @@ import { isJwtExpired } from "../utils/jwt";
 import { tokenStore } from "../auth/token";
 import { authService } from "../services/sso/authService";
 import { USERROLES } from "../constants/role";
-import { jwt } from "zod";
 
 type AuthState = {
   user: IUser | null;
@@ -60,35 +59,66 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const initAuth = async () => {
       try {
+        // 1. Check for existing local session (Standard JWT)
         const token = tokenStore.get();
         const rawUser = sessionStorage.getItem(AUTH_KEY);
 
         if (token && rawUser && !isJwtExpired(token)) {
           setAuthToken(token);
           setUser(JSON.parse(rawUser) as IUser);
+          setIsLoading(false);
           return;
         }
 
+        // 2. Handle Microsoft SSO Redirect & Handshake
+        // initialize() catches the redirect and sets the active account in MSAL
+        await authService.initialize();
         const ssoAccount = authService.getAccount();
+
         if (ssoAccount) {
-          const nameArray = ssoAccount.name ? ssoAccount.name.split(" ") : null;
-          const mappedUser: IUser = {
-            id: ssoAccount.localAccountId,
-            username: ssoAccount.username,
-            firstName: nameArray?.[0] || "",
-            lastName: nameArray?.[1] || "",
-            email: ssoAccount.username,
-            role: USERROLES.superAdmin,
-            jwtToken: ssoAccount.idToken || "",
-            hasChangedPassword: true,
-          };
-          setUser(mappedUser);
+          // Get the fresh Microsoft Access Token
+          const msToken = await authService.getToken();
+
+          console.log("MS token is ", msToken);
+
+          if (msToken) {
+            // CRITICAL: Set the token in your http utility so the handshake
+            // call to your backend includes it in the header.
+            console.log("ms token ", msToken)
+            setAuthToken(msToken);
+            tokenStore.set(msToken);
+
+            // 3. Trigger the Backend Handshake
+            // This sends the MS token to your /SingleSignOn/microsoft/login
+            const backendUser = await microsoftLogin();
+
+            if (backendUser) {
+              // If backend returns its own JWT, overwrite the MS token
+              const finalToken = backendUser.jwtToken || msToken;
+
+              const authenticatedUser: IUser = {
+                ...backendUser,
+                jwtToken: finalToken,
+              };
+
+              setUser(authenticatedUser);
+              sessionStorage.setItem(
+                AUTH_KEY,
+                JSON.stringify(authenticatedUser),
+              );
+              tokenStore.set(finalToken);
+              setAuthToken(finalToken);
+            }
+          }
         } else {
           setUser(null);
         }
       } catch (error) {
-        console.error("Auth restore failed:", error);
-        logoutRef.current();
+        console.error("Auth restore/handshake failed:", error);
+        // If handshake fails, clear everything to avoid stale states
+        sessionStorage.removeItem(AUTH_KEY);
+        tokenStore.clear();
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
@@ -97,12 +127,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth();
   }, []);
 
+  // Unauthorized Listener (401 global handler)
   useEffect(() => {
     const handler = () => logoutRef.current();
     window.addEventListener("unauthorized", handler);
     return () => window.removeEventListener("unauthorized", handler);
   }, []);
 
+  // Inactivity Timeout Logic
   useEffect(() => {
     let timer: number | undefined;
 
@@ -152,6 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [user, INACTIVITY_TIMEOUT_MS]);
 
+  // Standard Manual Login
   async function login(email: string, password: string) {
     const nextUser = await loginApi({ email, password });
 
@@ -175,7 +208,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return {
       user,
       isLoading,
-      isAdmin: true,
+      isAdmin: user?.role === USERROLES.superAdmin, // Derived from user role
       isAuthenticated: !!user,
       login,
       logout,

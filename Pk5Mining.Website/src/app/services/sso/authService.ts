@@ -5,6 +5,7 @@ import {
   IPublicClientApplication 
 } from "@azure/msal-browser";
 import { loginRequest, msalConfig } from "@/app/config/sso/authconfig";
+import { microsoftLogin } from "@/app/api/auth";
 
 class AuthService {
   private static instance: AuthService;
@@ -23,7 +24,11 @@ class AuthService {
     return AuthService.instance;
   }
 
-  public async initialize(): Promise<AuthenticationResult | null> {
+  /**
+   * Initializes MSAL and handles the redirect back from Microsoft.
+   * Returns the backend user data if a successful handshake occurs.
+   */
+  public async initialize(): Promise<any | null> {
     if (!this.isInitialized) {
       if (!this.initializingPromise) {
         this.initializingPromise = this.msalInstance.initialize();
@@ -35,54 +40,51 @@ class AuthService {
     try {
       const response = await this.msalInstance.handleRedirectPromise();
 
+      // Case 1: Just returned from a successful Microsoft Redirect
       if (response) {
         this.msalInstance.setActiveAccount(response.account);
-        return response;
+        // Call your backend handshake immediately
+        return await microsoftLogin();
       }
 
+      // Case 2: Checking for existing session on page refresh
       const accounts = this.msalInstance.getAllAccounts();
       if (accounts.length > 0) {
-        if (!this.msalInstance.getActiveAccount()) {
-          this.msalInstance.setActiveAccount(accounts[0]);
-        }
+        const activeAccount = this.msalInstance.getActiveAccount() || accounts[0];
+        this.msalInstance.setActiveAccount(activeAccount);
+        
+        // Optional: Call microsoftLogin() here if you want to verify 
+        // the session with your backend on every refresh.
       }
 
       return null;
     } catch (error) {
+      console.error("❌ MSAL: Initialization/Handshake error", error);
       return null;
     }
   }
 
-  public async login(): Promise<void> {
+  /**
+   * Core login logic. Supports optional email pre-fill.
+   */
+  public async login(email?: string): Promise<void> {
     try {
       if (!this.isInitialized) await this.initialize();
-      await this.msalInstance.loginRedirect(loginRequest);
+
+      const request = {
+        ...loginRequest,
+        loginHint: email, 
+        extraQueryParameters: { 
+          ...loginRequest.extraQueryParameters,
+          domain_hint: "pk5miningltd.com" 
+        }
+      };
+
+      await this.msalInstance.loginRedirect(request);
     } catch (error) {
       console.error("❌ MSAL: Login trigger error", error);
     }
   }
-
-  public async loginByEmail(email?: string): Promise<void> {
-  try {
-    if (!this.isInitialized) await this.initialize();
-
-    // Prepare the request dynamically
-    const request = {
-      ...loginRequest,
-      // If email is provided, MSAL will pre-fill it and skip the "Enter email" screen
-      loginHint: email, 
-      // Force the specific PK5 tenant branding
-      extraQueryParameters: { 
-        ...loginRequest.extraQueryParameters,
-        domain_hint: "pk5miningltd.com" 
-      }
-    };
-
-    await this.msalInstance.loginRedirect(request);
-  } catch (error) {
-    console.error("❌ MSAL: Login trigger error", error);
-  }
-}
 
   public getAccount(): AccountInfo | null {
     return this.msalInstance.getActiveAccount();
@@ -106,7 +108,7 @@ class AuthService {
       });
       return response.accessToken;
     } catch (error) {
-      console.warn("Silent token acquisition failed", error);
+      console.warn("⚠️ MSAL: Silent token acquisition failed", error);
       return null;
     }
   }

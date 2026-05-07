@@ -77,7 +77,7 @@ function useLoginViewModel() {
 
   const handleSSOSigninByEmail = async () => {
     if (email.trim()) {
-      await authService.loginByEmail(email);
+      await authService.login(email);
     }
   };
 

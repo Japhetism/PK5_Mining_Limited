@@ -21,6 +21,6 @@ export const msalConfig: Configuration = {
 };
 
 export const loginRequest = {
-  scopes: ["User.Read"],
+  scopes: ["User.Read", "api://a2dc2f0c-99a4-4708-bd36-835cc0f77382/pk5.Read"],
   extraQueryParameters: { domain_hint: "pk5miningltd.com" }
 };

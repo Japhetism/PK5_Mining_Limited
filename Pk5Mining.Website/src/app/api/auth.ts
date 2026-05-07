@@ -57,3 +57,28 @@ export async function changePassword(payload: IChangePasswordPayload) {
     throw new Error(getAxiosErrorMessage(err, "Failed to authenticate user"));
   }
 }
+
+export async function microsoftLogin() {
+  try {
+    const { data } = await http.post<ApiResponse<IUser>>(
+      "/SingleSignOn/microsoft/login",
+      {},
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to authenticate user",
+        ),
+      );
+    }
+
+    console.log("microsoft handshake response ", data);
+
+    return data.responseData;
+  } catch (err: unknown) {
+    console.log("from microsoft ", err);
+    throw new Error(getAxiosErrorMessage(err, "Failed to authenticate user"));
+  }
+}
