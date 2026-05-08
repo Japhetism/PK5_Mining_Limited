@@ -11,8 +11,6 @@ function useLoginViewModel() {
   const location = useLocation();
   const { login: authLogin, user: authUser, isLoading } = useAuth();
 
-  console.log("let's confirm loading state ", isLoading);
-  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
