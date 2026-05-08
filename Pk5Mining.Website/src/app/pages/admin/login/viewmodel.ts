@@ -9,8 +9,10 @@ import { isEmailAuthorized } from "@/app/utils/helper";
 function useLoginViewModel() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login: authLogin, user: authUser } = useAuth();
+  const { login: authLogin, user: authUser, isLoading } = useAuth();
 
+  console.log("let's confirm loading state ", isLoading);
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -18,6 +20,12 @@ function useLoginViewModel() {
   const [formType, setFormType] = useState<"emailForm" | "passwordForm">(
     "emailForm",
   );
+
+  useEffect(() => {
+    if (isLoading) {
+      navigate("/admin/sso", { replace: true });
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     const hasMsalParams =

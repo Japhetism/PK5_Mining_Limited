@@ -5,7 +5,6 @@ import {
   IPublicClientApplication 
 } from "@azure/msal-browser";
 import { loginRequest, msalConfig } from "@/app/config/sso/authconfig";
-import { microsoftLogin } from "@/app/api/auth";
 
 class AuthService {
   private static instance: AuthService;
@@ -25,10 +24,9 @@ class AuthService {
   }
 
   /**
-   * Initializes MSAL and handles the redirect back from Microsoft.
-   * Returns the backend user data if a successful handshake occurs.
+   * Initializes MSAL and handles the redirect result from Microsoft.
    */
-  public async initialize(): Promise<any | null> {
+  public async initialize(): Promise<AuthenticationResult | null> {
     if (!this.isInitialized) {
       if (!this.initializingPromise) {
         this.initializingPromise = this.msalInstance.initialize();
@@ -40,33 +38,24 @@ class AuthService {
     try {
       const response = await this.msalInstance.handleRedirectPromise();
 
-      // Case 1: Just returned from a successful Microsoft Redirect
       if (response) {
         this.msalInstance.setActiveAccount(response.account);
-        // Call your backend handshake immediately
-        return await microsoftLogin();
+        return response;
       }
 
-      // Case 2: Checking for existing session on page refresh
       const accounts = this.msalInstance.getAllAccounts();
       if (accounts.length > 0) {
         const activeAccount = this.msalInstance.getActiveAccount() || accounts[0];
         this.msalInstance.setActiveAccount(activeAccount);
-        
-        // Optional: Call microsoftLogin() here if you want to verify 
-        // the session with your backend on every refresh.
       }
 
       return null;
     } catch (error) {
-      console.error("❌ MSAL: Initialization/Handshake error", error);
+      console.error("❌ MSAL: Initialization error", error);
       return null;
     }
   }
 
-  /**
-   * Core login logic. Supports optional email pre-fill.
-   */
   public async login(email?: string): Promise<void> {
     try {
       if (!this.isInitialized) await this.initialize();
@@ -92,9 +81,7 @@ class AuthService {
 
   public async logout(): Promise<void> {
     const account = this.getAccount();
-    await this.msalInstance.logoutRedirect({
-      account: account,
-    });
+    await this.msalInstance.logoutRedirect({ account });
   }
 
   public async getToken(): Promise<string | null> {

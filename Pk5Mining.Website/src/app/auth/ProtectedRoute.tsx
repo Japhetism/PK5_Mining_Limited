@@ -11,9 +11,9 @@ export function ProtectedRoute() {
     return <Navigate to="/admin/login" replace state={{ from: location }} />;
   }
 
-  if (!isAdmin) {
-    return <Navigate to="/" replace />;
-  }
+  // if (!isAdmin) {
+  //   return <Navigate to="/" replace />;
+  // }
 
   if (!user.hasChangedPassword) {
     return <Navigate to="/admin/change/password" replace />;

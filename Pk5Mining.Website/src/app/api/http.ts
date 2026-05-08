@@ -87,12 +87,12 @@ http.interceptors.response.use(
       return http(config);
     }
 
-    if (axios.isAxiosError(err)) {
-      if (err.response?.status === 401) {
-        tokenStore.clear();
-        setAuthToken(undefined);
-      }
-    }
+    // if (axios.isAxiosError(err)) {
+    //   if (err.response?.status === 401) {
+    //     tokenStore.clear();
+    //     setAuthToken(undefined);
+    //   }
+    // }
 
     return Promise.reject(err);
   },

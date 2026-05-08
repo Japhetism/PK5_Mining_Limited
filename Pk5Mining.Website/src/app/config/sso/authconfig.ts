@@ -1,9 +1,13 @@
 import { Configuration, LogLevel, BrowserCacheLocation } from "@azure/msal-browser";
 
+const CLIENT_ID = import.meta.env.VITE_AUTH_CLIENT_ID ?? "";
+const CLIENT_SCOPE = import.meta.env.VITE_AUTH_CLIENT_SCOPE ?? "";
+const CLIENT_AUTHORITY = import.meta.env.VITE_CLIENT_AUTHORITY ?? "";
+
 export const msalConfig: Configuration = {
   auth: {
-    clientId: "f1bf005d-f0d5-4013-9faf-63bce3f7fb1e",
-    authority: "https://login.microsoftonline.com/pk5miningltd.com",
+    clientId: CLIENT_ID,
+    authority: CLIENT_AUTHORITY,
     redirectUri: `${window.location.origin}/admin/sso`,
     postLogoutRedirectUri: `${window.location.origin}/admin/login`,
   },
@@ -21,6 +25,5 @@ export const msalConfig: Configuration = {
 };
 
 export const loginRequest = {
-  scopes: ["User.Read", "api://a2dc2f0c-99a4-4708-bd36-835cc0f77382/pk5.Read"],
-  extraQueryParameters: { domain_hint: "pk5miningltd.com" }
+  scopes: [CLIENT_SCOPE],
 };

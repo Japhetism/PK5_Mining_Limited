@@ -14,15 +14,15 @@ export function AdminLayout() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // useEffect(() => {
-  //   const account = authService.getAccount();
+  useEffect(() => {
+    const account = authService.getAccount();
 
-  //   if (account) {
-  //     if (window.location.pathname !== "/admin/dashboard") {
-  //       navigate("/admin/dashboard", { replace: true });
-  //     }
-  //   }
-  // }, [navigate]);
+    if (account) {
+      if (window.location.pathname !== "/admin/dashboard") {
+        navigate("/admin/dashboard", { replace: true });
+      }
+    }
+  }, [navigate]);
 
   const onLogout = () => {
     logout();

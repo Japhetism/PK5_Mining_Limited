@@ -74,11 +74,8 @@ export async function microsoftLogin() {
       );
     }
 
-    console.log("microsoft handshake response ", data);
-
     return data.responseData;
   } catch (err: unknown) {
-    console.log("from microsoft ", err);
     throw new Error(getAxiosErrorMessage(err, "Failed to authenticate user"));
   }
 }
