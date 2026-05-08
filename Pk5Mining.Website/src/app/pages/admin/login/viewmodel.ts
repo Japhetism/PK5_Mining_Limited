@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
@@ -16,6 +16,7 @@ function useLoginViewModel() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formType, setFormType] = useState<"emailForm" | "passwordForm">(
     "emailForm",
   );
@@ -99,18 +100,29 @@ function useLoginViewModel() {
     }
   };
 
+  const isEmailStep = formType === "emailForm";
+
+  const handleFormSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    isEmailStep ? handleContinue() : onSubmit();
+  };
+
   return {
     email,
     password,
     error,
     loading,
     formType,
+    showPassword,
+    isEmailStep,
     setFormType,
     setEmail,
     setPassword,
     onSubmit,
     handleSSOSignin,
     handleContinue,
+    handleFormSubmit,
+    setShowPassword,
   };
 }
 
