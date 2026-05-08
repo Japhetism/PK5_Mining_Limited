@@ -204,7 +204,7 @@ export function JobList() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold mb-1" style={{ color: colors.text }}>Job openings</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-1">Job openings</h1>
           <p className="text-sm text-gray-400">
             Create, update, and close job postings.
           </p>
