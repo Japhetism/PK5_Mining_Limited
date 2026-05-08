@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { LogOut, Menu, X } from "lucide-react";
@@ -6,23 +6,11 @@ import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting, getVisibleNav } from "@/app/utils/helper";
 import { UserMenu } from "@/app/components/ui/userMenu";
 import { useTenant } from "@/tenants/useTenant";
-import { authService } from "@/app/services/sso/authService";
 
 export function AdminLayout() {
   const { colors, logo } = useTenant();
   const { logout, user } = useAuth();
-  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const account = authService.getAccount();
-
-    if (account) {
-      if (window.location.pathname !== "/admin/dashboard") {
-        navigate("/admin/dashboard", { replace: true });
-      }
-    }
-  }, [navigate]);
 
   const onLogout = () => {
     logout();
