@@ -35,20 +35,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logoutRef = useRef<() => void>(() => {});
 
   const INACTIVITY_TIMEOUT_MS =
-    Number(import.meta.env.VITE_INACTIVITY_TIMEOUT_MS) || DEFAULT_INACTIVITY_TIMEOUT_MS;
+    Number(import.meta.env.VITE_INACTIVITY_TIMEOUT_MS) ||
+    DEFAULT_INACTIVITY_TIMEOUT_MS;
 
-  function logout() {
+  async function logout() {
+    // 1. Clear local session data immediately
     sessionStorage.removeItem(AUTH_KEY);
-    tokenStore.clear();
-    setAuthToken(undefined);
 
     const ssoAccount = authService.getAccount();
-    if (ssoAccount) {
-      authService.logout();
-    }
 
-    setUser(null);
-    window.location.href = `${window.location.origin}/admin/login`;
+    if (ssoAccount) {
+      try {
+        const res = await authService.logout();
+      } catch (error) {
+        console.error(
+          "SSO Logout failed, falling back to manual redirect",
+          error,
+        );
+        window.location.href = `${window.location.origin}/admin/login`;
+      } finally {
+        tokenStore.clear();
+        setAuthToken(undefined);
+        setUser(null);
+      }
+    } else {
+      // 3. For manual/local users, just redirect to login
+      tokenStore.clear();
+      setAuthToken(undefined);
+      setUser(null);
+      window.location.href = `${window.location.origin}/admin/login`;
+    }
   }
 
   logoutRef.current = logout;
@@ -80,10 +96,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const backendUser = await microsoftLogin();
             if (backendUser) {
               const finalToken = backendUser.jwtToken || msToken;
-              const authenticatedUser = { ...backendUser, jwtToken: finalToken };
-              
+              const authenticatedUser = {
+                ...backendUser,
+                jwtToken: finalToken,
+              };
+
               setUser(authenticatedUser);
-              sessionStorage.setItem(AUTH_KEY, JSON.stringify(authenticatedUser));
+              sessionStorage.setItem(
+                AUTH_KEY,
+                JSON.stringify(authenticatedUser),
+              );
               tokenStore.set(finalToken);
               setAuthToken(finalToken);
             }
@@ -138,21 +160,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const activityEvents: (keyof WindowEventMap)[] = [
-      "mousemove", "mousedown", "keydown", "touchstart", "scroll"
+      "mousemove",
+      "mousedown",
+      "keydown",
+      "touchstart",
+      "scroll",
     ];
 
     // Initialize
     resetTimer();
 
     // Listeners
-    activityEvents.forEach(event => 
-      window.addEventListener(event, resetTimer, { passive: true })
+    activityEvents.forEach((event) =>
+      window.addEventListener(event, resetTimer, { passive: true }),
     );
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       clearTimer();
-      activityEvents.forEach(event => window.removeEventListener(event, resetTimer));
+      activityEvents.forEach((event) =>
+        window.removeEventListener(event, resetTimer),
+      );
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [user, INACTIVITY_TIMEOUT_MS]);
@@ -173,20 +201,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAuthToken(nextUser.jwtToken);
   }
 
-  const contextValue = useMemo(() => ({
-    user,
-    isLoading,
-    isAdmin: user?.role === USERROLES.superAdmin,
-    isAuthenticated: !!user,
-    login,
-    logout,
-    setUser,
-  }), [user, isLoading]);
+  const contextValue = useMemo(
+    () => ({
+      user,
+      isLoading,
+      isAdmin: user?.role === USERROLES.superAdmin,
+      isAuthenticated: !!user,
+      login,
+      logout,
+      setUser,
+    }),
+    [user, isLoading],
+  );
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
 

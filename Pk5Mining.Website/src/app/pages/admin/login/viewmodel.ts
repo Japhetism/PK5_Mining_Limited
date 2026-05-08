@@ -5,6 +5,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { authService } from "@/app/services/sso/authService";
 import { ApiError } from "@/app/interfaces";
 import { isEmailAuthorized } from "@/app/utils/helper";
+import { tokenStore } from "@/app/auth/token";
 
 function useLoginViewModel() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ function useLoginViewModel() {
       window.location.hash.includes("#");
 
     if (hasMsalParams) {
+      tokenStore.clear();
       navigate("/admin/login", { replace: true });
     }
   }, [location, navigate]);

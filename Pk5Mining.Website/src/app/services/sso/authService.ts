@@ -5,6 +5,8 @@ import {
   IPublicClientApplication 
 } from "@azure/msal-browser";
 import { loginRequest, msalConfig } from "@/app/config/sso/authconfig";
+import { tokenStore } from "@/app/auth/token";
+import { setAuthToken } from "@/app/api/http";
 
 class AuthService {
   private static instance: AuthService;
@@ -64,7 +66,7 @@ class AuthService {
         ...loginRequest,
         loginHint: email, 
         extraQueryParameters: { 
-          ...loginRequest.extraQueryParameters,
+          ...(loginRequest as any).extraQueryParameters,
           domain_hint: "pk5miningltd.com" 
         }
       };
@@ -79,9 +81,17 @@ class AuthService {
     return this.msalInstance.getActiveAccount();
   }
 
-  public async logout(): Promise<void> {
-    const account = this.getAccount();
-    await this.msalInstance.logoutRedirect({ account });
+  public async logout(): Promise<boolean> {
+    try {
+      const account = this.getAccount();
+      await this.msalInstance.logoutRedirect({ account });
+      return true;
+    } catch (error) {
+      return false;
+    } finally {
+      tokenStore.clear();
+      setAuthToken(undefined);
+    }
   }
 
   public async getToken(): Promise<string | null> {
