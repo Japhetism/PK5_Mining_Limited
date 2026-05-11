@@ -90,7 +90,7 @@ function useLoginViewModel() {
         "Access Denied: Please sign in with an authorized organizational account.",
       );
     }
-    
+
     if (email.trim()) {
       await authService.login(email);
     }

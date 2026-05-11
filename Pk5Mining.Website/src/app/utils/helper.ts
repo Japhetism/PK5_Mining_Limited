@@ -1,7 +1,7 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
 import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
 import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
-import { adminRouteItems } from "../routes/admin-config";
+import { AdminRouteItem, adminRouteItems } from "../routes/admin-config";
 import { UserRole } from "../constants/role";
 import { ZodError } from "zod";
 import { RolePermission } from "../interfaces/role";
@@ -184,10 +184,11 @@ export const hasPermissions = (
 };
 
 export const getVisibleNav = (
-  userPermissions: RolePermission[],
+  items: AdminRouteItem[],
+  userPermissions: RolePermission[] = [],
   userRole?: UserRole,
 ): NavItem[] => {
-  return adminRouteItems
+  return items
     .filter(
       (item) =>
         item.show &&

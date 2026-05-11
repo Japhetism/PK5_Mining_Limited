@@ -6,6 +6,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { getGreeting, getVisibleNav } from "@/app/utils/helper";
 import { UserMenu } from "@/app/components/ui/userMenu";
 import { useTenant } from "@/tenants/useTenant";
+import { useAdminNav } from "@/app/hooks/useAdminNav";
 
 export function AdminLayout() {
   const { colors, logo } = useTenant();
@@ -18,7 +19,7 @@ export function AdminLayout() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
-  const nav = getVisibleNav(user?.permissions ?? [], user?.role);
+  const nav = useAdminNav();
 
   return (
     <div className="h-screen text-black flex flex-col bg-white overflow-hidden">

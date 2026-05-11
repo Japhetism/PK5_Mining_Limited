@@ -14,6 +14,7 @@ import { isJwtExpired } from "../utils/jwt";
 import { tokenStore } from "../auth/token";
 import { authService } from "../services/sso/authService";
 import { USERROLES } from "../constants/role";
+import { isEmailAuthorized } from "../utils/helper";
 
 type AuthState = {
   user: IUser | null;
@@ -87,7 +88,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await authService.initialize();
         const ssoAccount = authService.getAccount();
 
+        console.log("SSO account ", ssoAccount);
+
         if (ssoAccount) {
+          if (
+            !isEmailAuthorized(ssoAccount.username, window.location.hostname)
+          ) {
+            await authService.logout();
+            return;
+          }
           const msToken = await authService.getToken();
           if (msToken) {
             setAuthToken(msToken);

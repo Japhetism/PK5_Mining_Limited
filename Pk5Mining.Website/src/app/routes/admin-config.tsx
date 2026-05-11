@@ -226,13 +226,3 @@ export const adminRouteItems: AdminRouteItem[] = [
     element: Account,
   },
 ];
-
-export const nav: NavItem[] = adminRouteItems
-  .filter((item) => item.show && hasRole() && hasPermissions())
-  .map((item) => ({
-    to: `/admin/${item.path}`,
-    label: item.label,
-    icon: item.icon!,
-    show: item.show,
-    end: item.end,
-  }));
