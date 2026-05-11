@@ -85,6 +85,12 @@ function useLoginViewModel() {
   };
 
   const handleSSOSigninByEmail = async () => {
+    if (!isEmailAuthorized(email, window.location.hostname)) {
+      return setError(
+        "Access Denied: Please sign in with an authorized organizational account.",
+      );
+    }
+    
     if (email.trim()) {
       await authService.login(email);
     }
