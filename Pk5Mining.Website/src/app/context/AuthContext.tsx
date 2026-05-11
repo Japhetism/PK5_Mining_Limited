@@ -6,12 +6,15 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { login as loginApi } from "../api/auth";
+import { login as loginApi, microsoftLogin } from "../api/auth";
 import { IUser } from "../interfaces";
 import { AUTH_KEY } from "../constants";
 import { setAuthToken } from "../api/http";
 import { isJwtExpired } from "../utils/jwt";
 import { tokenStore } from "../auth/token";
+import { authService } from "../services/sso/authService";
+import { USERROLES } from "../constants/role";
+import { isEmailAuthorized } from "../utils/helper";
 
 type AuthState = {
   user: IUser | null;
@@ -25,87 +28,147 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
-const DEFAULT_INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+const DEFAULT_INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 Minutes
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Keep logout stable for event listeners/timers
   const logoutRef = useRef<() => void>(() => {});
 
-  const INACTIVITY_TIMEOUT_MS = import.meta.env.VITE_INACTIVITY_TIMEOUT_MS ?? DEFAULT_INACTIVITY_TIMEOUT_MS;
+  const INACTIVITY_TIMEOUT_MS =
+    Number(import.meta.env.VITE_INACTIVITY_TIMEOUT_MS) ||
+    DEFAULT_INACTIVITY_TIMEOUT_MS;
 
-  function logout() {
+  async function logout() {
+    // 1. Clear local session data immediately
     sessionStorage.removeItem(AUTH_KEY);
-    tokenStore.clear();
-    setUser(null);
-    setAuthToken(undefined);
+
+    const ssoAccount = authService.getAccount();
+
+    if (ssoAccount) {
+      try {
+        const res = await authService.logout();
+      } catch (error) {
+        console.error(
+          "SSO Logout failed, falling back to manual redirect",
+          error,
+        );
+        window.location.href = `${window.location.origin}/admin/login`;
+      } finally {
+        tokenStore.clear();
+        setAuthToken(undefined);
+        setUser(null);
+      }
+    } else {
+      // 3. For manual/local users, just redirect to login
+      tokenStore.clear();
+      setAuthToken(undefined);
+      setUser(null);
+      window.location.href = `${window.location.origin}/admin/login`;
+    }
   }
 
   logoutRef.current = logout;
 
-  // Restore persisted auth on app start
   useEffect(() => {
-    try {
-      const token = tokenStore.get();
-      const rawUser = sessionStorage.getItem(AUTH_KEY);
+    const initAuth = async () => {
+      try {
+        const token = tokenStore.get();
+        const rawUser = sessionStorage.getItem(AUTH_KEY);
 
-      if (!rawUser || !token || isJwtExpired(token)) {
+        // Standard Session Restore
+        if (token && rawUser && !isJwtExpired(token)) {
+          setAuthToken(token);
+          setUser(JSON.parse(rawUser) as IUser);
+          setIsLoading(false);
+          return;
+        }
+
+        // Microsoft SSO Handshake
+        await authService.initialize();
+        const ssoAccount = authService.getAccount();
+
+        console.log("SSO account ", ssoAccount);
+
+        if (ssoAccount) {
+          if (
+            !isEmailAuthorized(ssoAccount.username, window.location.hostname)
+          ) {
+            await authService.logout();
+            return;
+          }
+          const msToken = await authService.getToken();
+          if (msToken) {
+            setAuthToken(msToken);
+            tokenStore.set(msToken);
+
+            const backendUser = await microsoftLogin();
+            if (backendUser) {
+              const finalToken = backendUser.jwtToken || msToken;
+              const authenticatedUser = {
+                ...backendUser,
+                jwtToken: finalToken,
+              };
+
+              setUser(authenticatedUser);
+              sessionStorage.setItem(
+                AUTH_KEY,
+                JSON.stringify(authenticatedUser),
+              );
+              tokenStore.set(finalToken);
+              setAuthToken(finalToken);
+            }
+          }
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("❌ Auth Initialization Failed:", error);
         logoutRef.current();
-        return;
+      } finally {
+        setIsLoading(false);
       }
+    };
 
-      setAuthToken(token);
-
-      if (rawUser) {
-        const parsedUser = JSON.parse(rawUser) as IUser;
-        setUser(parsedUser);
-      } else {
-        setUser(null);
-      }
-    } catch {
-      logoutRef.current();
-    } finally {
-      setIsLoading(false);
-    }
+    initAuth();
   }, []);
 
-  // ✅ Listen for 401 unauthorized emitted by axios interceptor
-  useEffect(() => {
-    const handler = () => logoutRef.current();
-    window.addEventListener("unauthorized", handler);
-    return () => window.removeEventListener("unauthorized", handler);
-  }, []);
-
-  // ✅ Inactivity logout (2 mins)
   useEffect(() => {
     let timer: number | undefined;
 
-    const clear = () => {
+    const clearTimer = () => {
       if (timer) window.clearTimeout(timer);
       timer = undefined;
     };
 
-    const reset = () => {
-      // only track inactivity when authenticated
-      const token = tokenStore.get();
-      if (!token || isJwtExpired(token)) {
-        clear();
+    const resetTimer = () => {
+      if (!user) {
+        clearTimer();
         return;
       }
-
-      clear();
+      clearTimer();
       timer = window.setTimeout(() => {
-        // re-check before logging out
-        const t = tokenStore.get();
-        if (t && !isJwtExpired(t)) logoutRef.current();
+        console.warn("Session timed out due to inactivity.");
+        logoutRef.current();
       }, INACTIVITY_TIMEOUT_MS);
     };
 
-    const onActivity = () => reset();
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Stop timer when user leaves the tab
+        clearTimer();
+      } else {
+        // User is back: verify session still exists in storage (cross-tab sync)
+        const sessionActive = !!sessionStorage.getItem(AUTH_KEY);
+        if (!sessionActive && user) {
+          logoutRef.current();
+        } else {
+          resetTimer();
+        }
+      }
+    };
 
-    const events: (keyof WindowEventMap)[] = [
+    const activityEvents: (keyof WindowEventMap)[] = [
       "mousemove",
       "mousedown",
       "keydown",
@@ -113,70 +176,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       "scroll",
     ];
 
-    // start once
-    reset();
+    // Initialize
+    resetTimer();
 
-    events.forEach((e) =>
-      window.addEventListener(e, onActivity, { passive: true })
+    // Listeners
+    activityEvents.forEach((event) =>
+      window.addEventListener(event, resetTimer, { passive: true }),
     );
-
-    // optional: pause when tab is hidden, resume when visible
-    const onVisibility = () => {
-      if (document.hidden) clear();
-      else reset();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      clear();
-      events.forEach((e) => window.removeEventListener(e, onActivity));
-      document.removeEventListener("visibilitychange", onVisibility);
+      clearTimer();
+      activityEvents.forEach((event) =>
+        window.removeEventListener(event, resetTimer),
+      );
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
+  }, [user, INACTIVITY_TIMEOUT_MS]);
+
+  useEffect(() => {
+    const handler = () => logoutRef.current();
+    window.addEventListener("unauthorized", handler);
+    return () => window.removeEventListener("unauthorized", handler);
   }, []);
 
   async function login(email: string, password: string) {
     const nextUser = await loginApi({ email, password });
-
-    if (!nextUser?.jwtToken) {
-      throw new Error("Login succeeded but no JWT token was returned.");
-    }
-
-    if (isJwtExpired(nextUser.jwtToken)) {
-      throw new Error("Session token is expired. Please login again.");
-    }
+    if (!nextUser?.jwtToken) throw new Error("Authentication failed: No token");
 
     setUser(nextUser as IUser);
-
     sessionStorage.setItem(AUTH_KEY, JSON.stringify(nextUser));
     tokenStore.set(nextUser.jwtToken);
-
     setAuthToken(nextUser.jwtToken);
-
-    // 🔥 reset inactivity timer immediately after login
-    window.dispatchEvent(new Event("mousemove"));
-
   }
 
-  const value = useMemo<AuthState>(() => {
-    const token = tokenStore.get();
-    const isAuthenticated = !!token && !isJwtExpired(token);
-
-    return {
+  const contextValue = useMemo(
+    () => ({
       user,
       isLoading,
-      isAdmin: true,
-      isAuthenticated,
+      isAdmin: user?.role === USERROLES.superAdmin,
+      isAuthenticated: !!user,
       login,
       logout,
       setUser,
-    };
-  }, [user, isLoading]);
+    }),
+    [user, isLoading],
+  );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
-}
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  return context;
+};

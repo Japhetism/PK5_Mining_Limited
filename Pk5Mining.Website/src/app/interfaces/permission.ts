@@ -1,3 +1,5 @@
+import { PERMISSIONS } from "../constants/permissions";
+
 export type Permission = {
   id: number,
   name: string;

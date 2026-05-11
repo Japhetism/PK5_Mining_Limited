@@ -2,9 +2,10 @@ import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router-dom";
 import { adminRouteItems, type AdminRouteItem } from "./admin-config";
 import { hasPermissions, hasRole } from "../utils/helper";
-import { Permission } from "../constants/permissions";
+import { Permission } from "../interfaces/permission";
 import { useAuth } from "../context/AuthContext";
 import { UserRole } from "../constants/role";
+import { RolePermission } from "../interfaces/role";
 
 const Login = lazy(() =>
   import("@/app/pages/admin/login").then((m) => ({ default: m.Login }))
@@ -24,6 +25,11 @@ const AdminLayout = lazy(() =>
   import("@/app/pages/admin/layout").then((m) => ({ default: m.AdminLayout }))
 );
 
+const SSO = lazy(() =>
+  import("@/app/pages/admin/sso").then((m) => ({ default: m.SSO })),
+);
+
+
 function AdminAccessGuard({
   canAccess,
   roles,
@@ -33,7 +39,7 @@ function AdminAccessGuard({
 }: {
   canAccess: boolean;
   roles?: UserRole[];
-  permissions?: Permission[];
+  permissions?: RolePermission[];
   requireAllPermissions?: boolean;
   children: React.ReactNode;
 }) {
@@ -78,6 +84,10 @@ function mapAdminRoutes(items: AdminRouteItem[]): RouteObject[] {
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
   { path: "/admin/change/password", element: <ChangePassword /> },
+  { 
+    path: "/admin/sso", 
+    element: <SSO /> 
+  },
   {
     path: "/admin",
     element: <ProtectedRoute />,

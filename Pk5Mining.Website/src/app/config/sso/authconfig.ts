@@ -1,18 +1,29 @@
-import { Configuration, PopupRequest } from "@azure/msal-browser";
+import { Configuration, LogLevel, BrowserCacheLocation } from "@azure/msal-browser";
+
+const CLIENT_ID = import.meta.env.VITE_AUTH_CLIENT_ID ?? "";
+const CLIENT_SCOPE = import.meta.env.VITE_AUTH_CLIENT_SCOPE ?? "";
+const CLIENT_AUTHORITY = import.meta.env.VITE_CLIENT_AUTHORITY ?? "";
 
 export const msalConfig: Configuration = {
   auth: {
-    clientId: "YOUR_CLIENT_ID", // From Entra Admin Center
-    authority: "https://login.microsoftonline.com/common", // or your Tenant ID
-    redirectUri: window.location.origin,
+    clientId: CLIENT_ID,
+    authority: CLIENT_AUTHORITY,
+    redirectUri: `${window.location.origin}/admin/sso`,
+    postLogoutRedirectUri: `${window.location.origin}/admin/login`,
   },
   cache: {
-    cacheLocation: "sessionStorage",
-    // storeAuthStateInCookie: false,
-  }
+    cacheLocation: BrowserCacheLocation.LocalStorage, 
+  },
+  system: {
+    loggerOptions: {
+      loggerCallback: (level, message, containsPii) => {
+        if (containsPii) return;
+      },
+      logLevel: LogLevel.Info,
+    },
+  },
 };
 
-// Scopes for the ID token / Graph API
-export const loginRequest: PopupRequest = {
-  scopes: ["User.Read"]
+export const loginRequest = {
+  scopes: [CLIENT_SCOPE],
 };

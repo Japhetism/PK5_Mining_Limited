@@ -1,40 +1,28 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
 import { authService } from "@/app/services/sso/authService";
 import { ApiError } from "@/app/interfaces";
 import { isEmailAuthorized } from "@/app/utils/helper";
-import { tokenStore } from "@/app/auth/token";
 
 function useLoginViewModel() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login: authLogin, user: authUser, isLoading } = useAuth();
+  const { login: authLogin, user: authUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [formType, setFormType] = useState<"emailForm" | "passwordForm">(
-    "emailForm",
-  );
 
   useEffect(() => {
-    if (isLoading) {
-      navigate("/admin/sso", { replace: true });
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    const hasMsalParams =
-      window.location.search.includes("state=") ||
+    const hasMsalParams = 
+      window.location.search.includes("state=") || 
       window.location.hash.includes("state=") ||
       window.location.hash.includes("#");
 
     if (hasMsalParams) {
-      tokenStore.clear();
       navigate("/admin/login", { replace: true });
     }
   }, [location, navigate]);
@@ -68,7 +56,9 @@ function useLoginViewModel() {
     onSettled: () => setLoading(false),
   });
 
-  const onSubmit = () => {
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (!isEmailAuthorized(email, window.location.hostname)) {
       return setError(
         "Access Denied: Please sign in with an authorized organizational account.",
@@ -84,51 +74,15 @@ function useLoginViewModel() {
     await authService.login();
   };
 
-  const handleSSOSigninByEmail = async () => {
-    if (!isEmailAuthorized(email, window.location.hostname)) {
-      return setError(
-        "Access Denied: Please sign in with an authorized organizational account.",
-      );
-    }
-
-    if (email.trim()) {
-      await authService.login(email);
-    }
-  };
-
-  const handleContinue = () => {
-    const domain = email.split("@")[1];
-
-    if (domain !== "pk5miningltd.com") {
-      setFormType("passwordForm");
-    } else {
-      handleSSOSigninByEmail();
-    }
-  };
-
-  const isEmailStep = formType === "emailForm";
-
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    isEmailStep ? handleContinue() : onSubmit();
-  };
-
   return {
     email,
     password,
     error,
     loading,
-    formType,
-    showPassword,
-    isEmailStep,
-    setFormType,
     setEmail,
     setPassword,
     onSubmit,
     handleSSOSignin,
-    handleContinue,
-    handleFormSubmit,
-    setShowPassword,
   };
 }
 

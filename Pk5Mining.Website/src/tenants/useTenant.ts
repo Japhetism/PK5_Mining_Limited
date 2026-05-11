@@ -1,3 +1,7 @@
+
+import agroLogo from "@/assets/images/pk5agroimage.png";
+import miningLogo from "@/assets/images/pk5miningimage.png";
+
 const agroDomain = import.meta.env.VITE_AGRO_DOMAIN;
 
 export const useTenant = () => {
@@ -8,7 +12,7 @@ export const useTenant = () => {
     isAgro,
     name: isAgro ? "PK5 Agro-Allied" : "PK5 Mining Ltd",
     favicon: isAgro ? "/favicon.ico" : "/favicon.png",
-    logo: isAgro ? "/src/assets/images/pk5agroimage.png" : "/src/assets/images/pk5miningimage.png",
+    logo: isAgro ? agroLogo : miningLogo,
     colors: {
       bg: isAgro ? "#041A12" : "#0F0F0F",
       card: isAgro ? "#072C1E" : "#1a1a1a",

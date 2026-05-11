@@ -14,10 +14,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { NavItem } from "../interfaces";
-import { Permission, PERMISSIONS } from "../constants/permissions";
+import { PERMISSIONS } from "../constants/permissions";
+import { Permission } from "../interfaces/permission";
 import { UserRole, USERROLES } from "../constants/role";
 import { hasPermissions, hasRole } from "../utils/helper";
 import { useAuth } from "../context/AuthContext";
+import { RolePermission } from "../interfaces/role";
 
 export type AdminRouteItem = {
   path: string;
@@ -28,7 +30,7 @@ export type AdminRouteItem = {
   end?: boolean;
   element: LazyExoticComponent<ComponentType<any>>;
   roles?: UserRole[];
-  permissions?: Permission[];
+  permissions?: RolePermission[];
   requireAllPermissions?: boolean;
 };
 
@@ -224,13 +226,3 @@ export const adminRouteItems: AdminRouteItem[] = [
     element: Account,
   },
 ];
-
-export const nav: NavItem[] = adminRouteItems
-  .filter((item) => item.show && hasRole() && hasPermissions())
-  .map((item) => ({
-    to: `/admin/${item.path}`,
-    label: item.label,
-    icon: item.icon!,
-    show: item.show,
-    end: item.end,
-  }));
