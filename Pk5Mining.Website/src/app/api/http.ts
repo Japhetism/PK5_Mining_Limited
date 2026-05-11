@@ -1,6 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 import { tokenStore } from "../auth/token";
+import { getAppId } from "../utils/helper";
+
+const hostname = window.location.hostname;
 
 const baseURL = "/api";
 const HEADER_NAME = import.meta.env.VITE_API_KEY_NAME;
@@ -44,6 +47,12 @@ http.interceptors.request.use((config) => {
 
   if (config.requiresApiKey && HEADER_NAME) {
     config.headers[HEADER_NAME] = API_VALUE;
+  }
+
+  const appId = getAppId(hostname);
+
+  if (appId) {
+    config.headers["Application-Tenant"] = appId;
   }
 
   return config;

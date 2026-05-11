@@ -1,8 +1,8 @@
-import { 
-  PublicClientApplication, 
-  AuthenticationResult, 
-  AccountInfo, 
-  IPublicClientApplication 
+import {
+  PublicClientApplication,
+  AuthenticationResult,
+  AccountInfo,
+  IPublicClientApplication,
 } from "@azure/msal-browser";
 import { loginRequest, msalConfig } from "@/app/config/sso/authconfig";
 import { tokenStore } from "@/app/auth/token";
@@ -47,7 +47,8 @@ class AuthService {
 
       const accounts = this.msalInstance.getAllAccounts();
       if (accounts.length > 0) {
-        const activeAccount = this.msalInstance.getActiveAccount() || accounts[0];
+        const activeAccount =
+          this.msalInstance.getActiveAccount() || accounts[0];
         this.msalInstance.setActiveAccount(activeAccount);
       }
 
@@ -64,11 +65,11 @@ class AuthService {
 
       const request = {
         ...loginRequest,
-        loginHint: email, 
-        extraQueryParameters: { 
+        loginHint: email,
+        extraQueryParameters: {
           ...(loginRequest as any).extraQueryParameters,
-          domain_hint: "pk5miningltd.com" 
-        }
+          domain_hint: "pk5miningltd.com",
+        },
       };
 
       await this.msalInstance.loginRedirect(request);
@@ -81,14 +82,45 @@ class AuthService {
     return this.msalInstance.getActiveAccount();
   }
 
+  // public async logout(): Promise<boolean> {
+  //   try {
+  //     const account = this.getAccount();
+  //     await this.msalInstance.logoutRedirect({ account });
+  //     return true;
+  //   } catch (error) {
+  //     return false;
+  //   } finally {
+  //     tokenStore.clear();
+  //     setAuthToken(undefined);
+  //   }
+  // }
+
   public async logout(): Promise<boolean> {
     try {
       const account = this.getAccount();
-      await this.msalInstance.logoutRedirect({ account });
+      console.log("from logout account ", account);
+
+      if (account) {
+        console.log("if block.....")
+        await this.msalInstance.logoutRedirect({
+          account: account,
+          // The logoutHint helps skip the "Which account?" screen
+          logoutHint: account.username,
+          // Redirect back to your app immediately after MS clears the session
+          postLogoutRedirectUri: window.location.origin,
+        });
+      } else {
+        console.log("logout else block.....")
+        // Fallback if no account is found in cache
+        await this.msalInstance.logoutRedirect();
+      }
+
       return true;
     } catch (error) {
+      console.error("Logout failed", error);
       return false;
     } finally {
+      // Clear local state
       tokenStore.clear();
       setAuthToken(undefined);
     }

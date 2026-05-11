@@ -13,6 +13,12 @@ import {
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
 
+const BRAND_MAPPING: Record<string, string> = {
+  pk5mining: "VITE_APP_ID",
+  pk5miningltd: "VITE_APP_ID",
+  pk5agroallied: "VITE_APP_AGRO_ID",
+};
+
 export function capitalizeFirstLetter(value: string): string {
   if (!value) return value;
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -346,4 +352,13 @@ export const isEmailAuthorized = (email: string, hostname: string): boolean => {
   const hostBrand = hostname.split(".")[0].toLowerCase();
   
   return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
+};
+
+export const getAppId = (hostname: string): string => {
+  if (!hostname) return "";
+  
+  const hostBrand = hostname.split(".")[0].toLowerCase();
+  const envKey = BRAND_MAPPING[hostBrand];
+
+  return envKey ? (import.meta.env[envKey] ?? "") : "";
 };
