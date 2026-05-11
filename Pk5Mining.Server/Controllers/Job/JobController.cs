@@ -25,14 +25,14 @@ namespace Pk5Mining.Server.Controllers.Job
             _mapper = mapper;
         }
 
-        /*[RequireApiKey]*/
+        [RequireApiKey]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IJobs>>> Get()
         {
             IEnumerable<IJobs> jobs = await _jobRepo.GetRepoItems();
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("light")]
         public async Task<ActionResult<IEnumerable<JobLightResponseDTO>>> GetLight()
         {
@@ -56,7 +56,7 @@ namespace Pk5Mining.Server.Controllers.Job
             return Ok(ApiResponse.SuccessMessage(job, "Job retrieved successfully."));
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPost]
         public async Task<ActionResult<IJobs>> Post([FromBody] JobsDTO value)
         {
@@ -88,7 +88,7 @@ namespace Pk5Mining.Server.Controllers.Job
                 }
             }
         }
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("filter")]
         public async Task<IActionResult> GetJobs(
             [FromQuery] int pageNumber = 1,
@@ -120,7 +120,7 @@ namespace Pk5Mining.Server.Controllers.Job
             return Ok(ApiResponse.SuccessMessage(response, "Jobs retrieved successfully."));
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] JobsDTO value)
         {

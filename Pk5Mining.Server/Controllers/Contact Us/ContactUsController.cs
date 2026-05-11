@@ -53,8 +53,8 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             }
             return Ok(ApiResponse.SuccessMessage(contact, "Your message has been sent successfully."));
         }
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("{id:long}")]
-        [Authorize]
         public async Task<IActionResult> Get(long id)
         {
             var (contact, error) = await _repo.GetById(id);
@@ -64,14 +64,15 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             }
             return Ok(ApiResponse.SuccessMessage(contact, "Data Retrieved"));
         }
+
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var contacts = await _repo.GetAll();
             return Ok(ApiResponse.SuccessMessage(contacts, "Data Retrieved"));
         }
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("filter")]
         public async Task<IActionResult> Get(
              [FromQuery] int pageNumber = 1,
@@ -110,7 +111,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             };
             return Ok(ApiResponse.SuccessMessage(response, "Contact requests retrieved successfully."));
         }
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] ContactUsUpdateDTO value)
         {

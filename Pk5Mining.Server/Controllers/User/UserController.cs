@@ -18,7 +18,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             _repo = adminRepo;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] UserDTO dto)
         {
@@ -41,7 +41,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             return Ok(ApiResponse.SuccessMessage(admin, "Password updated successfully"));
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("filter")]
         public async Task<IActionResult> Get( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? email = null, [FromQuery] string? userName = null,
              [FromQuery] string? name = null,
@@ -66,7 +66,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             };
             return Ok(ApiResponse.SuccessMessage(response, "Users retrieved successfully."));
         }
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("{id}")]
         public async Task<ActionResult> Ge(long id)
         {
@@ -81,7 +81,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             }
             return Ok(ApiResponse.SuccessMessage(admin, "User retrieved successfully"));
         }
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPut("update-user")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto dto)
         {

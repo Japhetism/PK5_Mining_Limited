@@ -16,7 +16,7 @@ namespace Pk5Mining.Server.Controllers.Single_Sign_On
         {
             _userRepo = userRepo;
         }
-      /*  [Authorize(AuthenticationSchemes = "SSOScheme")]*/
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPost("microsoft/login")]
         public async Task<IActionResult> ClientLogin()
         {
