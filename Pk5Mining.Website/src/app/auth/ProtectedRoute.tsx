@@ -15,9 +15,9 @@ export function ProtectedRoute() {
   //   return <Navigate to="/" replace />;
   // }
 
-  if (!user.hasChangedPassword) {
-    return <Navigate to="/admin/change/password" replace />;
-  }
+  // if (!user.hasChangedPassword) {
+  //   return <Navigate to="/admin/change/password" replace />;
+  // }
 
   return <Outlet />;
 }
