@@ -16,7 +16,7 @@ function useJobDetailsViewModel() {
   const { jobId } = useParams<{ jobId: string }>();
 
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(9);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [selectedApplicant, setSelectedApplicant] =
     useState<JobApplicationDto | null>(null);

@@ -202,13 +202,13 @@ export function EditModal({
                   )}
                 </div>
 
-                <PasswordInput
+                {/* <PasswordInput
                   label="Temporary Password"
                   value={form.password || ""}
                   disabled
                   infoText="Copy and share this temporary password with the user"
                   canCopy={true}
-                />
+                /> */}
               </div>
             </form>
           </div>

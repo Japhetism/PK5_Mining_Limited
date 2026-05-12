@@ -136,6 +136,7 @@ function useSubsidiaryListViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["subsidiaries"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       toastUtil.success("Subsidiary created successfully");
     },
     onError: (err) => {

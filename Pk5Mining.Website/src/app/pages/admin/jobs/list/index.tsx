@@ -226,7 +226,7 @@ export function JobList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label className="block text-xs font-semibold mb-2">
               Department
             </label>
             <input
@@ -235,13 +235,13 @@ export function JobList() {
               value={filters.department}
               onChange={(e) => updateFilter("department", e.target.value)}
               placeholder="Search by department"
-              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label className="block text-xs font-semibold mb-2">
               Location
             </label>
             <input
@@ -250,13 +250,13 @@ export function JobList() {
               value={filters.location}
               onChange={(e) => updateFilter("location", e.target.value)}
               placeholder="Search by location"
-              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label className="block text-xs font-semibold mb-2">
               Status
             </label>
             <select
@@ -265,7 +265,7 @@ export function JobList() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             >
               <option value="">All Statuses</option>
@@ -278,7 +278,7 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label className="block text-xs font-semibold mb-2">
               Job Type
             </label>
             <select
@@ -287,7 +287,7 @@ export function JobList() {
                 setFilterJobType(e.target.value);
                 setIsFilter(true);
               }}
-              className="w-full border rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             >
               <option value="">All Job Type</option>

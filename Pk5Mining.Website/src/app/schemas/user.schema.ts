@@ -10,11 +10,7 @@ const baseUserSchema = z.object({
   username: z.string().min(2, { message: "Username is required" }),
 });
 
-export const createUserSchema = baseUserSchema.extend({
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-});
+export const createUserSchema = baseUserSchema;
 
 export const updateUserSchema = baseUserSchema.partial().extend({
   id: z.number(),

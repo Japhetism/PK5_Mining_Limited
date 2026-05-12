@@ -239,7 +239,7 @@ export function Roles() {
               value={filters.search}
               onChange={(e) => updateFilter("search", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
@@ -250,7 +250,7 @@ export function Roles() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -264,7 +264,7 @@ export function Roles() {
       </div>
 
       {/* Table */}
-      <div className="min-w-0 overflow-x-auto rounded-xl border border-gray-800">
+      <div className="min-w-0 overflow-x-auto rounded-xl">
         <PaginatedTable<Role>
           data={roles}
           columns={columns}

@@ -1,10 +1,11 @@
-import { useAuth } from "@/app/context/AuthContext";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../../../assets/images/logo.png";
+import { useTenant } from "@/tenants/useTenant";
+import { useAuth } from "@/app/context/AuthContext";
 
 export function SSO() {
   const { user, isLoading } = useAuth();
+  const { colors, logo } = useTenant();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,13 +16,13 @@ export function SSO() {
   }, [user, isLoading, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f0f0f] p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ backgroundColor: colors.bg }}>
       <div className="flex flex-col items-center animate-pulse">
         <div className="mb-8">
           <img
-            src={Logo}
+            src={logo}
             alt="PK5 Mining Logo"
-            className="w-32 h-auto object-contain"
+            className="w-32 h-auto object-contain brightness-0 invert-[.5]"
             loading="lazy"
           />
         </div>
