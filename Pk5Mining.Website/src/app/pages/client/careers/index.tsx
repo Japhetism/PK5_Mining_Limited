@@ -184,7 +184,7 @@ export function Careers() {
               Open Positions
             </h2>
             <p className="text-xl text-gray-400">
-              Find your next opportunity with KP5 Mining
+              Find your next opportunity with PK5 Mining
             </p>
           </AnimatedSection>
 
