@@ -83,7 +83,7 @@ function mapAdminRoutes(items: AdminRouteItem[]): RouteObject[] {
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
-  { path: "/admin/change/password", element: <ChangePassword /> },
+  // { path: "/admin/change/password", element: <ChangePassword /> },
   { 
     path: "/admin/sso", 
     element: <SSO /> 

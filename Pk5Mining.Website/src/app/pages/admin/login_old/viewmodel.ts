@@ -31,11 +31,12 @@ function useLoginViewModel() {
   useEffect(() => {
     if (!authUser) return;
 
-    if (authUser.hasChangedPassword) {
-      navigate("/admin/dashboard", { replace: true });
-    } else {
-      navigate("/admin/change/password", { replace: true });
-    }
+    // if (authUser.hasChangedPassword) {
+    //   navigate("/admin/dashboard", { replace: true });
+    // } else {
+    //   navigate("/admin/change/password", { replace: true });
+    // }
+    navigate("/admin/dashboard", { replace: true });
   }, [authUser, navigate]);
 
   const mutation = useMutation({
