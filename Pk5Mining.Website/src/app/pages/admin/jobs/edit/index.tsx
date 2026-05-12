@@ -31,7 +31,7 @@ export function JobEdit() {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-xs hover:text-gray-200 mb-2"
+            className="inline-flex items-center gap-1 text-xs mb-2"
           >
             <ArrowLeft className="w-3 h-3"/>
             Back

@@ -132,14 +132,14 @@ export function ContactMessageList() {
         {/* Search & Filter Controls */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Quick Search Input */}
-          <div className="w-full sm:max-w-md">
+          <div className="w-full sm:max-w-2xl">
             <input
               name="search"
               type="text"
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email..."
-              className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
+              className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
             />
           </div>
 

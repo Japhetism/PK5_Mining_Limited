@@ -51,7 +51,7 @@ export function JobDetail() {
         <div>
           <button
             onClick={() => navigate("/admin/jobs")}
-            className="inline-flex items-center gap-1 text-xs hover:text-gray-200 mb-2"
+            className="inline-flex items-center gap-1 text-xs mb-2"
           >
             <ArrowLeft className="w-3 h-3" />
             Back

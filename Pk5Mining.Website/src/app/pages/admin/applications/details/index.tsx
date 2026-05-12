@@ -48,7 +48,7 @@ export function ApplicationDetail() {
         <button
           type="button"
           onClick={() => history.back()}
-          className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200"
+          className="inline-flex items-center gap-1 text-xs"
         >
           <ArrowLeft className="w-3 h-3" />
           Back
