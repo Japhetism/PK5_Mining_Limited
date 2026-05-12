@@ -31,7 +31,6 @@ const defaultFormData: User = {
   email: "",
   username: "",
   role: "",
-  password: "",
   isActive: true,
   dT_Created: "",
 };
@@ -140,7 +139,7 @@ function useUserViewModel() {
   useEffect(() => {
     if (confirmEditOpen) {
       const tempPassword = generatePassword();
-      setForm({ ...defaultFormData, password: tempPassword });
+      // setForm({ ...defaultFormData, password: tempPassword });
     }
 
     if (!selectedUser) return;
