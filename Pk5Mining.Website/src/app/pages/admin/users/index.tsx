@@ -195,7 +195,7 @@ export function UserList() {
                   <span className="text-red-400">Delete User</span>
                 </DropdownMenu.Item>
 
-                <DropdownMenu.Item
+                {/* <DropdownMenu.Item
                   onSelect={() => {
                     setSelectedUser(user);
                     setChangePasswordOpen(true);
@@ -204,7 +204,7 @@ export function UserList() {
                 >
                   <KeyRound className="w-4 h-4" />
                   <span>Change Password</span>
-                </DropdownMenu.Item>
+                </DropdownMenu.Item> */}
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
