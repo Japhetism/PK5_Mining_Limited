@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
 import { authService } from "@/app/services/sso/authService";
 import { ApiError } from "@/app/interfaces";
-import { isEmailAuthorized } from "@/app/utils/helper";
+import { isEmailAuthorized, shouldChangePassword } from "@/app/utils/helper";
 import { tokenStore } from "@/app/auth/token";
 
 function useLoginViewModel() {
@@ -43,11 +43,14 @@ function useLoginViewModel() {
   useEffect(() => {
     if (!authUser) return;
 
-    if (authUser.hasChangedPassword) {
-      navigate("/admin/dashboard", { replace: true });
-    } else {
-      navigate("/admin/change/password", { replace: true });
-    }
+    // const changePassword = authUser.hasChangedPassword && !(authUser.email && shouldChangePassword(authUser.email, window.location.hostname));
+
+    // if (!changePassword) {
+    //   navigate("/admin/dashboard", { replace: true });
+    // } else {
+    //   navigate("/admin/change/password", { replace: true });
+    // }
+    navigate("/admin/dashboard", { replace: true });
   }, [authUser, navigate]);
 
   const mutation = useMutation({

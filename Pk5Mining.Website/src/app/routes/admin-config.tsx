@@ -181,7 +181,7 @@ export const adminRouteItems: AdminRouteItem[] = [
     icon: UsersIcon,
     show: true,
     canAccess: true,
-    roles: [USERROLES.superAdmin],
+    // roles: [USERROLES.superAdmin],
     permissions: [PERMISSIONS.userView],
     element: Users,
   },

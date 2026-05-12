@@ -354,6 +354,18 @@ export const isEmailAuthorized = (email: string, hostname: string): boolean => {
   return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
 };
 
+export const shouldChangePassword = (email: string, hostname: string): boolean => {
+  if (!email) return false;
+
+  if (!hostname) return false;
+
+  const emailDomain = email.split("@")[1]?.toLowerCase();
+
+   const hostBrand = hostname.split(".")[0].toLowerCase();
+  
+  return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
+}
+
 export const getAppId = (hostname: string): string => {
   if (!hostname) return "";
   
