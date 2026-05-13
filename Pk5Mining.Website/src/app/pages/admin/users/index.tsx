@@ -49,6 +49,9 @@ export function UserList() {
     changePasswordOpen,
     isProcessing,
     confirmUpdateStatusOpen,
+    roles,
+    subsidiaries,
+    departments,
     onChange,
     updateFilter,
     onChangePage,
@@ -354,6 +357,9 @@ export function UserList() {
         open={confirmEditOpen}
         form={form}
         fieldErrors={fieldErrors}
+        subsidiaries={subsidiaries}
+        roles={roles}
+        departments={departments}
         onClose={handleCloseModal}
         onConfirm={selectedUser ? handleUpdateUser : handleCreateUser}
         setFieldErrors={setFieldErrors}
