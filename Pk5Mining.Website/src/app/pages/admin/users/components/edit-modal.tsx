@@ -7,6 +7,7 @@ import { PasswordInput } from "@/app/components/ui/password-input";
 import { Subsidiary } from "@/app/interfaces/subsidiary";
 import { Role } from "@/app/interfaces/role";
 import { SearchableSelect } from "@/app/components/searchable-select";
+import { Department } from "@/app/interfaces/department";
 
 type EditModalProps = {
   form: User;
@@ -18,6 +19,7 @@ type EditModalProps = {
   fieldErrors: any;
   subsidiaries: Subsidiary[];
   roles: Role[];
+  departments: Department[];
   onClose: () => void;
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<UserErrors | null>>;
@@ -35,6 +37,7 @@ export function EditModal({
   fieldErrors,
   roles,
   subsidiaries,
+  departments,
   onClose,
   onConfirm,
   setFieldErrors,
@@ -227,6 +230,26 @@ export function EditModal({
                     placeholder="Select subsidiary"
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
                       ${fieldErrors?.subsidiaryId ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Department <span className="text-red-500">*</span>
+                  </label>
+                  <SearchableSelect
+                    name="departmentId"
+                    value={form.departmentId ?? ""}
+                    options={departments.map((d) => ({
+                      value: d.id,
+                      label: d.name,
+                    }))}
+                    error={fieldErrors?.departmentId}
+                    onChange={onChange}
+                    placeholder="Select department"
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                      ${fieldErrors?.departmentId ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
                   />
                 </div>

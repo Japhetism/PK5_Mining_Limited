@@ -10,11 +10,13 @@ const baseUserSchema = z.object({
   username: z.string().min(2, { message: "Username is required" }),
   roleId: z.coerce
     .number({ message: "Role is required" })
-    .positive("Role is required"),
-    
+    .positive("Role is required"),  
   subsidiaryId: z.coerce
     .number({ message: "Subsidiary is required" })
     .positive("Subsidiary is required"),
+  departmentId: z.coerce
+    .number({ message: "Department is required" })
+    .positive("Department is required"),
 });
 
 export const createUserSchema = baseUserSchema;

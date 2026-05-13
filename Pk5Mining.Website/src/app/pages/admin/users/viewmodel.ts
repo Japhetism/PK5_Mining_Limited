@@ -24,6 +24,7 @@ import { changePassword } from "@/app/api/auth";
 import { createUserSchema, updateUserSchema } from "@/app/schemas/user.schema";
 import { getLightRoles } from "@/app/api/roles";
 import { getLightSubsidiaries } from "@/app/api/subsidiaries";
+import { getDepartmentsForDropdown } from "@/app/api/departments";
 
 const defaultFormData: User = {
   id: 0,
@@ -33,6 +34,7 @@ const defaultFormData: User = {
   username: "",
   roleId: 0,
   subsidiaryId: 0,
+  departmentId: 0,
   isActive: true,
   dT_Created: "",
 };
@@ -139,12 +141,22 @@ function useUserViewModel() {
   });
 
   const {
-    data: subsidiaryData,
-    isLoading: isLoadingSubsidiary,
-    error: subsidiaryError,
+    data: subsidiariesData,
+    isLoading: isLoadingSubsidiaries,
+    error: subsidiariesError,
   } = useQuery({
     queryKey: ["light-subsidiaries"],
     queryFn: () => getLightSubsidiaries(),
+    staleTime: 30_000,
+  });
+
+  const {
+    data: departmentsData,
+    isLoading: isLoadingDepartments,
+    error: departmentsError,
+  } = useQuery({
+    queryKey: ["light-departments"],
+    queryFn: () => getDepartmentsForDropdown(),
     staleTime: 30_000,
   });
 
@@ -181,6 +193,7 @@ function useUserViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       toastUtil.success("User created successfully");
     },
     onError: (err) => {
@@ -202,6 +215,7 @@ function useUserViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       const msg =
         successMessages[actionType as UserAction] ??
         successMessages[UserAction.Update];
@@ -332,8 +346,9 @@ function useUserViewModel() {
     }
   };
 
-  const subsidiaries = subsidiaryData ?? [];
+  const subsidiaries = subsidiariesData ?? [];
   const roles = rolesData ?? [];
+  const departments = departmentsData ?? [];
   const users: User[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -359,6 +374,7 @@ function useUserViewModel() {
     confirmUpdateStatusOpen,
     roles,
     subsidiaries,
+    departments,
     onChange,
     updateFilter,
     onChangePage,
