@@ -31,8 +31,8 @@ const defaultFormData: User = {
   lastName: "",
   email: "",
   username: "",
-  roleId: "",
-  subsidiaryId: "",
+  roleId: 0,
+  subsidiaryId: 0,
   isActive: true,
   dT_Created: "",
 };
