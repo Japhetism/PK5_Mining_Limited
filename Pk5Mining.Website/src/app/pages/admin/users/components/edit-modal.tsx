@@ -4,6 +4,9 @@ import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
 import { User, UserErrors } from "@/app/interfaces/user";
 import { PasswordInput } from "@/app/components/ui/password-input";
+import { Subsidiary } from "@/app/interfaces/subsidiary";
+import { Role } from "@/app/interfaces/role";
+import { SearchableSelect } from "@/app/components/searchable-select";
 
 type EditModalProps = {
   form: User;
@@ -13,11 +16,15 @@ type EditModalProps = {
   cancelText?: string;
   loading?: boolean;
   fieldErrors: any;
+  subsidiaries: Subsidiary[];
+  roles: Role[];
   onClose: () => void;
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<UserErrors | null>>;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => void;
 };
 
@@ -26,6 +33,8 @@ export function EditModal({
   open,
   loading = false,
   fieldErrors,
+  roles,
+  subsidiaries,
   onClose,
   onConfirm,
   setFieldErrors,
@@ -200,6 +209,46 @@ export function EditModal({
                       {fieldErrors?.username}
                     </p>
                   )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Subsidiary <span className="text-red-500">*</span>
+                  </label>
+                  <SearchableSelect
+                    name="subsidiaryId"
+                    value={form.subsidiaryId ?? ""}
+                    options={subsidiaries.map((s) => ({
+                      value: s.id,
+                      label: s.name,
+                    }))}
+                    error={fieldErrors?.subsidiaryId}
+                    onChange={onChange}
+                    placeholder="Select subsidiary"
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                      ${fieldErrors?.subsidiaryId ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                    Role <span className="text-red-500">*</span>
+                  </label>
+                  <SearchableSelect
+                    name="roleId"
+                    value={form.roleId ?? ""}
+                    options={roles.map((r) => ({
+                      value: r.id,
+                      label: r.name,
+                    }))}
+                    error={fieldErrors?.roleId}
+                    onChange={onChange}
+                    placeholder="Select role"
+                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                      ${fieldErrors?.roleId ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                  />
                 </div>
 
                 {/* <PasswordInput

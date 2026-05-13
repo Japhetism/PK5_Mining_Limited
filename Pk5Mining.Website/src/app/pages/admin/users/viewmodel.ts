@@ -23,6 +23,7 @@ import { ApiError } from "@/app/interfaces";
 import { changePassword } from "@/app/api/auth";
 import { createUserSchema, updateUserSchema } from "@/app/schemas/user.schema";
 import { getLightRoles } from "@/app/api/roles";
+import { getLightSubsidiaries } from "@/app/api/subsidiaries";
 
 const defaultFormData: User = {
   id: 0,
@@ -30,7 +31,8 @@ const defaultFormData: User = {
   lastName: "",
   email: "",
   username: "",
-  role: "",
+  roleId: "",
+  subsidiaryId: "",
   isActive: true,
   dT_Created: "",
 };
@@ -126,15 +128,25 @@ function useUserViewModel() {
   });
 
   // for dropdown
-    const {
-      data: rolesData,
-      isLoading: isLoadingRoles,
-      error: rolesError,
-    } = useQuery({
-      queryKey: ["light-roles"],
-      queryFn: () => getLightRoles(),
-      staleTime: 30_000,
-    });
+  const {
+    data: rolesData,
+    isLoading: isLoadingRoles,
+    error: rolesError,
+  } = useQuery({
+    queryKey: ["light-roles"],
+    queryFn: () => getLightRoles(),
+    staleTime: 30_000,
+  });
+
+  const {
+    data: subsidiaryData,
+    isLoading: isLoadingSubsidiary,
+    error: subsidiaryError,
+  } = useQuery({
+    queryKey: ["light-subsidiaries"],
+    queryFn: () => getLightSubsidiaries(),
+    staleTime: 30_000,
+  });
 
   useEffect(() => {
     if (confirmEditOpen) {
@@ -320,11 +332,11 @@ function useUserViewModel() {
     }
   };
 
+  const subsidiaries = subsidiaryData ?? [];
+  const roles = rolesData ?? [];
   const users: User[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
-
-  const roles = rolesData ?? [];
 
   return {
     users,
@@ -345,6 +357,8 @@ function useUserViewModel() {
     changePasswordOpen,
     isProcessing,
     confirmUpdateStatusOpen,
+    roles,
+    subsidiaries,
     onChange,
     updateFilter,
     onChangePage,

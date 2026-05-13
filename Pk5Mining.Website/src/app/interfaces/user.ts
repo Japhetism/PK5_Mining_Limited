@@ -8,6 +8,8 @@ export type User = {
   firstName: string;
   lastName: string;
   username: string;
+  roleId: string;
+  subsidiaryId: string;
   role?: string;
   isActive?: boolean;
   isDeleted?: boolean;
