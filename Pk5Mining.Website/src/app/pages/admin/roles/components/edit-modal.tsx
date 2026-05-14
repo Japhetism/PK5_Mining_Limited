@@ -89,7 +89,7 @@ export function EditModal({
                   </label>
                   <SearchableSelect
                     name="subsidiaryId"
-                    value={form.subsidiaryId ?? ""}
+                    value={form.subsidiaryId || form.subsidiary?.id || ""}
                     options={subsidiaries.map((s) => ({
                       value: s.id,
                       label: s.name,
