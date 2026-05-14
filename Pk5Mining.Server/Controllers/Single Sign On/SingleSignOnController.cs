@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories.Admin;
+using Pk5Mining.Server.Services;
 
 namespace Pk5Mining.Server.Controllers.Single_Sign_On
 {
@@ -11,10 +13,12 @@ namespace Pk5Mining.Server.Controllers.Single_Sign_On
     public class SingleSignOnController : ControllerBase
     {
         private readonly IUserRepo _userRepo;
+        private readonly ITokenService _tokenService;
 
-        public SingleSignOnController(IUserRepo userRepo)
+        public SingleSignOnController(IUserRepo userRepo, ITokenService tokenService)
         {
             _userRepo = userRepo;
+            _tokenService = tokenService;
         }
         [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPost("microsoft/login")]
@@ -37,7 +41,13 @@ namespace Pk5Mining.Server.Controllers.Single_Sign_On
             {
                 return Unauthorized(ApiResponse.AuthenticationException(null, error));
             }
-            return Ok(ApiResponse.SuccessMessage(user, " login successful"));
+            string token = _tokenService.CreateJWTToken(user);
+
+            return Ok(ApiResponse.SuccessMessage(new
+            {
+                User = user,
+                Token = token
+            }, "Login successful"));
         }
     }
 }
