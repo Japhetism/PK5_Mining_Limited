@@ -331,6 +331,7 @@ function useRoleViewModel() {
   }
 
   const handleCloseModal = () => {
+    setFieldErrors({});
     setSelectedRole(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);
