@@ -79,9 +79,25 @@ namespace Pk5Mining.Server.Repositories.Roles
             }
         }
 
-        public async Task<(IEnumerable<UserRole>, int)> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<UserRole>, int)> GetAllAsync(int pageNumber, int pageSize, long? subsidiaryId, string? name, string? status, bool? isSystem)
         {
             IQueryable<UserRole> query = _dbContext.UserRoles.Include(r => r.Permissions).Include(s => s.Subsidiary).AsQueryable();
+            if (subsidiaryId.HasValue)
+            {
+                query =query.Where(r => r.SubsidiaryId == subsidiaryId.Value);
+            }
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(r => r.Name.Contains(name));
+            }
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                query = query.Where(r => r.Status.ToLower() == status.ToLower());
+            }
+            if (isSystem.HasValue)
+            {
+                query = query.Where(r => r.IsSystem == isSystem.Value);
+            }
             int totalCount = await query.CountAsync();
 
             var data = await query.OrderByDescending(x => x.DT_Created).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
