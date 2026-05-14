@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import { statuses } from "../constants";
 import { UserRole } from "../constants/role";
 import { Permission } from "./permission";
+import { RolePermission } from "./role";
 
 export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 
@@ -212,7 +213,7 @@ export interface IUser {
   isDeleted?: boolean;
   isActive?: boolean;
   hasChangedPassword?: boolean;
-  permissions?: Permission[];
+  permissions?: RolePermission[];
   dT_Created?: string;
 }
 

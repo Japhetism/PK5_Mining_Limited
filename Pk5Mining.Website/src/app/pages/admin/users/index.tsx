@@ -49,6 +49,9 @@ export function UserList() {
     changePasswordOpen,
     isProcessing,
     confirmUpdateStatusOpen,
+    roles,
+    subsidiaries,
+    departments,
     onChange,
     updateFilter,
     onChangePage,
@@ -195,7 +198,7 @@ export function UserList() {
                   <span className="text-red-400">Delete User</span>
                 </DropdownMenu.Item>
 
-                <DropdownMenu.Item
+                {/* <DropdownMenu.Item
                   onSelect={() => {
                     setSelectedUser(user);
                     setChangePasswordOpen(true);
@@ -204,7 +207,7 @@ export function UserList() {
                 >
                   <KeyRound className="w-4 h-4" />
                   <span>Change Password</span>
-                </DropdownMenu.Item>
+                </DropdownMenu.Item> */}
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
@@ -241,7 +244,7 @@ export function UserList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2">
               Name
             </label>
             <input
@@ -250,12 +253,12 @@ export function UserList() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2">
               Email
             </label>
             <input
@@ -264,12 +267,12 @@ export function UserList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2">
               Username
             </label>
             <input
@@ -278,12 +281,12 @@ export function UserList() {
               value={filters.userName}
               onChange={(e) => updateFilter("userName", e.target.value)}
               placeholder="Search by username"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2">
               Status
             </label>
             <select
@@ -292,7 +295,7 @@ export function UserList() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -354,6 +357,9 @@ export function UserList() {
         open={confirmEditOpen}
         form={form}
         fieldErrors={fieldErrors}
+        subsidiaries={subsidiaries}
+        roles={roles}
+        departments={departments}
         onClose={handleCloseModal}
         onConfirm={selectedUser ? handleUpdateUser : handleCreateUser}
         setFieldErrors={setFieldErrors}

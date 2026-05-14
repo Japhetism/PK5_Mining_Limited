@@ -37,11 +37,11 @@ export type RolesQuery = {
   isActive?: boolean | string;
 };
 
-export type Permission =
+export type RolePermission =
   (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
 
 export type PermissionGroup = {
   name: string;
   key: string;
-  permissions: Permission[];
+  permissions: RolePermission[];
 };

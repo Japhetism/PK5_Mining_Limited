@@ -110,17 +110,14 @@ export function ApplicationList() {
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <div className="w-full sm:w-[360px]">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
-              Email
-            </label>
+          <div className="w-full sm:w-2xl">
             <input
               name="email"
               type="email"
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200"
             />
           </div>
         </div>

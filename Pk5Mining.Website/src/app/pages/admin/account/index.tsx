@@ -12,7 +12,7 @@ export function Account() {
       >
         {/* PAGE HEADER */}
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-white">Account</h1>
+          <h1 className="text-2xl font-semibold text-black">Account</h1>
           <p className="text-sm text-gray-400 mt-1">
             View your profile details and update your password.
           </p>
@@ -27,9 +27,9 @@ export function Account() {
           </div>
 
           {/* RIGHT: CHANGE PASSWORD */}
-          <div className="w-full">
+          {/* <div className="w-full">
             <ChangePassword />
-          </div>
+          </div> */}
 
         </div>
       </motion.div>

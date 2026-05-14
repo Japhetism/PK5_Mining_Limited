@@ -6,10 +6,10 @@ import { useLegalModalState } from "../hooks/useLegalModalState";
 import { privacyContent, termsContent } from "../fixtures";
 import { LegalContent } from "../interfaces";
 
-function ReadingProgress({ 
-  containerRef 
-}: { 
-  containerRef: React.RefObject<HTMLDivElement | null> 
+function ReadingProgress({
+  containerRef,
+}: {
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const { scrollYProgress } = useScroll({
     container: containerRef as React.RefObject<HTMLDivElement>,
@@ -37,45 +37,54 @@ export function LegalModalNew() {
   const isPrivacy = mode === "privacy";
   const content = isPrivacy ? privacyContent : termsContent;
 
-  useEffect(() => {
-    if (isLegalModalOpen) {
-      setCanAcknowledge(false);
-      const timer = setTimeout(() => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollTop = 0;
-        }
-      }, 10);
-      return () => clearTimeout(timer);
-    }
-  }, [isLegalModalOpen, mode]);
-
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-      // Increased tolerance for mobile scroll precision
-      if (scrollHeight <= clientHeight || scrollHeight - scrollTop <= clientHeight + 40) {
+
+      const isAtBottom =
+        Math.ceil(scrollTop + clientHeight) >= scrollHeight - 5;
+      const isNotScrollable = scrollHeight <= clientHeight;
+
+      if (isAtBottom || isNotScrollable) {
         setCanAcknowledge(true);
       }
     }
   };
+
+  useEffect(() => {
+    if (isLegalModalOpen) {
+      setCanAcknowledge(false);
+
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = 0;
+      }
+
+      const timer = setTimeout(handleScroll, 150);
+
+      const observer = new ResizeObserver(() => {
+        handleScroll();
+      });
+
+      if (scrollRef.current) {
+        observer.observe(scrollRef.current);
+      }
+
+      return () => {
+        clearTimeout(timer);
+        observer.disconnect();
+      };
+    }
+  }, [isLegalModalOpen, mode]);
 
   return (
     <Modal
       open={isLegalModalOpen}
       onClose={() => closeModal("modal")}
       maxWidth="lg"
-      // Added h-full for mobile to prevent weird cutoffs, md:h-auto for desktop
-      height="full" 
       showCloseButton={false}
       panelClassName="h-full md:h-auto overflow-hidden md:rounded-xl border border-gray-800 shadow-2xl"
     >
-      {/* 
-          Main Container: 
-          - h-screen for mobile to take full height
-          - md:max-h-[85vh] for desktop 
-      */}
       <div className="flex flex-col h-screen md:h-auto md:max-h-[85vh] bg-[#0a0a0a]">
-        
         {/* Header */}
         <div className="relative flex items-center justify-between px-4 md:px-6 py-4 md:py-5 border-b border-gray-800 bg-[#0f0f0f] z-20">
           <div className="flex items-center gap-3 md:gap-4">

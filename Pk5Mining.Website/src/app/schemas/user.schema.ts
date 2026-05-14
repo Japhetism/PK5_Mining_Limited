@@ -8,13 +8,18 @@ const baseUserSchema = z.object({
   firstName: z.string().min(2, { message: "First name is required" }),
   lastName: z.string().min(2, { message: "Last name is required" }),
   username: z.string().min(2, { message: "Username is required" }),
+  roleId: z.coerce
+    .number({ message: "Role is required" })
+    .positive("Role is required"),  
+  subsidiaryId: z.coerce
+    .number({ message: "Subsidiary is required" })
+    .positive("Subsidiary is required"),
+  departmentId: z.coerce
+    .number({ message: "Department is required" })
+    .positive("Department is required"),
 });
 
-export const createUserSchema = baseUserSchema.extend({
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-});
+export const createUserSchema = baseUserSchema;
 
 export const updateUserSchema = baseUserSchema.partial().extend({
   id: z.number(),

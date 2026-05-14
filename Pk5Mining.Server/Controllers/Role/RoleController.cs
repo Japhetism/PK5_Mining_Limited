@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Pk5Mining.Server.Models.Permissions.DTOs;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Models.Roles;
+using Pk5Mining.Server.Models.Subsidiaries;
 using Pk5Mining.Server.Models.UserRoles;
 using Pk5Mining.Server.Repositories.Roles;
 
@@ -35,12 +37,36 @@ namespace Pk5Mining.Server.Controllers.Role
 
         [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("all")]
-        public async Task<IActionResult> Get( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> Get([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] long? subsidiaryId = null, [FromQuery] string? name = null, [FromQuery] RoleStatus? status = null, [FromQuery] bool? isSystem = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var (data, totalCount) = await _repo.GetAllAsync(pageNumber, pageSize);
+            string? statusString = status?.ToString();
+
+            var (data, totalCount) = await _repo.GetAllAsync(pageNumber, pageSize, subsidiaryId, name, statusString, isSystem);
+
+            var mappedData = data.Select(r => new UserRoleResponseDto
+            {
+                Id = r.Id,
+                Name = r.Name,
+                IsSystem = r.IsSystem,
+                Status = r.Status,
+                DT_Created = r.DT_Created,
+                DT_Modified = r.DT_Modified,
+
+                Subsidiary = r.Subsidiary == null ? null : new SubsidiaryResponseDto
+                {
+                    Id = r.Subsidiary.Id,
+                    Name = r.Subsidiary.Name
+                },
+
+                Permissions = r.Permissions.Select(p => new PermissionResponseDto
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                }).ToList()
+            }).ToList();
 
             var response = new
             {
@@ -48,7 +74,7 @@ namespace Pk5Mining.Server.Controllers.Role
                 PageSize = pageSize,
                 TotalCount = totalCount,
                 TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
-                Data = data
+                Data = mappedData
             };
 
             return Ok(ApiResponse.SuccessMessage(response, "Roles retrieved successfully."));

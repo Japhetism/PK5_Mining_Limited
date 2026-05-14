@@ -51,8 +51,7 @@ export function JobDetail() {
         <div>
           <button
             onClick={() => navigate("/admin/jobs")}
-            className="inline-flex items-center gap-1 text-xs hover:text-gray-200 mb-2"
-            style={{ color: colors.text }}
+            className="inline-flex items-center gap-1 text-xs mb-2"
           >
             <ArrowLeft className="w-3 h-3" />
             Back
@@ -63,31 +62,31 @@ export function JobDetail() {
                 {job?.department}
               </Badge>
             )}
-            <h1 className="text-2xl font-bold mb-1" style={{ color: colors.text }}>{job?.title}</h1>
-            <p className="text-sm" style={{ color: colors.text }}>
+            <h1 className="text-2xl font-bold mb-1">{job?.title}</h1>
+            <p className="text-sm">
               {job?.briefDescription}
             </p>
-            <div className="flex flex-wrap gap-4 text-gray-300 mb-6">
+            <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-6">
               {job?.location && (
-                <span className="flex items-center gap-2" style={{ color: colors.text }}>
+                <span className="flex items-center gap-2">
                   <MapPin className="w-3 h-3 text-[#c89b3c]" /> {job?.location}
                 </span>
               )}
               {job?.jobType && (
-                <span className="flex items-center gap-2" style={{ color: colors.text }}>
+                <span className="flex items-center gap-2">
                   <Clock className="w-3 h-3 text-[#c89b3c]" />{" "}
                   {job?.jobType && capitalizeFirstLetter(job.jobType)}
                 </span>
               )}
               {job?.workArrangement && (
-                <span className="flex items-center gap-1" style={{ color: colors.text }}>
+                <span className="flex items-center gap-1">
                   <LocateIcon className="w-3 h-3 text-[#c89b3c]" />{" "}
                   {job?.workArrangement &&
                     capitalizeFirstLetter(job.workArrangement)}
                 </span>
               )}
               {job?.experience && (
-                <span className="flex items-center gap-2" style={{ color: colors.text }}>
+                <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#c89b3c]" />
                   {job?.experience} experience
                 </span>

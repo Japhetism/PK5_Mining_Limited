@@ -1,6 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 import { tokenStore } from "../auth/token";
+import { getAppId } from "../utils/helper";
+
+const hostname = window.location.hostname;
 
 const baseURL = "/api";
 const HEADER_NAME = import.meta.env.VITE_API_KEY_NAME;
@@ -46,6 +49,12 @@ http.interceptors.request.use((config) => {
     config.headers[HEADER_NAME] = API_VALUE;
   }
 
+  const appId = getAppId(hostname);
+
+  if (appId) {
+    config.headers["Application-Tenant"] = appId;
+  }
+
   return config;
 });
 
@@ -87,12 +96,12 @@ http.interceptors.response.use(
       return http(config);
     }
 
-    if (axios.isAxiosError(err)) {
-      if (err.response?.status === 401) {
-        tokenStore.clear();
-        setAuthToken(undefined);
-      }
-    }
+    // if (axios.isAxiosError(err)) {
+    //   if (err.response?.status === 401) {
+    //     tokenStore.clear();
+    //     setAuthToken(undefined);
+    //   }
+    // }
 
     return Promise.reject(err);
   },

@@ -246,7 +246,7 @@ export function SubsidiaryList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2">
               Name
             </label>
             <input
@@ -260,7 +260,7 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2">
               Email
             </label>
             <input
@@ -274,7 +274,7 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2">
               Status
             </label>
             <select
@@ -295,7 +295,7 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold text-gray-300 mb-2">
+            <label className="block text-xs font-semibold mb-2">
               Country
             </label>
             <SearchableSelect
@@ -315,7 +315,7 @@ export function SubsidiaryList() {
       </div>
 
       {/* Table */}
-      <div className="min-w-0 overflow-x-auto rounded-xl border border-gray-800">
+      <div className="min-w-0 overflow-x-auto rounded-xl">
         <PaginatedTable<Subsidiary>
           data={subsidaries}
           columns={columns}

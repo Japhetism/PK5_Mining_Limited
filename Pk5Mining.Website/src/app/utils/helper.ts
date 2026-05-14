@@ -1,10 +1,10 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
 import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
 import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
-import { adminRouteItems } from "../routes/admin-config";
+import { AdminRouteItem, adminRouteItems } from "../routes/admin-config";
 import { UserRole } from "../constants/role";
 import { ZodError } from "zod";
-import { Permission } from "../interfaces/role";
+import { RolePermission } from "../interfaces/role";
 import {
   Permission as BackendPermission,
   BackendPermissionGroup,
@@ -12,6 +12,12 @@ import {
 
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
+
+const BRAND_MAPPING: Record<string, string> = {
+  pk5mining: "VITE_APP_ID",
+  pk5miningltd: "VITE_APP_ID",
+  pk5agroallied: "VITE_APP_AGRO_ID",
+};
 
 export function capitalizeFirstLetter(value: string): string {
   if (!value) return value;
@@ -166,8 +172,8 @@ export const hasRole = (
 };
 
 export const hasPermissions = (
-  userPermissions: Permission[] = [],
-  requiredPermissions: Permission[] = [],
+  userPermissions: RolePermission[] = [],
+  requiredPermissions: RolePermission[] = [],
   requireAll = false,
 ) => {
   if (!enforcePermission || !requiredPermissions.length) return true;
@@ -184,10 +190,11 @@ export const hasPermissions = (
 };
 
 export const getVisibleNav = (
-  userPermissions: Permission[],
+  items: AdminRouteItem[],
+  userPermissions: RolePermission[] = [],
   userRole?: UserRole,
 ): NavItem[] => {
-  return adminRouteItems
+  return items
     .filter(
       (item) =>
         item.show &&
@@ -345,4 +352,25 @@ export const isEmailAuthorized = (email: string, hostname: string): boolean => {
   const hostBrand = hostname.split(".")[0].toLowerCase();
   
   return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
+};
+
+export const shouldChangePassword = (email: string, hostname: string): boolean => {
+  if (!email) return false;
+
+  if (!hostname) return false;
+
+  const emailDomain = email.split("@")[1]?.toLowerCase();
+
+   const hostBrand = hostname.split(".")[0].toLowerCase();
+  
+  return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
+}
+
+export const getAppId = (hostname: string): string => {
+  if (!hostname) return "";
+  
+  const hostBrand = hostname.split(".")[0].toLowerCase();
+  const envKey = BRAND_MAPPING[hostBrand];
+
+  return envKey ? (import.meta.env[envKey] ?? "") : "";
 };

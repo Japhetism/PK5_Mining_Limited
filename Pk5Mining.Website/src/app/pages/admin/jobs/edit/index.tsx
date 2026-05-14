@@ -31,13 +31,12 @@ export function JobEdit() {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-xs hover:text-gray-200 mb-2"
-            style={{ color: colors.text }}
+            className="inline-flex items-center gap-1 text-xs mb-2"
           >
-            <ArrowLeft className="w-3 h-3" style={{ color: colors.text }} />
+            <ArrowLeft className="w-3 h-3"/>
             Back
           </button>
-          <h1 className="text-2xl font-bold" style={{ color: colors.text }}>
+          <h1 className="text-2xl font-bold">
             {existing ? "Edit Job" : "Create Job"}
           </h1>
           <p className="text-sm text-gray-400">

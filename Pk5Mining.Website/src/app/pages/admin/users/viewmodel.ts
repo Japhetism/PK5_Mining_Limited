@@ -23,6 +23,8 @@ import { ApiError } from "@/app/interfaces";
 import { changePassword } from "@/app/api/auth";
 import { createUserSchema, updateUserSchema } from "@/app/schemas/user.schema";
 import { getLightRoles } from "@/app/api/roles";
+import { getLightSubsidiaries } from "@/app/api/subsidiaries";
+import { getDepartmentsForDropdown } from "@/app/api/departments";
 
 const defaultFormData: User = {
   id: 0,
@@ -30,8 +32,9 @@ const defaultFormData: User = {
   lastName: "",
   email: "",
   username: "",
-  role: "",
-  password: "",
+  roleId: 0,
+  subsidiaryId: 0,
+  departmentId: 0,
   isActive: true,
   dT_Created: "",
 };
@@ -127,20 +130,40 @@ function useUserViewModel() {
   });
 
   // for dropdown
-    const {
-      data: rolesData,
-      isLoading: isLoadingRoles,
-      error: rolesError,
-    } = useQuery({
-      queryKey: ["light-roles"],
-      queryFn: () => getLightRoles(),
-      staleTime: 30_000,
-    });
+  const {
+    data: rolesData,
+    isLoading: isLoadingRoles,
+    error: rolesError,
+  } = useQuery({
+    queryKey: ["light-roles"],
+    queryFn: () => getLightRoles(),
+    staleTime: 30_000,
+  });
+
+  const {
+    data: subsidiariesData,
+    isLoading: isLoadingSubsidiaries,
+    error: subsidiariesError,
+  } = useQuery({
+    queryKey: ["light-subsidiaries"],
+    queryFn: () => getLightSubsidiaries(),
+    staleTime: 30_000,
+  });
+
+  const {
+    data: departmentsData,
+    isLoading: isLoadingDepartments,
+    error: departmentsError,
+  } = useQuery({
+    queryKey: ["light-departments"],
+    queryFn: () => getDepartmentsForDropdown(),
+    staleTime: 30_000,
+  });
 
   useEffect(() => {
     if (confirmEditOpen) {
       const tempPassword = generatePassword();
-      setForm({ ...defaultFormData, password: tempPassword });
+      // setForm({ ...defaultFormData, password: tempPassword });
     }
 
     if (!selectedUser) return;
@@ -170,6 +193,7 @@ function useUserViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       toastUtil.success("User created successfully");
     },
     onError: (err) => {
@@ -191,6 +215,7 @@ function useUserViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       const msg =
         successMessages[actionType as UserAction] ??
         successMessages[UserAction.Update];
@@ -321,11 +346,12 @@ function useUserViewModel() {
     }
   };
 
+  const subsidiaries = subsidiariesData ?? [];
+  const roles = rolesData ?? [];
+  const departments = departmentsData ?? [];
   const users: User[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
-
-  const roles = rolesData ?? [];
 
   return {
     users,
@@ -346,6 +372,9 @@ function useUserViewModel() {
     changePasswordOpen,
     isProcessing,
     confirmUpdateStatusOpen,
+    roles,
+    subsidiaries,
+    departments,
     onChange,
     updateFilter,
     onChangePage,
