@@ -254,8 +254,8 @@ export function Roles() {
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                <option key={opt.label2} value={opt.label2}>
+                  {opt.label2}
                 </option>
               ))}
             </select>
