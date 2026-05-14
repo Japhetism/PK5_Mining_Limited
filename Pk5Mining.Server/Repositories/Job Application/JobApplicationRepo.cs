@@ -89,7 +89,7 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                           { "FirstName", item.FirstName }
                     });
 
-                await _mailService.SendHTMLMailAsync(new MailData
+                 _mailService.SendHTMLMail(new MailData
                 {
                     EmailToId = item.Email,
                     EmailToName = $"{item.FirstName} {item.LastName}",
