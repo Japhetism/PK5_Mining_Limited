@@ -217,6 +217,11 @@ export interface IUser {
   dT_Created?: string;
 }
 
+export interface ISSOAUTH {
+  user: IUser,
+  token: string;
+}
+
 export interface ILoginPayload {
   email: string;
   password: string;
