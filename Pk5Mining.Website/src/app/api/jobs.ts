@@ -10,6 +10,7 @@ import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 
 const displayJobs = import.meta.env.VITE_DISPLAY_JOBS_PRODUCTION === "true";
+const code = import.meta.env.VITE_APP_ID ?? "";
 
 export async function getActiveJobs() {
   try {
@@ -18,6 +19,9 @@ export async function getActiveJobs() {
     }
     const { data } = await http.get<ApiResponse<JobDto[]>>("/Job", {
       requiresApiKey: true,
+      params: {
+        code
+      }
     });
 
     if (data.responseStatus !== "SUCCESS") {
