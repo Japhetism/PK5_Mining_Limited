@@ -141,7 +141,7 @@ export function JobDetails() {
               <AnimatedSection>
                 <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-8">
                   <div
-                    className="text-gray-300 leading-relaxed mb-6
+                    className="break-all text-gray-300 leading-relaxed mb-6
                     [&_p]:mb-4
                     [&_ul]:mb-6 [&_ul]:pl-6 [&_ul]:list-disc
                     [&_li]:mb-2
