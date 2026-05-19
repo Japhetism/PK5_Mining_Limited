@@ -11,6 +11,7 @@ import { getAxiosErrorMessage } from "../utils/axios-error";
 
 const displayJobs = import.meta.env.VITE_DISPLAY_JOBS_PRODUCTION === "true";
 const code = import.meta.env.VITE_APP_ID ?? "";
+const agroCode = import.meta.env.VITE_APP_AGRO_ID ?? "";
 
 export async function getActiveJobs() {
   try {
@@ -82,7 +83,7 @@ export async function getJobById(id: string) {
       { 
         requiresApiKey: true,
         params: {
-          code
+          code: window.location.hostname.includes("agro") ? agroCode : code
         }
       });
 
