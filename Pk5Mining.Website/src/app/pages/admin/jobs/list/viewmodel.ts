@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs, updateJob } from "@/app/api/jobs";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
@@ -14,6 +14,7 @@ import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 
 function useJobListViewModel() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -139,6 +140,24 @@ function useJobListViewModel() {
     });
   };
 
+  const handleNavigatetoJobDetailWebsite = (jobId: number | undefined) => {
+    const agroBaseUrl = import.meta.env.VITE_AGRO_APP_BASE_URL ?? "";
+    const isAgro = window.location.hostname.includes("agro");
+
+    if (!jobId) {
+      toastUtil.error("Job ID is missing. Cannot navigate to job details.");
+      return;
+    }
+
+    if (agroBaseUrl && isAgro) {
+      const agroFullUrl = `${agroBaseUrl}/${jobId}/apply`;
+      window.open(agroFullUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    window.open(`/careers/job/${jobId}`, "_blank", "noopener,noreferrer");
+  }
+
   const jobs: JobDto[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -172,6 +191,7 @@ function useJobListViewModel() {
     onChangePage,
     onChangePageSize,
     setConfirmOpen,
+    handleNavigatetoJobDetailWebsite,
   };
 }
 

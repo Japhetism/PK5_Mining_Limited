@@ -47,6 +47,7 @@ export function JobList() {
     onChangePage,
     onChangePageSize,
     handleUpdateStatus,
+    handleNavigatetoJobDetailWebsite,
   } = useJobListViewModel();
 
   const columns: PaginatedTableColumn<JobDto>[] = [
@@ -55,14 +56,13 @@ export function JobList() {
       header: "Title",
       render: (job) => (
         <div>
-          <Link
-            to={`/careers/job/${job.id}`}
+          <button
+            onClick={() => handleNavigatetoJobDetailWebsite(job.id)}
             className="flex-1"
-            target="_blank"
             title="View public page"
           >
             <div className="font-semibold text-[#c89b3c]">{job.title}</div>
-          </Link>
+          </button>
           <div className="text-xs text-gray-500 line-clamp-2">{job.id}</div>
         </div>
       ),
