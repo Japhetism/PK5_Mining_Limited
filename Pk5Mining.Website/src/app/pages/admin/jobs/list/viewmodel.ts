@@ -12,14 +12,15 @@ import {
 } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
+import { useTenant } from "@/tenants/useTenant";
 
 function useJobListViewModel() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { isAgro } = useTenant();
 
   const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
-  const IS_AGRO_ENVIRONMENT = typeof window !== "undefined" && window.location.hostname.includes("agro");
-  const SHOULD_USE_AGRO_URL = !!(IS_AGRO_ENVIRONMENT && AGRO_BASE_URL);
+  const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
