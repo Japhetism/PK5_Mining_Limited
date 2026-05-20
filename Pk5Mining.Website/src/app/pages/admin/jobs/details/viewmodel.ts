@@ -10,10 +10,12 @@ import {
 } from "@/app/interfaces";
 import { cleanParams } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
+import { useTenant } from "@/tenants/useTenant";
 
 function useJobDetailsViewModel() {
   const queryClient = useQueryClient();
   const { jobId } = useParams<{ jobId: string }>();
+  const { isAgro } = useTenant();
 
   const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
     const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
