@@ -17,6 +17,10 @@ function useJobListViewModel() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
+  const IS_AGRO_ENVIRONMENT = typeof window !== "undefined" && window.location.hostname.includes("agro");
+  const SHOULD_USE_AGRO_URL = !!(IS_AGRO_ENVIRONMENT && AGRO_BASE_URL);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
   const [filterJobType, setFilterJobType] = useState<string>("");
@@ -140,23 +144,18 @@ function useJobListViewModel() {
     });
   };
 
-  const handleNavigatetoJobDetailWebsite = (jobId: number | undefined) => {
-    const agroBaseUrl = import.meta.env.VITE_AGRO_APP_BASE_URL ?? "";
-    const isAgro = window.location.hostname.includes("agro");
-
+  const handleNavigateToJobDetailWebsite = (jobId: number | undefined) => {
     if (!jobId) {
       toastUtil.error("Job ID is missing. Cannot navigate to job details.");
       return;
     }
 
-    if (agroBaseUrl && isAgro) {
-      const agroFullUrl = `${agroBaseUrl}/${jobId}/apply`;
-      window.open(agroFullUrl, "_blank", "noopener,noreferrer");
-      return;
-    }
+    const targetUrl = SHOULD_USE_AGRO_URL
+      ? `${AGRO_BASE_URL}/${jobId}/apply`
+      : `/careers/job/${jobId}`;
 
-    window.open(`/careers/job/${jobId}`, "_blank", "noopener,noreferrer");
-  }
+    window.open(targetUrl, "_blank", "noopener,noreferrer");
+  };
 
   const jobs: JobDto[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
@@ -191,7 +190,7 @@ function useJobListViewModel() {
     onChangePage,
     onChangePageSize,
     setConfirmOpen,
-    handleNavigatetoJobDetailWebsite,
+    handleNavigateToJobDetailWebsite,
   };
 }
 
