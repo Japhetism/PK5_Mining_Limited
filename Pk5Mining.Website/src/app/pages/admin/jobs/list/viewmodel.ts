@@ -20,7 +20,7 @@ function useJobListViewModel() {
   const { isAgro } = useTenant();
 
   const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
-  const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
+  const SHOULD_USE_AGRO_URL = isAgro && AGRO_BASE_URL;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
@@ -150,6 +150,8 @@ function useJobListViewModel() {
       toastUtil.error("Job ID is missing. Cannot navigate to job details.");
       return;
     }
+
+    console.log("should use agro url?", SHOULD_USE_AGRO_URL, "AGRO_BASE_URL:", AGRO_BASE_URL, isAgro);
 
     const targetUrl = SHOULD_USE_AGRO_URL
       ? `${AGRO_BASE_URL}/${jobId}/apply`
