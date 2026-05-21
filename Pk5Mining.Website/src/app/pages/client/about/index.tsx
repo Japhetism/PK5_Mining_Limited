@@ -1,9 +1,11 @@
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import { Target, Eye, Award } from 'lucide-react';
+import { Target, Eye, Award, DollarSign, Network, TrendingUp, Users, Briefcase, Globe } from 'lucide-react';
 import { leadership, timeline } from '@/app/fixtures';
 import { ILeader, ITimelineEvent } from '@/app/interfaces';
+import { ImpactCard } from '@/app/components/impact-card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
 
 export function About() {
   return (
@@ -38,7 +40,7 @@ export function About() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <p>PK5 Mining is a strategic mining brand of PK5 Holdings Inc., USA , established to develop and operate responsible mining assets across Africa.</p><br/>
+            <p>PK5 Mining is a strategic mining brand of PK5 Holdings Inc., USA , established to develop and operate responsible mining assets across Africa.</p><br />
             <p>The company began its African journey in Tanzania and is strategically expanding its focus to Nigeria, aligning with national development priorities, local content participation, and international best practices in environmental, social, and governance (ESG) standards.</p>
           </motion.div>
         </div>
@@ -57,8 +59,8 @@ export function About() {
                 <Target className="w-12 h-12 text-[#c89b3c] mb-6" />
                 <h3 className="text-3xl font-bold mb-4">Our Mission</h3>
                 <p className="text-gray-400 leading-relaxed">
-                  To responsibly extract and deliver high-quality strategic minerals that power global industries, 
-                  while maintaining the highest standards of environmental stewardship, worker safety, and 
+                  To responsibly extract and deliver high-quality strategic minerals that power global industries,
+                  while maintaining the highest standards of environmental stewardship, worker safety, and
                   community engagement.
                 </p>
               </motion.div>
@@ -73,8 +75,8 @@ export function About() {
                 <Eye className="w-12 h-12 text-[#c89b3c] mb-6" />
                 <h3 className="text-3xl font-bold mb-4">Our Vision</h3>
                 <p className="text-gray-400 leading-relaxed">
-                  To be the world's most trusted and sustainable mining company, setting industry standards for 
-                  operational excellence, innovation, and environmental responsibility while creating lasting value 
+                  To be the world's most trusted and sustainable mining company, setting industry standards for
+                  operational excellence, innovation, and environmental responsibility while creating lasting value
                   for all stakeholders.
                 </p>
               </motion.div>
@@ -103,7 +105,7 @@ export function About() {
                   {index < timeline.length - 1 && (
                     <div className="absolute left-[31px] top-16 w-0.5 h-full bg-gradient-to-b from-[#c89b3c] to-transparent" />
                   )}
-                  
+
                   {/* Year badge */}
                   <motion.div
                     className="w-16 h-16 rounded-full bg-[#c89b3c] flex items-center justify-center font-bold shrink-0"
@@ -122,6 +124,230 @@ export function About() {
               </AnimatedSection>
             ))}
           </div>
+        </div>
+      </section>
+      {/* Economic Impact */}
+      <section className="py-32 bg-gradient-to-b from-[#0a0a0a] to-[#0f0f0f] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-[#D4AF37]/5 rounded-full blur-[120px]" />
+
+        <div className="container mx-auto px-6 relative z-10">
+          <AnimatedSection className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="inline-block mb-6"
+            >
+              <span className="px-5 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold">
+                National Impact
+              </span>
+            </motion.div>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+              Economic Impact
+            </h2>
+            <p className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed">
+              PK5 Mining drives local, state, and national economic growth through sustainable mineral extraction, leveraging advanced
+              technologies to enhance efficiency and support responsible environmental and socioeconomic development.
+            </p>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <ImpactCard
+              icon={Users}
+              title="Creation of Direct and Indirect Employment"
+              description="Our initiative generates numerous job opportunities not only within the core operations but also across related industries, thereby supporting livelihoods and reducing unemployment rates.​"
+              // value={5000}
+              // suffix="+"
+              delay={0}
+            />
+            <ImpactCard
+              icon={TrendingUp}
+              title="Increased State and Federal Revenue"
+              description="Enhanced economic activities lead to higher tax collections from businesses and employees, providing governments with additional resources to fund public services and infrastructure projects.​"
+              // value={250}
+              // suffix="M+"
+              // prefix="$"
+              delay={0.15}
+            />
+            <ImpactCard
+              icon={Network}
+              title="Development of Local Supply Chains"
+              description="By fostering partnerships with local suppliers and manufacturers, the projects strengthen regional economies and promote sustainable business growth within the communities."
+              delay={0.3}
+            />
+            <ImpactCard
+              icon={DollarSign}
+              title="Contribution of GDP and FX Earnings"
+              description="The activities contribute significantly to the country's gross domestic product and foreign exchange earnings through exports and international trade, bolstering economic stability and growth.​"
+              // value={500}
+              // suffix="M+"
+              // prefix="$"
+              delay={0.45}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Government Alignment */}
+      <section className="py-32 bg-[#0a0a0a]">
+        <div className="container mx-auto px-6">
+          <AnimatedSection className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="inline-block mb-6"
+            >
+              <span className="px-5 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold">
+                Policy Alignment
+              </span>
+            </motion.div>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+              Aligned with Government Priorities
+            </h2>
+            <p className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed">
+              PK5 Mining aligns closely with government priorities by promoting economic development through responsible mineral exploitation. Our company
+              emphasizes job creation, infrastructure enhancement, and export-driven growth to support sustainable local, state, and national progress.
+            </p>
+          </AnimatedSection>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <Tabs defaultValue="diversification" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-12 bg-[#141414] p-2 rounded-lg border border-[#2a2a2a]">
+                <TabsTrigger
+                  value="diversification"
+                  className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-white"
+                >
+                  Supports Economic Diversification Agenda
+                </TabsTrigger>
+                <TabsTrigger
+                  value="crude"
+                  className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-white"
+                >
+                  Reduces Reliance on Crude Oil
+                </TabsTrigger>
+                <TabsTrigger
+                  value="industrialization"
+                  className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-white"
+                >
+                  Promotes Industrialization and beneficiation
+                </TabsTrigger>
+                <TabsTrigger
+                  value="competitiveness"
+                  className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-white"
+                >
+                  Strengthens State and National Global Mineral Standings​
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="diversification" className="mt-8">
+                <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
+                  <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Supports Economic Diversification Agenda</h3>
+                  <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
+                    We encourage the development of various sectors within the economy to reduce dependence on a single industry, fostering sustainable growth.​
+                  </p>
+                  {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+                      <Briefcase className="w-10 h-10 text-[#D4AF37] mb-4" />
+                      <h4 className="text-xl font-bold mb-3">Multiple Revenue Streams</h4>
+                      <p className="text-[#a0a0a0]">Iron ore, nickel, lithium, and strategic minerals</p>
+                    </div>
+                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+                      <Globe className="w-10 h-10 text-[#D4AF37] mb-4" />
+                      <h4 className="text-xl font-bold mb-3">Export Growth</h4>
+                      <p className="text-[#a0a0a0]">Expanding foreign exchange earnings</p>
+                    </div>
+                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+                      <Target className="w-10 h-10 text-[#D4AF37] mb-4" />
+                      <h4 className="text-xl font-bold mb-3">Sector Development</h4>
+                      <p className="text-[#a0a0a0]">Building world-class mining sector</p>
+                    </div>
+                  </div> */}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="crude" className="mt-8">
+                <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
+                  <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Reduces Reliance on Crude Oil</h3>
+                  <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
+                    Our initiative decreases the country's economic vulnerability by minimizing dependence on crude oil exports and promoting alternative revenue sources.​
+                  </p>
+                  {/* <div className="flex items-center gap-12 mt-8">
+                    <div className="flex-1">
+                      <div className="text-5xl font-bold text-[#D4AF37] mb-3">40%</div>
+                      <p className="text-[#a0a0a0]">Potential contribution to non-oil exports by 2030</p>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-5xl font-bold text-[#D4AF37] mb-3">$2B+</div>
+                      <p className="text-[#a0a0a0]">Annual revenue potential from mining sector</p>
+                    </div>
+                  </div> */}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="industrialization" className="mt-8">
+                <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
+                  <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Promotes Industrialization and Beneficiation</h3>
+                  <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
+                    We facilitate the growth of manufacturing and processing industries, allowing the country to add value to its raw materials and boost domestic production.​
+                  </p>
+                  {/* <div className="grid grid-cols-2 gap-6 mt-8">
+                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+                      <h4 className="text-xl font-bold mb-3 text-[#D4AF37]">Processing Plants</h4>
+                      <p className="text-[#a0a0a0]">State-of-the-art beneficiation facilities</p>
+                    </div>
+                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+                      <h4 className="text-xl font-bold mb-3 text-[#D4AF37]">Value Addition</h4>
+                      <p className="text-[#a0a0a0]">Export refined products, not raw materials</p>
+                    </div>
+                  </div> */}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="competitiveness" className="mt-8">
+                <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
+                  <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Strengthens State and National Global Mineral Standings​</h3>
+                  <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
+                    We enhance the country's reputation and competitiveness in the international mineral market, attracting investment and trade opportunities.​
+                  </p>
+                  <ul className="space-y-4 mt-8">
+                    <li className="flex items-start gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
+                      </div>
+                      {/* <div>
+                        <h4 className="font-bold text-lg mb-1">International Standards</h4>
+                        <p className="text-[#a0a0a0]">ISO certified operations and global ESG compliance</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-lg mb-1">Technology Leadership</h4>
+                        <p className="text-[#a0a0a0]">AI-driven operations and automation excellence</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-lg mb-1">Global Partnerships</h4>
+                        <p className="text-[#a0a0a0]">Strategic alliances with international mining leaders</p>
+                      </div> */}
+                    </li>
+                  </ul>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </motion.div>
         </div>
       </section>
 
