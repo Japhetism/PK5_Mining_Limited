@@ -1,11 +1,24 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
 import { Target, Eye, Award } from 'lucide-react';
-import { leadership, timeline } from '@/app/fixtures';
-import { ILeader, ITimelineEvent } from '@/app/interfaces';
+import { LeadershipAccordionCard } from '@/app/components/leadership-accordion-card';
+
+// FIX 1: Keep timeline imported here so your journey section works perfectly!
+import { timeline } from '@/app/fixtures';
+import { executiveLeadership } from '@/app/data/leadership';
+import { ITimelineEvent } from '@/app/interfaces';
 
 export function About() {
+  // State to manage the expanded executive accordion card
+  const [expandedExecutiveId, setExpandedExecutiveId] = useState<string | null>(null);
+
+  // Toggle handler function for the accordion cards
+  const handleToggleExecutive = (id: string) => {
+    setExpandedExecutiveId(prevId => (prevId === id ? null : id));
+  };
+
   return (
     <div className="pt-24">
       {/* Hero */}
@@ -99,12 +112,10 @@ export function About() {
                   whileHover={{ x: 10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {/* Timeline line */}
                   {index < timeline.length - 1 && (
                     <div className="absolute left-[31px] top-16 w-0.5 h-full bg-gradient-to-b from-[#c89b3c] to-transparent" />
                   )}
                   
-                  {/* Year badge */}
                   <motion.div
                     className="w-16 h-16 rounded-full bg-[#c89b3c] flex items-center justify-center font-bold shrink-0"
                     whileHover={{ scale: 1.2, rotate: 360 }}
@@ -113,7 +124,6 @@ export function About() {
                     {item.year}
                   </motion.div>
 
-                  {/* Content */}
                   <div className="flex-1 pb-8">
                     <h3 className="text-2xl font-bold mb-2">{item.event}</h3>
                     <p className="text-gray-400">{item.description}</p>
@@ -126,41 +136,22 @@ export function About() {
       </section>
 
       {/* Leadership */}
-      <section className="py-24 bg-[#1a1a1a]">
-        <div className="container mx-auto px-6">
-          <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Leadership Team</h2>
-            <p className="text-xl text-gray-400">Experience and expertise driving our success</p>
-          </AnimatedSection>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {leadership.map((leader: ILeader, index: number) => (
-              <AnimatedSection key={leader.name} delay={index * 0.1}>
-                <motion.div
-                  className="text-center p-6 bg-[#0f0f0f] rounded-lg"
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <motion.div
-                    className="w-32 h-32 rounded-full bg-gradient-to-br from-[#c89b3c] to-[#9d7a2e] mx-auto mb-6 flex items-center justify-center"
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    {/* <Users className="w-16 h-16 text-white" /> */}
-                    <img src={leader.image} alt={leader.name} loading="lazy" className="w-32 h-32 rounded-full object-cover" />
-                  </motion.div>
-                  <h3 className="text-xl font-bold mb-2">{leader.name}</h3>
-                  <p className="text-[#c89b3c] text-sm mb-2">{leader.role}</p>
-                  {/* <p className="text-gray-400 text-sm">{leader.experience} experience</p> */}
-                </motion.div>
-              </AnimatedSection>
-            ))}
-          </div>
+      <section className="py-24 bg-[#0a0a0a]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto px-6">
+          {/* FIX 2: Changed from 'leadership' to loop through your unique 'executiveLeadership' array */}
+          {executiveLeadership.map((leader) => (
+            <LeadershipAccordionCard
+              key={leader.id}
+              executive={leader} 
+              isExpanded={expandedExecutiveId === leader.id} 
+              onToggle={() => handleToggleExecutive(leader.id)} 
+            />
+          ))}
         </div>
       </section>
 
       {/* Values */}
-      <section className="py-24 bg-[#0f0f0f]">
+      <section className="py-24 bg-gradient-to-b from-[#0f0f0f] to-[#0a0a0a]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Core Values</h2>
@@ -170,11 +161,11 @@ export function About() {
             {['Safety First', 'Environmental Stewardship', 'Innovation'].map((value, index) => (
               <AnimatedSection key={value} delay={index * 0.1}>
                 <motion.div
-                  className="p-8 bg-[#1a1a1a] rounded-lg text-center"
-                  whileHover={{ scale: 1.05 }}
+                  className="p-10 bg-[#141414] rounded-xl border border-[#2a2a2a] text-center"
+                  whileHover={{ scale: 1.05, borderColor: '#D4AF37' }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Award className="w-12 h-12 text-[#c89b3c] mx-auto mb-4" />
+                  <Award className="w-12 h-12 text-[#D4AF37] mx-auto mb-4" />
                   <h3 className="text-2xl font-bold">{value}</h3>
                 </motion.div>
               </AnimatedSection>
