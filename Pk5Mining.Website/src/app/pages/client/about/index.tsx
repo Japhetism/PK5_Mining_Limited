@@ -38,7 +38,7 @@ export function About() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <p>PK5 Mining is a strategic mining brand of PK5 Holdings Inc., USA , established to develop and operate responsible mining assets across Africa.</p><br/>
+            <p>PK5 Mining is a strategic mining brand of PK5 Holdings Inc., USA , established to develop and operate responsible mining assets across Africa.</p><br />
             <p>The company began its African journey in Tanzania and is strategically expanding its focus to Nigeria, aligning with national development priorities, local content participation, and international best practices in environmental, social, and governance (ESG) standards.</p>
           </motion.div>
         </div>
@@ -57,9 +57,10 @@ export function About() {
                 <Target className="w-12 h-12 text-[#c89b3c] mb-6" />
                 <h3 className="text-3xl font-bold mb-4">Our Mission</h3>
                 <p className="text-gray-400 leading-relaxed">
-                  To responsibly extract and deliver high-quality strategic minerals that power global industries, 
-                  while maintaining the highest standards of environmental stewardship, worker safety, and 
-                  community engagement.
+                  Our mission is to establish efficient, innovative, and responsible mining processes that
+                  consistently deliver high-quality minerals to meet global market demands, while prioritizing international safety
+                  standards, community well-being, environmental stewardship,
+                  and ethical stakeholder relationships built on transparency and sustained financial performance.
                 </p>
               </motion.div>
             </AnimatedSection>
@@ -73,9 +74,7 @@ export function About() {
                 <Eye className="w-12 h-12 text-[#c89b3c] mb-6" />
                 <h3 className="text-3xl font-bold mb-4">Our Vision</h3>
                 <p className="text-gray-400 leading-relaxed">
-                  To be the world's most trusted and sustainable mining company, setting industry standards for 
-                  operational excellence, innovation, and environmental responsibility while creating lasting value 
-                  for all stakeholders.
+                  At PK5 Mining, our vision is to be a trusted leader in the global mining sector, recognized for integrity, sustainability, and operational excellence.
                 </p>
               </motion.div>
             </AnimatedSection>
@@ -103,7 +102,7 @@ export function About() {
                   {index < timeline.length - 1 && (
                     <div className="absolute left-[31px] top-16 w-0.5 h-full bg-gradient-to-b from-[#c89b3c] to-transparent" />
                   )}
-                  
+
                   {/* Year badge */}
                   <motion.div
                     className="w-16 h-16 rounded-full bg-[#c89b3c] flex items-center justify-center font-bold shrink-0"
