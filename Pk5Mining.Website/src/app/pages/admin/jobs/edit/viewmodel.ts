@@ -14,6 +14,7 @@ import {
 import { validateJob } from "@/app/utils/validator";
 import { toastUtil } from "@/app/utils/toast";
 import { ddmmyyyyToApiDate } from "@/app/utils/helper";
+import { getDepartmentsForDropdown } from "@/app/api/departments";
 
 const defaultFormData = {
   title: "",
@@ -78,6 +79,16 @@ function useJobEditViewModel() {
       dT_Expiry: existing.dT_Expiry ?? "",
     });
   }, [existing]);
+
+  const {
+    data: departmentsData,
+    isLoading: isLoadingDepartments,
+    error: departmentsError,
+  } = useQuery({
+    queryKey: ["light-departments"],
+    queryFn: () => getDepartmentsForDropdown(),
+    staleTime: 30_000,
+  });
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateJobPayload) => createJob(payload),
@@ -158,11 +169,14 @@ function useJobEditViewModel() {
     });
   };
 
+  const departments = departmentsData ?? [];
+
   return {
     existing,
     form,
     fieldErrors,
     loading: loading || jobLoading,
+    departments,
     navigate,
     onSubmit,
     setFieldErrors,

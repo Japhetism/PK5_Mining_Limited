@@ -7,6 +7,7 @@ import { RichTextEditor } from "@/app/components/ui/rich-text-editor";
 import { DatePicker } from "@/app/components/ui/date-picker";
 import { formatDateTime, limitWords } from "@/app/utils/helper";
 import { useTenant } from "@/tenants/useTenant";
+import { SearchableSelect } from "@/app/components/searchable-select";
 
 const maxWordsBriefDescription = 50;
 
@@ -17,6 +18,7 @@ export function JobEdit() {
     form,
     fieldErrors,
     loading,
+    departments,
     navigate,
     onSubmit,
     setFieldErrors,
@@ -33,7 +35,7 @@ export function JobEdit() {
             onClick={() => navigate(-1)}
             className="inline-flex items-center gap-1 text-xs mb-2"
           >
-            <ArrowLeft className="w-3 h-3"/>
+            <ArrowLeft className="w-3 h-3" />
             Back
           </button>
           <h1 className="text-2xl font-bold">
@@ -52,13 +54,16 @@ export function JobEdit() {
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-xs font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Job title
               <span className="ml-1 text-red-500">*</span>
             </label>
             <motion.input
               name="title"
-              value={form.title}
+              value={form.title} 
               onChange={onChange}
               onBlur={() => {
                 if (!isValidName(form.title)) {
@@ -75,37 +80,39 @@ export function JobEdit() {
                 }
               }}
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
-              style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.title ? "#f87171" : colors.border }}
+              style={{
+                backgroundColor: colors.bg,
+                color: colors.text,
+                borderColor: fieldErrors.title ? "#f87171" : colors.border,
+              }}
             />
             {fieldErrors.title && (
               <p className="text-xs text-red-500 mt-1">{fieldErrors.title}</p>
             )}
           </div>
           <div>
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-xs font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Department
               <span className="ml-1 text-red-500">*</span>
             </label>
-            <motion.input
+            <SearchableSelect
               name="department"
-              value={form.department}
+              value={form.department ?? ""}
+              options={departments.map((d) => ({
+                value: d.name,
+                label: d.name,
+              }))}
               onChange={onChange}
-              onBlur={() => {
-                if (!isValidDepartment(form.department)) {
-                  setFieldErrors((prev) => ({
-                    ...prev,
-                    department: "Invalid department name",
-                  }));
-                } else {
-                  setFieldErrors((prev) => {
-                    const updated = { ...prev };
-                    delete updated.department;
-                    return updated;
-                  });
-                }
-              }}
+              placeholder="Select department"
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
-              style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.department ? "#f87171" : colors.border }}
+              styles={{
+                backgroundColor: colors.bg,
+                color: colors.text,
+                borderColor: fieldErrors.department ? "#f87171" : colors.border,
+              }}
             />
             {fieldErrors.department && (
               <p className="text-xs text-red-500 mt-1">
@@ -115,7 +122,10 @@ export function JobEdit() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-xs font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Location
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -138,7 +148,11 @@ export function JobEdit() {
                 }
               }}
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
-              style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.location ? "#f87171" : colors.border }}
+              style={{
+                backgroundColor: colors.bg,
+                color: colors.text,
+                borderColor: fieldErrors.location ? "#f87171" : colors.border,
+              }}
             />
             {fieldErrors.location && (
               <p className="text-xs text-red-500 mt-1">
@@ -150,7 +164,10 @@ export function JobEdit() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-xs font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Close Date
             </label>
             <DatePicker
@@ -173,7 +190,10 @@ export function JobEdit() {
             )}
           </div>
           <div>
-            <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-xs font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Experience
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -197,7 +217,11 @@ export function JobEdit() {
                 }
               }}
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
-              style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.experience ? "#f87171" : colors.border }}
+              style={{
+                backgroundColor: colors.bg,
+                color: colors.text,
+                borderColor: fieldErrors.experience ? "#f87171" : colors.border,
+              }}
             />
             {fieldErrors.experience && (
               <p className="text-xs text-red-500 mt-1">
@@ -207,7 +231,10 @@ export function JobEdit() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+              <label
+                className="block text-xs font-semibold mb-2"
+                style={{ color: colors.text }}
+              >
                 Type
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -236,7 +263,11 @@ export function JobEdit() {
                   }
                 }}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
-                style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.jobType ? "#f87171" : colors.border }}
+                style={{
+                  backgroundColor: colors.bg,
+                  color: colors.text,
+                  borderColor: fieldErrors.jobType ? "#f87171" : colors.border,
+                }}
               >
                 <option value="">Select</option>
                 {jobTypes.map((t) => (
@@ -252,7 +283,10 @@ export function JobEdit() {
               )}
             </div>
             <div>
-              <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+              <label
+                className="block text-xs font-semibold mb-2"
+                style={{ color: colors.text }}
+              >
                 Work Arrangement
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -281,7 +315,13 @@ export function JobEdit() {
                   }
                 }}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
-                style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.workArrangement ? "#f87171" : colors.border }}
+                style={{
+                  backgroundColor: colors.bg,
+                  color: colors.text,
+                  borderColor: fieldErrors.workArrangement
+                    ? "#f87171"
+                    : colors.border,
+                }}
               >
                 <option value="">Select</option>
                 {workArrangements.map((w) => (
@@ -300,7 +340,10 @@ export function JobEdit() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+          <label
+            className="block text-xs font-semibold mb-2"
+            style={{ color: colors.text }}
+          >
             Brief Description
             <span className="ml-1 text-red-500">*</span>
           </label>
@@ -350,7 +393,13 @@ export function JobEdit() {
             }}
             rows={3}
             className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c] resize-none`}
-            style={{ backgroundColor: colors.bg, color: colors.text, borderColor: fieldErrors.briefDescription ? "#f87171" : colors.border }}
+            style={{
+              backgroundColor: colors.bg,
+              color: colors.text,
+              borderColor: fieldErrors.briefDescription
+                ? "#f87171"
+                : colors.border,
+            }}
           />
           <div className="flex justify-between">
             <p className="mt-1 text-[11px] text-gray-500">
@@ -369,7 +418,10 @@ export function JobEdit() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold mb-2" style={{ color: colors.text }}>
+          <label
+            className="block text-xs font-semibold mb-2"
+            style={{ color: colors.text }}
+          >
             Full Description (rich text)
             <span className="ml-1 text-red-500">*</span>
           </label>

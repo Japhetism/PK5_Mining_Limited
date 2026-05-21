@@ -13,6 +13,7 @@ import {
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 import { useTenant } from "@/tenants/useTenant";
+import { getDepartmentsForDropdown } from "@/app/api/departments";
 
 function useJobListViewModel() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function useJobListViewModel() {
   const { isAgro } = useTenant();
 
   const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
-  const SHOULD_USE_AGRO_URL = isAgro && AGRO_BASE_URL;
+  const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
@@ -76,6 +77,16 @@ function useJobListViewModel() {
       queryParams.jobType ?? "",
     ],
     queryFn: () => getJobs(queryParams),
+    staleTime: 30_000,
+  });
+
+  const {
+    data: departmentsData,
+    isLoading: isLoadingDepartments,
+    error: departmentsError,
+  } = useQuery({
+    queryKey: ["light-departments"],
+    queryFn: () => getDepartmentsForDropdown(),
     staleTime: 30_000,
   });
 
@@ -151,8 +162,6 @@ function useJobListViewModel() {
       return;
     }
 
-    console.log("should use agro url?", SHOULD_USE_AGRO_URL, "AGRO_BASE_URL:", AGRO_BASE_URL, isAgro);
-
     const targetUrl = SHOULD_USE_AGRO_URL
       ? `${AGRO_BASE_URL}/${jobId}/apply`
       : `/careers/job/${jobId}`;
@@ -163,6 +172,7 @@ function useJobListViewModel() {
   const jobs: JobDto[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
+  const departments = departmentsData ?? [];
 
   return {
     jobs,
@@ -182,6 +192,7 @@ function useJobListViewModel() {
     confirmOpen,
     filters,
     queryClient,
+    departments,
     setIsFilter,
     setFilterStatus,
     setFilterJobType,

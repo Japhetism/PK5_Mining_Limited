@@ -66,6 +66,9 @@ export const validateJob = (data: CreateJobPayload): JobErrors => {
 
   if (!data.title.trim()) {
     errors.title = "Title is required.";
+  } else if (!/^[a-zA-Z0-9 -]+$/.test(data.title)) {
+    errors.title =
+      "Title can only contain letters, numbers, spaces, and hyphens.";
   }
 
   if (!data.department.trim()) {
@@ -150,7 +153,7 @@ export const validateApplication = (
   }
 
   if (!hasAgreedToTerms) {
-    errors.agreedToTerms = true
+    errors.agreedToTerms = true;
   }
 
   return errors;
