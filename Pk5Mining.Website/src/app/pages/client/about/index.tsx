@@ -210,145 +210,145 @@ export function About() {
               emphasizes job creation, infrastructure enhancement, and export-driven growth to support sustainable local, state, and national progress.
             </p>
           </AnimatedSection>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <Tabs defaultValue="diversification" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-12 bg-[#141414] p-2 rounded-lg border border-[#2a2a2a]">
-                <TabsTrigger
-                  value="diversification"
-                  className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-white"
-                >
-                  Supports Economic Diversification Agenda
-                </TabsTrigger>
-                <TabsTrigger
-                  value="crude"
-                  className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-white"
-                >
-                  Reduces Reliance on Crude Oil
-                </TabsTrigger>
-                <TabsTrigger
-                  value="industrialization"
-                  className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-white"
-                >
-                  Promotes Industrialization and beneficiation
-                </TabsTrigger>
-                <TabsTrigger
-                  value="competitiveness"
-                  className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-white"
-                >
-                  Strengthens State and National Global Mineral Standings​
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="diversification" className="mt-8">
-                <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
-                  <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Supports Economic Diversification Agenda</h3>
-                  <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
-                    We encourage the development of various sectors within the economy to reduce dependence on a single industry, fostering sustainable growth.​
-                  </p>
-                  {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
-                      <Briefcase className="w-10 h-10 text-[#D4AF37] mb-4" />
-                      <h4 className="text-xl font-bold mb-3">Multiple Revenue Streams</h4>
-                      <p className="text-[#a0a0a0]">Iron ore, nickel, lithium, and strategic minerals</p>
-                    </div>
-                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
-                      <Globe className="w-10 h-10 text-[#D4AF37] mb-4" />
-                      <h4 className="text-xl font-bold mb-3">Export Growth</h4>
-                      <p className="text-[#a0a0a0]">Expanding foreign exchange earnings</p>
-                    </div>
-                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
-                      <Target className="w-10 h-10 text-[#D4AF37] mb-4" />
-                      <h4 className="text-xl font-bold mb-3">Sector Development</h4>
-                      <p className="text-[#a0a0a0]">Building world-class mining sector</p>
-                    </div>
-                  </div> */}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="crude" className="mt-8">
-                <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
-                  <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Reduces Reliance on Crude Oil</h3>
-                  <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
-                    Our initiative decreases the country's economic vulnerability by minimizing dependence on crude oil exports and promoting alternative revenue sources.​
-                  </p>
-                  {/* <div className="flex items-center gap-12 mt-8">
-                    <div className="flex-1">
-                      <div className="text-5xl font-bold text-[#D4AF37] mb-3">40%</div>
-                      <p className="text-[#a0a0a0]">Potential contribution to non-oil exports by 2030</p>
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-5xl font-bold text-[#D4AF37] mb-3">$2B+</div>
-                      <p className="text-[#a0a0a0]">Annual revenue potential from mining sector</p>
-                    </div>
-                  </div> */}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="industrialization" className="mt-8">
-                <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
-                  <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Promotes Industrialization and Beneficiation</h3>
-                  <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
-                    We facilitate the growth of manufacturing and processing industries, allowing the country to add value to its raw materials and boost domestic production.​
-                  </p>
-                  {/* <div className="grid grid-cols-2 gap-6 mt-8">
-                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
-                      <h4 className="text-xl font-bold mb-3 text-[#D4AF37]">Processing Plants</h4>
-                      <p className="text-[#a0a0a0]">State-of-the-art beneficiation facilities</p>
-                    </div>
-                    <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
-                      <h4 className="text-xl font-bold mb-3 text-[#D4AF37]">Value Addition</h4>
-                      <p className="text-[#a0a0a0]">Export refined products, not raw materials</p>
-                    </div>
-                  </div> */}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="competitiveness" className="mt-8">
-                <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
-                  <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Strengthens State and National Global Mineral Standings​</h3>
-                  <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
-                    We enhance the country's reputation and competitiveness in the international mineral market, attracting investment and trade opportunities.​
-                  </p>
-                  <ul className="space-y-4 mt-8">
-                    <li className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
-                        <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
-                      </div>
-                      {/* <div>
-                        <h4 className="font-bold text-lg mb-1">International Standards</h4>
-                        <p className="text-[#a0a0a0]">ISO certified operations and global ESG compliance</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
-                        <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-lg mb-1">Technology Leadership</h4>
-                        <p className="text-[#a0a0a0]">AI-driven operations and automation excellence</p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
-                        <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-lg mb-1">Global Partnerships</h4>
-                        <p className="text-[#a0a0a0]">Strategic alliances with international mining leaders</p>
-                      </div> */}
-                    </li>
-                  </ul>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </motion.div>
         </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <Tabs defaultValue="diversification" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-12 bg-[#141414] p-2 rounded-lg border border-[#2a2a2a]">
+              <TabsTrigger
+                value="diversification"
+                className="text-white/90 hover:text-[#D4AF37] data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black font-medium transition-colors"
+              >
+                Supports Economic Diversification Agenda
+              </TabsTrigger>
+              <TabsTrigger
+                value="crude"
+                className="text-white/90 hover:text-[#D4AF37] data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black font-medium transition-colors"
+              >
+                Reduces Reliance on Crude Oil
+              </TabsTrigger>
+              <TabsTrigger
+                value="industrialization"
+                className="text-white/90 hover:text-[#D4AF37] data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black font-medium transition-colors"
+              >
+                Promotes Industrialization and beneficiation
+              </TabsTrigger>
+              <TabsTrigger
+                value="competitiveness"
+                className="text-white/90 hover:text-[#D4AF37] data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black font-medium transition-colors"
+              >
+                Strengthens State and National Global Mineral Standings
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="diversification" className="mt-8">
+              <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
+                <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Supports Economic Diversification Agenda</h3>
+                <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
+                  We encourage the development of various sectors within the economy to reduce dependence on a single industry, fostering sustainable growth.
+                </p>
+                {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+          <Briefcase className="w-10 h-10 text-[#D4AF37] mb-4" />
+          <h4 className="text-xl font-bold mb-3">Multiple Revenue Streams</h4>
+          <p className="text-[#a0a0a0]">Iron ore, nickel, lithium, and strategic minerals</p>
+        </div>
+        <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+          <Globe className="w-10 h-10 text-[#D4AF37] mb-4" />
+          <h4 className="text-xl font-bold mb-3">Export Growth</h4>
+          <p className="text-[#a0a0a0]">Expanding foreign exchange earnings</p>
+        </div>
+        <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+          <Target className="w-10 h-10 text-[#D4AF37] mb-4" />
+          <h4 className="text-xl font-bold mb-3">Sector Development</h4>
+          <p className="text-[#a0a0a0]">Building world-class mining sector</p>
+        </div>
+      </div> */}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="crude" className="mt-8">
+              <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
+                <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Reduces Reliance on Crude Oil</h3>
+                <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
+                  Our initiative decreases the country's economic vulnerability by minimizing dependence on crude oil exports and promoting alternative revenue sources.
+                </p>
+                {/* <div className="flex items-center gap-12 mt-8">
+        <div className="flex-1">
+          <div className="text-5xl font-bold text-[#D4AF37] mb-3">40%</div>
+          <p className="text-[#a0a0a0]">Potential contribution to non-oil exports by 2030</p>
+        </div>
+        <div className="flex-1">
+          <div className="text-5xl font-bold text-[#D4AF37] mb-3">$2B+</div>
+          <p className="text-[#a0a0a0]">Annual revenue potential from mining sector</p>
+        </div>
+      </div> */}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="industrialization" className="mt-8">
+              <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
+                <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Promotes Industrialization and Beneficiation</h3>
+                <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
+                  We facilitate the growth of manufacturing and processing industries, allowing the country to add value to its raw materials and boost domestic production.
+                </p>
+                {/* <div className="grid grid-cols-2 gap-6 mt-8">
+        <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+          <h4 className="text-xl font-bold mb-3 text-[#D4AF37]">Processing Plants</h4>
+          <p className="text-[#a0a0a0]">State-of-the-art beneficiation facilities</p>
+        </div>
+        <div className="p-6 rounded-lg bg-[#1a1a1a] border border-[#2a2a2a]">
+          <h4 className="text-xl font-bold mb-3 text-[#D4AF37]">Value Addition</h4>
+          <p className="text-[#a0a0a0]">Export refined products, not raw materials</p>
+        </div>
+      </div> */}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="competitiveness" className="mt-8">
+              <div className="p-10 rounded-lg bg-gradient-to-br from-[#141414] to-[#0f0f0f] border border-[#2a2a2a]">
+                <h3 className="text-3xl font-bold mb-6 text-[#D4AF37]">Strengthens State and National Global Mineral Standings​</h3>
+                <p className="text-lg text-[#a0a0a0] leading-relaxed mb-6">
+                  We enhance the country's reputation and competitiveness in the international mineral market, attracting investment and trade opportunities.
+                </p>
+                <ul className="space-y-4 mt-8">
+                  {/* Cleaned up the split block list items cleanly below */}
+                  {/* <li className="flex items-start gap-4">
+          <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
+            <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
+          </div>
+          <div>
+            <h4 className="font-bold text-lg mb-1">International Standards</h4>
+            <p className="text-[#a0a0a0]">ISO certified operations and global ESG compliance</p>
+          </div>
+        </li>
+        <li className="flex items-start gap-4">
+          <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
+            <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
+          </div>
+          <div>
+            <h4 className="font-bold text-lg mb-1">Technology Leadership</h4>
+            <p className="text-[#a0a0a0]">AI-driven operations and automation excellence</p>
+          </div>
+        </li>
+        <li className="flex items-start gap-4">
+          <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0 mt-1">
+            <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
+          </div>
+          <div>
+            <h4 className="font-bold text-lg mb-1">Global Partnerships</h4>
+            <p className="text-[#a0a0a0]">Strategic alliances with international mining leaders</p>
+          </div>
+        </li> */}
+                </ul>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </motion.div>
       </section>
 
       {/* Leadership */}
