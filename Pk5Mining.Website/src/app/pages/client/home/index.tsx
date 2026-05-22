@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Building2, Compass, Globe, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { AnimatedSection } from "@/app/components/animated-section";
 import { StatCounter } from "@/app/components/stat-counter";
@@ -20,6 +20,37 @@ export function Home() {
 
     return () => clearInterval(t);
   }, []);
+  const coreOperations = [
+    {
+      number: '01',
+      icon: Compass,
+      title: 'Geological Exploration & Resource Validation:',
+      description:
+        'We conduct detailed surveys and analysis to identify and confirm the presence of valuable mineral deposits.',
+    },
+    {
+      number: '02',
+      icon: Building2,
+      title: 'Mine Development & Infrastructure:',
+      description:
+        'We plan and construct the necessary facilities and systems to support efficient mining operations.',
+    },
+    {
+      number: '03',
+      icon: Settings,
+      title: 'Extraction & Mineral Processing:',
+      description:
+        'We remove minerals from the earth and refine them to meet quality standards for market readiness.',
+    },
+    {
+      number: '04',
+      icon: Globe,
+      title: 'Logistics & Export Operations:',
+      description:
+        'We manage the transportation and shipment of processed minerals to global markets in a timely and cost-effective manner.',
+    },
+  ];
+
 
   const content = slideShowContent[slide];
 
@@ -72,11 +103,10 @@ export function Home() {
                 type="button"
                 aria-label={`Go to slide ${i + 1}`}
                 onClick={() => setSlide(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === slide
+                className={`h-2 rounded-full transition-all duration-300 ${i === slide
                     ? "w-8 bg-[#c89b3c]"
                     : "w-2 bg-gray-500 hover:bg-gray-400"
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -227,7 +257,6 @@ export function Home() {
                 </motion.button>
               </Link>
             </AnimatedSection>
-
             <AnimatedSection delay={0.2}>
               <motion.div
                 className="relative rounded-lg overflow-hidden"
@@ -242,6 +271,144 @@ export function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </motion.div>
             </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CORE OPERATIONS ───────────────────────────────────────────── */}
+      <section className="py-28 bg-[#090909] relative overflow-hidden">
+        {/* Industrial grid texture */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(0deg, #D4AF37 0px, transparent 1px, transparent 72px), repeating-linear-gradient(90deg, #D4AF37 0px, transparent 1px, transparent 72px)',
+          }}
+        />
+        {/* Ambient gold glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[160px] pointer-events-none" />
+
+        <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] relative z-10">
+          {/* Section header */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end mb-20">
+            <AnimatedSection>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-4 mb-7"
+              >
+                <div className="w-10 h-px bg-[#D4AF37]" />
+                <span className="px-4 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
+                  What We Do
+                </span>
+              </motion.div>
+
+              <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.12 }}
+                className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight"
+                style={{ letterSpacing: '-0.025em' }}
+              >
+                Core Operations
+              </motion.h2>
+            </AnimatedSection>
+
+            <AnimatedSection delay={0.2}>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.75, delay: 0.25 }}
+                className="text-lg text-[#787878] leading-relaxed"
+              >
+                PK5 Mining specializes in the exploration and extraction of mineral resources across
+                nations. Our company is committed to sustainable mining practices and delivering
+                high-quality minerals to meet industrial demands.
+              </motion.p>
+            </AnimatedSection>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent mb-16" />
+
+          {/* Operations cards — 2×2 grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {coreOperations.map((op, index) => {
+              const Icon = op.icon;
+              return (
+                <AnimatedSection key={op.number} delay={index * 0.1}>
+                  <motion.div
+                    className="group relative rounded-xl p-8 overflow-hidden cursor-default"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
+                      border: '1px solid rgba(42,42,42,0.8)',
+                      boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+                    }}
+                    whileHover={{ y: -5 }}
+                    transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    {/* Gold left border that appears on hover */}
+                    <motion.div
+                      className="absolute left-0 top-6 bottom-6 w-0.5 rounded-full bg-[#D4AF37] origin-top"
+                      initial={{ scaleY: 0, opacity: 0 }}
+                      whileHover={{ scaleY: 1, opacity: 1 }}
+                      transition={{ duration: 0.4 }}
+                    />
+
+                    {/* Hover border glow */}
+                    <div
+                      className="absolute inset-0 rounded-xl border border-[#D4AF37]/0 group-hover:border-[#D4AF37]/20 transition-all duration-500 pointer-events-none"
+                    />
+
+                    {/* Background gold glow on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/0 to-[#D4AF37]/0 group-hover:from-[#D4AF37]/4 transition-all duration-500 rounded-xl pointer-events-none" />
+
+                    {/* Large dim number watermark */}
+                    <div
+                      className="absolute top-3 right-5 font-bold text-[#D4AF37] leading-none select-none pointer-events-none"
+                      style={{ fontSize: '5.5rem', opacity: 0.055 }}
+                    >
+                      {op.number}
+                    </div>
+
+                    {/* Icon */}
+                    <div className="relative z-10 mb-6">
+                      <motion.div
+                        className="w-14 h-14 rounded-xl flex items-center justify-center"
+                        style={{
+                          background: 'rgba(212,175,55,0.08)',
+                          border: '1px solid rgba(212,175,55,0.18)',
+                        }}
+                        whileHover={{ scale: 1.1, background: 'rgba(212,175,55,0.14)' }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <Icon className="w-6 h-6 text-[#D4AF37]" />
+                      </motion.div>
+                    </div>
+
+                    {/* Gold rule separator */}
+                    <div className="relative z-10 h-px w-12 bg-[#D4AF37]/40 mb-5 group-hover:w-20 group-hover:bg-[#D4AF37]/70 transition-all duration-400" />
+
+                    {/* Title */}
+                    <h3
+                      className="relative z-10 text-lg md:text-xl font-bold text-white mb-4 leading-snug"
+                      style={{ letterSpacing: '-0.015em' }}
+                    >
+                      {op.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="relative z-10 text-[#888] text-sm leading-relaxed">
+                      {op.description}
+                    </p>
+                  </motion.div>
+                </AnimatedSection>
+              );
+            })}
           </div>
         </div>
       </section>
