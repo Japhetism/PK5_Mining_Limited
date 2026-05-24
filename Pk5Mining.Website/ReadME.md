@@ -290,7 +290,7 @@ The system is a multi-tenant React front-end with a strong focus on authenticati
 - tenant-specific configuration
 - backend API access
 
-## Optional Architecture Diagrams
+## Architecture Diagrams
 
 ### Login Sequence Diagram
 
