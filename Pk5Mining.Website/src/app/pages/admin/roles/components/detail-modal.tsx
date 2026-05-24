@@ -64,7 +64,7 @@ export function DetailModal({ role, open, onClose }: DetailModalProps) {
               <DetailItem label="Subsidiary" value={role.subsidiary?.name} />
               <DetailItem
                 label="Status"
-                value={role.isActive ? "Active" : "Inactive"}
+                value={role.status}
               />
               <DetailItem
                 label="Date Added"

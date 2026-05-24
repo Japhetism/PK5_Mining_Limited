@@ -15,6 +15,7 @@ import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import {
   cleanParams,
   generatePassword,
+  isEmailAuthorized,
   mapZodErrors,
   toNumber,
 } from "@/app/utils/helper";
@@ -288,6 +289,10 @@ function useUserViewModel() {
   };
 
   const handleCreateUser = () => {
+    if (!isEmailAuthorized(form.email, window.location.hostname)) {
+      setFieldErrors({ email: "Email address is not allowed" });
+      return;
+    }
     const result = createUserSchema.safeParse(form);
 
     if (!result.success) {

@@ -13,6 +13,7 @@ type Props = {
   required?: boolean;
   error?: string;
   className: string;
+  styles?: React.CSSProperties;
   placeholder?: string;
   onChange: (
     e: React.ChangeEvent<
@@ -31,6 +32,7 @@ export const SearchableSelect = ({
   error,
   className,
   placeholder,
+  styles,
   onChange,
   onBlur,
 }: Props) => {
@@ -98,6 +100,10 @@ export const SearchableSelect = ({
           onBlur={onBlur}
           placeholder={placeholder ?? `Search ${label ? label : ""}`}
           className={`${className} pr-10`}
+          style={styles}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
         />
 
         {/* Dropdown Icon */}

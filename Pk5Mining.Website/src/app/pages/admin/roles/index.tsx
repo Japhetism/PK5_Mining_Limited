@@ -234,10 +234,10 @@ export function Roles() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="w-full sm:w-[760px]">
             <input
-              name="search"
+              name="name"
               type="search"
-              value={filters.search}
-              onChange={(e) => updateFilter("search", e.target.value)}
+              value={filters.name}
+              onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             />
@@ -254,8 +254,8 @@ export function Roles() {
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                <option key={opt.label2} value={opt.label2}>
+                  {opt.label2}
                 </option>
               ))}
             </select>

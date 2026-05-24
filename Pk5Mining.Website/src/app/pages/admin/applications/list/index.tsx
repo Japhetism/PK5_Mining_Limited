@@ -8,9 +8,10 @@ import {
 import { formatDate, formatDateTime } from "@/app/utils/helper";
 import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
 import useApplicationsListViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function ApplicationList() {
-
+  const { isAgro } = useTenant();
   const {
     queryClient,
     apps,
@@ -51,15 +52,21 @@ export function ApplicationList() {
       header: "Job Applied For",
       render: (app) => app?.job?.title ?? "-",
     },
-    {
-      key: "country",
-      header: "Country",
-      render: (app) => app.country ?? "-",
-    },
+    ...(isAgro
+      ? []
+      : [
+          {
+            key: "country",
+            header: "Country",
+            render: (app: any) => app.country ?? "-",
+          },
+        ]),
     {
       key: "status",
       header: "Status",
-      render: (app) => <ApplicationStatusPill status={app.status?.toLowerCase()} />,
+      render: (app) => (
+        <ApplicationStatusPill status={app.status?.toLowerCase()} />
+      ),
     },
     {
       key: "submitted",
@@ -81,10 +88,7 @@ export function ApplicationList() {
           to={`/admin/applications/${app.id}`}
           title="View application details"
           onClick={() => {
-            queryClient.setQueryData(
-              ["applications", String(app.id)],
-              app,
-            );
+            queryClient.setQueryData(["applications", String(app.id)], app);
           }}
         >
           <button className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-700 text-xs text-gray-100 hover:border-[#c89b3c]">

@@ -3,6 +3,8 @@ import agroLogo from "@/assets/images/pk5agroimage.png";
 import miningLogo from "@/assets/images/pk5miningimage.png";
 
 const agroDomain = import.meta.env.VITE_AGRO_DOMAIN;
+const agroAppId = import.meta.env.VITE_APP_AGRO_ID ?? "";
+const miningAppId = import.meta.env.VITE_APP_ID ?? "";
 
 export const useTenant = () => {
   const hostname = window.location.hostname;
@@ -23,6 +25,7 @@ export const useTenant = () => {
       progressBgColor: isAgro ? "#4D6F47" : "#0F0F0F",
       iconColor: isAgro ? "#C89B3C" : "#5A5324",
       primaryAccentColor: isAgro ? "#C89B3C" : "#C89B3C70",
-    }
+    },
+    appId: isAgro ? agroAppId : miningAppId,
   };
 };

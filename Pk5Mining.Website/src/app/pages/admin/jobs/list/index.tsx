@@ -19,6 +19,7 @@ import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { jobTypes, statusOptions } from "@/app/constants";
 import useJobListViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
+import { SearchableSelect } from "@/app/components/searchable-select";
 
 export function JobList() {
   const { colors } = useTenant();
@@ -38,6 +39,7 @@ export function JobList() {
     selectedJob,
     isUpdating,
     queryClient,
+    departments,
     setConfirmOpen,
     setSelectedJob,
     updateFilter,
@@ -47,6 +49,7 @@ export function JobList() {
     onChangePage,
     onChangePageSize,
     handleUpdateStatus,
+    handleNavigateToJobDetailWebsite,
   } = useJobListViewModel();
 
   const columns: PaginatedTableColumn<JobDto>[] = [
@@ -55,14 +58,13 @@ export function JobList() {
       header: "Title",
       render: (job) => (
         <div>
-          <Link
-            to={`/careers/job/${job.id}`}
-            className="flex-1"
-            target="_blank"
+          <button
+            onClick={() => handleNavigateToJobDetailWebsite(job.id)}
+            className="flex-1 cursor-pointer"
             title="View public page"
           >
             <div className="font-semibold text-[#c89b3c]">{job.title}</div>
-          </Link>
+          </button>
           <div className="text-xs text-gray-500 line-clamp-2">{job.id}</div>
         </div>
       ),
@@ -229,21 +231,22 @@ export function JobList() {
             <label className="block text-xs font-semibold mb-2">
               Department
             </label>
-            <input
-              name="department"
-              type="text"
-              value={filters.department}
+            <SearchableSelect
+              name="departmentId"
+              value={filters.department ?? ""}
+              options={departments.map((d) => ({
+                value: d.name,
+                label: d.name,
+              }))}
               onChange={(e) => updateFilter("department", e.target.value)}
               placeholder="Search by department"
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              styles={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Location
-            </label>
+            <label className="block text-xs font-semibold mb-2">Location</label>
             <input
               name="location"
               type="text"
@@ -251,14 +254,16 @@ export function JobList() {
               onChange={(e) => updateFilter("location", e.target.value)}
               placeholder="Search by location"
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Status
-            </label>
+            <label className="block text-xs font-semibold mb-2">Status</label>
             <select
               value={filterStatus}
               onChange={(e) => {
@@ -266,7 +271,11 @@ export function JobList() {
                 setIsFilter(true);
               }}
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -278,9 +287,7 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Job Type
-            </label>
+            <label className="block text-xs font-semibold mb-2">Job Type</label>
             <select
               value={filterJobType}
               onChange={(e) => {
@@ -288,7 +295,11 @@ export function JobList() {
                 setIsFilter(true);
               }}
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Job Type</option>
               {jobTypes.map((opt) => (

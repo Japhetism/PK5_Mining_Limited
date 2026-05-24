@@ -13,7 +13,7 @@ import {
   CreateDepartmentPayload,
 } from "@/app/interfaces/department";
 import { getDepartments,updateDepartment,  updateDepartmentStatus, createDepartment, deleteDepartment } from "@/app/api/departments";
-import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.shcema";
+import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.schema";
 import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 
 

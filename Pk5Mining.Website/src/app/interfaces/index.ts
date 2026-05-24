@@ -217,6 +217,11 @@ export interface IUser {
   dT_Created?: string;
 }
 
+export interface ISSOAUTH {
+  user: IUser,
+  token: string;
+}
+
 export interface ILoginPayload {
   email: string;
   password: string;
@@ -419,7 +424,6 @@ export type AdvanceFilter = {
   subject?: string;
   phoneNumber?: string;
   name?: string;
-  appId?: string;
   startDate?: string;
   endDate?: string;
 }

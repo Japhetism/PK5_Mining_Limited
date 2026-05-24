@@ -102,11 +102,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setAuthToken(msToken);
             tokenStore.set(msToken);
 
-            const backendUser = await microsoftLogin();
-            if (backendUser) {
-              const finalToken = backendUser.jwtToken || msToken;
+            const backendResponseData = await microsoftLogin();
+            if (backendResponseData) {
+              const finalToken = backendResponseData.token || msToken;
               const authenticatedUser = {
-                ...backendUser,
+                ...backendResponseData.user,
                 jwtToken: finalToken,
               };
 

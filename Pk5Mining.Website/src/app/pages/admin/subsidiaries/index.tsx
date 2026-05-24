@@ -11,7 +11,6 @@ import {
   Pencil,
   Trash,
 } from "lucide-react";
-import { StatusFilter } from "@/app/interfaces";
 import { formatDateTime } from "@/app/utils/helper";
 import {
   PaginatedTable,
@@ -286,9 +285,9 @@ export function SubsidiaryList() {
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
             >
               <option value="">All Statuses</option>
-              {["Active", "Inactive"].map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
+              {statusOptions.map((opt) => (
+                <option key={opt.label2} value={opt.label2}>
+                  {opt.label2}
                 </option>
               ))}
             </select>

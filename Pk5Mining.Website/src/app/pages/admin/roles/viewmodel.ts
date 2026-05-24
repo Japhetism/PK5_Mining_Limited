@@ -33,7 +33,7 @@ function useRoleViewModel() {
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmUpdateStatusOpen, setConfirmUpdateStatusOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
@@ -53,21 +53,21 @@ function useRoleViewModel() {
   );
 
   const [filters, setFilters] = useState({
-    search: searchParams.get("search") ?? "",
+    name: searchParams.get("name") ?? "",
   });
 
   const debouncedFilters = useDebouncedValue(filters, 400);
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.search]);
+  }, [debouncedFilters.name, filterStatus]);
 
   const queryParams: RolesQuery = useMemo(() => {
     const raw: RolesQuery = {
       pageNumber,
       pageSize,
-      isActive:
-        filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
+      name: debouncedFilters.name,
+      status: filterStatus,
     };
 
     // clean out empty strings
@@ -79,7 +79,8 @@ function useRoleViewModel() {
       "roles",
       queryParams.pageNumber,
       queryParams.pageSize,
-      queryParams.isActive ?? "",
+      queryParams.name,
+      queryParams.status,
     ],
     queryFn: () => getRoles(queryParams),
     staleTime: 30_000,
@@ -330,6 +331,7 @@ function useRoleViewModel() {
   }
 
   const handleCloseModal = () => {
+    setFieldErrors({});
     setSelectedRole(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);

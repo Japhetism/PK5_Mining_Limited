@@ -5,7 +5,7 @@ import { useAuth } from "@/app/context/AuthContext";
 
 export function SSO() {
   const { user, isLoading } = useAuth();
-  const { colors, logo } = useTenant();
+  const { colors: { bg }, logo, name } = useTenant();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,12 +16,12 @@ export function SSO() {
   }, [user, isLoading, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ backgroundColor: colors.bg }}>
+    <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ backgroundColor: bg }}>
       <div className="flex flex-col items-center animate-pulse">
         <div className="mb-8">
           <img
             src={logo}
-            alt="PK5 Mining Logo"
+            alt={name}
             className="w-32 h-auto object-contain brightness-0 invert-[.5]"
             loading="lazy"
           />
