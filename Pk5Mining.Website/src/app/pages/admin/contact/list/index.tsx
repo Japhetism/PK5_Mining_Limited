@@ -80,13 +80,13 @@ export function ContactMessageList() {
       header: "Status",
       render: (row) => <ContactStatusPill status={row.status ?? "new"} />,
     },
-    {
-      key: "appId",
-      header: "Website",
-      render: (row) => (
-        <span>{row.appId ? getWebsiteName(row.appId) : "-"}</span>
-      ),
-    },
+    // {
+    //   key: "appId",
+    //   header: "Website",
+    //   render: (row) => (
+    //     <span>{row.appId ? getWebsiteName(row.appId) : "-"}</span>
+    //   ),
+    // },
     {
       key: "dT_Created",
       header: "Date Created",

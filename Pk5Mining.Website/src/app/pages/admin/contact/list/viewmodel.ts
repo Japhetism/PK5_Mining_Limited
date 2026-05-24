@@ -14,6 +14,7 @@ import {
 } from "@/app/interfaces";
 import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import { toastUtil } from "@/app/utils/toast";
+import { useTenant } from "@/tenants/useTenant";
 
 export interface AdvancedFilters {
   search: string;
@@ -32,12 +33,15 @@ const defaultAdvanceFilters: AdvanceFilter = {
   subject: "",
   name: "",
   phoneNumber: "",
-  appId: "",
   startDate: "",
   endDate: "",
 };
 
 function useContactListViewModel() {
+  const { appId } = useTenant();
+
+  console.log("from contact page ", appId);
+
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedContactMessage, setSelectedContactMessage] =
@@ -78,6 +82,7 @@ function useContactListViewModel() {
       return cleanParams({
         pageNumber,
         pageSize,
+        appId: appId,
         email: advEmailFilter?.trim() || undefined,
         ...restAdvanceFilters,
       }) as ContactQuery;
@@ -86,9 +91,10 @@ function useContactListViewModel() {
     return cleanParams({
       pageNumber,
       pageSize,
+      appId: appId,
       email: debouncedFilters.email || undefined,
     }) as ContactQuery;
-  }, [pageNumber, pageSize, debouncedFilters, appliedAdvanceFilters]);
+  }, [pageNumber, pageSize, debouncedFilters, appliedAdvanceFilters, appId]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [

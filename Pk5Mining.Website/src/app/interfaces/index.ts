@@ -424,7 +424,6 @@ export type AdvanceFilter = {
   subject?: string;
   phoneNumber?: string;
   name?: string;
-  appId?: string;
   startDate?: string;
   endDate?: string;
 }
