@@ -101,6 +101,9 @@ export const SearchableSelect = ({
           placeholder={placeholder ?? `Search ${label ? label : ""}`}
           className={`${className} pr-10`}
           style={styles}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
         />
 
         {/* Dropdown Icon */}
