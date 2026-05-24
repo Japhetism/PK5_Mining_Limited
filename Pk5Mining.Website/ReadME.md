@@ -11,6 +11,45 @@ The app is tenant-aware and supports multi-brand behavior based on the runtime h
 
 ---
 
+## Getting Started
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start the app
+
+```bash
+npm run dev
+```
+
+The Vite dev server typically runs on `http://localhost:5173`.
+
+### Visit tenant domains
+
+This app changes branding and tenant headers by hostname.
+
+- For **Mining**: use the mining hostname configured in `VITE_APP_ID` / `VITE_APP_ID` or local host mapping
+- For **Agro**: use the hostname configured in `VITE_AGRO_DOMAIN` and `VITE_APP_AGRO_ID`
+
+If you run locally, you can point both domains to `127.0.0.1` in your hosts file and then open the app in the browser using those hostnames.
+
+Example local mapping for development:
+
+```text
+127.0.0.1 pk5mining.local
+127.0.0.1 pk5agroallied.local
+```
+
+Then visit:
+
+- `http://pk5mining.local:5173` for Mining
+- `http://pk5agroallied.local:5173` for Agro
+
+---
+
 ## Core Layers
 
 ### 1. Bootstrap and Global Providers
@@ -251,4 +290,51 @@ The system is a multi-tenant React front-end with a strong focus on authenticati
 - tenant-specific configuration
 - backend API access
 
-If needed, this file can also be extended with a formal UML-style diagram or a sequence diagram for the login and SSO handshake flows.
+## Optional Architecture Diagrams
+
+### Login Sequence Diagram
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Browser
+  participant App
+  participant Backend
+  participant AzureAD
+
+  User->>Browser: opens /admin/login
+  Browser->>App: render login page
+  User->>Browser: submit email/password
+  Browser->>App: call AuthContext.login()
+  App->>Backend: POST /Authentication/login
+  Backend-->>App: return JWT + user payload
+  App->>AuthContext: save sessionStorage + tokenStore
+  App-->>Browser: navigate to /admin/dashboard
+```
+
+### SSO Handshake Sequence Diagram
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Browser
+  participant App
+  participant MSAL
+  participant AzureAD
+  participant Backend
+
+  User->>Browser: open /admin or /admin/sso
+  Browser->>App: boot and initialize authService
+  App->>MSAL: initialize() / handleRedirectPromise()
+  MSAL->>AzureAD: if redirect callback, validate response
+  AzureAD-->>MSAL: return auth result
+  MSAL-->>App: active account established
+  App->>MSAL: acquireTokenSilent()
+  MSAL-->>App: return access token
+  App->>Backend: POST /SingleSignOn/microsoft/login
+  Backend-->>App: return app JWT + user payload
+  App->>AuthContext: store session and token
+  App-->>Browser: render authenticated admin pages
+```
+
+These diagrams describe the two main authentication flows in the system.
