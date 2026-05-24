@@ -61,47 +61,6 @@ export const isValidPhoneForCountry = (phone: string, country: string) => {
   return !!parsed && parsed.isValid();
 };
 
-export const validateJob = (data: CreateJobPayload): JobErrors => {
-  const errors: JobErrors = {};
-
-  if (!data.title.trim()) {
-    errors.title = "Title is required.";
-  } else if (!/^[a-zA-Z0-9 -]+$/.test(data.title)) {
-    errors.title =
-      "Title can only contain letters, numbers, spaces, and hyphens.";
-  }
-
-  if (!data.department.trim()) {
-    errors.department = "Department is required.";
-  }
-
-  if (!data.location.trim()) {
-    errors.location = "Location is required.";
-  }
-
-  if (!data.experience.trim()) {
-    errors.experience = "Experience is required.";
-  }
-
-  if (!data.jobType) {
-    errors.jobType = "Job type is required.";
-  }
-
-  if (!data.workArrangement) {
-    errors.workArrangement = "Work arrangement is required.";
-  }
-
-  if (!data.briefDescription.trim()) {
-    errors.briefDescription = "Brief description is required.";
-  }
-
-  if (!data.description.trim()) {
-    errors.description = "Description is required.";
-  }
-
-  return errors;
-};
-
 export const validateApplication = (
   data: IApplicantBioData,
   resumeFile: File | null,

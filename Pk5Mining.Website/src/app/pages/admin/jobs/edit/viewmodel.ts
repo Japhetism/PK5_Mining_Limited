@@ -11,10 +11,10 @@ import {
   UpdateJobPayload,
   WorkArrangement,
 } from "@/app/interfaces";
-import { validateJob } from "@/app/utils/validator";
 import { toastUtil } from "@/app/utils/toast";
-import { ddmmyyyyToApiDate } from "@/app/utils/helper";
+import { ddmmyyyyToApiDate, mapZodErrors } from "@/app/utils/helper";
 import { getDepartmentsForDropdown } from "@/app/api/departments";
+import { createJobSchema, updateJobSchema } from "@/app/schemas/job.schema";
 
 const defaultFormData = {
   title: "",
@@ -149,10 +149,15 @@ function useJobEditViewModel() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const errors: JobErrors = validateJob(form);
+    const result = jobId
+      ? updateJobSchema.safeParse(form)
+      : createJobSchema.safeParse(form);
 
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
+    if (!result.success) {
+      type JobPayload = typeof jobId extends string
+        ? UpdateJobPayload
+        : CreateJobPayload;
+      setFieldErrors(mapZodErrors<JobPayload>(result.error));
       return;
     }
 
