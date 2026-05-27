@@ -1,3 +1,4 @@
+import { useTenant } from "@/tenants/useTenant";
 import { useState, useMemo, useRef, useEffect } from "react";
 
 type Option = {
@@ -36,6 +37,7 @@ export const SearchableSelect = ({
   onChange,
   onBlur,
 }: Props) => {
+  const { colors } = useTenant();
   const [query, setQuery] = useState<string | number>("");
   const [open, setOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -134,7 +136,7 @@ export const SearchableSelect = ({
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-[#0f0f0f] border border-gray-800 rounded-lg shadow-lg scrollbar-black text-white">
+        <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto border border-gray-800 rounded-lg shadow-lg scrollbar-black text-white" style={{ background: colors.card }}>
           {filteredOptions.length > 0 ? (
             filteredOptions.map((opt) => (
               <div

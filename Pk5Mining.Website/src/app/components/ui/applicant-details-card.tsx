@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronLeft, ChevronRight, Eye, FileText, Mail, Phone } from "lucide-react";
+import { useTenant } from "@/tenants/useTenant";
 
 /**
  * Simple skeleton for cards (swap with your own if you have one).
@@ -85,16 +86,17 @@ export function PaginatedCard<T>({
   setPageSize,
 
   gridClassName = "grid gap-3 sm:grid-cols-2 lg:grid-cols-3",
-  cardClassName = "bg-[#1a1a1a] border border-gray-800 rounded-xl p-4",
+  cardClassName = "border border-gray-800 rounded-xl p-4",
 
   renderCard,
 }: PaginatedCardProps<T>) {
+  const { colors } = useTenant();
   const from = totalCount === 0 ? 0 : (pageNumber - 1) * pageSize + 1;
   const to = totalCount === 0 ? 0 : Math.min(pageNumber * pageSize, totalCount);
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden">
+      <div className="border border-gray-800 rounded-xl overflow-hidden" style={{ background: colors.bg }}>
         <div className="p-4">
           {isLoading ? (
             <CardListSkeleton count={Math.min(pageSize, 6)} />
@@ -127,7 +129,7 @@ export function PaginatedCard<T>({
         </div>
 
         {!isLoading && data.length > 0 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-800 bg-black/20">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-800" style={{ background: colors.bg }}>
             <div className="text-xs text-gray-400">
               Showing {from}–{to} of {totalCount}
             </div>
@@ -139,7 +141,8 @@ export function PaginatedCard<T>({
                   setPageSize(Number(e.target.value));
                   setPageNumber(1);
                 }}
-                className="bg-[#1a1a1a] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+                className="border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
+                style={{ background: colors.bg }}
               >
                 {pageSizeOptions.map((n) => (
                   <option key={n} value={n}>

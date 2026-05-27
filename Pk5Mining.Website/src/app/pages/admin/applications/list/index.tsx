@@ -11,7 +11,7 @@ import useApplicationsListViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
 
 export function ApplicationList() {
-  const { isAgro } = useTenant();
+  const { isAgro, colors } = useTenant();
   const {
     queryClient,
     apps,
@@ -122,6 +122,11 @@ export function ApplicationList() {
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
         </div>
@@ -131,9 +136,6 @@ export function ApplicationList() {
         data={apps}
         columns={columns}
         isLoading={isLoading}
-        searchPlaceholder="Search name, email, role, country..."
-        statusValue={status}
-        onStatusChange={(v) => setStatus(v as ApplicationStatusFilter)}
         emptyTitle="No applications yet. Once candidates apply, they will appear here."
         noResultsTitle="No results found. Try changing your filters."
         setPageNumber={onChangePage}

@@ -1,3 +1,4 @@
+import { useTenant } from "@/tenants/useTenant";
 import React from "react";
 
 type TableSkeletonProps = {
@@ -8,8 +9,17 @@ type TableSkeletonProps = {
   colWidths?: string[];
 };
 
-const CellSkeleton = ({ className = "" }: { className?: string }) => (
-  <div className={`h-4 bg-gray-800/60 rounded animate-pulse ${className}`} />
+const CellSkeleton = ({
+  className = "",
+  backgroundColor,
+}: {
+  className?: string;
+  backgroundColor: string;
+}) => (
+  <div
+    className={`h-4 rounded animate-pulse ${className}`}
+    style={{ background: backgroundColor }}
+  />
 );
 
 export const TableSkeleton: React.FC<TableSkeletonProps> = ({
@@ -19,6 +29,7 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
   className = "",
   colWidths,
 }) => {
+  const { colors } = useTenant();
   const widths =
     colWidths && colWidths.length >= cols
       ? colWidths.slice(0, cols)
@@ -33,11 +44,14 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
     <div className={`overflow-x-auto ${className}`}>
       <table className="min-w-full text-sm">
         {showHeader && (
-          <thead className="bg-black/40 text-gray-300">
+          <thead className="text-gray-300" style={{ background: colors.bg }}>
             <tr>
               {Array.from({ length: cols }).map((_, i) => (
                 <th key={`h-${i}`} className="px-4 py-3 text-left font-medium">
-                  <CellSkeleton className={`h-3 ${widths[i]}`} />
+                  <CellSkeleton
+                    className={`h-3 ${widths[i]}`}
+                    backgroundColor={colors.card}
+                  />
                 </th>
               ))}
             </tr>
@@ -49,22 +63,41 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
             <tr
               key={`r-${r}`}
               className="border-t border-gray-800 hover:bg-white/5"
+              style={{ background: colors.bg }}
             >
               {Array.from({ length: cols }).map((_, c) => (
                 <td key={`c-${r}-${c}`} className="px-4 py-3 align-top">
                   {c === 0 ? (
                     <div className="space-y-2">
-                      <CellSkeleton className="w-32" />
-                      <CellSkeleton className="w-48 h-3" />
+                      <CellSkeleton
+                        className="w-32"
+                        backgroundColor={colors.card}
+                      />
+                      <CellSkeleton
+                        className="w-48 h-3"
+                        backgroundColor={colors.card}
+                      />
                     </div>
                   ) : c === cols - 1 ? (
                     <div className="flex justify-end gap-2">
-                      <CellSkeleton className="w-8 h-8 rounded-md" />
-                      <CellSkeleton className="w-8 h-8 rounded-md" />
-                      <CellSkeleton className="w-8 h-8 rounded-md" />
+                      <CellSkeleton
+                        className="w-8 h-8 rounded-md"
+                        backgroundColor={colors.card}
+                      />
+                      <CellSkeleton
+                        className="w-8 h-8 rounded-md"
+                        backgroundColor={colors.card}
+                      />
+                      <CellSkeleton
+                        className="w-8 h-8 rounded-md"
+                        backgroundColor={colors.card}
+                      />
                     </div>
                   ) : (
-                    <CellSkeleton className={widths[c]} />
+                    <CellSkeleton
+                      className={widths[c]}
+                      backgroundColor={colors.card}
+                    />
                   )}
                 </td>
               ))}

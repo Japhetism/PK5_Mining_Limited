@@ -20,8 +20,10 @@ import { ResumeViewerModal } from "@/app/components/ui/resume-viewer-modal";
 import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
 import useApplicationDetailsViewModel from "./viewmodel";
 import { statuses } from "@/app/constants";
+import { useTenant } from "@/tenants/useTenant";
 
 export function ApplicationDetail() {
+  const { colors } = useTenant();
   const {
     app,
     isLoading,
@@ -60,7 +62,8 @@ export function ApplicationDetail() {
               <motion.select
                 value={selectedStatus ?? app?.status}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="rounded-lg border border-gray-800 bg-[#0f0f0f] px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
+                className="rounded-lg border border-gray-800 px-3 py-1.5 text-xs text-gray-100 outline-none focus:border-[#c89b3c]"
+                style={{ background: colors.bg }}
               >
                 {statuses.map((s) => (
                   <option key={s.value} value={s.value} disabled={s.value === app?.status?.toLowerCase()}>
@@ -113,7 +116,7 @@ export function ApplicationDetail() {
       {/* Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_1.3fr] gap-6">
         {/* Candidate */}
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5 space-y-4 text-sm text-gray-200">
+        <div className="border border-gray-800 rounded-xl p-5 space-y-4 text-sm text-gray-200" style={{ background: colors.bg }}>
           <div>
             <h1 className="text-xl font-semibold mb-1">
               {app?.firstName} {app?.lastName}
@@ -148,7 +151,7 @@ export function ApplicationDetail() {
         </div>
 
         {/* Resume */}
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5 text-sm text-gray-200">
+        <div className="border border-gray-800 rounded-xl p-5 text-sm text-gray-200" style={{ background: colors.bg }}>
           <p className="text-xs font-semibold text-white mb-2">Resume</p>
 
           {resumeUrl ? (
@@ -184,7 +187,7 @@ export function ApplicationDetail() {
         </div>
 
         {/* Other Info */}
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-5 text-sm text-gray-200">
+        <div className="border border-gray-800 rounded-xl p-5 text-sm text-gray-200" style={{ background: colors.bg }}>
           <p className="text-xs font-semibold text-white mb-2">
             Other Information
           </p>
