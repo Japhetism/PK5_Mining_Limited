@@ -40,12 +40,12 @@
 
 /* in your global CSS or a module */
 .scrollbar-black::-webkit-scrollbar-track {
-  background-color: #0f0f0f;
+  background-color: var(--scrollbar-track, #0f0f0f); /* fallback to dark */
 }
 .scrollbar-black::-webkit-scrollbar {
-  width: 10px; /* optional */
+  width: 10px;
 }
 .scrollbar-black::-webkit-scrollbar-thumb {
-  background-color: #d4a84a; /* Tailwind gray-700 */
+  background-color: var(--scrollbar-thumb, #d4a84a); /* fallback to gold */
   border-radius: 4px;
 }
