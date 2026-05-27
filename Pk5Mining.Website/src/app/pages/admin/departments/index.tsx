@@ -21,8 +21,10 @@ import { Department } from "@/app/interfaces/department";
 import { DetailModal } from "./components/details-modal";
 import { EditModal } from "./components/edit-modal";
 import useDepartmentViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function Departments() {
+  const { colors } = useTenant();
   const {
     departments,
     filters,
@@ -220,7 +222,12 @@ export function Departments() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
             />
           </div>
 
@@ -231,7 +238,12 @@ export function Departments() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (

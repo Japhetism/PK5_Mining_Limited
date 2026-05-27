@@ -21,8 +21,11 @@ import { Role } from "@/app/interfaces/role";
 import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
 import useRoleViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function Roles() {
+  const { colors } = useTenant();
+  9;
   const {
     roles,
     filters,
@@ -85,9 +88,7 @@ export function Roles() {
       key: "isSystem",
       header: "System Role",
       render: (role) => (
-        <span
-          className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs text-grey-400"
-        >
+        <span className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs text-grey-400">
           {role.isSystem ? "Yes" : "No"}
         </span>
       ),
@@ -140,7 +141,8 @@ export function Roles() {
             <DropdownMenu.Content
               align="end"
               sideOffset={6}
-              className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
+              className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
+              style={{ background: colors.bg }}
             >
               <DropdownMenu.Item
                 onClick={() => {
@@ -233,7 +235,12 @@ export function Roles() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
@@ -244,7 +251,12 @@ export function Roles() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (

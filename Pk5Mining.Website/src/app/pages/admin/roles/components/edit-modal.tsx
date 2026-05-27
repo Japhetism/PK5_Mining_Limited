@@ -6,6 +6,7 @@ import { Role, RoleErrors } from "@/app/interfaces/role";
 import { getGroupedPermissions } from "@/app/utils/helper";
 import { Permission } from "@/app/interfaces/permission";
 import { SearchableSelect } from "@/app/components/searchable-select";
+import { useTenant } from "@/tenants/useTenant";
 
 type EditModalProps = {
   form: Role;
@@ -41,6 +42,7 @@ export function EditModal({
   onChange,
   handlePermissionToggle,
 }: EditModalProps) {
+  const { colors } = useTenant();
   const groupedPermissions = getGroupedPermissions(permissions);
 
   return (
@@ -103,8 +105,13 @@ export function EditModal({
                       }
                     }}
                     className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                      ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors.name && (
                     <p className="text-xs text-red-500 mt-1">
@@ -125,10 +132,20 @@ export function EditModal({
                   </div>
 
                   {/* Scrollable Table */}
-                  <div className="h-[350px] overflow-y-auto pr-2 scrollbar-black border border-gray-800 rounded-lg">
+                  <div
+                    className="h-[350px] overflow-y-auto scrollbar-black border border-gray-800 rounded-lg"
+                    style={
+                      {
+                        "--scrollbar-track": colors.bg,
+                      } as React.CSSProperties
+                    }
+                  >
                     <table className="w-full text-left border-collapse">
                       {/* Sticky Header */}
-                      <thead className="sticky top-0 bg-[#0f0f0f] z-10 shadow-sm">
+                      <thead
+                        className="sticky top-0 z-10 shadow-sm"
+                        style={{ background: colors.card }}
+                      >
                         <tr className="border-b border-gray-800">
                           <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest w-1/3">
                             Resource / Group

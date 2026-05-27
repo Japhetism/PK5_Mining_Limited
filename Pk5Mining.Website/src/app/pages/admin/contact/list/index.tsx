@@ -9,8 +9,10 @@ import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
 import { ContactMessageFilterPanel } from "../components/contact-message-filter-panel";
 import { ContactViewModal } from "../components/contact-message-modal";
 import useContactListViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function ContactMessageList() {
+  const { colors } = useTenant();
   const {
     contactMessages,
     isLoading,
@@ -139,7 +141,12 @@ export function ContactMessageList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email..."
-              className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
+              className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
@@ -147,7 +154,8 @@ export function ContactMessageList() {
           <button
             type="button"
             onClick={() => setIsFilterPanelOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-800 bg-[#1a1a1a] px-4 py-2 text-sm text-gray-200 hover:border-[#c89b3c] hover:text-[#c89b3c] transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-200 hover:border-[#c89b3c] hover:text-[#c89b3c] transition-colors"
+            style={{ background: colors.bg }}
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters
@@ -188,7 +196,8 @@ export function ContactMessageList() {
                   return (
                     <button
                       key={key}
-                      className="inline-flex items-center gap-1 rounded-full border border-gray-800 bg-[#1a1a1a] px-2.5 py-1 text-xs text-gray-200"
+                      className="inline-flex items-center gap-1 rounded-full border border-gray-800 px-2.5 py-1 text-xs text-gray-200"
+                      style={{ background: colors.bg }}
                     >
                       <span>
                         {displayKey

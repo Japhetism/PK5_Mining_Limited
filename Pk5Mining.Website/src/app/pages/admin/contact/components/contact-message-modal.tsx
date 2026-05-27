@@ -11,6 +11,7 @@ import { Modal } from "@/app/components/ui/modal";
 import { formatDateTime } from "@/app/utils/helper";
 import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
 import { ContactMessageDto, ContactStatus } from "@/app/interfaces";
+import { useTenant } from "@/tenants/useTenant";
 
 type ContactViewModalProps = {
   open: boolean;
@@ -27,6 +28,7 @@ export function ContactViewModal({
   onUpdateStatus,
   onClose,
 }: ContactViewModalProps) {
+  const { colors } = useTenant();
   return (
     <Modal
       open={open}
@@ -52,7 +54,7 @@ export function ContactViewModal({
         </div>
 
         {/* Sender Info & Metadata */}
-        <div className="bg-[#0f0f0f] p-4 sm:p-5 space-y-4 border-b border-gray-800">
+        <div className="p-4 sm:p-5 space-y-4 border-b border-gray-800" style={{ background: colors.bg }}>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             {/* Left side metadata */}
             <div className="flex flex-col gap-2 text-sm text-gray-400">

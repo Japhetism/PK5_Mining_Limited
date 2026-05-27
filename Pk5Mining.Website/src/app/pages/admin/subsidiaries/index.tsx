@@ -24,8 +24,10 @@ import { DetailModal } from "./components/detail-modal";
 import { SearchableSelect } from "@/app/components/searchable-select";
 import { statusOptions } from "@/app/constants";
 import { useMemo } from "react";
+import { useTenant } from "@/tenants/useTenant";
 
 export function SubsidiaryList() {
+  const { colors } = useTenant();
   const {
     subsidaries,
     filters,
@@ -158,7 +160,8 @@ export function SubsidiaryList() {
             <DropdownMenu.Content
               align="end"
               sideOffset={6}
-              className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
+              className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
+              style={{ background: colors.bg }}
             >
               <DropdownMenu.Item
                 onClick={() => {
@@ -245,44 +248,53 @@ export function SubsidiaryList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Name
-            </label>
+            <label className="block text-xs font-semibold mb-2">Name</label>
             <input
               name="name"
               type="text"
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Email
-            </label>
+            <label className="block text-xs font-semibold mb-2">Email</label>
             <input
               name="email"
               type="text"
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Status
-            </label>
+            <label className="block text-xs font-semibold mb-2">Status</label>
             <select
               value={filterStatus}
               onChange={(e) => {
                 setFilterStatus(e.target.value);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -294,9 +306,7 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Country
-            </label>
+            <label className="block text-xs font-semibold mb-2">Country</label>
             <SearchableSelect
               name="country"
               value={filterCountry}
@@ -307,7 +317,12 @@ export function SubsidiaryList() {
                 setIsFilter(true);
               }}
               placeholder="All Countries"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              styles={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
         </div>

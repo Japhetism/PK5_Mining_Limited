@@ -273,7 +273,7 @@ export const getWebsiteName = (appId: string): string => {
 export const getFilterSubjects = (appId: string | undefined) => {
   const subjectMap: Record<string, typeof miningSubjects> = {
     "com.pk5.mining": miningSubjects,
-    "com.pk5.agro": agroSubjects,
+    "com.pk5.agro.allied": agroSubjects,
   };
 
   const subjects = !appId

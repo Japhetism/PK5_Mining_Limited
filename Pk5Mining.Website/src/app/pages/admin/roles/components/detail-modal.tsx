@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { formatDateTime, getGroupedPermissions } from "@/app/utils/helper";
 import { Role } from "@/app/interfaces/role";
+import { useTenant } from "@/tenants/useTenant";
 
 type DetailModalProps = {
   role: Role;
@@ -27,6 +28,7 @@ function DetailItem({
 }
 
 export function DetailModal({ role, open, onClose }: DetailModalProps) {
+  const { colors } = useTenant();
   const groupedPermissions = getGroupedPermissions(role.permissions || []);
   return (
     <Modal
@@ -92,9 +94,9 @@ export function DetailModal({ role, open, onClose }: DetailModalProps) {
                   No permissions assigned
                 </p>
               ) : (
-                <div className="max-h-[350px] overflow-y-auto pr-2 scrollbar-black border border-gray-800 rounded-lg">
+                <div className="max-h-[350px] overflow-y-auto scrollbar-black border border-gray-800 rounded-lg">
                   <table className="w-full text-left border-collapse">
-                    <thead className="sticky top-0 bg-[#0f0f0f] z-10 shadow-sm">
+                    <thead className="sticky top-0 z-10 shadow-sm" style={{ background: colors.card }}>
                       <tr className="border-b border-gray-800">
                         <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest w-1/3">
                           Resource / Group
