@@ -14,6 +14,7 @@ import {
 } from "@/app/interfaces/department";
 import { getDepartments,updateDepartment,  updateDepartmentStatus, createDepartment, deleteDepartment } from "@/app/api/departments";
 import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.schema";
+import { useTenant } from "@/tenants/useTenant";
 
 
 const defaultFormData: Department = {
@@ -42,6 +43,7 @@ const successMessages: Record<DepartmentAction, string> = {
 };
 
 function useDepartmentViewModel() {
+  const { subsidiaryId } = useTenant();
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -272,8 +274,8 @@ function useDepartmentViewModel() {
     const payload: CreateDepartmentPayload = {
       ...result.data,
       status: "Active",
+      subsidiaryId: subsidiaryId,
       dT_Updated: new Date().toISOString(),
-
     };
 
     createMutation.mutate(payload);
@@ -294,6 +296,7 @@ function useDepartmentViewModel() {
     const payload = {
       ...result.data,
       status: selectedDepartment.status,
+      subsidiaryId: subsidiaryId,
     };
     setFieldErrors({});
 

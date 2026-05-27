@@ -5,6 +5,7 @@ export type Department = {
   id: string;
   name: string;
   description?: string;
+  subsidiaryId?: string;
   subsidiary?: Subsidiary | null;
   isActive?: boolean;
   status: "Active" | "Inactive";
