@@ -14,7 +14,6 @@ import {
 } from "@/app/interfaces/department";
 import { getDepartments,updateDepartment,  updateDepartmentStatus, createDepartment, deleteDepartment } from "@/app/api/departments";
 import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.schema";
-import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 
 
 const defaultFormData: Department = {
@@ -125,17 +124,6 @@ function useDepartmentViewModel() {
       dT_Updated: selectedDepartment.dT_Updated ?? "",
     });
   }, [selectedDepartment]);
-
-  // for dropdown
-  const {
-    data: subsidiaryData,
-    isLoading: isLoadingSubsidiary,
-    error: subsidiaryError,
-  } = useQuery({
-    queryKey: ["light-subsidiaries"],
-    queryFn: () => getLightSubsidiaries(),
-    staleTime: 30_000,
-  });
 
   const createMutation = useMutation({
     mutationFn: (payload: CreateDepartmentPayload) => createDepartment(payload),
@@ -283,7 +271,6 @@ function useDepartmentViewModel() {
 
     const payload: CreateDepartmentPayload = {
       ...result.data,
-      subsidiaryId: result.data.subsidiaryId ? Number(result.data.subsidiaryId) : undefined,
       status: "Active",
       dT_Updated: new Date().toISOString(),
 
@@ -347,7 +334,6 @@ function useDepartmentViewModel() {
     setConfirmViewOpen(false);
   };
 
-  const subsidiaries = subsidiaryData ?? [];
   const departments: Department[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -373,7 +359,6 @@ function useDepartmentViewModel() {
     queryClient,
     form,
     fieldErrors,
-    subsidiaries,
     onChange,
     setIsFilter,
     setFilterStatus,

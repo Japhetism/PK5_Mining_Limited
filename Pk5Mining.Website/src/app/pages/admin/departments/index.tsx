@@ -43,7 +43,6 @@ export function Departments() {
     selectedDepartment,
     isUpdating,
     queryClient,
-    subsidiaries,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -95,11 +94,6 @@ export function Departments() {
           {dept.isActive ? "Active" : "Inactive"}
         </span>
       ),
-    },
-    {
-      key: "subsidiary",
-      header: "Subsidiary",
-      render: (role) => role.subsidiary?.name
     },
     {
       key: "dT_Created",
@@ -296,7 +290,6 @@ export function Departments() {
         form={form}
         fieldErrors={fieldErrors}
         cancelText="Cancel"
-        subsidiaries={subsidiaries}
         loading={isUpdating}
         onClose={handleCloseModal}
         onConfirm={selectedDepartment ? handleUpdateDepartment : handleCreateDepartment}

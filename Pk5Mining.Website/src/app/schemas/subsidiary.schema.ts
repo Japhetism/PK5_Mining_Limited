@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Regex allows alphanumeric characters, spaces, and standard corporate symbols: - & . '
 const COMPANY_NAME_REGEX = /^[a-zA-Z0-9 \-&.']+$/;
 
 const baseSubsidiarySchema = z.object({
