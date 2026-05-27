@@ -50,7 +50,6 @@ export function UserList() {
     isProcessing,
     confirmUpdateStatusOpen,
     roles,
-    subsidiaries,
     departments,
     onChange,
     updateFilter,
@@ -357,7 +356,6 @@ export function UserList() {
         open={confirmEditOpen}
         form={form}
         fieldErrors={fieldErrors}
-        subsidiaries={subsidiaries}
         roles={roles}
         departments={departments}
         onClose={handleCloseModal}

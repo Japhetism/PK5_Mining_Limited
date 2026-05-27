@@ -17,7 +17,6 @@ type EditModalProps = {
   cancelText?: string;
   loading?: boolean;
   fieldErrors: any;
-  subsidiaries: Subsidiary[];
   roles: Role[];
   departments: Department[];
   onClose: () => void;
@@ -36,7 +35,6 @@ export function EditModal({
   loading = false,
   fieldErrors,
   roles,
-  subsidiaries,
   departments,
   onClose,
   onConfirm,
@@ -212,26 +210,6 @@ export function EditModal({
                       {fieldErrors?.username}
                     </p>
                   )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Subsidiary <span className="text-red-500">*</span>
-                  </label>
-                  <SearchableSelect
-                    name="subsidiaryId"
-                    value={form.subsidiaryId ?? ""}
-                    options={subsidiaries.map((s) => ({
-                      value: s.id,
-                      label: s.name,
-                    }))}
-                    error={fieldErrors?.subsidiaryId}
-                    onChange={onChange}
-                    placeholder="Select subsidiary"
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                      ${fieldErrors?.subsidiaryId ? "border-red-500" : "border-gray-800"}
-                      focus:border-[#c89b3c]`}
-                  />
                 </div>
 
                 <div>

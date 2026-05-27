@@ -26,6 +26,7 @@ import { createUserSchema, updateUserSchema } from "@/app/schemas/user.schema";
 import { getLightRoles } from "@/app/api/roles";
 import { getLightSubsidiaries } from "@/app/api/subsidiaries";
 import { getDepartmentsForDropdown } from "@/app/api/departments";
+import { useTenant } from "@/tenants/useTenant";
 
 const defaultFormData: User = {
   id: 0,
@@ -55,6 +56,7 @@ const successMessages: Record<UserAction, string> = {
 };
 
 function useUserViewModel() {
+  const { subsidiaryId } = useTenant();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -138,16 +140,6 @@ function useUserViewModel() {
   } = useQuery({
     queryKey: ["light-roles"],
     queryFn: () => getLightRoles(),
-    staleTime: 30_000,
-  });
-
-  const {
-    data: subsidiariesData,
-    isLoading: isLoadingSubsidiaries,
-    error: subsidiariesError,
-  } = useQuery({
-    queryKey: ["light-subsidiaries"],
-    queryFn: () => getLightSubsidiaries(),
     staleTime: 30_000,
   });
 
@@ -302,7 +294,12 @@ function useUserViewModel() {
 
     setFieldErrors({});
 
-    createMutation.mutate(result.data);
+    const payload = {
+      ...result.data,
+      subsidiaryId: subsidiaryId,
+    }
+
+    createMutation.mutate(payload);
   };
 
   const handleUpdateUser = () => {
@@ -319,7 +316,12 @@ function useUserViewModel() {
 
     setFieldErrors({});
     setActionType(UserAction.Update);
-    updateMutation.mutate(result.data);
+
+    const payload = {
+      ...result.data,
+      subsidiaryId: subsidiaryId,
+    }
+    updateMutation.mutate(payload);
   };
 
   const onChange = (
@@ -351,7 +353,6 @@ function useUserViewModel() {
     }
   };
 
-  const subsidiaries = subsidiariesData ?? [];
   const roles = rolesData ?? [];
   const departments = departmentsData ?? [];
   const users: User[] = data?.data ?? [];
@@ -378,7 +379,6 @@ function useUserViewModel() {
     isProcessing,
     confirmUpdateStatusOpen,
     roles,
-    subsidiaries,
     departments,
     onChange,
     updateFilter,

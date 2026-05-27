@@ -27,9 +27,6 @@ const baseUserSchema = z.object({
   roleId: z.coerce
     .number({ message: "Role is required" })
     .positive("Role is required"),
-  subsidiaryId: z.coerce
-    .number({ message: "Subsidiary is required" })
-    .positive("Subsidiary is required"),
   departmentId: z.coerce
     .number({ message: "Department is required" })
     .positive("Department is required"),
