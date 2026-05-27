@@ -45,7 +45,6 @@ export function Roles() {
     queryClient,
     permissions,
     permissionError,
-    subsidiaries,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -108,11 +107,6 @@ export function Roles() {
           {role.status}
         </span>
       ),
-    },
-    {
-      key: "subsidiary",
-      header: "Subsidiary",
-      render: (role) => role.subsidiary?.name
     },
     {
       key: "dT_Created",
@@ -311,7 +305,6 @@ export function Roles() {
         loading={isUpdating}
         permissions={permissions}
         permissionError={permissionError}
-        subsidiaries={subsidiaries}
         onClose={handleCloseModal}
         onConfirm={selectedRole ? handleUpdateRole : handleCreateRole}
         setFieldErrors={setFieldErrors}

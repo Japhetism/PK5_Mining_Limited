@@ -5,7 +5,6 @@ import { isValidName } from "@/app/utils/validator";
 import { Role, RoleErrors } from "@/app/interfaces/role";
 import { getGroupedPermissions } from "@/app/utils/helper";
 import { Permission } from "@/app/interfaces/permission";
-import { Subsidiary } from "@/app/interfaces/subsidiary";
 import { SearchableSelect } from "@/app/components/searchable-select";
 
 type EditModalProps = {
@@ -18,7 +17,6 @@ type EditModalProps = {
   fieldErrors: any;
   permissions: Permission[];
   permissionError: any;
-  subsidiaries: Subsidiary[];
   onClose: () => void;
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<RoleErrors>>;
@@ -37,7 +35,6 @@ export function EditModal({
   fieldErrors,
   permissions,
   permissionError,
-  subsidiaries,
   onClose,
   onConfirm,
   setFieldErrors,
@@ -82,27 +79,6 @@ export function EditModal({
               className="p-6 space-y-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Subsidiary
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <SearchableSelect
-                    name="subsidiaryId"
-                    value={form.subsidiaryId || form.subsidiary?.id || ""}
-                    options={subsidiaries.map((s) => ({
-                      value: s.id,
-                      label: s.name,
-                    }))}
-                    error={fieldErrors.subsidiaryId}
-                    onChange={onChange}
-                    placeholder="Select subsidiary"
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                      ${fieldErrors.subsidiaryId ? "border-red-500" : "border-gray-800"}
-                      focus:border-[#c89b3c]`}
-                  />
-                </div>
-
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Name
