@@ -12,7 +12,7 @@ import useContactListViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
 
 export function ContactMessageList() {
-  const { colors } = useTenant();
+  const { isAgro, colors } = useTenant();
   const {
     contactMessages,
     isLoading,
@@ -70,25 +70,22 @@ export function ContactMessageList() {
         <span className="text-gray-300">{row.company ?? "-"}</span>
       ),
     },
-    {
-      key: "phoneNumber",
-      header: "Phone",
-      render: (row) => (
-        <span className="text-gray-300">{row.phoneNumber ?? "-"}</span>
-      ),
-    },
+    ...(isAgro
+      ? [
+          {
+            key: "phoneNumber",
+            header: "Phone",
+            render: (row: ContactMessageDto) => (
+              <span className="text-gray-300">{row.phoneNumber ?? "-"}</span>
+            ),
+          },
+        ]
+      : []),
     {
       key: "status",
       header: "Status",
       render: (row) => <ContactStatusPill status={row.status ?? "new"} />,
     },
-    // {
-    //   key: "appId",
-    //   header: "Website",
-    //   render: (row) => (
-    //     <span>{row.appId ? getWebsiteName(row.appId) : "-"}</span>
-    //   ),
-    // },
     {
       key: "dT_Created",
       header: "Date Created",
