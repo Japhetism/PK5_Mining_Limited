@@ -49,7 +49,7 @@ export function ContactMessageList() {
       header: "Name",
       render: (row) => (
         <div>
-          <div className="font-semibold text-gray-100">
+          <div className="font-semibold text-gray-100 capitalize">
             {row.firstName} {row.lastName}
           </div>
           <div className="text-xs text-gray-500">{row.email}</div>
@@ -60,14 +60,14 @@ export function ContactMessageList() {
       key: "subject",
       header: "Subject",
       render: (row) => (
-        <span className="text-gray-300">{row.subject ?? "-"}</span>
+        <span className="text-gray-300 capitalize">{row.subject ?? "-"}</span>
       ),
     },
     {
       key: "company",
       header: "Company",
       render: (row) => (
-        <span className="text-gray-300">{row.company ?? "-"}</span>
+        <span className="text-gray-300 capitalize">{row.company ?? "-"}</span>
       ),
     },
     ...(isAgro
@@ -196,7 +196,7 @@ export function ContactMessageList() {
                       className="inline-flex items-center gap-1 rounded-full border border-gray-800 px-2.5 py-1 text-xs text-gray-200"
                       style={{ background: colors.bg }}
                     >
-                      <span>
+                      <span className={key === "subject" ? "capitalize" : ""}>
                         {displayKey
                           .replace(/([A-Z])/g, " $1")
                           .replace(/^./, (str) => str.toUpperCase())}

@@ -142,7 +142,7 @@ export function Roles() {
               align="end"
               sideOffset={6}
               className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
-              style={{ background: colors.bg }}
+              style={{ backgroundColor: colors.bg, border: colors.border }}
             >
               <DropdownMenu.Item
                 onClick={() => {

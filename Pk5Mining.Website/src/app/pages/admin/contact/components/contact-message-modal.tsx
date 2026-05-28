@@ -43,7 +43,7 @@ export function ContactViewModal({
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
           <div className="flex items-center gap-3">
             <Mail className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold">{contact?.subject}</h2>
+            <h2 className="text-lg font-semibold capitalize">{contact?.subject}</h2>
           </div>
           <button
             onClick={onClose}
@@ -60,7 +60,7 @@ export function ContactViewModal({
             <div className="flex flex-col gap-2 text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4" />
-                <span>
+                <span className="capitalize">
                   {contact?.firstName} {contact?.lastName}
                 </span>
               </div>
@@ -78,19 +78,13 @@ export function ContactViewModal({
               {contact?.company && (
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4" />
-                  <span>{contact.company}</span>
+                  <span className="capitalize">{contact.company}</span>
                 </div>
               )}
               {contact?.phoneNumber && (
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4" />
                   <span>{contact.phoneNumber}</span>
-                </div>
-              )}
-              {contact?.appId && (
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4" />
-                  <span>{contact.appId}</span>
                 </div>
               )}
               {contact?.dT_Created && (
@@ -103,7 +97,7 @@ export function ContactViewModal({
 
             {/* Right side status */}
             <div className="text-sm flex items-start">
-              Status: <ContactStatusPill status={contact?.status ?? "new"} />
+              <span className="mr-2">Status:</span> <ContactStatusPill status={contact?.status ?? "new"} />
             </div>
           </div>
         </div>
