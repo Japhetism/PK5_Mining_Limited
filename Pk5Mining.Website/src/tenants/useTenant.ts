@@ -12,7 +12,7 @@ const miningSubsidiaryId = import.meta.env.VITE_MINING_SUBSIDIARY_ID ?? "";
 
 export const useTenant = () => {
   const hostname = window.location.hostname;
-  const isAgro = !hostname.includes(agroDomain);
+  const isAgro = hostname.includes(agroDomain);
 
   return {
     isAgro,
