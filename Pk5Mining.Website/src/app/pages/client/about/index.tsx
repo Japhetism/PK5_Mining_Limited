@@ -1,7 +1,8 @@
+import { useState, useRef } from 'react';
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import { Target, Eye, Award, DollarSign, Network, TrendingUp, Users, Briefcase, Globe, BarChart3, Factory } from 'lucide-react';
+import { Target, Eye, Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users } from 'lucide-react';
 import { leadership, timeline } from '@/app/fixtures';
 import { ILeader, ITimelineEvent } from '@/app/interfaces';
 import { ImpactCard } from '@/app/components/impact-card';
@@ -9,7 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/ta
 import { LeadershipAccordionCard } from '@/app/components/leadership-accordion-card';
 import { executiveLeadership } from '@/app/data/leadership';
 import { TimelineSection } from '@/app/components/timeline-section';
-import { useState } from 'react';
 
 export function About() {
   // State to manage the expanded executive accordion card
@@ -22,6 +22,33 @@ export function About() {
 
   const [hoveredAdvantage, setHoveredAdvantage] = useState<number | null>(null);
 
+  // --- CAROUSEL REFS & STATES PRESERVING ALL LAYOUT LOGIC ---
+  const [missionIndex, setMissionIndex] = useState<number>(0);
+  const carouselContainerRef = useRef<HTMLDivElement>(null);
+  const cardStepPx = 500; // Expected card step offset for layout calculations
+
+  // --- MOCK CAROUSEL DATA COMPATIBLE WITH ALL ICON AND PROPERTY LAYOUTS ---
+  const missionCards = [
+    { id: 1, number: '01', title: 'Develop World Class Mining Operations', description: 'Our mission is to establish efficient and innovative mining processes that meet international standards for safety, productivity, and environmental responsibility.​', icon: Target, accent: 'Pillar One', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
+    { id: 2, number: '02', title: 'Deliver High Quality Processed Minerals', description: 'Our mission is to ensure the consistent production of minerals that meet rigorous quality requirements to satisfy market demands.​', icon: Eye, accent: 'Pillar Two', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
+    { id: 3, number: '03', title: 'Drive Sustainable Economic Growth​', description: 'Our mission is to promote initiatives that support economic development while minimizing environmental impact and fostering community well-being.​', icon: Users, accent: 'Pillar Three', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
+    { id: 4, number: '04', title: 'Create Long Term Stakeholder Value​', description: 'Our mission is to build enduring relationships with stakeholders by focusing on transparency, ethical practices, and sustained financial performance.', icon: Award, accent: 'Pillar Four', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' }
+  ];
+
+  function handleTouchStart(event: React.TouchEvent<HTMLDivElement>): void {
+    // UI gesture placeholder
+  }
+
+  function handleTouchEnd(event: React.TouchEvent<HTMLDivElement>): void {
+    // UI gesture placeholder
+  }
+
+  function goToMissionSlide(arg0: number): void {
+    if (arg0 >= 0 && arg0 < missionCards.length) {
+      setMissionIndex(arg0);
+    }
+  }
+
   return (
     <div className="pt-24">
       {/* Hero */}
@@ -33,7 +60,7 @@ export function About() {
           transition={{ duration: 1.5 }}
         >
           <ImageWithFallback
-            src="https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmR1c3RyaWFsJTIwbWluaW5nJTIwc2l0ZXxlbnwxfHx8fDE3Njg5ODg3MTd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+            src="https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
             alt="Mining site"
             className="w-full h-full object-cover"
           />
@@ -60,41 +87,324 @@ export function About() {
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section className="py-24 bg-[#1a1a1a]">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      {/* ── VISION ─────────────────────────────────────────────────────── */}
+      <section className="relative min-h-[75vh] flex items-center overflow-hidden">
+        {/* Cinematic background */}
+        <div className="absolute inset-0">
+          <ImageWithFallback
+            src="https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+            alt="PK5 Mining Vision"
+            className="w-full h-full object-cover"
+          />
+          {/* Multi-layer cinematic overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/92 via-black/78 to-[#0a0a0a]/95" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+          {/* Subtle gold dot texture */}
+          <div
+            className="absolute inset-0 opacity-[0.045]"
+            style={{
+              backgroundImage: 'radial-gradient(circle at 2px 2px, #D4AF37 1px, transparent 0)',
+              backgroundSize: '44px 44px',
+            }}
+          />
+          {/* Gold atmospheric glow */}
+          <div className="absolute bottom-0 left-1/3 w-[700px] h-[280px] bg-[#D4AF37]/8 rounded-full blur-[130px]" />
+        </div>
+
+        <div className="relative z-10 w-full py-36">
+          <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
+            {/* Vision label */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="flex items-center gap-5 mb-16"
+            >
+              <div className="w-20 h-px bg-[#D4AF37]" />
+              <span className="text-[#D4AF37] font-semibold tracking-[0.45em] uppercase text-xs">
+                Vision
+              </span>
+            </motion.div>
+
+            {/* Cinematic statement */}
+            <div className="relative">
+              {/* Decorative oversized quotation mark */}
+              <div
+                className="absolute -top-4 -left-2 text-[#D4AF37] select-none pointer-events-none font-serif leading-none"
+                style={{ fontSize: 'clamp(7rem, 16vw, 18rem)', opacity: 0.055, lineHeight: 1 }}
+              >
+                &ldquo;
+              </div>
+
+              <motion.h2
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.05, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="relative text-4xl sm:text-5xl md:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] font-bold leading-[1.12] text-white max-w-[1080px]"
+                style={{ letterSpacing: '-0.025em' }}
+              >
+                At PK5 Mining, our vision is to be a{' '}
+                <span
+                  className="text-[#D4AF37]"
+                  style={{ textShadow: '0 0 80px rgba(212, 175, 55, 0.45)' }}
+                >
+                  trusted leader
+                </span>{' '}
+                in the global mining sector, recognized for{' '}
+                <span
+                  className="text-[#D4AF37]"
+                  style={{ textShadow: '0 0 80px rgba(212, 175, 55, 0.45)' }}
+                >
+                  integrity, sustainability,
+                </span>{' '}
+                and{' '}
+                <span
+                  className="text-[#D4AF37]"
+                  style={{ textShadow: '0 0 80px rgba(212, 175, 55, 0.45)' }}
+                >
+                  operational excellence.
+                </span>
+              </motion.h2>
+
+              {/* Gold accent bar */}
+              <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                whileInView={{ opacity: 1, scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="mt-16 flex items-center gap-4 origin-left"
+              >
+                <div className="h-px w-24 bg-[#D4AF37]" />
+                <div className="w-2.5 h-2.5 rotate-45 bg-[#D4AF37] flex-shrink-0" />
+                <div className="h-px w-48 bg-gradient-to-r from-[#D4AF37] to-transparent" />
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── MISSION CAROUSEL ───────────────────────────────────────────── */}
+      <section className="py-28 bg-[#090909] relative overflow-hidden">
+        {/* Background elements */}
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(0deg, #D4AF37 0px, transparent 1px, transparent 80px), repeating-linear-gradient(90deg, #D4AF37 0px, transparent 1px, transparent 80px)',
+          }}
+        />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#D4AF37]/5 rounded-full blur-[160px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#B8941F]/4 rounded-full blur-[130px]" />
+
+        <div className="relative z-10">
+          {/* Section header */}
+          <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] mb-16">
             <AnimatedSection>
               <motion.div
-                className="p-8 bg-[#0f0f0f] rounded-lg border border-gray-800"
-                whileHover={{ borderColor: '#c89b3c', y: -5 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-4 mb-7"
               >
-                <Target className="w-12 h-12 text-[#c89b3c] mb-6" />
-                <h3 className="text-3xl font-bold mb-4">Our Mission</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  To responsibly extract and deliver high-quality strategic minerals that power global industries,
-                  while maintaining the highest standards of environmental stewardship, worker safety, and
-                  community engagement.
-                </p>
+                <div className="w-10 h-px bg-[#D4AF37]" />
+                <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
+                  Our Mission
+                </span>
+                <div className="w-10 h-px bg-[#D4AF37]" />
               </motion.div>
-            </AnimatedSection>
 
-            <AnimatedSection delay={0.2}>
-              <motion.div
-                className="p-8 bg-[#0f0f0f] rounded-lg border border-gray-800"
-                whileHover={{ borderColor: '#c89b3c', y: -5 }}
-                transition={{ duration: 0.3 }}
+              <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.15 }}
+                className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-white leading-tight mb-4"
+                style={{ letterSpacing: '-0.025em' }}
               >
-                <Eye className="w-12 h-12 text-[#c89b3c] mb-6" />
-                <h3 className="text-3xl font-bold mb-4">Our Vision</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  To be the world's most trusted and sustainable mining company, setting industry standards for
-                  operational excellence, innovation, and environmental responsibility while creating lasting value
-                  for all stakeholders.
-                </p>
-              </motion.div>
+                What We Stand For
+              </motion.h2>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.25 }}
+                className="text-lg text-[#787878] max-w-2xl leading-relaxed"
+              >
+                Four pillars that define our commitment to excellence, sustainability, and long-term value creation.
+              </motion.p>
             </AnimatedSection>
+          </div>
+
+          {/* Carousel track */}
+          <div
+            ref={carouselContainerRef}
+            className="overflow-hidden"
+          >
+            <div
+              className="flex gap-5"
+              style={{
+                transform: `translateX(calc(${cardStepPx > 0 ? `-${missionIndex * cardStepPx}px` : '0px'} + clamp(24px, calc((100vw - 1380px) / 2 + 64px), 120px)))`,
+                transition: 'transform 0.72s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                willChange: 'transform',
+              }}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              {missionCards.map((card, index) => {
+                const Icon = card.icon;
+                const isActive = index === missionIndex;
+
+                return (
+                  <motion.div
+                    data-slide
+                    key={card.id}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.75, delay: index * 0.08 }}
+                    className="flex-shrink-0 w-[82vw] sm:w-[65vw] md:w-[52vw] lg:w-[480px]"
+                  >
+                    <motion.div
+                      className="relative rounded-2xl overflow-hidden cursor-pointer group"
+                      style={{
+                        height: 'clamp(460px, 50vh, 560px)',
+                        boxShadow: isActive
+                          ? '0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,175,55,0.25)'
+                          : '0 20px 55px rgba(0,0,0,0.55)',
+                        transition: 'box-shadow 0.4s ease',
+                      }}
+                      whileHover={{ y: -7 }}
+                      transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      onClick={() => goToMissionSlide(index)}
+                    >
+                      {/* Background image */}
+                      <ImageWithFallback
+                        src={card.image}
+                        alt={card.title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      />
+
+                      {/* Gradient overlays */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-black/25 via-transparent to-transparent" />
+
+                      {/* Active/hover gold border */}
+                      <div
+                        className="absolute inset-0 rounded-2xl border-2 transition-opacity duration-500 pointer-events-none"
+                        style={{
+                          borderColor: '#D4AF37',
+                          opacity: isActive ? 0.5 : 0,
+                        }}
+                      />
+                      <div className="absolute inset-0 rounded-2xl border-2 border-[#D4AF37] opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none" />
+
+                      {/* Card number watermark */}
+                      <div
+                        className="absolute top-5 right-6 font-bold text-white leading-none select-none pointer-events-none"
+                        style={{ fontSize: 'clamp(4.5rem, 8vw, 6.5rem)', opacity: 0.07 }}
+                      >
+                        {card.number}
+                      </div>
+
+                      {/* Content */}
+                      <div className="absolute inset-x-0 bottom-0 p-7 md:p-8">
+                        {/* Category badge */}
+                        <div className="flex items-center gap-3 mb-5">
+                          <div className="w-7 h-px bg-[#D4AF37]" />
+                          <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.42em] uppercase">
+                            {card.accent}
+                          </span>
+                        </div>
+
+                        {/* Icon */}
+                        <motion.div
+                          className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
+                          style={{
+                            background: 'rgba(212, 175, 55, 0.1)',
+                            border: '1px solid rgba(212, 175, 55, 0.22)',
+                            backdropFilter: 'blur(8px)',
+                          }}
+                          whileHover={{ scale: 1.12 }}
+                          transition={{ duration: 0.25 }}
+                        >
+                          <Icon className="w-5 h-5 text-[#D4AF37]" />
+                        </motion.div>
+
+                        {/* Title */}
+                        <h3
+                          className="text-xl md:text-[1.4rem] font-bold text-white mb-3 leading-snug"
+                          style={{ letterSpacing: '-0.015em' }}
+                        >
+                          {card.title}
+                        </h3>
+
+                        {/* Description */}
+                        <p className="text-[#aaaaaa] text-sm leading-relaxed">
+                          {card.description}
+                        </p>
+
+                        {/* Bottom gold rule */}
+                        <div className="mt-6 h-px bg-gradient-to-r from-[#D4AF37]/50 via-[#D4AF37]/20 to-transparent" />
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+
+              {/* Right spacer so last card can scroll into partial-preview position */}
+              <div className="flex-shrink-0 w-8 md:w-16 lg:w-24" />
+            </div>
+          </div>
+
+          {/* Navigation row */}
+          <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] mt-12 flex items-center gap-5">
+            {/* Prev */}
+            <motion.button
+              onClick={() => goToMissionSlide(missionIndex - 1)}
+              disabled={missionIndex === 0}
+              className="w-12 h-12 rounded-full border border-[#D4AF37]/35 flex items-center justify-center text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/70 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-200"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.93 }}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </motion.button>
+
+            {/* Dot indicators */}
+            <div className="flex items-center gap-2">
+              {missionCards.map((_, i) => (
+                <motion.button
+                  key={i}
+                  onClick={() => goToMissionSlide(i)}
+                  className="h-1.5 rounded-full transition-all duration-500"
+                  style={{
+                    width: i === missionIndex ? '2.5rem' : '0.4rem',
+                    background: i === missionIndex ? '#D4AF37' : 'rgba(212,175,55,0.22)',
+                  }}
+                  whileTap={{ scale: 0.85 }}
+                />
+              ))}
+            </div>
+
+            {/* Next */}
+            <motion.button
+              onClick={() => goToMissionSlide(missionIndex + 1)}
+              disabled={missionIndex === missionCards.length - 1}
+              className="w-12 h-12 rounded-full border border-[#D4AF37]/35 flex items-center justify-center text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/70 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-200"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.93 }}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </motion.button>
+
+            {/* Slide counter */}
+            <div className="ml-auto text-sm font-semibold tracking-widest text-white">
+              <span className="text-[#D4AF37]">{String(missionIndex + 1).padStart(2, '0')}</span>
+              <span className="text-[#444]"> / </span>
+              <span className="text-[#555]">{String(missionCards.length).padStart(2, '0')}</span>
+            </div>
           </div>
         </div>
       </section>
@@ -103,7 +413,7 @@ export function About() {
       <section className="py-24 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Journey</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">Our Journey</h2>
             <p className="text-xl text-gray-400">5 years of mining excellence</p>
           </AnimatedSection>
 
@@ -121,14 +431,15 @@ export function About() {
 
                   {/* Year badge */}
                   <motion.div
-                    className="w-16 h-16 rounded-full bg-[#c89b3c] flex items-center justify-center font-bold shrink-0"
+                    className="w-16 h-16 rounded-full bg-[#c89b3c] flex items-center justify-center font-bold shrink-0 text-black"
                     whileHover={{ scale: 1.2, rotate: 360 }}
                     transition={{ duration: 0.6 }}
                   >
                     {item.year}
                   </motion.div>
 
-                  <div className="flex-1 pb-8">
+                  {/* Content */}
+                  <div className="flex-1 pb-8 text-white">
                     <h3 className="text-2xl font-bold mb-2">{item.event}</h3>
                     <p className="text-gray-400">{item.description}</p>
                   </div>
@@ -1048,6 +1359,26 @@ export function About() {
             </p>
           </AnimatedSection>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {leadership.map((leader: ILeader, index: number) => (
+              <AnimatedSection key={leader.name} delay={index * 0.1}>
+                <motion.div
+                  className="text-center p-6 bg-[#0f0f0f] rounded-lg"
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <motion.div
+                    className="w-32 h-32 rounded-full bg-gradient-to-br from-[#c89b3c] to-[#9d7a2e] mx-auto mb-6 flex items-center justify-center overflow-hidden"
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    <img src={leader.image} alt={leader.name} loading="lazy" className="w-32 h-32 rounded-full object-cover" />
+                  </motion.div>
+                  <h3 className="text-xl font-bold mb-2 text-white">{leader.name}</h3>
+                  <p className="text-[#c89b3c] text-sm mb-2">{leader.role}</p>
+                </motion.div>
+              </AnimatedSection>
+            ))}
           <div className="max-w-4xl mx-auto">
             <TimelineSection
               items={[
@@ -1096,7 +1427,7 @@ export function About() {
       <section className="py-24 bg-gradient-to-b from-[#0f0f0f] to-[#0a0a0a]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Core Values</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">Our Core Values</h2>
           </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -1108,7 +1439,7 @@ export function About() {
                   transition={{ duration: 0.3 }}
                 >
                   <Award className="w-12 h-12 text-[#D4AF37] mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold">{value}</h3>
+                  <h3 className="text-2xl font-bold text-white">{value}</h3>
                 </motion.div>
               </AnimatedSection>
             ))}
