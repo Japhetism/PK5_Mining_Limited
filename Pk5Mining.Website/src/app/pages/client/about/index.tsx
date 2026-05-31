@@ -1,8 +1,7 @@
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import { Target, Eye, Award, DollarSign, Network, TrendingUp, Users, Briefcase, Globe } from 'lucide-react';
-// import { Target, Eye, Award, BarChart3, Factory, Network, TrendingUp, Globe } from 'lucide-react';
+import { Target, Eye, Award, DollarSign, Network, TrendingUp, Users, Briefcase, Globe, BarChart3, Factory } from 'lucide-react';
 import { leadership, timeline } from '@/app/fixtures';
 import { ILeader, ITimelineEvent } from '@/app/interfaces';
 import { ImpactCard } from '@/app/components/impact-card';
@@ -76,10 +75,6 @@ export function About() {
                 <p className="text-gray-400 leading-relaxed">
                   To responsibly extract and deliver high-quality strategic minerals that power global industries,
                   while maintaining the highest standards of environmental stewardship, worker safety, and
-                  To responsibly extract and deliver high-quality strategic minerals that power global industries,
-                  while maintaining the highest standards of environmental stewardship, worker safety, and
-                  To responsibly extract and deliver high-quality strategic minerals that power global industries,
-                  while maintaining the highest standards of environmental stewardship, worker safety, and
                   community engagement.
                 </p>
               </motion.div>
@@ -94,7 +89,6 @@ export function About() {
                 <Eye className="w-12 h-12 text-[#c89b3c] mb-6" />
                 <h3 className="text-3xl font-bold mb-4">Our Vision</h3>
                 <p className="text-gray-400 leading-relaxed">
-                
                   To be the world's most trusted and sustainable mining company, setting industry standards for
                   operational excellence, innovation, and environmental responsibility while creating lasting value
                   for all stakeholders.
@@ -124,8 +118,6 @@ export function About() {
                   {index < timeline.length - 1 && (
                     <div className="absolute left-[31px] top-16 w-0.5 h-full bg-gradient-to-b from-[#c89b3c] to-transparent" />
                   )}
-
-
 
                   {/* Year badge */}
                   <motion.div
