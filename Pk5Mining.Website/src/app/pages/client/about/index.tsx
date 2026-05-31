@@ -1282,8 +1282,6 @@ export function About() {
         </div>
       </section>
 
-
-
       {/* Growth Strategy */}
       <section className="py-32 bg-gradient-to-b from-[#0a0a0a] to-[#0f0f0f]">
         <div className="container mx-auto px-6">
@@ -1307,78 +1305,6 @@ export function About() {
             </p>
           </AnimatedSection>
 
-          <div className="max-w-4xl mx-auto">
-            <TimelineSection
-              items={[
-                {
-                  icon: Target,
-                  title: 'Expansion of Mining Licenses and Assets',
-                  description: 'We scale production capacity by securing additional mining rights, ensuring arobust and sustainable resource pipeline for the future.​',
-                },
-                {
-                  icon: Factory,
-                  title: 'Investment in Processing',
-                  description: 'We enhance our operational footprint by upgrading equipment and adopting smart technologies to increase throughput and optimize processing speeds without compromising quality',
-                },
-                {
-                  icon: Globe,
-                  title: 'Strategic Partnerships and Funding',
-                  description: 'We partner with leading industry and financial experts to drive innovation, optimize resource allocation, and ensure the long-term financial stability and scalability of our operations.',
-                },
-                {
-                  icon: BarChart3,
-                  title: 'Continuous Operational Optimization',
-                  description: 'We enhance organizational performance by modernizing workflows and leveraging industrial innovation, ensuring a lean operational model that prioritizes environmental responsibility and stringent safety protocols.',
-                },
-              ]}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Leadership */}
-      <section className="py-24 bg-[#1a1a1a]">
-        <div className="container mx-auto px-6">
-          <AnimatedSection className="text-center mb-20">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="inline-block mb-6"
-            >
-              <span className="px-5 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold">
-                Future Vision
-              </span>
-            </motion.div>
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
-              Growth Strategy
-            </h2>
-            <p className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed">
-              PK5 Mining is committed to driving sustainable growth through strategic investments in advanced mining technologies and expanding our operational capacities.
-              Our growthstrategy focuses on enhancing resource efficiency, local partnerships, and exploring new markets to maximize value creation.
-            </p>
-          </AnimatedSection>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {leadership.map((leader: ILeader, index: number) => (
-              <AnimatedSection key={leader.name} delay={index * 0.1}>
-                <motion.div
-                  className="text-center p-6 bg-[#0f0f0f] rounded-lg"
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <motion.div
-                    className="w-32 h-32 rounded-full bg-gradient-to-br from-[#c89b3c] to-[#9d7a2e] mx-auto mb-6 flex items-center justify-center overflow-hidden"
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <img src={leader.image} alt={leader.name} loading="lazy" className="w-32 h-32 rounded-full object-cover" />
-                  </motion.div>
-                  <h3 className="text-xl font-bold mb-2 text-white">{leader.name}</h3>
-                  <p className="text-[#c89b3c] text-sm mb-2">{leader.role}</p>
-                </motion.div>
-              </AnimatedSection>
-            ))}
           <div className="max-w-4xl mx-auto">
             <TimelineSection
               items={[
