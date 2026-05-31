@@ -261,26 +261,26 @@ export const esgMetrics = [
 
 export const initiatives: IInitiative[] = [
   {
-    title: "Zero Waste Mining",
+    title: "Environmental Protection & Land Rehabilitation",
     description:
-      "Implementing circular economy principles to minimize waste and maximize resource efficiency.",
+      "We implement sustainable practices to conserve natural resources and restore degraded land areas to their natural state.",
     icon: Recycle,
   },
   {
-    title: "Water Conservation",
-    description:
-      "Advanced water recycling systems reducing freshwater consumption by 85%.",
+    title: "Community Engagement & Development",
+description:
+      "We are actively involving local communities in decision-making processes and supporting initiatives that promote social and economic growth.",
     icon: Droplet,
   },
   {
-    title: "Renewable Energy",
+    title: "Health & Safety Compliance",
     description:
-      "Transitioning to solar and wind power for 75% of our energy needs.",
+      "We ensure all operations adhere to established health and safety standards to protect employees and the surrounding environment.",
     icon: Sun,
   },
   {
-    title: "Ecosystem Restoration",
-    description: "Active programs to restore and protect local biodiversity.",
+    title: "Transparent Governance Structure",
+    description: "We maintain clear and accountable leadership practices that foster trust and ethical management within the organization.",
     icon: Leaf,
   },
 ];

@@ -67,7 +67,9 @@ export function Sustainability() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Mining responsibly today for a sustainable tomorrow
+            PK5 Mining is committed to sustainability by implementing environmentally responsible mining practices and minimizing ecological impact. We
+            prioritize strong ESG standards by fostering community engagement and ensuring transparent
+            governance throughout our operations.
           </motion.p>
         </div>
       </section>
@@ -78,8 +80,8 @@ export function Sustainability() {
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Our ESG Commitment</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              We believe that responsible mining is not just good ethics—it's good business. 
-              Our comprehensive ESG framework guides every decision we make.
+              At PK5 Mining, responsible resource development is both a moral commitment and a sound business strategy.
+              Our comprehensive ESG framework directly translates these values into every decision we execute on the ground.
             </p>
           </AnimatedSection>
 
@@ -118,7 +120,8 @@ export function Sustainability() {
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Sustainability Initiatives</h2>
             <p className="text-xl text-gray-400">
-              Leading the industry with innovative environmental programs
+              We don’t just manage resources, we protect ecosystems. At PK5 Mining, <br />
+              we design and implement forward-thinking environmental initiatives that honor the land <br /> and empower local communities.
             </p>
           </AnimatedSection>
 
@@ -158,8 +161,8 @@ export function Sustainability() {
                 Every site we operate becomes a testament to our commitment to environmental restoration.
               </p>
               <p className="text-gray-400 mb-6 leading-relaxed">
-                Our land reclamation program goes beyond compliance. We don't just restore—we enhance. 
-                Former mining sites are transformed into thriving ecosystems with native vegetation, 
+                Our land reclamation program goes beyond compliance. We don't just restore—we enhance.
+                Former mining sites are transformed into thriving ecosystems with native vegetation,
                 restored waterways, and protected habitats for local wildlife.
               </p>
               <div className="grid grid-cols-2 gap-6">
