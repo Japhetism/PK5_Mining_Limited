@@ -281,14 +281,15 @@ function useUserViewModel() {
   };
 
   const handleCreateUser = () => {
-    if (!isEmailAuthorized(form.email, emailDomain)) {
-      setFieldErrors({ email: "Email address is not allowed" });
-      return;
-    }
     const result = createUserSchema.safeParse(form);
 
     if (!result.success) {
       setFieldErrors(mapZodErrors<CreateUserPayload>(result.error));
+      return;
+    }
+
+    if (!isEmailAuthorized(form.email, emailDomain)) {
+      setFieldErrors({ email: "Email address is not allowed" });
       return;
     }
 
