@@ -40,6 +40,7 @@ export const SearchableSelect = ({
   const { colors } = useTenant();
   const [query, setQuery] = useState<string | number>("");
   const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState<string | number | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +59,10 @@ export const SearchableSelect = ({
     if (!isTyping) return options;
 
     return options.filter((opt) =>
-      opt.label.toString().toLowerCase().includes(query.toString().toLowerCase()),
+      opt.label
+        .toString()
+        .toLowerCase()
+        .includes(query.toString().toLowerCase()),
     );
   }, [query, options, isTyping]);
 
@@ -136,7 +140,10 @@ export const SearchableSelect = ({
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto border border-gray-800 rounded-lg shadow-lg scrollbar-black text-white" style={{ background: colors.card }}>
+        <div
+          className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto border border-gray-800 rounded-lg shadow-lg scrollbar-black text-white"
+          style={{ background: colors.card }}
+        >
           {filteredOptions.length > 0 ? (
             filteredOptions.map((opt) => (
               <div
@@ -156,9 +163,17 @@ export const SearchableSelect = ({
                   setOpen(false);
                   setIsTyping(false);
                 }}
-                className={`px-4 py-2 cursor-pointer hover:bg-[#1a1a1a] ${
-                  value === opt.value ? "bg-[#1a1a1a]" : ""
-                }`}
+                className="px-4 py-2 cursor-pointer"
+                onMouseEnter={() => setHovered(opt.value)}
+                onMouseLeave={() => setHovered(null)}
+                style={{
+                  backgroundColor:
+                    value === opt.value
+                      ? colors.bg
+                      : hovered === opt.value
+                        ? colors.bg
+                        : "transparent",
+                }}
               >
                 {opt.label}
               </div>
