@@ -43,7 +43,9 @@ export function ContactViewModal({
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
           <div className="flex items-center gap-3">
             <Mail className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold capitalize">{contact?.subject}</h2>
+            <h2 className="text-lg font-semibold capitalize">
+              {contact?.subject}
+            </h2>
           </div>
           <button
             onClick={onClose}
@@ -54,7 +56,10 @@ export function ContactViewModal({
         </div>
 
         {/* Sender Info & Metadata */}
-        <div className="p-4 sm:p-5 space-y-4 border-b border-gray-800" style={{ background: colors.bg }}>
+        <div
+          className="p-4 sm:p-5 space-y-4 border-b border-gray-800"
+          style={{ background: colors.bg }}
+        >
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             {/* Left side metadata */}
             <div className="flex flex-col gap-2 text-sm text-gray-400">
@@ -97,7 +102,8 @@ export function ContactViewModal({
 
             {/* Right side status */}
             <div className="text-sm flex items-start">
-              <span className="mr-2">Status:</span> <ContactStatusPill status={contact?.status ?? "new"} />
+              <span className="mr-2">Status:</span>{" "}
+              <ContactStatusPill status={contact?.status ?? "new"} />
             </div>
           </div>
         </div>
@@ -119,14 +125,16 @@ export function ContactViewModal({
             Close
           </button>
 
-          <button
-            onClick={() => onUpdateStatus("resolved")}
-            disabled={loading || !contact}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] transition-transform active:scale-95 disabled:opacity-50"
-          >
-            {!loading && <CheckCircle2 size={14} />}
-            {loading ? "Processing..." : "Mark as Resolved"}
-          </button>
+          {contact?.status?.toLowerCase() !== "resolved" && (
+            <button
+              onClick={() => onUpdateStatus("resolved")}
+              disabled={loading || !contact}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] transition-transform active:scale-95 disabled:opacity-50"
+            >
+              {!loading && <CheckCircle2 size={14} />}
+              {loading ? "Processing..." : "Mark as Resolved"}
+            </button>
+          )}
         </div>
       </div>
     </Modal>
