@@ -338,21 +338,17 @@ export const generateAppId = (name: string): string => {
   );
 };
 
-export const isEmailAuthorized = (email: string, hostname: string): boolean => {
-  if (!email) return false;
+export const isEmailAuthorized = (username: string, emailDomain: string): boolean => {
+  const parts = username.trim().toLowerCase().split("@");
 
-  const emailDomain = email.split("@")[1]?.toLowerCase();
-  const adminDomain = import.meta.env.VITE_ADMIN_DOMAIN?.toLowerCase();
-
-  if (adminDomain && emailDomain === adminDomain) {
-    return true;
+  if (parts.length !== 2) {
+    return false; // invalid email
   }
 
-  if (!hostname) return false;
-  const hostBrand = hostname.split(".")[0].toLowerCase();
-  
-  return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
-};
+  const domain = parts[1];
+
+  return domain === emailDomain.trim().toLowerCase();
+}
 
 export const shouldChangePassword = (email: string, hostname: string): boolean => {
   if (!email) return false;

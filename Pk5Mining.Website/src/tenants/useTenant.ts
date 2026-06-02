@@ -10,6 +10,9 @@ const miningAppId = import.meta.env.VITE_APP_ID ?? "";
 const agroSubsidiaryId = import.meta.env.VITE_AGRO_SUBSIDIARY_ID ?? "";
 const miningSubsidiaryId = import.meta.env.VITE_MINING_SUBSIDIARY_ID ?? "";
 
+const miningEmailDomain = import.meta.env.VITE_PK5_MINING_EMAIL_DOMAIN;
+const agroEmailDomain = import.meta.env.VITE_PK5_AGRO_EMAIL_DOMAIN;
+
 export const useTenant = () => {
   const hostname = window.location.hostname;
   const isAgro = hostname.includes(agroDomain);
@@ -34,5 +37,6 @@ export const useTenant = () => {
     appId: isAgro ? agroAppId : miningAppId,
     subsidiaryId: isAgro ? agroSubsidiaryId : miningSubsidiaryId,
     contactMessageSubjects: isAgro ? agroSubjects : miningSubjects,
+    emailDomain: isAgro ? agroEmailDomain : miningEmailDomain,
   };
 };

@@ -15,6 +15,7 @@ import { tokenStore } from "../auth/token";
 import { authService } from "../services/sso/authService";
 import { USERROLES } from "../constants/role";
 import { isEmailAuthorized } from "../utils/helper";
+import { useTenant } from "@/tenants/useTenant";
 
 type AuthState = {
   user: IUser | null;
@@ -31,6 +32,7 @@ const AuthContext = createContext<AuthState | null>(null);
 const DEFAULT_INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 Minutes
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { emailDomain } = useTenant();
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const logoutRef = useRef<() => void>(() => {});
@@ -92,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (ssoAccount) {
           if (
-            !isEmailAuthorized(ssoAccount.username, window.location.hostname)
+            !isEmailAuthorized(ssoAccount.username, emailDomain)
           ) {
             await authService.logout();
             return;

@@ -56,7 +56,7 @@ const successMessages: Record<UserAction, string> = {
 };
 
 function useUserViewModel() {
-  const { subsidiaryId } = useTenant();
+  const { subsidiaryId, emailDomain } = useTenant();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -281,7 +281,7 @@ function useUserViewModel() {
   };
 
   const handleCreateUser = () => {
-    if (!isEmailAuthorized(form.email, window.location.hostname)) {
+    if (!isEmailAuthorized(form.email, emailDomain)) {
       setFieldErrors({ email: "Email address is not allowed" });
       return;
     }
