@@ -284,6 +284,11 @@ export function EditModal({
                       </tbody>
                     </table>
                   </div>
+                  {fieldErrors.permissionIds && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {fieldErrors.permissionIds}
+                    </p>
+                  )}
                 </div>
               </div>
             </form>
