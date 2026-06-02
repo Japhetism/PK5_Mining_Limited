@@ -289,7 +289,7 @@ export function Roles() {
 
       <ConfirmModal
         open={confirmUpdateStatusOpen}
-        onClose={() => setConfirmUpdateStatusOpen(false)}
+        onClose={handleCloseModal}
         onConfirm={handleUpdateStatus}
         title={selectedRole?.isActive ? "Deactivate Role" : "Activate Role"}
         description={`Are you sure you want to ${selectedRole?.isActive ? "deactivate" : "activate"} "${selectedRole?.name}"?`}
@@ -300,7 +300,7 @@ export function Roles() {
 
       <ConfirmModal
         open={confirmDeleteOpen}
-        onClose={() => setConfirmDeleteOpen(false)}
+        onClose={handleCloseModal}
         onConfirm={handleDeleteRole}
         title="Delete Role"
         description={`Are you sure you want to delete "${selectedRole?.name}"?`}
