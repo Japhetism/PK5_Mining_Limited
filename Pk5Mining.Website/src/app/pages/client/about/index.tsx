@@ -180,6 +180,15 @@ export function About() {
                 &ldquo;
               </div>
 
+              <div className="relative">
+              {/* Decorative oversized quotation mark */}
+              <div
+                className="absolute -top-4 -left-2 text-white select-none pointer-events-none font-serif leading-none"
+                style={{ fontSize: 'clamp(7rem, 16vw, 18rem)', opacity: 0.04, lineHeight: 1 }}
+              >
+                "
+              </div>
+
               <motion.h2
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -188,28 +197,9 @@ export function About() {
                 className="relative text-4xl sm:text-5xl md:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] font-bold leading-[1.12] text-white max-w-[1080px]"
                 style={{ letterSpacing: '-0.025em' }}
               >
-                At PK5 Mining, our vision is to be a{' '}
-                <span
-                  className="text-[#D4AF37]"
-                  style={{ textShadow: '0 0 80px rgba(212, 175, 55, 0.45)' }}
-                >
-                  trusted leader
-                </span>{' '}
-                in the global mining sector, recognized for{' '}
-                <span
-                  className="text-[#D4AF37]"
-                  style={{ textShadow: '0 0 80px rgba(212, 175, 55, 0.45)' }}
-                >
-                  integrity, sustainability,
-                </span>{' '}
-                and{' '}
-                <span
-                  className="text-[#D4AF37]"
-                  style={{ textShadow: '0 0 80px rgba(212, 175, 55, 0.45)' }}
-                >
-                  operational excellence.
-                </span>
+                At PK5 Mining, our vision is to be a trusted leader in the global mining sector, recognized for integrity, sustainability, and operational excellence.
               </motion.h2>
+              </div>
 
             </div>
           </div>
