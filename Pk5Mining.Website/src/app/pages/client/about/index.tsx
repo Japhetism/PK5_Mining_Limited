@@ -134,11 +134,11 @@ export function About() {
       <section className="relative min-h-[75vh] flex items-center overflow-hidden">
         {/* Cinematic background */}
         <div className="absolute inset-0">
-          <ImageWithFallback
+          {/* <ImageWithFallback
             src="https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
             alt="PK5 Mining Vision"
             className="w-full h-full object-cover"
-          />
+          /> */}
           {/* Multi-layer cinematic overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-black/92 via-black/78 to-[#0a0a0a]/95" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
