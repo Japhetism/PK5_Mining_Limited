@@ -135,6 +135,7 @@ function useDepartmentViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["departments"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       toastUtil.success("Department created successfully");
     },
     onError: (err) => {
@@ -169,6 +170,7 @@ function useDepartmentViewModel() {
       const msg =
         successMessages[actionType as DepartmentAction] ??
         successMessages[DepartmentAction.Update];
+      setForm(defaultFormData);
       handleCloseModal();
       toastUtil.success(msg);
     },

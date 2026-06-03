@@ -111,7 +111,6 @@ export function EditModal({
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Description
-                    <span className="ml-1 text-red-500">*</span>
                   </label>
                   <motion.textarea
                     name="description"
