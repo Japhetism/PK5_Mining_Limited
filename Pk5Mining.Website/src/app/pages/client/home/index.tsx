@@ -276,6 +276,7 @@ export function Home() {
       </section>
 
       {/* ── CORE OPERATIONS ───────────────────────────────────────────── */}
+       {/* ── CORE OPERATIONS ───────────────────────────────────────────── */}
       <section className="py-28 bg-[#090909] relative overflow-hidden">
         {/* Industrial grid texture */}
         <div
@@ -290,7 +291,7 @@ export function Home() {
 
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] relative z-10">
           {/* Section header */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end mb-20">
+          <div className="mb-10">
             <AnimatedSection>
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -299,9 +300,10 @@ export function Home() {
                 className="flex items-center gap-4 mb-7"
               >
                 <div className="w-10 h-px bg-[#D4AF37]" />
-                <span className="px-4 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
+                <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
                   What We Do
                 </span>
+                <div className="w-10 h-px bg-[#D4AF37]" />
               </motion.div>
 
               <motion.h2
@@ -309,20 +311,18 @@ export function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.12 }}
-                className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight"
+                className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight mb-6"
                 style={{ letterSpacing: '-0.025em' }}
               >
-                Core Operations
+                Our Mining Footprints
               </motion.h2>
-            </AnimatedSection>
 
-            <AnimatedSection delay={0.2}>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.75, delay: 0.25 }}
-                className="text-lg text-[#787878] leading-relaxed"
+                className="text-lg text-[#787878] leading-relaxed max-w-2xl"
               >
                 PK5 Mining specializes in the exploration and extraction of mineral resources across
                 nations. Our company is committed to sustainable mining practices and delivering
@@ -332,7 +332,7 @@ export function Home() {
           </div>
 
           {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent mb-16" />
+          <div className="h-px bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent mb-10" />
 
           {/* Operations cards — 2×2 grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -412,7 +412,7 @@ export function Home() {
           </div>
         </div>
       </section>
-
+      
       {/* Why Choose PK5 */}
       <section className="py-24 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">

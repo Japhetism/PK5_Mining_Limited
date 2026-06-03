@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import { Target, Eye, Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users } from 'lucide-react';
+import { Target, Eye, Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users, Mountain } from 'lucide-react';
 import { leadership, timeline } from '@/app/fixtures';
 import { ILeader, ITimelineEvent } from '@/app/interfaces';
 import { ImpactCard } from '@/app/components/impact-card';
@@ -10,6 +10,49 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/ta
 import { LeadershipAccordionCard } from '@/app/components/leadership-accordion-card';
 import { executiveLeadership } from '@/app/data/leadership';
 import { TimelineSection } from '@/app/components/timeline-section';
+import visionimage1 from '../../../../assets/images/visionimage1.png';
+import visionimage2 from '../../../../assets/images/visionimage2.png';
+import visionimage3 from '../../../../assets/images/visionimage3.png';
+import visionimage4 from '../../../../assets/images/visionimage4.png';
+
+const missionCards = [
+  {
+    id: 'card-1',
+    number: '01',
+    accent: 'Operations',
+    title: 'Develop World Class Mining Operations',
+    description: 'Our mission is to establish efficient and innovative mining processes that meet international standards for safety, productivity, and environmental responsibility.',
+    image: visionimage1,
+    icon: Mountain,
+  },
+  {
+    id: 'card-2',
+    number: '02',
+    accent: 'Quality',
+    title: 'Deliver High Quality Processed Minerals',
+    description: 'Our mission is to ensure the consistent production of minerals that meet rigorous quality requirements to satisfy market demands.',
+    image: visionimage2,
+    icon: Factory,
+  },
+  {
+    id: 'card-3',
+    number: '03',
+    accent: 'Sustainability',
+    title: 'Drive Sustainable Economic Growth',
+    description: 'Our mission is to promote initiatives that support economic development while minimizing environmental impact and fostering community well-being.',
+    image: visionimage3,
+    icon: Globe,
+  },
+  {
+    id: 'card-4',
+    number: '04',
+    accent: 'Value',
+    title: 'Create Long Term Stakeholder Value',
+    description: 'Our mission is to build enduring relationships with stakeholders by focusing on transparency, ethical practices, and sustained financial performance.',
+    image: visionimage4,
+    icon: Users,
+  },
+];
 
 export function About() {
   // State to manage the expanded executive accordion card
@@ -28,12 +71,12 @@ export function About() {
   const cardStepPx = 500; // Expected card step offset for layout calculations
 
   // --- MOCK CAROUSEL DATA COMPATIBLE WITH ALL ICON AND PROPERTY LAYOUTS ---
-  const missionCards = [
-    { id: 1, number: '01', title: 'Develop World Class Mining Operations', description: 'Our mission is to establish efficient and innovative mining processes that meet international standards for safety, productivity, and environmental responsibility.​', icon: Target, accent: 'Pillar One', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
-    { id: 2, number: '02', title: 'Deliver High Quality Processed Minerals', description: 'Our mission is to ensure the consistent production of minerals that meet rigorous quality requirements to satisfy market demands.​', icon: Eye, accent: 'Pillar Two', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
-    { id: 3, number: '03', title: 'Drive Sustainable Economic Growth​', description: 'Our mission is to promote initiatives that support economic development while minimizing environmental impact and fostering community well-being.​', icon: Users, accent: 'Pillar Three', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
-    { id: 4, number: '04', title: 'Create Long Term Stakeholder Value​', description: 'Our mission is to build enduring relationships with stakeholders by focusing on transparency, ethical practices, and sustained financial performance.', icon: Award, accent: 'Pillar Four', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' }
-  ];
+  // const missionCards = [
+  //   { id: 1, number: '01', title: 'Develop World Class Mining Operations', description: 'Our mission is to establish efficient and innovative mining processes that meet international standards for safety, productivity, and environmental responsibility.​', icon: Target, accent: 'Pillar One', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
+  //   { id: 2, number: '02', title: 'Deliver High Quality Processed Minerals', description: 'Our mission is to ensure the consistent production of minerals that meet rigorous quality requirements to satisfy market demands.​', icon: Eye, accent: 'Pillar Two', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
+  //   { id: 3, number: '03', title: 'Drive Sustainable Economic Growth​', description: 'Our mission is to promote initiatives that support economic development while minimizing environmental impact and fostering community well-being.​', icon: Users, accent: 'Pillar Three', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
+  //   { id: 4, number: '04', title: 'Create Long Term Stakeholder Value​', description: 'Our mission is to build enduring relationships with stakeholders by focusing on transparency, ethical practices, and sustained financial performance.', icon: Award, accent: 'Pillar Four', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' }
+  // ];
 
   function handleTouchStart(event: React.TouchEvent<HTMLDivElement>): void {
     // UI gesture placeholder
@@ -121,10 +164,10 @@ export function About() {
               transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="flex items-center gap-5 mb-16"
             >
-              <div className="w-20 h-px bg-[#D4AF37]" />
+              {/* <div className="w-20 h-px bg-[#D4AF37]" />
               <span className="text-[#D4AF37] font-semibold tracking-[0.45em] uppercase text-xs">
                 Vision
-              </span>
+              </span> */}
             </motion.div>
 
             {/* Cinematic statement */}
@@ -168,23 +211,13 @@ export function About() {
                 </span>
               </motion.h2>
 
-              {/* Gold accent bar */}
-              <motion.div
-                initial={{ opacity: 0, scaleX: 0 }}
-                whileInView={{ opacity: 1, scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.9, delay: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="mt-16 flex items-center gap-4 origin-left"
-              >
-                <div className="h-px w-24 bg-[#D4AF37]" />
-                <div className="w-2.5 h-2.5 rotate-45 bg-[#D4AF37] flex-shrink-0" />
-                <div className="h-px w-48 bg-gradient-to-r from-[#D4AF37] to-transparent" />
-              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* ── MISSION CAROUSEL ───────────────────────────────────────────── */}
+      
       {/* ── MISSION CAROUSEL ───────────────────────────────────────────── */}
       <section className="py-28 bg-[#090909] relative overflow-hidden">
         {/* Background elements */}
@@ -256,7 +289,6 @@ export function About() {
               {missionCards.map((card, index) => {
                 const Icon = card.icon;
                 const isActive = index === missionIndex;
-
                 return (
                   <motion.div
                     data-slide
@@ -400,7 +432,7 @@ export function About() {
             </motion.button>
 
             {/* Slide counter */}
-            <div className="ml-auto text-sm font-semibold tracking-widest text-white">
+            <div className="ml-auto text-sm font-semibold tracking-widest">
               <span className="text-[#D4AF37]">{String(missionIndex + 1).padStart(2, '0')}</span>
               <span className="text-[#444]"> / </span>
               <span className="text-[#555]">{String(missionCards.length).padStart(2, '0')}</span>
@@ -461,12 +493,12 @@ export function About() {
               viewport={{ once: true }}
               className="inline-block mb-6"
             >
-              <span className="px-5 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold">
+              {/* <span className="px-5 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold">
                 National Impact
-              </span>
+              </span> */}
             </motion.div>
             <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
-              Economic Impact
+             Economic Impact
             </h2>
             <p className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed">
               PK5 Mining drives local, state, and national economic growth through sustainable mineral extraction, leveraging advanced
