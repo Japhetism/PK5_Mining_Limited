@@ -205,6 +205,7 @@ function useDepartmentViewModel() {
         setConfirmOpen(false);
         setConfirmDeleteOpen(false);
         setSelectedDepartment(null);
+        setForm(defaultFormData);
         toastUtil.success(
           `Department status updated to ${data?.isActive} successfully`,
         );
@@ -238,6 +239,7 @@ function useDepartmentViewModel() {
       await queryClient.invalidateQueries({ queryKey: ["departments"] });
       setConfirmDeleteOpen(false);
       setSelectedDepartment(null);
+      setForm(defaultFormData);
       toastUtil.success("Department deleted successfully");
     },
     onError: (err) => {
