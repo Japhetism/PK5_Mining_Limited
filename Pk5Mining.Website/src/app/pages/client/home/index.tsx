@@ -20,38 +20,7 @@ export function Home() {
 
     return () => clearInterval(t);
   }, []);
-  const coreOperations = [
-    {
-      number: '01',
-      icon: Compass,
-      title: 'Geological Exploration & Resource Validation:',
-      description:
-        'We conduct detailed surveys and analysis to identify and confirm the presence of valuable mineral deposits.',
-    },
-    {
-      number: '02',
-      icon: Building2,
-      title: 'Mine Development & Infrastructure:',
-      description:
-        'We plan and construct the necessary facilities and systems to support efficient mining operations.',
-    },
-    {
-      number: '03',
-      icon: Settings,
-      title: 'Extraction & Mineral Processing:',
-      description:
-        'We remove minerals from the earth and refine them to meet quality standards for market readiness.',
-    },
-    {
-      number: '04',
-      icon: Globe,
-      title: 'Logistics & Export Operations:',
-      description:
-        'We manage the transportation and shipment of processed minerals to global markets in a timely and cost-effective manner.',
-    },
-  ];
-
-
+  
   const content = slideShowContent[slide];
 
   return (
@@ -104,8 +73,8 @@ export function Home() {
                 aria-label={`Go to slide ${i + 1}`}
                 onClick={() => setSlide(i)}
                 className={`h-2 rounded-full transition-all duration-300 ${i === slide
-                    ? "w-8 bg-[#c89b3c]"
-                    : "w-2 bg-gray-500 hover:bg-gray-400"
+                  ? "w-8 bg-[#c89b3c]"
+                  : "w-2 bg-gray-500 hover:bg-gray-400"
                   }`}
               />
             ))}
@@ -127,15 +96,6 @@ export function Home() {
                 <ArrowRight size={20} />
               </motion.button>
             </Link>
-            {/* <Link to="/investor-relations">
-              <motion.button
-                whileHover={{ scale: 1.05, borderColor: '#c89b3c', color: '#c89b3c' }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border-2 border-white text-white font-bold rounded"
-              >
-                Investor Relations
-              </motion.button>
-            </Link> */}
           </motion.div>
         </div>
 
