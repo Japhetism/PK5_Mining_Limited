@@ -27,8 +27,9 @@ export function UserInfo() {
       <Item label="First Name" value={user?.firstName} />
       <Item label="Last Name" value={user?.lastName} />
       <Item label="Email Address" value={user?.email} />
-      <Item label="Phone Number" value={user?.phoneNumber} />
-      <Item label="Role" value={user?.role} />
+      <Item label="Subsidiary" value={user?.subsidiary?.name} />
+      <Item label="Department" value={user?.department?.name} />
+      <Item label="Role" value={user?.role?.name} />
     </div>
   );
 }
