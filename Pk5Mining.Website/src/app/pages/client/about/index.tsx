@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
@@ -69,6 +69,16 @@ export function About() {
   const [missionIndex, setMissionIndex] = useState<number>(0);
   const carouselContainerRef = useRef<HTMLDivElement>(null);
   const cardStepPx = 500; // Expected card step offset for layout calculations
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setMissionIndex((current) => (current + 1) % missionCards.length);
+    }, 7000);
+
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, []);
 
   // --- MOCK CAROUSEL DATA COMPATIBLE WITH ALL ICON AND PROPERTY LAYOUTS ---
   // const missionCards = [
@@ -218,8 +228,6 @@ export function About() {
           </div>
         </div>
       </section>
-
-      {/* ── MISSION CAROUSEL ───────────────────────────────────────────── */}
 
       {/* ── MISSION CAROUSEL ───────────────────────────────────────────── */}
       <section className="py-28 bg-[#090909] relative overflow-hidden">
