@@ -145,7 +145,8 @@ export function ImpactPage() {
               Aligned with Government Priorities
             </h2>
             <p className="text-xl text-[#a0a0a0] max-w-2xl leading-relaxed">
-              Supporting national development objectives and economic transformation
+              PK5 Mining aligns closely with government priorities by promoting economic development through responsible mineral exploitation. Our company emphasizes job creation, infrastructure enhancement,
+               and export-driven growth to support sustainable local, state, and national progress.
             </p>
           </AnimatedSection>
 
@@ -153,30 +154,29 @@ export function ImpactPage() {
             {[
               {
                 icon: Briefcase,
-                label: 'Economic Diversification',
-                title: 'Multiple Revenue Streams',
-                description: 'Reducing dependence on single-sector revenue by developing iron ore, nickel, lithium, and other strategic mineral exports.',
+                title: 'Supports Economic Diversification Agenda',
+                description: 'We encourage the development of various sectors within the economy to reduce dependence on a single industry, fostering sustainable growth.',
                 delay: 0,
               },
               {
                 icon: TrendingUp,
-                label: 'Beyond Crude Oil',
-                title: '40% Non-Oil Export Potential',
-                description: 'Sustainable mineral development creates alternative revenue, reducing national vulnerability to oil price volatility by 2030.',
+                // label: 'Beyond Crude Oil',
+                title: 'Reduces Reliance on Crude Oil',
+                description: 'Our initiative decreases the country economic vulnerability by minimizing dependence on crude oil exports and promoting alternative revenue sources. ',
                 delay: 0.12,
               },
               {
                 icon: Factory,
-                label: 'Industrialization',
-                title: 'Beneficiation & Value Addition',
-                description: 'Advanced processing facilities transform raw minerals into high-value products, retaining economic value within Africa.',
+                // label: 'Industrialization',
+                title: 'Promotes Industrialization and Beneficiation',
+                description: 'We facilitate the growth of manufacturing and processing industries, allowing the country to add value to its raw materials and boost domestic production.',
                 delay: 0.24,
               },
               {
                 icon: Globe,
-                label: 'Competitiveness',
-                title: 'Global Standards & Partnerships',
-                description: 'ISO-certified operations, AI-driven processes, and strategic international alliances establish Africa as a premier mining destination.',
+                // label: 'Competitiveness',
+                title: 'Strengthens State and National Global Mineral Standings',
+                description: 'We encourage industries that utilize processed minerals to produce finished goods, thereby boosting economic growth and diversification',
                 delay: 0.36,
               },
             ].map((item) => (

@@ -268,28 +268,30 @@ export function OperationsPage() {
                             Strategic Focus Areas
                         </h2>
                         <p className="text-xl text-[#a0a0a0] max-w-2xl leading-relaxed">
-                            Comprehensive mining operations spanning exploration, processing, and export logistics
+                           PK5 Mining strategically aligns its core focus areas to enhance operational efficiency and drive sustainable growth. This approach ensures the company remains competitive while meeting industry demands and stakeholder expectations.
+
                         </p>
                     </AnimatedSection>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <StrategicCard
                             title="Iron Ore Development"
-                            description="Advanced exploration, geological modelling, and reserve validation driving long-term commercial iron ore production across our strategic mining sites."
+                            description=" We target high-grade deposits through systematic exploration, geological modelling, and JORC-compliant reserve validation to support long-term commercial production.
+"
                             image="https://images.unsplash.com/photo-1709489662983-3674d790b224?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcGVuJTIwcGl0JTIwbWluZXxlbnwxfHx8fDE3NjkwNTQyMDR8MA&ixlib=rb-4.1.0&q=80&w=1080"
                             icon={Mountain}
                             delay={0}
                         />
                         <StrategicCard
                             title="Processing & Value Addition"
-                            description="State-of-the-art beneficiation plants and crushing facilities transforming raw minerals into export-ready, refined products of exceptional quality."
+                            description="Our on-site beneficiation and crushing plants convert raw ore into refined, graded products ready for direct export, maximizing in-country value and margins."
                             image="https://images.unsplash.com/photo-1751054770504-c69daeec4721?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaW5pbmclMjBleGNhdmF0b3IlMjBlcXVpcG1lbnR8ZW58MXx8fHwxNzY5MDc3NTEyfDA&ixlib=rb-4.1.0&q=80&w=1080"
                             icon={Factory}
                             delay={0.2}
                         />
                         <StrategicCard
                             title="Export-Oriented Production"
-                            description="Integrated mine-to-port logistics infrastructure ensuring seamless export operations and global market access for African mineral resources."
+                            description="Our end-to-end logistics from mine to port, including rail corridors and bulk-handling terminals, deliver mineral commodities to global markets efficiently."
                             image="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXJnbyUyMHNoaXAlMjBwb3J0fGVufDF8fHx8MTc2OTA3NzUxNHww&ixlib=rb-4.1.0&q=80&w=1080"
                             icon={Ship}
                             delay={0.4}
@@ -348,9 +350,10 @@ export function OperationsPage() {
                             transition={{ duration: 0.75, delay: 0.2 }}
                             className="text-lg text-[#848484] leading-relaxed max-w-2xl"
                         >
-                            PK5 Agro-Allied develops integrated agro-processing facilities to enhance the value
-                            of agricultural produce using modern technologies. We promote sustainable agriculture
-                            and local economic growth through infrastructure development and value chain expansion.
+                           PK5 Mining designs integrated processing plants to enhance the value of raw minerals using advanced 
+                           technologies. We promote sustainable mining and local economic growth through infrastructure 
+                           development.
+
                         </motion.p>
                     </AnimatedSection>
 
@@ -398,7 +401,7 @@ export function OperationsPage() {
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="w-8 h-px bg-[#D4AF37]" />
                                     <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.42em] uppercase">
-                                        Agro-Processing
+                                      Mineral Processing
                                     </span>
                                 </div>
 
@@ -419,7 +422,7 @@ export function OperationsPage() {
                                     className="text-2xl md:text-[1.65rem] font-bold text-white mb-5 leading-snug"
                                     style={{ letterSpacing: '-0.018em' }}
                                 >
-                                    Establishment of Agro-Processing Facilities
+                                    Establishment of Mineral Processing Plants
                                 </h3>
 
                                 {/* Animated separator */}
@@ -427,8 +430,7 @@ export function OperationsPage() {
 
                                 {/* Description */}
                                 <p className="text-[#888] leading-relaxed text-[0.95rem]">
-                                    We set up processing plants to handle agricultural produce locally, increasing
-                                    value addition and creating employment opportunities.
+                                  We set up facilities to process raw minerals locally to enhance their value and create jobs.
                                 </p>
 
                                 {/* Bottom edge glow */}
@@ -479,14 +481,15 @@ export function OperationsPage() {
                                     className="text-2xl md:text-[1.65rem] font-bold text-white mb-5 leading-snug"
                                     style={{ letterSpacing: '-0.018em' }}
                                 >
-                                    Value Addition Before Market Distribution
+                                    Value Addition Before Export
                                 </h3>
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
                                 <p className="text-[#888] leading-relaxed text-[0.95rem]">
-                                    We improve product quality by transforming raw crops into processed or
-                                    semi-processed goods, enhancing market value and revenue potential.
+                                    We enhance the quality by transforming minerals into finished or semi-finished products 
+                                    to increase export revenues.
+
                                 </p>
 
                                 <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/0 to-transparent group-hover:via-[#D4AF37]/35 transition-all duration-600" />
@@ -558,14 +561,14 @@ export function OperationsPage() {
                                     className="text-2xl md:text-[1.65rem] font-bold text-white mb-5 leading-snug"
                                     style={{ letterSpacing: '-0.018em' }}
                                 >
-                                    Reduction of Raw Produce Export Dependency
+                                    Reduction of Raw Mineral Export Dependency
                                 </h3>
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
                                 <p className="text-[#888] leading-relaxed text-[0.95rem]">
-                                    We reduce reliance on exporting unprocessed agricultural products by promoting
-                                    local processing and packaging.
+                                   We decrease reliance on exporting unprocessed minerals by promoting local processing and 
+                                   manufacturing.
                                 </p>
 
                                 <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/0 to-transparent group-hover:via-[#D4AF37]/35 transition-all duration-600" />
@@ -596,7 +599,7 @@ export function OperationsPage() {
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="w-8 h-px bg-[#D4AF37]" />
                                     <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.42em] uppercase">
-                                        Agro Industries
+                                        Downstream Industries
                                     </span>
                                 </div>
 
@@ -615,14 +618,15 @@ export function OperationsPage() {
                                     className="text-2xl md:text-[1.65rem] font-bold text-white mb-5 leading-snug"
                                     style={{ letterSpacing: '-0.018em' }}
                                 >
-                                    Development of Agro-Based Industries
+                                    Development of Downstream Industries
                                 </h3>
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
                                 <p className="text-[#888] leading-relaxed text-[0.95rem]">
-                                    We support the growth of industries that utilize processed agricultural outputs,
-                                    driving economic diversification and industrial development.
+                                   We encourage industries that utilize processed minerals to produce finished goods, 
+                                   thereby boosting economic growth and diversification.
+
                                 </p>
 
                                 <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/0 to-transparent group-hover:via-[#D4AF37]/35 transition-all duration-600" />
@@ -694,10 +698,10 @@ export function OperationsPage() {
                             transition={{ duration: 0.75, delay: 0.2 }}
                             className="text-lg text-[#848484] leading-relaxed max-w-2xl"
                         >
-                            PK5 Agro-Allied maintains a competitive edge through its commitment to sustainable
-                            agricultural practices and the integration of modern technologies. Our focus on
-                            efficient resource management and strong community engagement further strengthens our
-                            position in the agribusiness sector.
+                           PK5 Mining maintains a competitive edge through its commitment to sustainable mining practices and 
+                           advanced technological integration. Our focus on efficient resource management and community 
+                           engagement further strengthens our market position.
+
                         </motion.p>
                     </AnimatedSection>
 
@@ -709,30 +713,30 @@ export function OperationsPage() {
                         const cards = [
                             {
                                 number: '01',
-                                accent: 'Supply Chain',
-                                title: 'Integrated farm-to-market model',
+                                accent: 'Strong Vision',
+                                title: 'Strong Leadership & Strategic Vision',
                                 description:
-                                    'Our operations ensure seamless control of the supply chain from cultivation to retail, enhancing freshness, reducing waste, and lowering overall costs.',
+                                    'Our organization consistently exhibits effective leadership by setting clear goals and a well-defined roadmap, ensuring all teams are aligned and motivated to achieve long-term success. This approach fosters innovation, adaptability, and resilience in a rapidly evolving industry.',
                                 image:
                                     'https://images.unsplash.com/photo-1535379453347-1ffd615e2e08?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080',
                                 icon: Globe,
                             },
                             {
                                 number: '02',
-                                accent: 'Partnerships',
-                                title: 'Strong technical and strategic partnerships',
+                                accent: 'Technology',
+                                title: 'Technology-Driven Mining Approach',
                                 description:
-                                    'Collaborations with industry experts and technology providers allow us to adopt advanced processing techniques and continuously improve product quality.',
+                                    'We leverage cutting-edge technologies, including automation, data analytics, and real-time monitoring systems, to optimize mining operations. These advancements not only boost operational efficiency but also significantly enhance safety protocols, minimizing risks for our workforce and the environment.',
                                 image:
                                     'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080',
                                 icon: Network,
                             },
                             {
                                 number: '03',
-                                accent: 'Growth',
-                                title: 'Scalable operations',
+                                accent: 'Global ESG',
+                                title: 'Alignment with Global ESG Standards',
                                 description:
-                                    'Our robust infrastructure supports expansion and increased production capacity to efficiently meet growing market demands.',
+                                    'Our commitment to environmental, social, and governance (ESG) principles is integral to our business model. We actively implement sustainable practices, promote social responsibility, and maintain transparent governance structures, thereby contributing to the well-being of communities and ensuring accountability to stakeholders worldwide.',
                                 image:
                                     'https://images.unsplash.com/photo-1586528321409-9c7853d54ff1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080',
                                 icon: BarChart3,
@@ -925,7 +929,10 @@ export function OperationsPage() {
                             Growth Strategy
                         </h2>
                         <p className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed">
-                            Strategic roadmap for sustainable expansion and market leadership
+                          PK5 Mining is committed to driving sustainable growth through strategic investments in advanced mining
+                           technologies and expanding our operational capacities. Our growth strategy focuses on enhancing 
+                           resource efficiency, fostering local partnerships, and exploring new markets to maximize value creation.
+
                         </p>
                     </AnimatedSection>
 
@@ -934,23 +941,23 @@ export function OperationsPage() {
                             items={[
                                 {
                                     icon: Target,
-                                    title: 'Expansion of Mining Assets',
-                                    description: 'Strategic acquisition of additional mining licenses and exploration of high-potential mineral reserves across multiple regions.',
+                                    title: 'Expansion of Mining Licenses and Assets',
+                                    description: 'We scale production capacity by securing additional mining rights, ensuring a robust and sustainable resource pipeline for the future.',
                                 },
                                 {
                                     icon: Factory,
-                                    title: 'Processing Infrastructure Investment',
-                                    description: 'Development of advanced processing facilities and beneficiation plants to maximize value addition and product quality.',
+                                    title: 'Investment in Processing ',
+                                    description: 'We enhance our operational footprint by upgrading equipment and adopting smart technologies to increase throughput and optimize processing speeds without compromising quality.',
                                 },
                                 {
                                     icon: Globe,
-                                    title: 'Strategic Partnerships',
-                                    description: 'Establishing international partnerships and securing strategic funding for accelerated growth and market expansion.',
+                                    title: '	Strategic Partnerships and Funding',
+                                    description: 'We partner with leading industry and financial experts to drive innovation, optimize resource allocation, and ensure the long-term financial stability and scalability of our operations.',
                                 },
                                 {
                                     icon: BarChart3,
-                                    title: 'Operational Optimization',
-                                    description: 'Continuous improvement through technology adoption, process refinement, and efficiency maximization across all operations.',
+                                    title: 'Continuous Operational Optimization',
+                                    description: 'We enhance organizational performance by modernizing workflows and leveraging industrial innovation, ensuring a lean operational model that prioritizes environmental responsibility and stringent safety protocols.',
                                 },
                             ]}
                         />
