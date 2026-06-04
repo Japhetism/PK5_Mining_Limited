@@ -92,38 +92,38 @@ export const statusStyles: Record<
   { bg: string; text: string; dot: string }
 > = {
   new: {
-    bg: "bg-gray-700",
-    text: "text-gray-300",
-    dot: "bg-gray-400",
-  },
-  "in review": {
-    bg: "bg-blue-900/40",
-    text: "text-blue-300",
+    bg: "bg-blue-500/10",
+    text: "text-blue-400",
     dot: "bg-blue-400",
   },
+  "in review": {
+    bg: "bg-amber-500/10",
+    text: "text-amber-400",
+    dot: "bg-amber-400",
+  },
   shortlisted: {
-    bg: "bg-purple-900/40",
-    text: "text-purple-300",
-    dot: "bg-purple-400",
-  },
-  "interview scheduled": {
-    bg: "bg-yellow-900/40",
-    text: "text-yellow-300",
-    dot: "bg-yellow-400",
-  },
-  "offer sent": {
-    bg: "bg-green-900/40",
-    text: "text-green-300",
-    dot: "bg-green-400",
-  },
-  hired: {
-    bg: "bg-emerald-900/40",
-    text: "text-emerald-300",
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
     dot: "bg-emerald-400",
   },
+  "interview scheduled": {
+    bg: "bg-cyan-500/10",
+    text: "text-cyan-400",
+    dot: "bg-cyan-400",
+  },
+  "offer sent": {
+    bg: "bg-indigo-500/10",
+    text: "text-indigo-400",
+    dot: "bg-indigo-400",
+  },
+  hired: {
+    bg: "bg-purple-500/10",
+    text: "text-purple-400",
+    dot: "bg-purple-400",
+  },
   rejected: {
-    bg: "bg-red-900/40",
-    text: "text-red-300",
+    bg: "bg-red-500/10",
+    text: "text-red-400",
     dot: "bg-red-400",
   },
 };
