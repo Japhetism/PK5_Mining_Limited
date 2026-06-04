@@ -183,7 +183,8 @@ export interface JobApplicationDto {
   linkedIn: string;
   dT_Created: string;
   dT_Modified: string;
-  job: JobDto | null;
+  job?: JobDto | null;
+  jobs?: JobDto | null;
 }
 
 export interface IApplicantBioData {

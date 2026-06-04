@@ -370,3 +370,30 @@ export const getAppId = (hostname: string): string => {
 
   return envKey ? (import.meta.env[envKey] ?? "") : "";
 };
+
+export const formatFileSize = (bytes?: number): string => {
+  if (bytes === undefined || bytes === null || bytes < 0) return "Unknown size";
+
+  const units = ["B", "KB", "MB", "GB", "TB"] as const;
+
+  let size = bytes;
+  let unitIndex = 0;
+
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex++;
+  }
+
+  return `${size.toFixed(unitIndex === 0 ? 0 : 2)} ${units[unitIndex]}`;
+};
+
+export const getRemoteFileSize = async (url: string): Promise<string> => {
+  try {
+    const res = await fetch(url, { method: "HEAD" });
+    const contentLength = res.headers.get("content-length");
+
+    return formatFileSize(contentLength ? Number(contentLength) : undefined);
+  } catch {
+    return "Unknown size";
+  }
+};
