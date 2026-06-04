@@ -89,13 +89,6 @@ export function UserList() {
         ),
       },
       {
-        key: "username",
-        header: "Username",
-        render: (user) => (
-          <span className="text-xs text-gray-300">{user.username ?? "-"}</span>
-        ),
-      },
-      {
         key: "role",
         header: "Role",
         render: (user) => (
@@ -270,23 +263,6 @@ export function UserList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
-                color: colors.text,
-              }}
-            />
-          </div>
-
-          <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">Username</label>
-            <input
-              name="userName"
-              type="text"
-              value={filters.userName}
-              onChange={(e) => updateFilter("userName", e.target.value)}
-              placeholder="Search by username"
               className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.card,
