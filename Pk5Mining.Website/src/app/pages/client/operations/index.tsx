@@ -68,18 +68,6 @@ export function OperationsPage() {
 
                 {/* Content */}
                 <div className="container mx-auto px-6 relative z-10 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="flex items-center justify-center gap-4 mb-6"
-                    >
-                        <div className="w-16 h-px bg-[#D4AF37]" />
-                        <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                            Operations Excellence
-                        </span>
-                        <div className="w-16 h-px bg-[#D4AF37]" />
-                    </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -114,32 +102,19 @@ export function OperationsPage() {
                 {/* Ambient gold glow */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[160px] pointer-events-none" />
 
-                <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] relative z-10">
+                <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] relative z-10 text-center">
                     {/* Section header */}
                     <div className="mb-10">
                         <AnimatedSection>
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                className="flex items-center gap-4 mb-7"
-                            >
-                                <div className="w-10 h-px bg-[#D4AF37]" />
-                                <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                                    What We Do
-                                </span>
-                                <div className="w-10 h-px bg-[#D4AF37]" />
-                            </motion.div>
-
                             <motion.h2
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, delay: 0.12 }}
-                                className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight mb-6"
+                                className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight mb-6 mx-auto"
                                 style={{ letterSpacing: '-0.025em' }}
                             >
-                                Our Mining Footprints
+                                Our Core Operations
                             </motion.h2>
 
                             <motion.p
@@ -147,7 +122,7 @@ export function OperationsPage() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.75, delay: 0.25 }}
-                                className="text-lg text-[#787878] leading-relaxed max-w-2xl"
+                                className="text-lg text-[#787878] leading-relaxed max-w-2xl mx-auto"
                             >
                                 PK5 Mining specializes in the exploration and extraction of mineral resources across
                                 nations. Our company is committed to sustainable mining practices and delivering
@@ -251,23 +226,11 @@ export function OperationsPage() {
                 </div>
 
                 <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] relative z-10">
-                    <AnimatedSection className="mb-20">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="flex items-center gap-4 mb-6"
-                        >
-                            <div className="w-10 h-px bg-[#D4AF37]" />
-                            <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                                Strategic Focus
-                            </span>
-                            <div className="w-10 h-px bg-[#D4AF37]" />
-                        </motion.div>
-                        <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+                    <AnimatedSection className="mb-20 text-center">
+                        <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white mx-auto">
                             Strategic Focus Areas
                         </h2>
-                        <p className="text-xl text-[#a0a0a0] max-w-2xl leading-relaxed">
+                        <p className="text-xl text-[#a0a0a0] max-w-4xl leading-relaxed mx-auto">
                            PK5 Mining strategically aligns its core focus areas to enhance operational efficiency and drive sustainable growth. This approach ensures the company remains competitive while meeting industry demands and stakeholder expectations.
 
                         </p>
@@ -317,30 +280,16 @@ export function OperationsPage() {
                 <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] relative z-10">
 
                     {/* ── Section Header ─── */}
-                    <AnimatedSection className="mb-16">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="flex items-center gap-4 mb-7"
-                        >
-                            <div className="w-10 h-px bg-[#D4AF37]" />
-                            <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                                Infrastructure
-                            </span>
-                            <div className="w-10 h-px bg-[#D4AF37]" />
-                        </motion.div>
-
+                    <AnimatedSection className="mb-16 text-center">
                         <motion.h2
                             initial={{ opacity: 0, y: 28 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, delay: 0.1 }}
-                            className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight mb-5"
+                            className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight mb-5 mx-auto"
                             style={{ letterSpacing: '-0.025em' }}
                         >
-                            Processing and<br />Industrialization
+                            Processing and Industrialization
                         </motion.h2>
 
                         <motion.p
@@ -348,7 +297,7 @@ export function OperationsPage() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.75, delay: 0.2 }}
-                            className="text-lg text-[#848484] leading-relaxed max-w-2xl"
+                            className="text-lg text-[#848484] leading-relaxed max-w-4xl mx-auto"
                         >
                            PK5 Mining designs integrated processing plants to enhance the value of raw minerals using advanced 
                            technologies. We promote sustainable mining and local economic growth through infrastructure 
@@ -665,30 +614,17 @@ export function OperationsPage() {
                 <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] relative z-10">
 
                     {/* ── Section Header ─── */}
-                    <AnimatedSection className="mb-16">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="flex items-center gap-4 mb-7"
-                        >
-                            <div className="w-10 h-px bg-[#D4AF37]" />
-                            <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                                Competitive Edge
-                            </span>
-                            <div className="w-10 h-px bg-[#D4AF37]" />
-                        </motion.div>
+                    <AnimatedSection className="mb-16 text-center">
 
                         <motion.h2
                             initial={{ opacity: 0, y: 28 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, delay: 0.1 }}
-                            className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight mb-5"
+                            className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-tight mb-5 mx-auto"
                             style={{ letterSpacing: '-0.025em' }}
                         >
-                            Competitive<br />Advantage
+                            Our Competitive Advantage
                         </motion.h2>
 
                         <motion.p
@@ -696,7 +632,7 @@ export function OperationsPage() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.75, delay: 0.2 }}
-                            className="text-lg text-[#848484] leading-relaxed max-w-2xl"
+                            className="text-lg text-[#848484] leading-relaxed max-w-4xl mx-auto"
                         >
                            PK5 Mining maintains a competitive edge through its commitment to sustainable mining practices and 
                            advanced technological integration. Our focus on efficient resource management and community 
@@ -913,22 +849,10 @@ export function OperationsPage() {
             <section className="py-32 bg-gradient-to-b from-[#0a0a0a] to-[#0f0f0f]">
                 <div className="container mx-auto px-6">
                     <AnimatedSection className="text-center mb-20">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="flex items-center justify-center gap-4 mb-6"
-                        >
-                            <div className="w-10 h-px bg-[#D4AF37]" />
-                            <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                                Future Vision
-                            </span>
-                            <div className="w-10 h-px bg-[#D4AF37]" />
-                        </motion.div>
-                        <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
-                            Growth Strategy
+                        <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white mx-auto">
+                            Our Growth Strategy
                         </h2>
-                        <p className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-xl text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed ">
                           PK5 Mining is committed to driving sustainable growth through strategic investments in advanced mining
                            technologies and expanding our operational capacities. Our growth strategy focuses on enhancing 
                            resource efficiency, fostering local partnerships, and exploring new markets to maximize value creation.

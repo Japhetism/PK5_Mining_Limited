@@ -116,31 +116,19 @@ export function Home() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#D4AF37]/4 rounded-full blur-[150px] pointer-events-none" />
 
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
-          <AnimatedSection className="mb-20">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-4 mb-6"
-            >
-              <div className="w-10 h-px bg-[#D4AF37]" />
-              <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                Mineral Portfolio
-              </span>
-              <div className="w-10 h-px bg-[#D4AF37]" />
-            </motion.div>
+          <AnimatedSection className="mb-20 text-center">
             <h2
-              className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white mb-5"
+              className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white mb-5 mx-auto"
               style={{ letterSpacing: '-0.025em' }}
             >
               Minerals We Mine
             </h2>
-            <p className="text-lg text-[#787878] max-w-xl leading-relaxed">
+            <p className="text-lg text-[#787878] max-w-xl leading-relaxed mx-auto">
               High-purity strategic minerals for the modern industrial age
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {minerals.map((mineral, index) => (
               <AnimatedSection key={mineral.name} delay={index * 0.1}>
                 <motion.div
@@ -206,19 +194,11 @@ export function Home() {
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <AnimatedSection>
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-10 h-px bg-[#D4AF37]" />
-                <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                  Operations
-                </span>
-                <div className="w-10 h-px bg-[#D4AF37]" />
-              </div>
-
               <h2
                 className="text-4xl md:text-5xl font-bold mb-6 text-white"
                 style={{ letterSpacing: '-0.025em' }}
               >
-                Our Operations
+                Our Footprint
               </h2>
               <p className="text-lg text-[#787878] mb-12 leading-relaxed max-w-lg">
                 Strategically located mining sites with state-of-the-art infrastructure and advanced
@@ -300,21 +280,14 @@ export function Home() {
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] relative z-10">
-          <AnimatedSection className="mb-20">
-            <div className="flex items-center gap-4 mb-7">
-              <div className="w-10 h-px bg-[#D4AF37]" />
-              <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                Our Advantage
-              </span>
-              <div className="w-10 h-px bg-[#D4AF37]" />
-            </div>
+          <AnimatedSection className="mb-20 text-center">
             <h2
-              className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white mb-5"
+              className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white mb-5 mx-auto"
               style={{ letterSpacing: '-0.025em' }}
             >
               Why Choose PK5
             </h2>
-            <p className="text-lg text-[#787878] max-w-xl leading-relaxed">
+            <p className="text-lg text-[#787878] max-w-xl leading-relaxed mx-auto">
               Industry-leading expertise combined with commitment to excellence
             </p>
           </AnimatedSection>

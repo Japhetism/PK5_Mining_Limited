@@ -167,31 +167,16 @@ export function About() {
         <div className="relative z-10 w-full py-36">
           <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
             {/* Vision label */}
-            {/* <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="flex items-center gap-5 mb-16"
-            >
-              <div className="w-20 h-px bg-[#D4AF37]" />
-              <span className="text-[#D4AF37] font-semibold tracking-[0.45em] uppercase text-xs">
-                Vision
-              </span>
-            </motion.div> */}
-
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+            {/* <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-4 mb-7"
+                transition={{ duration: 0.8, delay: 0.15 }}
+                className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-white leading-tight mb-4"
+                style={{ letterSpacing: '-0.025em' }}
               >
-                <div className="w-10 h-px bg-[#D4AF37]" />
-                <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                  Vision
-                </span>
-                <div className="w-10 h-px bg-[#D4AF37]" />
-              </motion.div>
+                Our Vision
+              </motion.h2> */}
 
             {/* Cinematic statement */}
             <div className="relative">
@@ -244,21 +229,8 @@ export function About() {
 
         <div className="relative z-10">
           {/* Section header */}
-          <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] mb-16">
+          <div className="container mx-auto px-6 lg:px-16 max-w-[1380px] mb-16 text-center">
             <AnimatedSection>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="flex items-center gap-4 mb-7"
-              >
-                <div className="w-10 h-px bg-[#D4AF37]" />
-                <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                  Our Mission
-                </span>
-                <div className="w-10 h-px bg-[#D4AF37]" />
-              </motion.div>
-
               <motion.h2
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -267,7 +239,7 @@ export function About() {
                 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-white leading-tight mb-4"
                 style={{ letterSpacing: '-0.025em' }}
               >
-                What We Stand For
+                Our Mission
               </motion.h2>
 
               <motion.p
@@ -275,7 +247,7 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.25 }}
-                className="text-lg text-[#787878] max-w-2xl leading-relaxed"
+                className="text-lg text-[#787878] max-w-2xl leading-relaxed mx-auto"
               >
                 Four pillars that define our commitment to excellence, sustainability, and long-term value creation.
               </motion.p>
@@ -497,16 +469,6 @@ export function About() {
       <section className="py-24 bg-[#0a0a0a]">
         <div className="container mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-20">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="inline-block mb-6"
-            >
-              <span className="px-5 py-2 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold">
-                Executive Leadership
-              </span>
-            </motion.div>
             <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               PK5 Mining Leadership
             </h2>

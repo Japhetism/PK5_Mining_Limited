@@ -46,7 +46,7 @@ export function LeadershipAccordionCard({
         <div className={`absolute inset-0 bg-gradient-to-br from-[#D4AF37]/5 to-transparent transition-opacity duration-500 ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
 
         {/* Executive Photo Container */}
-        <div className="relative h-80 overflow-hidden">
+        <div className="relative h-125 overflow-hidden">
           <motion.div
             whileHover={{ scale: isExpanded ? 1 : 1.05 }}
             transition={{ duration: 0.6 }}
@@ -87,7 +87,7 @@ export function LeadershipAccordionCard({
           {/* Bottom Interactive Label Link */}
           <div className="flex items-center gap-2 text-[#D4AF37] group-hover:gap-4 transition-all duration-300">
             <span className="text-sm font-semibold">
-              {isExpanded ? 'Hide Info' : 'Read Bio'}
+              {isExpanded ? 'Hide bio' : 'Show bio'}
             </span>
             <motion.div
               animate={{ rotate: isExpanded ? 180 : 0 }}

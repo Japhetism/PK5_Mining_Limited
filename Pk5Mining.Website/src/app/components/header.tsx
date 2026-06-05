@@ -114,7 +114,7 @@ export function Header() {
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
               >
-                Our Responsibility
+                Responsibilities
               </motion.span>
               <motion.div
                 animate={{ rotate: dropdownOpen ? 180 : 0 }}

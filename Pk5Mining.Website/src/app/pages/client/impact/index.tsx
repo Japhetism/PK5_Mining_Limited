@@ -29,18 +29,6 @@ export function ImpactPage() {
 
         {/* Content */}
         <div className="container mx-auto px-6 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="flex items-center justify-center gap-4 mb-6"
-          >
-            <div className="w-16 h-px bg-[#D4AF37]" />
-            <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-              Creating Value
-            </span>
-            <div className="w-16 h-px bg-[#D4AF37]" />
-          </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -128,23 +116,11 @@ export function ImpactPage() {
         <div className="absolute bottom-0 left-0 w-[500px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[160px] pointer-events-none" />
 
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
-          <AnimatedSection className="mb-20">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-4 mb-6"
-            >
-              <div className="w-10 h-px bg-[#D4AF37]" />
-              <span className="px-5 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] font-semibold text-xs tracking-[0.35em] uppercase">
-                Policy Alignment
-              </span>
-              <div className="w-10 h-px bg-[#D4AF37]" />
-            </motion.div>
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+          <AnimatedSection className="mb-20 text-center">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white ">
               Aligned with Government Priorities
             </h2>
-            <p className="text-xl text-[#a0a0a0] max-w-2xl leading-relaxed">
+            <p className="text-xl text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed">
               PK5 Mining aligns closely with government priorities by promoting economic development through responsible mineral exploitation. Our company emphasizes job creation, infrastructure enhancement,
                and export-driven growth to support sustainable local, state, and national progress.
             </p>
