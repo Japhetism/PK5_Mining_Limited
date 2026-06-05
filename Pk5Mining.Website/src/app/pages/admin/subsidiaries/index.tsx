@@ -311,7 +311,6 @@ export function SubsidiaryList() {
               name="country"
               value={filterCountry}
               options={countryList}
-              error={fieldErrors.country}
               onChange={(e) => {
                 setFilterCountry(e.target.value);
                 setIsFilter(true);
