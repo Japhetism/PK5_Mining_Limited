@@ -89,7 +89,6 @@ export function OperationsPage() {
             </section>
 
             {/* ── CORE OPERATIONS ───────────────────────────────────────────── */}
-            {/* ── CORE OPERATIONS ───────────────────────────────────────────── */}
             <section className="py-28 bg-[#090909] relative overflow-hidden">
                 {/* Industrial grid texture */}
                 <div
@@ -346,14 +345,6 @@ export function OperationsPage() {
                                     01
                                 </div>
 
-                                {/* Category label */}
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-8 h-px bg-[#D4AF37]" />
-                                    <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.42em] uppercase">
-                                      Mineral Processing
-                                    </span>
-                                </div>
-
                                 {/* Icon */}
                                 <div
                                     className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
@@ -408,12 +399,7 @@ export function OperationsPage() {
                                     02
                                 </div>
 
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-8 h-px bg-[#D4AF37]" />
-                                    <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.42em] uppercase">
-                                        Value Addition
-                                    </span>
-                                </div>
+                              
 
                                 <div
                                     className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
@@ -488,13 +474,6 @@ export function OperationsPage() {
                                     03
                                 </div>
 
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-8 h-px bg-[#D4AF37]" />
-                                    <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.42em] uppercase">
-                                        Local Processing
-                                    </span>
-                                </div>
-
                                 <div
                                     className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
                                     style={{
@@ -543,13 +522,6 @@ export function OperationsPage() {
                                     style={{ fontSize: 'clamp(4.5rem, 8vw, 7rem)', opacity: 0.055 }}
                                 >
                                     04
-                                </div>
-
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-8 h-px bg-[#D4AF37]" />
-                                    <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.42em] uppercase">
-                                        Downstream Industries
-                                    </span>
                                 </div>
 
                                 <div

@@ -125,9 +125,9 @@ export const locations: ILocation[] = [
   },
   {
     displayAddress:
-      "2/5, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
+      "2/4, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
     actualAddress:
-      "2/5, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
+      "2/4, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
       type: "Enugu, Nigeria Office",
   },
   {
@@ -135,6 +135,7 @@ export const locations: ILocation[] = [
     actualAddress: "No. 5B, Ikosi Road, Oregun, Ikeja, Lagos, Nigeria",
     type: "Lagos, Nigeria Office",
   },
+
 ];
 
 export const telephone: string = "+2348081254905";

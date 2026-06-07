@@ -198,7 +198,7 @@ export function Home() {
                 className="text-4xl md:text-5xl font-bold mb-6 text-white"
                 style={{ letterSpacing: '-0.025em' }}
               >
-                Our Footprint
+                Our Footprints
               </h2>
               <p className="text-lg text-[#787878] mb-12 leading-relaxed max-w-lg">
                 Strategically located mining sites with state-of-the-art infrastructure and advanced
