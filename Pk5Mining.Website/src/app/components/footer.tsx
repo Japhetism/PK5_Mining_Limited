@@ -116,7 +116,11 @@ export function Footer() {
                     rel="noopener noreferrer"
                     className="hover:text-[#c89b3c] transition-colors"
                   >
-                    {location.type && `${location.type}: `}
+                    {location.type && (
+                      <span className="font-bold text-white">
+                        {location.type}:
+                      </span>
+                    )}{" "}
                     {location.displayAddress}
                   </a>
                 </li>
