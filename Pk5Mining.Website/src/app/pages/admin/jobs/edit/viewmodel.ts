@@ -153,8 +153,6 @@ function useJobEditViewModel() {
       ? updateJobSchema.safeParse({ ...form, id: Number(jobId) })
       : createJobSchema.safeParse(form);
 
-    console.log("form errors ", result, jobId);
-
     if (!result.success) {
       type JobPayload = typeof jobId extends string
         ? UpdateJobPayload

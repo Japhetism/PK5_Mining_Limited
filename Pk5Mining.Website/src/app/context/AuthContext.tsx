@@ -90,8 +90,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await authService.initialize();
         const ssoAccount = authService.getAccount();
 
-        console.log("SSO account ", ssoAccount);
-
         if (ssoAccount) {
           if (
             !isEmailAuthorized(ssoAccount.username, emailDomain)

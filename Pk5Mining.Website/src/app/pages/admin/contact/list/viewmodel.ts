@@ -40,8 +40,6 @@ const defaultAdvanceFilters: AdvanceFilter = {
 function useContactListViewModel() {
   const { appId } = useTenant();
 
-  console.log("from contact page ", appId);
-
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedContactMessage, setSelectedContactMessage] =
