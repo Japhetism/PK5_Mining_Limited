@@ -234,14 +234,24 @@ export function JobList() {
             <SearchableSelect
               name="departmentId"
               value={filters.department ?? ""}
-              options={departments.map((d) => ({
-                value: d.name,
-                label: d.name,
-              }))}
-              onChange={(e) => updateFilter("department", e.target.value)}
+              options={[
+                { value: "", label: "All Departments" },
+                ...departments.map((d) => ({
+                  value: d.name,
+                  label: d.name,
+                })),
+              ]}
+              onChange={(e) => {
+                console.log("department filter from job ", e.target.value);
+                updateFilter("department", e.target.value);
+              }}
               placeholder="Search by department"
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              styles={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              styles={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
