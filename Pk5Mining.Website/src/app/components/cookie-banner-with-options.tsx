@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useLegalModalState } from "../hooks/useLegalModalState";
@@ -89,22 +89,16 @@ export function CookieBannerWithOptions() {
   if (isAdminRoute) return null;
 
   // Responsive Variants: Slide from bottom on mobile (y), from right on desktop (x)
-  const variants = {
+  const variants: Variants = {
     initial: { y: 100, x: 0, opacity: 0, scale: 0.95 },
     animate: {
       y: 0,
       x: 0,
       opacity: 1,
       scale: 1,
-      transition: { type: "spring", damping: 25, stiffness: 200 },
+      transition: { type: "spring" as const, damping: 25, stiffness: 200 },
     },
     exit: { y: 100, opacity: 0, scale: 0.95 },
-    // Override for desktop
-    desktop: {
-      initial: { x: 400, y: 0, opacity: 0 },
-      animate: { x: 0, y: 0, opacity: 1 },
-      exit: { x: 400, opacity: 0 },
-    },
   };
 
   return (
@@ -115,11 +109,6 @@ export function CookieBannerWithOptions() {
           initial="initial"
           animate="animate"
           exit="exit"
-          /* 
-             Responsiveness strategy:
-             - Mobile: fixed bottom-0 left-0 (full width) with some padding
-             - Desktop (sm:): bottom-6 right-6 max-w-[400px]
-          */
           className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto w-full sm:max-w-[400px] z-[100] overflow-hidden sm:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)] sm:shadow-2xl border-t sm:border border-gray-200"
         >
           <div className="bg-white text-black font-sans pb-safe sm:pb-0">
