@@ -164,10 +164,10 @@ export function CookieBannerWithOptions() {
                       }`}
                     >
                       <span
-                        className={`inline-block h-2.5 w-2.5 sm:h-3 sm:w-3 transform rounded-full bg-white transition duration-200 ${
+                        className={`inline-block h-2.5 w-2.5 sm:h-3 sm:w-3 transform rounded-full transition duration-200 ${
                           preferences[key]
-                            ? "translate-x-4 sm:translate-x-6"
-                            : "translate-x-1"
+                            ? "translate-x-4 sm:translate-x-6 bg-[#F7E8C3]"
+                            : "translate-x-1 bg-[#E0E0E0]"
                         }`}
                       />
                     </button>
@@ -192,7 +192,7 @@ export function CookieBannerWithOptions() {
                   </button>
                   <button
                     onClick={() => handleSave("custom_preferences")}
-                    className="flex-1 py-2 sm:py-2.5 bg-[#C89B3C] text-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-gray-800 active:scale-95 transition-all"
+                    className="flex-1 py-2 sm:py-2.5 bg-[#C89B3C] text-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-[#C89B3C] active:scale-95 transition-all"
                   >
                     Accept Selection
                   </button>
