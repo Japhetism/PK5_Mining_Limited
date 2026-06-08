@@ -25,6 +25,8 @@ import { SearchableSelect } from "@/app/components/searchable-select";
 import { statusOptions } from "@/app/constants";
 import { useMemo } from "react";
 import { useTenant } from "@/tenants/useTenant";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 export function SubsidiaryList() {
   const { colors } = useTenant();
@@ -174,47 +176,57 @@ export function SubsidiaryList() {
                 View Details
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item
-                onClick={() => {
-                  setSelectedSubsidiary(subsidiary);
-                  setConfirmEditOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Pencil className="w-4 h-4" />
-                Edit Subsidiary
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.subsidiaryUpdate}>
+                <DropdownMenu.Item
+                  onClick={() => {
+                    setSelectedSubsidiary(subsidiary);
+                    setConfirmEditOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Subsidiary
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedSubsidiary(subsidiary);
-                  setConfirmUpdateStatusOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                {subsidiary.status === "Active" ? (
-                  <>
-                    <XCircle className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">Deactivate Subsidiary</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">Activate Subsidiary</span>
-                  </>
-                )}
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.subsidiaryUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedSubsidiary(subsidiary);
+                    setConfirmUpdateStatusOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  {subsidiary.status === "Active" ? (
+                    <>
+                      <XCircle className="w-4 h-4 text-red-400" />
+                      <span className="text-red-400">
+                        Deactivate Subsidiary
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400">
+                        Activate Subsidiary
+                      </span>
+                    </>
+                  )}
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedSubsidiary(subsidiary);
-                  setConfirmDeleteOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Trash className="w-4 h-4 text-red-400" />
-                <span className="text-red-400">Delete Subsidiary</span>
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.subsidiaryUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedSubsidiary(subsidiary);
+                    setConfirmDeleteOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Trash className="w-4 h-4 text-red-400" />
+                  <span className="text-red-400">Delete Subsidiary</span>
+                </DropdownMenu.Item>
+              </PermissionGuard>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
@@ -232,16 +244,17 @@ export function SubsidiaryList() {
             Manage company subsidiaries and their details.
           </p>
         </div>
-
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => setConfirmEditOpen(true)}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-        >
-          <Plus className="w-4 h-4" />
-          New Subsidiary
-        </motion.button>
+        <PermissionGuard permission={PERMISSIONS.subsidiaryCreate}>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setConfirmEditOpen(true)}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+          >
+            <Plus className="w-4 h-4" />
+            New Subsidiary
+          </motion.button>
+        </PermissionGuard>
       </div>
 
       {/* Filters */}

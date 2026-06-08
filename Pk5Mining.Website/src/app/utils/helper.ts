@@ -164,7 +164,7 @@ export const ddmmyyyyToApiDate = (value?: string | null) => {
 };
 
 export const hasRole = (
-  userRole?: UserRole,
+  userRole?: string,
   requiredRoles?: UserRole[],
 ): boolean => {
   if (!enforceRole || !requiredRoles) return true;

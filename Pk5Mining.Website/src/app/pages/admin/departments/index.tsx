@@ -22,6 +22,8 @@ import { DetailModal } from "./components/details-modal";
 import { EditModal } from "./components/edit-modal";
 import useDepartmentViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
+import { PERMISSIONS } from "@/app/constants/permissions";
+import { PermissionGuard } from "@/app/components/permission-guard";
 
 export function Departments() {
   const { colors } = useTenant();
@@ -56,7 +58,7 @@ export function Departments() {
     onChangePage,
     onChangePageSize,
     // handleUpdateStatus,
-    handleUpdateDepartmentStatus,  
+    handleUpdateDepartmentStatus,
     setForm,
     setFieldErrors,
     onChange,
@@ -143,47 +145,53 @@ export function Departments() {
                 View details
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item
-                onClick={() => {
-                  setSelectedDepartment(dept);
-                  setConfirmEditOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Pencil className="w-4 h-4" />
-                Edit Department
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.departmentUpdate}>
+                <DropdownMenu.Item
+                  onClick={() => {
+                    setSelectedDepartment(dept);
+                    setConfirmEditOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Department
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedDepartment(dept);
-                  setConfirmOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                {dept.isActive ? (
-                  <>
-                    <XCircle className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">Deactivate</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">Activate</span>
-                  </>
-                )}
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.departmentUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedDepartment(dept);
+                    setConfirmOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  {dept.isActive ? (
+                    <>
+                      <XCircle className="w-4 h-4 text-red-400" />
+                      <span className="text-red-400">Deactivate</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400">Activate</span>
+                    </>
+                  )}
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedDepartment(dept);
-                  setConfirmDeleteOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Trash className="w-4 h-4 text-red-400" />
-                <span className="text-red-400">Delete Department</span>
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.departmentUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedDepartment(dept);
+                    setConfirmDeleteOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Trash className="w-4 h-4 text-red-400" />
+                  <span className="text-red-400">Delete Department</span>
+                </DropdownMenu.Item>
+              </PermissionGuard>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
@@ -202,15 +210,17 @@ export function Departments() {
           </p>
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => setConfirmEditOpen(true)}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-        >
-          <Plus className="w-4 h-4" />
-          New Department
-        </motion.button>
+        <PermissionGuard permission={PERMISSIONS.departmentCreate}>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setConfirmEditOpen(true)}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+          >
+            <Plus className="w-4 h-4" />
+            New Department
+          </motion.button>
+        </PermissionGuard>
       </div>
 
       {/* Filters */}
@@ -225,10 +235,10 @@ export function Departments() {
               placeholder="Search by name"
               className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                      backgroundColor: colors.card,
-                      borderColor: colors.border,
-                      color: colors.text,
-                    }}
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
@@ -241,10 +251,10 @@ export function Departments() {
               }}
               className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                      backgroundColor: colors.card,
-                      borderColor: colors.border,
-                      color: colors.text,
-                    }}
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -280,7 +290,11 @@ export function Departments() {
         onClose={() => setConfirmOpen(false)}
         // onConfirm={handleUpdateStatus}
         onConfirm={handleUpdateDepartmentStatus}
-        title={selectedDepartment?.isActive ? "Deactivate Department" : "Activate Department"}
+        title={
+          selectedDepartment?.isActive
+            ? "Deactivate Department"
+            : "Activate Department"
+        }
         description={`Are you sure you want to ${selectedDepartment?.isActive ? "deactivate" : "activate"} "${selectedDepartment?.name}"?`}
         confirmText={`Yes, ${selectedDepartment?.isActive ? "deactivate" : "activate"}`}
         cancelText="No"
@@ -305,7 +319,9 @@ export function Departments() {
         cancelText="Cancel"
         loading={isUpdating}
         onClose={handleCloseModal}
-        onConfirm={selectedDepartment ? handleUpdateDepartment : handleCreateDepartment}
+        onConfirm={
+          selectedDepartment ? handleUpdateDepartment : handleCreateDepartment
+        }
         setFieldErrors={setFieldErrors}
         onChange={onChange}
       />

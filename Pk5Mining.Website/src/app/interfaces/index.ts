@@ -5,6 +5,7 @@ import { Permission } from "./permission";
 import { RolePermission, Role as AppRole } from "./role";
 import { Department } from "./department";
 import { Subsidiary } from "./subsidiary";
+import { ReactNode } from "react";
 
 export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 

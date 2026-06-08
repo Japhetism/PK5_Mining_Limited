@@ -20,6 +20,8 @@ import { jobTypes, statusOptions } from "@/app/constants";
 import useJobListViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
 import { SearchableSelect } from "@/app/components/searchable-select";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 export function JobList() {
   const { colors } = useTenant();
@@ -160,40 +162,44 @@ export function JobList() {
                 </Link>
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item asChild>
-                <Link
-                  to={`/admin/jobs/${job.id}/edit`}
-                  onClick={() => {
-                    queryClient.setQueryData(["jobs", String(job.id)], job);
+              <PermissionGuard permission={PERMISSIONS.jobUpdate}>
+                <DropdownMenu.Item asChild>
+                  <Link
+                    to={`/admin/jobs/${job.id}/edit`}
+                    onClick={() => {
+                      queryClient.setQueryData(["jobs", String(job.id)], job);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                    style={{ color: colors.text }}
+                  >
+                    <Pencil className="w-4 h-4" />
+                    Edit Job
+                  </Link>
+                </DropdownMenu.Item>
+              </PermissionGuard>
+
+              <PermissionGuard permission={PERMISSIONS.jobUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedJob(job);
+                    setConfirmOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
                   style={{ color: colors.text }}
                 >
-                  <Pencil className="w-4 h-4" />
-                  Edit Job
-                </Link>
-              </DropdownMenu.Item>
-
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedJob(job);
-                  setConfirmOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-                style={{ color: colors.text }}
-              >
-                {job.isActive ? (
-                  <>
-                    <XCircle className="w-4 h-4 text-red-400" />
-                    Close job
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    Reopen job
-                  </>
-                )}
-              </DropdownMenu.Item>
+                  {job.isActive ? (
+                    <>
+                      <XCircle className="w-4 h-4 text-red-400" />
+                      Close job
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      Reopen job
+                    </>
+                  )}
+                </DropdownMenu.Item>
+              </PermissionGuard>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
@@ -212,16 +218,18 @@ export function JobList() {
           </p>
         </div>
 
-        <Link to="/admin/jobs/new" className="w-full sm:w-auto">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-          >
-            <Plus className="w-4 h-4" />
-            New job
-          </motion.button>
-        </Link>
+        <PermissionGuard permission={PERMISSIONS.jobCreate}>
+          <Link to="/admin/jobs/new" className="w-full sm:w-auto">
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+            >
+              <Plus className="w-4 h-4" />
+              New job
+            </motion.button>
+          </Link>
+        </PermissionGuard>
       </div>
 
       {/* Filters */}
