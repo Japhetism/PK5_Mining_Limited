@@ -1,4 +1,5 @@
 ﻿using Pk5Mining.Server.Models.Job_Application;
+using Pk5Mining.Server.Models.Subsidiaries;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pk5Mining.Server.Models.Job
@@ -8,6 +9,7 @@ namespace Pk5Mining.Server.Models.Job
     {
         public long Id { get; set; }
         public string? Title { get; set; }
+        public long SubsidiaryId { get; set; }
         public string? Description { get; set; }
         public string? Department { get; set; }
         public string? Location { get; set; }
@@ -22,5 +24,8 @@ namespace Pk5Mining.Server.Models.Job
         public DateTime? DT_Expiry { get; set; }
 
         public virtual ICollection<JobApplication>? JobApplications { get; set; }
+        [ForeignKey("SubsidiaryId")]
+        public virtual Subsidiary? Subsidiary { get; set; }
+
     }
 }

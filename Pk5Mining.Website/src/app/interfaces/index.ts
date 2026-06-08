@@ -13,6 +13,7 @@ export type WorkArrangement = "onsite" | "hybrid" | "remote";
 export type ApiError = { message?: string };
 
 export interface IMineral {
+  index: ReactNode;
   name: string;
   image: string;
   use: string;

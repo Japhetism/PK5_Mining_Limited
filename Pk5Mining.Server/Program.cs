@@ -1,7 +1,10 @@
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pk5Mining.Server.Extensions;
+using Pk5Mining.Server.Middleware;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Services.Email;
 using System.Text;
@@ -14,6 +17,10 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler =
             System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter());
+            
     });
 
 // Add services to the container.
@@ -27,13 +34,22 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "PKMining API", Version = "v1" });
-    options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "PKI", Version = "v1" });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        Scheme = JwtBearerDefaults.AuthenticationScheme
+        Scheme = "Bearer",
+        Description = "Enter: Bearer {your JWT token}"
+    });
+    options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    {
+        Name = "pk5mining-api-key",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Description = "Enter your API Key"
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -44,11 +60,19 @@ builder.Services.AddSwaggerGen(options =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = JwtBearerDefaults.AuthenticationScheme
-                },
-                Scheme = "Oauth2",
-                Name = JwtBearerDefaults.AuthenticationScheme,
-                In = ParameterLocation.Header
+                    Id = "Bearer"
+                }
+            },
+            new List<string>()
+        },
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
+                }
             },
             new List<string>()
         }
@@ -60,6 +84,13 @@ builder.Services.Configure<MailSettings>(
 builder.Services.Configure<AgroMailSettings>(
             builder.Configuration.GetSection("AgroMailSettings")
  );
+
+var authenticationBuilder = builder.Services.AddAuthentication();
+
+authenticationBuilder.AddMicrosoftIdentityWebApi(
+    builder.Configuration.GetSection("MicrosoftSSO"),
+    jwtBearerScheme: "SSOScheme");
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
@@ -137,7 +168,9 @@ app.UseRouting();
 app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<ApiKeyMiddleware>();
 app.MapControllers();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 

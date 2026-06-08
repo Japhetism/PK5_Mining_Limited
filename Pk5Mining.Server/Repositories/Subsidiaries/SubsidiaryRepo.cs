@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Subsidiaries;
@@ -37,6 +38,28 @@ namespace Pk5Mining.Server.Repositories.Subsidiaries
                 await _dbContext.SaveChangesAsync();
 
                 return (entity, null, false);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx &&
+                    (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    string errorMessage = sqlEx.Message;
+
+                    if (errorMessage.Contains("UQ_Subsidiaries_Name"))
+                    {
+                        return (null, "Subsidiary name already exists.", true);
+                    }
+
+                    if (errorMessage.Contains("UQ_Subsidiaries_Email"))
+                    {
+                        return (null, "Subsidiary email already exists.", true);
+                    }
+
+                    return (null, "Duplicate record exists.", true);
+                }
+
+                return (null, "Database error occurred.", true);
             }
             catch (Exception ex)
             {
@@ -137,6 +160,28 @@ namespace Pk5Mining.Server.Repositories.Subsidiaries
                 await _dbContext.SaveChangesAsync();
 
                 return (entity, null, false);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx &&
+                    (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    string errorMessage = sqlEx.Message;
+
+                    if (errorMessage.Contains("UQ_Subsidiaries_Name"))
+                    {
+                        return (null, "Subsidiary name already exists.", true);
+                    }
+
+                    if (errorMessage.Contains("UQ_Subsidiaries_Email"))
+                    {
+                        return (null, "Subsidiary email already exists.", true);
+                    }
+
+                    return (null, "Duplicate record exists.", true);
+                }
+
+                return (null, "Database error occurred.", true);
             }
             catch (Exception ex)
             {

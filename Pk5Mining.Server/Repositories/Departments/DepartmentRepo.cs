@@ -57,7 +57,7 @@ namespace Pk5Mining.Server.Repositories.Departments
         {
             try
             {
-                var entity = await _dbContext.Departments.FindAsync(id);
+                var entity = await _dbContext.Departments.Include(d => d.Subsidiary).FirstOrDefaultAsync(d => d.Id == id);
 
                 if (entity == null)
                 {
@@ -72,15 +72,18 @@ namespace Pk5Mining.Server.Repositories.Departments
             }
         }
 
-        public async Task<(IEnumerable<Department>, int)> GetAllAsync(int pageNumber, int pageSize, string? name)
+        public async Task<(IEnumerable<Department>, int)> GetAllAsync(int pageNumber, int pageSize, string? name, bool? isActive)
         {
-            IQueryable<Department> query = _dbContext.Departments.AsQueryable();
+            IQueryable<Department> query = _dbContext.Departments.Include(d => d.Subsidiary).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(name))
             {
                 query = query.Where(d => d.Name.StartsWith(name));
             }
-
+            if (isActive.HasValue)
+            {
+                query = query.Where(d => d.IsActive == isActive.Value);
+            }
             int totalCount = await query.CountAsync();
 
             var data = await query

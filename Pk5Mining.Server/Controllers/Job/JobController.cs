@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Pk5Mining.Server.Middleware;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
@@ -24,23 +25,25 @@ namespace Pk5Mining.Server.Controllers.Job
             _mapper = mapper;
         }
 
+        [RequireApiKey]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IJobs>>> Get()
         {
-            var jobs = await _jobRepo.GetRepoItems();
+            IEnumerable<IJobs> jobs = await _jobRepo.GetRepoItems();
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("light")]
         public async Task<ActionResult<IEnumerable<JobLightResponseDTO>>> GetLight()
         {
-            var (jobs, error) = await _jobSpecificRepo.GetJob();
+            (IEnumerable<JobLightResponseDTO>? jobs, string? error) = await _jobSpecificRepo.GetJob();
 
             if (error != null)
                 return BadRequest(error);
 
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
+        [RequireApiKey]
         [HttpGet("{id}")]
         public async Task<ActionResult<IJobs>> Get(long id)
         {
@@ -53,7 +56,7 @@ namespace Pk5Mining.Server.Controllers.Job
             return Ok(ApiResponse.SuccessMessage(job, "Job retrieved successfully."));
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPost]
         public async Task<ActionResult<IJobs>> Post([FromBody] JobsDTO value)
         {
@@ -85,7 +88,7 @@ namespace Pk5Mining.Server.Controllers.Job
                 }
             }
         }
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpGet("filter")]
         public async Task<IActionResult> GetJobs(
             [FromQuery] int pageNumber = 1,
@@ -117,7 +120,7 @@ namespace Pk5Mining.Server.Controllers.Job
             return Ok(ApiResponse.SuccessMessage(response, "Jobs retrieved successfully."));
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "SSOScheme")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] JobsDTO value)
         {

@@ -13,6 +13,7 @@ namespace Pk5Mining.Server.Models.Job_Application
         public string? Country { get; set; }
         public IFormFile? ResumeFile { get; set; }
         public string? Resume { get; set; }
+        public string? CoverLetter { get; set; }
         public string? Status { get; set; }
         public string? LinkedIn { get; set; }
         public DateTime? DT_Created { get; set; }

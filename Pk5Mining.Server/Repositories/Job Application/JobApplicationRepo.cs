@@ -39,6 +39,11 @@ namespace Pk5Mining.Server.Repositories.Job_Application
         {
             try
             {
+                bool alreadyApplied = await DbContext.JobApplications.AnyAsync(x =>x.JobId == item.JobId && x.Email!.ToLower() == item.Email!.ToLower());
+                if (alreadyApplied)
+                {
+                    return (null, "This email has already applied for this job.", false);
+                }
                 JobApplication jobApplication = _mapper.Map<JobApplication>(item);
                 if (jobApplication == null)
                 {
@@ -84,7 +89,7 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                           { "FirstName", item.FirstName }
                     });
 
-                _mailService.SendHTMLMail(new MailData
+                 _mailService.SendHTMLMail(new MailData
                 {
                     EmailToId = item.Email,
                     EmailToName = $"{item.FirstName} {item.LastName}",
