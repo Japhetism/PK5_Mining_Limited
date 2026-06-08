@@ -2,14 +2,12 @@ import React from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { X, ChevronDown } from "lucide-react";
 import { DatePicker } from "@/app/components/ui/date-picker";
-import { AdvanceFilter, ContactStatus } from "@/app/interfaces";
-import { formatDateTime, getFilterSubjects, toBackendDateTimeWithBoundary } from "@/app/utils/helper";
+import { AdvanceFilter } from "@/app/interfaces";
 import {
-  contactMsgStatusOptions,
-  websites,
-  miningSubjects,
-  agroSubjects,
-} from "@/app/constants";
+  formatDateTime,
+  toBackendDateTimeWithBoundary,
+} from "@/app/utils/helper";
+import { useTenant } from "@/tenants/useTenant";
 
 type Props = {
   open: boolean;
@@ -28,6 +26,8 @@ export function ContactMessageFilterPanel({
   onClear,
   updateFilters,
 }: Props) {
+  const { colors, contactMessageSubjects } = useTenant();
+
   return (
     <AnimatePresence>
       {open && (
@@ -43,7 +43,8 @@ export function ContactMessageFilterPanel({
 
           {/* Slide-out Panel */}
           <motion.aside
-            className="fixed right-0 top-0 z-50 flex h-screen w-full max-w-md flex-col border-l border-gray-800 bg-[#111111] shadow-2xl"
+            className="fixed right-0 top-0 z-50 flex h-screen w-full max-w-md flex-col border-l border-gray-800 shadow-2xl"
+            style={{ background: colors.bg }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -91,7 +92,12 @@ export function ContactMessageFilterPanel({
                   value={filters.name}
                   onChange={(e) => updateFilters("name", e.target.value)}
                   placeholder="Filter by Name"
-                  className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  style={{
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    color: colors.text,
+                  }}
                 />
               </FilterField>
 
@@ -102,7 +108,12 @@ export function ContactMessageFilterPanel({
                   value={filters.email}
                   onChange={(e) => updateFilters("email", e.target.value)}
                   placeholder="Filter by email"
-                  className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  style={{
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    color: colors.text,
+                  }}
                 />
               </FilterField>
 
@@ -113,7 +124,12 @@ export function ContactMessageFilterPanel({
                   value={filters.phoneNumber}
                   onChange={(e) => updateFilters("phoneNumber", e.target.value)}
                   placeholder="Filter by phone number"
-                  className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  style={{
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    color: colors.text,
+                  }}
                 />
               </FilterField>
 
@@ -142,10 +158,15 @@ export function ContactMessageFilterPanel({
                   <select
                     value={filters.subject}
                     onChange={(e) => updateFilters("subject", e.target.value)}
-                    className="w-full appearance-none rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                    className="w-full appearance-none rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   >
                     <option value="">All Subjects</option>
-                    {getFilterSubjects(filters.appId).map((opt) => (
+                    {contactMessageSubjects.map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label}
                       </option>
@@ -165,8 +186,15 @@ export function ContactMessageFilterPanel({
                         ? formatDateTime(filters.startDate, false)
                         : ""
                     }
-                    onChange={(value) => updateFilters("startDate", toBackendDateTimeWithBoundary(value))}
-                    maxDate={filters.endDate ? new Date(filters.endDate) : new Date()}
+                    onChange={(value) =>
+                      updateFilters(
+                        "startDate",
+                        toBackendDateTimeWithBoundary(value),
+                      )
+                    }
+                    maxDate={
+                      filters.endDate ? new Date(filters.endDate) : new Date()
+                    }
                   />
                 </FilterField>
 
@@ -178,8 +206,17 @@ export function ContactMessageFilterPanel({
                         ? formatDateTime(filters.endDate, false)
                         : ""
                     }
-                    onChange={(value) => updateFilters("endDate", toBackendDateTimeWithBoundary(value, "end"))}
-                    minDate={filters.startDate ? new Date(filters.startDate) : new Date()}
+                    onChange={(value) =>
+                      updateFilters(
+                        "endDate",
+                        toBackendDateTimeWithBoundary(value, "end"),
+                      )
+                    }
+                    minDate={
+                      filters.startDate
+                        ? new Date(filters.startDate)
+                        : new Date()
+                    }
                     maxDate={new Date()}
                   />
                 </FilterField>

@@ -222,7 +222,7 @@ export function JobDetail() {
       </div>
 
       <div className="mt-20">
-        <h3 className="mb-2" style={{ color: colors.text }}>
+        <h3 className="mb-2" style={{ color: colors.headerText }}>
           Applications
         </h3>
         <PaginatedCard<JobApplicationDto>

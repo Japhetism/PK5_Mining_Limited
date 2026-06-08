@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { motion } from "motion/react";
 import { X } from "lucide-react";
+import { useTenant } from "@/tenants/useTenant";
 
 type ModalProps = {
   open: boolean;
@@ -57,6 +58,7 @@ export function Modal({
   showCloseButton = true,
   panelClassName = "",
 }: ModalProps) {
+  const { colors } = useTenant();
   // ESC closes
   useEffect(() => {
     if (!open) return;
@@ -82,7 +84,8 @@ export function Modal({
         initial={{ opacity: 0, scale: 0.98, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.15 }}
-        className={`relative w-full ${widthMap[maxWidth]} ${heightMap[height]} bg-[#0f0f0f] rounded-xl border border-gray-800 shadow-xl overflow-hidden ${panelClassName}`}
+        className={`relative w-full ${widthMap[maxWidth]} ${heightMap[height]} rounded-xl border border-gray-800 shadow-xl overflow-hidden ${panelClassName}`}
+        style={{ background: colors.bg }}
         onMouseDown={(e) => e.stopPropagation()}
       >
         {(title || subtitle || headerActions || showCloseButton) && (

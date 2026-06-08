@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
+import { useTenant } from "@/tenants/useTenant";
 
 type ResumeViewerModalProps = {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export function ResumeViewerModal({
   firstName,
   lastName,
 }: ResumeViewerModalProps) {
+  const { colors } = useTenant();
   const [resumeLoading, setResumeLoading] = useState(true);
 
   const resumeUrl = useMemo(() => {
@@ -80,7 +82,7 @@ export function ResumeViewerModal({
             <div className="relative w-full h-[calc(85vh-56px)]">
               {/* Loader overlay */}
               {resumeLoading && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40">
+                <div className="absolute inset-0 z-10 flex items-center justify-center" style={{ background: colors.bg }}>
                   <div className="flex flex-col items-center gap-3">
                     <div className="h-9 w-9 rounded-full border-2 border-gray-500 border-t-transparent animate-spin" />
                     <p className="text-xs text-gray-300">Loading resume...</p>
@@ -91,7 +93,8 @@ export function ResumeViewerModal({
               <iframe
                 src={resumeUrl}
                 title="Resume Viewer"
-                className="w-full h-full bg-black"
+                className="w-full h-full"
+                style={{ background: colors.bg }}
                 onLoad={() => setResumeLoading(false)}
               />
             </div>

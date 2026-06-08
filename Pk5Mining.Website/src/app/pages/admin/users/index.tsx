@@ -23,6 +23,7 @@ import { StatusFilter } from "@/app/interfaces";
 import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
 import { ChangePasswordModal } from "./components/change-password-modal";
+import { useTenant } from "@/tenants/useTenant";
 
 const statusOptions = [
   { label: "Active", value: "active" },
@@ -30,6 +31,7 @@ const statusOptions = [
 ] as const;
 
 export function UserList() {
+  const { colors } = useTenant();
   const {
     users,
     totalCount,
@@ -50,7 +52,6 @@ export function UserList() {
     isProcessing,
     confirmUpdateStatusOpen,
     roles,
-    subsidiaries,
     departments,
     onChange,
     updateFilter,
@@ -85,13 +86,6 @@ export function UserList() {
             </div>
             <div className="text-xs text-gray-400">{user.email}</div>
           </div>
-        ),
-      },
-      {
-        key: "username",
-        header: "Username",
-        render: (user) => (
-          <span className="text-xs text-gray-300">{user.username ?? "-"}</span>
         ),
       },
       {
@@ -143,7 +137,8 @@ export function UserList() {
               <DropdownMenu.Content
                 align="end"
                 sideOffset={6}
-                className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
+                className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
+                style={{ backgroundColor: colors.bg, border: colors.border }}
               >
                 <DropdownMenu.Item
                   onClick={() => {
@@ -244,58 +239,53 @@ export function UserList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Name
-            </label>
+            <label className="block text-xs font-semibold mb-2">Name</label>
             <input
               name="name"
               type="text"
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Email
-            </label>
+            <label className="block text-xs font-semibold mb-2">Email</label>
             <input
               name="email"
               type="text"
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Username
-            </label>
-            <input
-              name="userName"
-              type="text"
-              value={filters.userName}
-              onChange={(e) => updateFilter("userName", e.target.value)}
-              placeholder="Search by username"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-            />
-          </div>
-
-          <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Status
-            </label>
+            <label className="block text-xs font-semibold mb-2">Status</label>
             <select
               value={filterStatus}
               onChange={(e) => {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -357,7 +347,6 @@ export function UserList() {
         open={confirmEditOpen}
         form={form}
         fieldErrors={fieldErrors}
-        subsidiaries={subsidiaries}
         roles={roles}
         departments={departments}
         onClose={handleCloseModal}

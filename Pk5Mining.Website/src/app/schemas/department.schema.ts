@@ -5,9 +5,9 @@ const baseDepartmentSchema = z.object({
     .string()
     .min(2, { message: "Name must be at least 2 characters" })
     .max(255, { message: "Department name must not exceed 255 characters" })
-    .regex(/^[a-zA-Z0-9_-]+$/, {
+    .regex(/^(?=.*[a-zA-Z])[a-zA-Z0-9_ -]+$/, {
       message:
-        "Name can only contain letters, numbers, underscores, and hyphens",
+        "Name must contain at least one letter and can only contain letters, numbers, underscores, hyphens, and spaces",
     }),
   description: z
     .string()
@@ -23,7 +23,6 @@ const baseDepartmentSchema = z.object({
       },
     )
     .optional(),
-  subsidiaryId: z.number({ message: "Subsidiary is required" }),
   isActive: z.boolean().default(true).optional(),
 });
 

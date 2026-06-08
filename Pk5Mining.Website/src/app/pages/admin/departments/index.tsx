@@ -21,8 +21,10 @@ import { Department } from "@/app/interfaces/department";
 import { DetailModal } from "./components/details-modal";
 import { EditModal } from "./components/edit-modal";
 import useDepartmentViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function Departments() {
+  const { colors } = useTenant();
   const {
     departments,
     filters,
@@ -43,7 +45,6 @@ export function Departments() {
     selectedDepartment,
     isUpdating,
     queryClient,
-    subsidiaries,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -97,11 +98,6 @@ export function Departments() {
       ),
     },
     {
-      key: "subsidiary",
-      header: "Subsidiary",
-      render: (role) => role.subsidiary?.name
-    },
-    {
       key: "dT_Created",
       header: "Date Added",
       render: (dept) =>
@@ -133,7 +129,8 @@ export function Departments() {
             <DropdownMenu.Content
               align="end"
               sideOffset={6}
-              className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
+              className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
+              style={{ backgroundColor: colors.bg, border: colors.border }}
             >
               <DropdownMenu.Item
                 onClick={() => {
@@ -226,7 +223,12 @@ export function Departments() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
             />
           </div>
 
@@ -237,7 +239,12 @@ export function Departments() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -296,7 +303,6 @@ export function Departments() {
         form={form}
         fieldErrors={fieldErrors}
         cancelText="Cancel"
-        subsidiaries={subsidiaries}
         loading={isUpdating}
         onClose={handleCloseModal}
         onConfirm={selectedDepartment ? handleUpdateDepartment : handleCreateDepartment}

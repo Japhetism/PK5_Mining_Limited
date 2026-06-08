@@ -21,8 +21,11 @@ import { Role } from "@/app/interfaces/role";
 import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
 import useRoleViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function Roles() {
+  const { colors } = useTenant();
+  9;
   const {
     roles,
     filters,
@@ -45,7 +48,6 @@ export function Roles() {
     queryClient,
     permissions,
     permissionError,
-    subsidiaries,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -86,9 +88,7 @@ export function Roles() {
       key: "isSystem",
       header: "System Role",
       render: (role) => (
-        <span
-          className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs text-grey-400"
-        >
+        <span className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs text-grey-400">
           {role.isSystem ? "Yes" : "No"}
         </span>
       ),
@@ -108,11 +108,6 @@ export function Roles() {
           {role.status}
         </span>
       ),
-    },
-    {
-      key: "subsidiary",
-      header: "Subsidiary",
-      render: (role) => role.subsidiary?.name
     },
     {
       key: "dT_Created",
@@ -146,7 +141,8 @@ export function Roles() {
             <DropdownMenu.Content
               align="end"
               sideOffset={6}
-              className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
+              className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
+              style={{ backgroundColor: colors.bg, border: colors.border }}
             >
               <DropdownMenu.Item
                 onClick={() => {
@@ -239,7 +235,12 @@ export function Roles() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
@@ -250,7 +251,12 @@ export function Roles() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -283,7 +289,7 @@ export function Roles() {
 
       <ConfirmModal
         open={confirmUpdateStatusOpen}
-        onClose={() => setConfirmUpdateStatusOpen(false)}
+        onClose={handleCloseModal}
         onConfirm={handleUpdateStatus}
         title={selectedRole?.isActive ? "Deactivate Role" : "Activate Role"}
         description={`Are you sure you want to ${selectedRole?.isActive ? "deactivate" : "activate"} "${selectedRole?.name}"?`}
@@ -294,7 +300,7 @@ export function Roles() {
 
       <ConfirmModal
         open={confirmDeleteOpen}
-        onClose={() => setConfirmDeleteOpen(false)}
+        onClose={handleCloseModal}
         onConfirm={handleDeleteRole}
         title="Delete Role"
         description={`Are you sure you want to delete "${selectedRole?.name}"?`}
@@ -311,7 +317,6 @@ export function Roles() {
         loading={isUpdating}
         permissions={permissions}
         permissionError={permissionError}
-        subsidiaries={subsidiaries}
         onClose={handleCloseModal}
         onConfirm={selectedRole ? handleUpdateRole : handleCreateRole}
         setFieldErrors={setFieldErrors}

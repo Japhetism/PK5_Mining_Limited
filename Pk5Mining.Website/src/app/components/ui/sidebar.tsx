@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./tooltip";
+import { useTenant } from "@/tenants/useTenant";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -163,6 +164,7 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
 }) {
+  const { colors } = useTenant();
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
   if (collapsible === "none") {
@@ -170,9 +172,10 @@ function Sidebar({
       <div
         data-slot="sidebar"
         className={cn(
-          "bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col",
+          "text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col",
           className,
         )}
+        style={{ backgroundColor: colors.bg }}
         {...props}
       >
         {children}
@@ -187,10 +190,11 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
-          className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
+          className="text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+              backgroundColor: colors.bg,
             } as React.CSSProperties
           }
           side={side}
@@ -244,7 +248,8 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
+          className="group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
+          style={{ backgroundColor: colors.bg }}
         >
           {children}
         </div>
@@ -258,6 +263,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
+  const { colors } = useTenant();
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -271,6 +277,7 @@ function SidebarTrigger({
         onClick?.(event);
         toggleSidebar();
       }}
+      style={{ backgroundColor: colors.bg }}
       {...props}
     >
       <PanelLeftIcon />
@@ -280,6 +287,7 @@ function SidebarTrigger({
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
+  const { colors } = useTenant();
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -299,12 +307,14 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
         "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
         className,
       )}
+      style={{ backgroundColor: colors.bg}}
       {...props}
     />
   );
 }
 
 function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
+  const { colors } = useTenant();
   return (
     <main
       data-slot="sidebar-inset"
@@ -313,6 +323,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
         "md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2",
         className,
       )}
+      style={{ backgroundColor: colors.bg }}
       {...props}
     />
   );
@@ -369,6 +380,7 @@ function SidebarSeparator({
 }
 
 function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
+  const { colors } = useTenant();
   return (
     <div
       data-slot="sidebar-content"
@@ -377,6 +389,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
         "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
         className,
       )}
+      style={{ backgroundColor: colors.bg }}
       {...props}
     />
   );
