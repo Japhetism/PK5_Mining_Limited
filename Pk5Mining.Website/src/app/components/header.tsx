@@ -10,6 +10,7 @@ export function Header() {
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,10 +38,6 @@ export function Header() {
   const navLinks = [
     { path: '/', label: 'Home' },
     { path: '/about', label: 'About Us' },
-    // { path: '/sustainability', label: 'Sustainability' },
-    // { path: '/investor-relations', label: 'Investors' },
-    // { path: '/operations', label: 'Operations' },
-    // { path: '/impact', label: 'Impact' },
     { path: '/careers', label: 'Careers' },
     { path: '/contact', label: 'Contact' },
   ];
@@ -72,16 +69,15 @@ export function Header() {
           <img src={Logo} alt="PK5 Mining Logo" loading="lazy" className="w-40 h-auto object-contain" />
         </Link>
 
-          {/* Desktop Navigation */}
+        {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-10">
           {navLinks.map((link) => (
             <Link key={link.path} to={link.path} className="relative group">
               <motion.span
-                className={`text-sm font-medium transition-colors ${
-                  location.pathname === link.path
-                    ? 'text-[#D4AF37]'
-                    : 'text-[#a0a0a0] group-hover:text-white'
-                }`}
+                className={`text-sm font-medium transition-colors ${location.pathname === link.path
+                  ? 'text-[#D4AF37]'
+                  : 'text-[#a0a0a0] group-hover:text-white'
+                  }`}
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
               >
@@ -106,11 +102,10 @@ export function Header() {
           >
             <button className="relative group flex items-center gap-1.5">
               <motion.span
-                className={`text-sm font-medium transition-colors ${
-                  isResponsibilityActive
-                    ? 'text-[#D4AF37]'
-                    : 'text-[#a0a0a0] group-hover:text-white'
-                }`}
+                className={`text-sm font-medium transition-colors ${isResponsibilityActive
+                  ? 'text-[#D4AF37]'
+                  : 'text-[#a0a0a0] group-hover:text-white'
+                  }`}
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
               >
@@ -122,11 +117,10 @@ export function Header() {
               >
                 <ChevronDown
                   size={16}
-                  className={`transition-colors ${
-                    isResponsibilityActive
-                      ? 'text-[#D4AF37]'
-                      : 'text-[#a0a0a0] group-hover:text-white'
-                  }`}
+                  className={`transition-colors ${isResponsibilityActive
+                    ? 'text-[#D4AF37]'
+                    : 'text-[#a0a0a0] group-hover:text-white'
+                    }`}
                 />
               </motion.div>
               {isResponsibilityActive && (
@@ -171,11 +165,10 @@ export function Header() {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.05 }}
-                            className={`px-5 py-3.5 transition-all duration-200 ${
-                              location.pathname === link.path
-                                ? 'bg-[#D4AF37]/15 text-[#D4AF37] border-l-2 border-[#D4AF37]'
-                                : 'text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-white border-l-2 border-transparent'
-                            }`}
+                            className={`px-5 py-3.5 transition-all duration-200 ${location.pathname === link.path
+                              ? 'bg-[#D4AF37]/15 text-[#D4AF37] border-l-2 border-[#D4AF37]'
+                              : 'text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-white border-l-2 border-transparent'
+                              }`}
                           >
                             <div className="flex items-center justify-between">
                               <span className="text-sm font-medium">{link.label}</span>
@@ -228,7 +221,58 @@ export function Header() {
             </Link>
           ))}
         </nav>
+
+        {/* Mobile Dropdown */}
+        <div>
+          <button
+            onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+            className={`w-full py-3 px-4 rounded-lg transition-all flex items-center justify-between ${isResponsibilityActive
+              ? 'text-[#D4AF37] bg-[#D4AF37]/10 font-medium'
+              : 'text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]'
+              }`}
+          >
+            <span>Our Responsibility</span>
+            <motion.div
+              animate={{ rotate: mobileDropdownOpen ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChevronDown size={18} />
+            </motion.div>
+          </button>
+
+          <AnimatePresence>
+            {mobileDropdownOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="ml-4 mt-1 border-l-2 border-[#D4AF37]/20">
+                  {responsibilityLinks.map((link) => (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setMobileDropdownOpen(false);
+                      }}
+                      className={`block py-2.5 pl-4 pr-4 rounded-r-lg transition-all ${location.pathname === link.path
+                        ? 'text-[#D4AF37] bg-[#D4AF37]/10 font-medium border-l-2 border-[#D4AF37] -ml-[2px]'
+                        : 'text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]/50'
+                        }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
+
     </motion.header>
   );
 }
