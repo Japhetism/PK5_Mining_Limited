@@ -218,6 +218,7 @@ export function ContactMessageFilterPanel({
                         : new Date()
                     }
                     maxDate={new Date()}
+                    classes="right-0"
                   />
                 </FilterField>
               </div>

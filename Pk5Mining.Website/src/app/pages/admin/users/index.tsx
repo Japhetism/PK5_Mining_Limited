@@ -24,6 +24,8 @@ import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
 import { ChangePasswordModal } from "./components/change-password-modal";
 import { useTenant } from "@/tenants/useTenant";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 const statusOptions = [
   { label: "Active", value: "active" },
@@ -151,58 +153,53 @@ export function UserList() {
                   View Details
                 </DropdownMenu.Item>
 
-                <DropdownMenu.Item
-                  onClick={() => {
-                    setSelectedUser(user);
-                    setConfirmEditOpen(true);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit User
-                </DropdownMenu.Item>
+                <PermissionGuard permission={PERMISSIONS.userUpdate}>
+                  <DropdownMenu.Item
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setConfirmEditOpen(true);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  >
+                    <Pencil className="w-4 h-4" />
+                    Edit User
+                  </DropdownMenu.Item>
+                </PermissionGuard>
 
-                <DropdownMenu.Item
-                  onSelect={() => {
-                    setSelectedUser(user);
-                    setConfirmUpdateStatusOpen(true);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-                >
-                  {user.isActive ? (
-                    <>
-                      <XCircle className="w-4 h-4 text-red-400" />
-                      <span className="text-red-400">Deactivate User</span>
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400">Activate User</span>
-                    </>
-                  )}
-                </DropdownMenu.Item>
+                <PermissionGuard permission={PERMISSIONS.userUpdate}>
+                  <DropdownMenu.Item
+                    onSelect={() => {
+                      setSelectedUser(user);
+                      setConfirmUpdateStatusOpen(true);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  >
+                    {user.isActive ? (
+                      <>
+                        <XCircle className="w-4 h-4 text-red-400" />
+                        <span className="text-red-400">Deactivate User</span>
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-4 h-4 text-green-400" />
+                        <span className="text-green-400">Activate User</span>
+                      </>
+                    )}
+                  </DropdownMenu.Item>
+                </PermissionGuard>
 
-                <DropdownMenu.Item
-                  onSelect={() => {
-                    setSelectedUser(user);
-                    setConfirmDeleteOpen(true);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <Trash className="w-4 h-4 text-red-400" />
-                  <span className="text-red-400">Delete User</span>
-                </DropdownMenu.Item>
-
-                {/* <DropdownMenu.Item
-                  onSelect={() => {
-                    setSelectedUser(user);
-                    setChangePasswordOpen(true);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-                >
-                  <KeyRound className="w-4 h-4" />
-                  <span>Change Password</span>
-                </DropdownMenu.Item> */}
+                <PermissionGuard permission={PERMISSIONS.userUpdate}>
+                  <DropdownMenu.Item
+                    onSelect={() => {
+                      setSelectedUser(user);
+                      setConfirmDeleteOpen(true);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  >
+                    <Trash className="w-4 h-4 text-red-400" />
+                    <span className="text-red-400">Delete User</span>
+                  </DropdownMenu.Item>
+                </PermissionGuard>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
@@ -222,18 +219,20 @@ export function UserList() {
             Manage user accounts, status, and access.
           </p>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => {
-            setSelectedUser(null); // Resets form for "New User"
-            setConfirmEditOpen(true);
-          }}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-        >
-          <Plus className="w-4 h-4" />
-          New User
-        </motion.button>
+        <PermissionGuard permission={PERMISSIONS.userCreate}>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => {
+              setSelectedUser(null); // Resets form for "New User"
+              setConfirmEditOpen(true);
+            }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+          >
+            <Plus className="w-4 h-4" />
+            New User
+          </motion.button>
+        </PermissionGuard>
       </div>
 
       <div className="space-y-3 mb-10">

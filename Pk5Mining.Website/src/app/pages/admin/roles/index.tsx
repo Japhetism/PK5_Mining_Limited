@@ -22,6 +22,8 @@ import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
 import useRoleViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 export function Roles() {
   const { colors } = useTenant();
@@ -155,47 +157,53 @@ export function Roles() {
                 View details
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item
-                onClick={() => {
-                  setSelectedRole(role);
-                  setConfirmEditOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Pencil className="w-4 h-4" />
-                Edit Role
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.roleUpdate}>
+                <DropdownMenu.Item
+                  onClick={() => {
+                    setSelectedRole(role);
+                    setConfirmEditOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Role
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedRole(role);
-                  setConfirmUpdateStatusOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                {role.status === "Active" ? (
-                  <>
-                    <XCircle className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">Deactivate</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">Activate</span>
-                  </>
-                )}
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.roleUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedRole(role);
+                    setConfirmUpdateStatusOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  {role.status === "Active" ? (
+                    <>
+                      <XCircle className="w-4 h-4 text-red-400" />
+                      <span className="text-red-400">Deactivate</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400">Activate</span>
+                    </>
+                  )}
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedRole(role);
-                  setConfirmDeleteOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Trash className="w-4 h-4 text-red-400" />
-                <span className="text-red-400">Delete Role</span>
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.roleUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedRole(role);
+                    setConfirmDeleteOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Trash className="w-4 h-4 text-red-400" />
+                  <span className="text-red-400">Delete Role</span>
+                </DropdownMenu.Item>
+              </PermissionGuard>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
@@ -214,15 +222,17 @@ export function Roles() {
           </p>
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => setConfirmEditOpen(true)}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-        >
-          <Plus className="w-4 h-4" />
-          New Role
-        </motion.button>
+        <PermissionGuard permission={PERMISSIONS.roleCreate}>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setConfirmEditOpen(true)}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+          >
+            <Plus className="w-4 h-4" />
+            New Role
+          </motion.button>
+        </PermissionGuard>
       </div>
 
       {/* Filters */}

@@ -8,6 +8,8 @@ import { DatePicker } from "@/app/components/ui/date-picker";
 import { formatDateTime, limitWords } from "@/app/utils/helper";
 import { useTenant } from "@/tenants/useTenant";
 import { SearchableSelect } from "@/app/components/searchable-select";
+import { PERMISSIONS } from "@/app/constants/permissions";
+import { PermissionGuard } from "@/app/components/permission-guard";
 
 const maxWordsBriefDescription = 50;
 
@@ -63,7 +65,7 @@ export function JobEdit() {
             </label>
             <motion.input
               name="title"
-              value={form.title} 
+              value={form.title}
               onChange={onChange}
               onBlur={() => {
                 if (!isValidName(form.title)) {
@@ -444,22 +446,26 @@ export function JobEdit() {
         </div>
 
         <div className="flex justify-end">
-          <motion.button
-            type="submit"
-            whileHover={!loading ? { scale: 1.02 } : undefined}
-            whileTap={!loading ? { scale: 0.98 } : undefined}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#c89b3c] text-black text-sm font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
-            disabled={loading}
+          <PermissionGuard
+            permission={[PERMISSIONS.jobUpdate, PERMISSIONS.jobCreate]}
           >
-            <Save className="w-4 h-4" />
-            {existing
-              ? loading
-                ? "Updating..."
-                : "Update Job"
-              : loading
-                ? "Saving..."
-                : "Save Job"}
-          </motion.button>
+            <motion.button
+              type="submit"
+              whileHover={!loading ? { scale: 1.02 } : undefined}
+              whileTap={!loading ? { scale: 0.98 } : undefined}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#c89b3c] text-black text-sm font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
+              disabled={loading}
+            >
+              <Save className="w-4 h-4" />
+              {existing
+                ? loading
+                  ? "Updating..."
+                  : "Update Job"
+                : loading
+                  ? "Saving..."
+                  : "Save Job"}
+            </motion.button>
+          </PermissionGuard>
         </div>
       </form>
     </div>

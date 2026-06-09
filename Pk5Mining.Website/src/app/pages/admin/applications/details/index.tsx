@@ -6,8 +6,13 @@ import { downloadFile, getStageMeta } from "@/app/utils/helper";
 import { workflowStages } from "@/app/constants";
 import { useTenant } from "@/tenants/useTenant";
 import useApplicationDetailsViewModel from "./viewmodel";
+import { useAuth } from "@/app/context/AuthContext";
+import { PERMISSIONS } from "@/app/constants/permissions";
+
+const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 
 export function ApplicationDetail() {
+  const { user } = useAuth();
   const { colors } = useTenant();
   const {
     app,
@@ -27,6 +32,12 @@ export function ApplicationDetail() {
   } = useApplicationDetailsViewModel();
 
   if (isLoading) return <ApplicationDetailsSkeleton />;
+
+  const permissions = user?.role?.permissions ?? [];
+
+  const canUpdateApplication =
+    permissions.includes(PERMISSIONS.applicationUpdate as any) ||
+    !enforcePermission;
 
   return (
     <div className="space-y-6">
@@ -234,6 +245,7 @@ export function ApplicationDetail() {
                     app?.status?.toLowerCase() === stage.label?.toLowerCase();
                   return (
                     <button
+                      disabled={!canUpdateApplication}
                       key={stage.id}
                       onClick={() => setSelectedStatus(stage.label)}
                       className={`relative h-11 px-9 text-xs font-normal transition-all flex items-center justify-center tracking-wide

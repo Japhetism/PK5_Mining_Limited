@@ -19,6 +19,7 @@ type DatePickerProps = {
   fromYear?: number;
   toYear?: number;
   name?: string;
+  classes?: string;
 };
 
 export function DatePicker({
@@ -32,6 +33,7 @@ export function DatePicker({
   fromYear = Number(startYear),
   toYear = Number(endYear),
   name,
+  classes = "left-0",
 }: DatePickerProps) {
   const { colors } = useTenant();
   const [open, setOpen] = React.useState(false);
@@ -78,6 +80,7 @@ export function DatePicker({
     setOpen(false);
   };
 
+  
   return (
     <div className="relative">
       {name ? <input type="hidden" name={name} value={value ?? ""} /> : null}
@@ -103,7 +106,8 @@ export function DatePicker({
             aria-label="Close date picker"
           />
 
-          <div className="absolute left-0 top-[calc(100%+8px)] z-50 rounded-xl border p-3 shadow-2xl"
+          <div
+            className={`absolute ${classes} top-[calc(100%+8px)] z-50 rounded-xl border p-3 shadow-2xl`}
             style={{ backgroundColor: colors.card, border: colors.border }}
           >
             <DayPicker

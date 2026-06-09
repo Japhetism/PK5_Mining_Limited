@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useLegalModalState } from "../hooks/useLegalModalState";
@@ -89,22 +89,16 @@ export function CookieBannerWithOptions() {
   if (isAdminRoute) return null;
 
   // Responsive Variants: Slide from bottom on mobile (y), from right on desktop (x)
-  const variants = {
+  const variants: Variants = {
     initial: { y: 100, x: 0, opacity: 0, scale: 0.95 },
     animate: {
       y: 0,
       x: 0,
       opacity: 1,
       scale: 1,
-      transition: { type: "spring", damping: 25, stiffness: 200 },
+      transition: { type: "spring" as const, damping: 25, stiffness: 200 },
     },
     exit: { y: 100, opacity: 0, scale: 0.95 },
-    // Override for desktop
-    desktop: {
-      initial: { x: 400, y: 0, opacity: 0 },
-      animate: { x: 0, y: 0, opacity: 1 },
-      exit: { x: 400, opacity: 0 },
-    },
   };
 
   return (
@@ -115,15 +109,10 @@ export function CookieBannerWithOptions() {
           initial="initial"
           animate="animate"
           exit="exit"
-          /* 
-             Responsiveness strategy:
-             - Mobile: fixed bottom-0 left-0 (full width) with some padding
-             - Desktop (sm:): bottom-6 right-6 max-w-[400px]
-          */
-          className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto w-full sm:max-w-[400px] z-[100] overflow-hidden sm:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)] sm:shadow-2xl border-t sm:border border-gray-200"
+          className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto w-full sm:max-w-[400px] z-[100] overflow-hidden sm:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)] sm:shadow-2xl border-t sm:border border-[#C89B3C]"
         >
           <div className="bg-white text-black font-sans pb-safe sm:pb-0">
-            <div className="bg-black text-white px-5 sm:px-6 py-3 sm:py-4 flex justify-between items-center relative">
+            <div className="bg-[#C89B3C] text-white px-5 sm:px-6 py-3 sm:py-4 flex justify-between items-center relative">
               <span className="font-bold text-base sm:text-lg tracking-tight">
                 PK5 Mining
               </span>
@@ -135,15 +124,15 @@ export function CookieBannerWithOptions() {
                 className="p-1 text-gray-400 hover:text-white transition-colors"
                 aria-label="Close"
               >
-                <X size={20} />
+                <X size={20} color="#FFF" />
               </button>
             </div>
 
-            <div className="p-5 sm:p-6">
-              <h3 className="text-sm sm:text-md font-bold text-black mb-2">
+            <div className="p-5 sm:py-2 bg-[#F6F6F6]">
+              <h3 className="text-[20px] sm:text-md font-bold text-black mb-2">
                 Cookie settings
               </h3>
-              <p className="text-[11px] sm:text-xs text-gray-600 leading-relaxed mb-5 sm:mb-6">
+              <p className="text-[11px] sm:text-sm text-black leading-relaxed mb-5 sm:mb-6">
                 PK5 Mining uses cookies to enhance your experience and analyze
                 site traffic. By clicking "Accept", you agree to our use of
                 cookies as described in our{" "}
@@ -157,28 +146,28 @@ export function CookieBannerWithOptions() {
               </p>
 
               {/* Grid: 2 columns on slightly larger mobile screens, 1 column on small */}
-              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-1 gap-2 mb-6">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-1 gap-4 mb-6">
                 {(
                   Object.keys(preferences) as Array<keyof CookiePreferences>
                 ).map((key) => (
                   <div
                     key={key}
-                    className="flex justify-between items-center p-2.5 sm:p-3 border border-gray-100 rounded-lg bg-gray-50/50"
+                    className="flex justify-between items-center p-2.5 sm:p-3 border border-[#C89B3C] rounded-lg bg-[#DDDCD9]"
                   >
-                    <span className="text-[10px] sm:text-xs font-semibold capitalize text-gray-700">
+                    <span className="text-[10px] sm:text-sm font-semibold capitalize text-black">
                       {key}
                     </span>
                     <button
                       onClick={() => togglePreference(key)}
                       className={`relative inline-flex h-4 w-8 sm:h-5 sm:w-10 items-center rounded-full transition-colors duration-200 ${
-                        preferences[key] ? "bg-black" : "bg-gray-300"
+                        preferences[key] ? "bg-[#C89B3C]" : "bg-[#9F9F9F]"
                       }`}
                     >
                       <span
-                        className={`inline-block h-2.5 w-2.5 sm:h-3 sm:w-3 transform rounded-full bg-white transition duration-200 ${
+                        className={`inline-block h-2.5 w-2.5 sm:h-3 sm:w-3 transform rounded-full transition duration-200 ${
                           preferences[key]
-                            ? "translate-x-4 sm:translate-x-6"
-                            : "translate-x-1"
+                            ? "translate-x-4 sm:translate-x-6 bg-[#F7E8C3]"
+                            : "translate-x-1 bg-[#E0E0E0]"
                         }`}
                       />
                     </button>
@@ -197,13 +186,13 @@ export function CookieBannerWithOptions() {
                         marketing: false,
                       })
                     }
-                    className="flex-1 py-2 sm:py-2.5 bg-white border border-black text-[10px] sm:text-xs font-bold rounded-full hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                    className="flex-1 py-2 sm:py-2.5 bg-white border border-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-gray-50 active:bg-gray-100 transition-colors"
                   >
                     Reject all
                   </button>
                   <button
                     onClick={() => handleSave("custom_preferences")}
-                    className="flex-1 py-2 sm:py-2.5 bg-black text-white text-[10px] sm:text-xs font-bold rounded-full hover:bg-gray-800 active:scale-95 transition-all"
+                    className="flex-1 py-2 sm:py-2.5 bg-[#C89B3C] text-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-[#C89B3C] active:scale-95 transition-all"
                   >
                     Accept Selection
                   </button>
@@ -218,7 +207,7 @@ export function CookieBannerWithOptions() {
                       marketing: true,
                     })
                   }
-                  className="w-full py-2.5 sm:py-2 mt-1 bg-gray-100 text-black text-[10px] sm:text-xs font-bold rounded-full hover:bg-gray-200 transition-colors"
+                  className="w-full py-2.5 sm:py-2 mt-1 bg-gray-100 text-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-gray-200 transition-colors"
                 >
                   Accept all cookies
                 </button>

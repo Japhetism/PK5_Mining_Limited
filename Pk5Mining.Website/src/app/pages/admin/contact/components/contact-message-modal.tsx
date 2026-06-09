@@ -12,6 +12,8 @@ import { formatDateTime } from "@/app/utils/helper";
 import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
 import { ContactMessageDto, ContactStatus } from "@/app/interfaces";
 import { useTenant } from "@/tenants/useTenant";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 type ContactViewModalProps = {
   open: boolean;
@@ -126,14 +128,16 @@ export function ContactViewModal({
           </button>
 
           {contact?.status?.toLowerCase() !== "resolved" && (
-            <button
-              onClick={() => onUpdateStatus("resolved")}
-              disabled={loading || !contact}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] transition-transform active:scale-95 disabled:opacity-50"
-            >
-              {!loading && <CheckCircle2 size={14} />}
-              {loading ? "Processing..." : "Mark as Resolved"}
-            </button>
+            <PermissionGuard permission={PERMISSIONS.contactMessageUpdate}>
+              <button
+                onClick={() => onUpdateStatus("resolved")}
+                disabled={loading || !contact}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] transition-transform active:scale-95 disabled:opacity-50"
+              >
+                {!loading && <CheckCircle2 size={14} />}
+                {loading ? "Processing..." : "Mark as Resolved"}
+              </button>
+            </PermissionGuard>
           )}
         </div>
       </div>
