@@ -221,6 +221,7 @@ export interface IUser {
   isActive?: boolean;
   hasChangedPassword?: boolean;
   permissions?: RolePermission[];
+  userPermissions?: RolePermission[];
   dT_Created?: string;
 }
 

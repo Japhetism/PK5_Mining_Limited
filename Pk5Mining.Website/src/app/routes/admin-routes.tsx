@@ -47,9 +47,8 @@ function AdminAccessGuard({
 
   const isAllowed =
     canAccess &&
-    hasRole(user?.role?.name, roles) &&
     hasPermissions(
-      user?.permissions ?? [],
+      user?.userPermissions ?? [],
       permissions,
       requireAllPermissions
     );

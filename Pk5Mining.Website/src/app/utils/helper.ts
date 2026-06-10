@@ -192,7 +192,6 @@ export const hasPermissions = (
 export const getVisibleNav = (
   items: AdminRouteItem[],
   userPermissions: RolePermission[] = [],
-  userRole?: UserRole,
 ): NavItem[] => {
   return items
     .filter(
@@ -202,8 +201,7 @@ export const getVisibleNav = (
           userPermissions,
           item.permissions ?? [],
           item.requireAllPermissions,
-        ) &&
-        hasRole(userRole, item.roles),
+        ) 
     )
     .map((item) => ({
       to: `/admin/${item.path}`,
