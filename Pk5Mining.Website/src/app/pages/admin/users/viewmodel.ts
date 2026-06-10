@@ -297,6 +297,7 @@ function useUserViewModel() {
 
     const payload = {
       ...result.data,
+      isActive: true,
       subsidiaryId: subsidiaryId,
     }
 
@@ -320,6 +321,7 @@ function useUserViewModel() {
 
     const payload = {
       ...result.data,
+      isActive: true,
       subsidiaryId: subsidiaryId,
     }
     updateMutation.mutate(payload);
