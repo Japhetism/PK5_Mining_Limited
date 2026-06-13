@@ -9,8 +9,7 @@ export const useAdminNav = () => {
   return useMemo(() => {
     return getVisibleNav(
       adminRouteItems, 
-      user?.permissions, 
-      user?.role
+      user?.userPermissions, 
     );
   }, [user]);
 };

@@ -9,6 +9,7 @@ import {
   Permission as BackendPermission,
   BackendPermissionGroup,
 } from "../interfaces/permission";
+import { adminRoutes } from "../routes/admin-routes";
 
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
@@ -192,7 +193,6 @@ export const hasPermissions = (
 export const getVisibleNav = (
   items: AdminRouteItem[],
   userPermissions: RolePermission[] = [],
-  userRole?: UserRole,
 ): NavItem[] => {
   return items
     .filter(
@@ -202,8 +202,7 @@ export const getVisibleNav = (
           userPermissions,
           item.permissions ?? [],
           item.requireAllPermissions,
-        ) &&
-        hasRole(userRole, item.roles),
+        ) 
     )
     .map((item) => ({
       to: `/admin/${item.path}`,
@@ -397,3 +396,40 @@ export const getRemoteFileSize = async (url: string): Promise<string> => {
     return "Unknown size";
   }
 };
+
+export function getBestAdminRoute(userPermissions: RolePermission[]) {
+  const accessibleRoutes = adminRouteItems
+    .filter((route) => route.path !== "account")
+    .filter((route) =>
+      hasPermissions(
+        userPermissions,
+        route.permissions || [],
+        route.requireAllPermissions
+      )
+    );
+
+  const priorityOrder = [
+    "dashboard",
+    "jobs",
+    "applications",
+    "contact-messages",
+    "users",
+    "roles",
+    "departments",
+    "subsidiaries",
+  ];
+
+  const getGroup = (path: string) => path.split("/")[0];
+
+  const sorted = [...accessibleRoutes].sort((a, b) => {
+    const aGroup = getGroup(a.path);
+    const bGroup = getGroup(b.path);
+
+    const aIndex = priorityOrder.indexOf(aGroup);
+    const bIndex = priorityOrder.indexOf(bGroup);
+
+    return aIndex - bIndex;
+  });
+
+  return sorted[0]?.path || "/unauthorized";
+}

@@ -334,6 +334,7 @@ function useDepartmentViewModel() {
 
   const handleCloseModal = () => {
     setSelectedDepartment(null);
+    setFieldErrors({});
     setForm(defaultFormData);
     setConfirmEditOpen(false);
     setConfirmOpen(false);

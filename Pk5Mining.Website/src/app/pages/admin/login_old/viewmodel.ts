@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
 import { authService } from "@/app/services/sso/authService";
 import { ApiError } from "@/app/interfaces";
-import { isEmailAuthorized } from "@/app/utils/helper";
+import { getBestAdminRoute, isEmailAuthorized } from "@/app/utils/helper";
 import { useTenant } from "@/tenants/useTenant";
 
 function useLoginViewModel() {
@@ -38,7 +38,8 @@ function useLoginViewModel() {
     // } else {
     //   navigate("/admin/change/password", { replace: true });
     // }
-    navigate("/admin/dashboard", { replace: true });
+    const redirectTo = getBestAdminRoute(authUser.userPermissions ?? []);
+    navigate(`/admin/${redirectTo}`, { replace: true });
   }, [authUser, navigate]);
 
   const mutation = useMutation({

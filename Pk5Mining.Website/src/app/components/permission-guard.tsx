@@ -18,7 +18,7 @@ export function PermissionGuard({
       return <>{children}</>;
     }
 
-  const userPermissions = user?.role?.permissions ?? [];
+  const userPermissions = user?.userPermissions ?? [];
   const requiredPermissions = Array.isArray(permission)
     ? permission
     : [permission];

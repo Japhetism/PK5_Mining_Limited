@@ -5,6 +5,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { changePassword } from "@/app/api/auth";
 import { ApiError } from "@/app/interfaces";
 import { IChangePasswordPayload } from "@/app/interfaces/user";
+import { getBestAdminRoute } from "@/app/utils/helper";
 
 function useResetPasswordViewModel() {
   const navigate = useNavigate();
@@ -25,7 +26,8 @@ function useResetPasswordViewModel() {
       return;
     }
     if (authUser.hasChangedPassword) {
-      navigate("/admin/dashboard", { replace: true });
+      const redirectTo = getBestAdminRoute(authUser.userPermissions ?? []);
+      navigate(`/admin/${redirectTo}`, { replace: true });
     }
   }, [authUser, navigate]);
 
@@ -39,12 +41,15 @@ function useResetPasswordViewModel() {
     onSuccess: () => {
       setSuccessMsg("Password changed successfully. Login to continue.");
       setAuthUser({ ...authUser!, hasChangedPassword: true });
-      navigate("/admin/dashboard", { replace: true });
+      const redirectTo = getBestAdminRoute(authUser?.userPermissions ?? []);
+      navigate(`/admin/${redirectTo}`, { replace: true });
     },
     onError: (err) => {
       const message =
         (err as ApiError)?.message ??
-        (err instanceof Error ? err.message : "An error occurred. Please try again.");
+        (err instanceof Error
+          ? err.message
+          : "An error occurred. Please try again.");
       setError(message);
     },
     onSettled: () => setLoading(false),
@@ -83,4 +88,6 @@ function useResetPasswordViewModel() {
 }
 
 export default useResetPasswordViewModel;
-export type ResetPasswordViewModel = ReturnType<typeof useResetPasswordViewModel>;
+export type ResetPasswordViewModel = ReturnType<
+  typeof useResetPasswordViewModel
+>;

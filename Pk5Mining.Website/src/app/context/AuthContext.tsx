@@ -16,6 +16,7 @@ import { authService } from "../services/sso/authService";
 import { USERROLES } from "../constants/role";
 import { isEmailAuthorized } from "../utils/helper";
 import { useTenant } from "@/tenants/useTenant";
+import { RolePermission } from "../interfaces/role";
 
 type AuthState = {
   user: IUser | null;
@@ -91,9 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const ssoAccount = authService.getAccount();
 
         if (ssoAccount) {
-          if (
-            !isEmailAuthorized(ssoAccount.username, emailDomain)
-          ) {
+          if (!isEmailAuthorized(ssoAccount.username, emailDomain)) {
             await authService.logout();
             return;
           }
@@ -105,9 +104,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const backendResponseData = await microsoftLogin();
             if (backendResponseData) {
               const finalToken = backendResponseData.token || msToken;
+              const permissionNames =
+                backendResponseData.user.role?.permissions?.map(
+                  (permission) => permission.name,
+                );
               const authenticatedUser = {
                 ...backendResponseData.user,
                 jwtToken: finalToken,
+                userPermissions: permissionNames as RolePermission[],
               };
 
               setUser(authenticatedUser);
