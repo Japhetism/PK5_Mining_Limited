@@ -2,21 +2,30 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTenant } from "@/tenants/useTenant";
 import { useAuth } from "@/app/context/AuthContext";
+import { getBestAdminRoute } from "@/app/utils/helper";
 
 export function SSO() {
   const { user, isLoading } = useAuth();
-  const { colors: { bg }, logo, name } = useTenant();
+  const {
+    colors: { bg },
+    logo,
+    name,
+  } = useTenant();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoading) {
-      const targetPath = user ? "/admin/dashboard" : "/admin/login";
+      const redirectTo = getBestAdminRoute(user?.userPermissions ?? []);
+      const targetPath = user ? `/admin/${redirectTo}` : "/admin/login";
       navigate(targetPath, { replace: true });
     }
   }, [user, isLoading, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ backgroundColor: bg }}>
+    <div
+      className="min-h-screen flex flex-col items-center justify-center p-6"
+      style={{ backgroundColor: bg }}
+    >
       <div className="flex flex-col items-center animate-pulse">
         <div className="mb-8">
           <img
