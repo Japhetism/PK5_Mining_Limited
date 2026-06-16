@@ -116,11 +116,13 @@ export function Login() {
           >
             {loading ? "Signing in..." : "Sign in"}
           </motion.button>
+          
           <div className="relative flex items-center py-5">
             <div className="flex-grow border-t border-gray-600"></div>
             <span className="flex-shrink mx-4 text-gray-400 font-bold">OR</span>
             <div className="flex-grow border-t border-gray-600"></div>
           </div>
+
           <motion.button
             type="button"
             whileHover={!loading ? { scale: 1.02 } : undefined}
