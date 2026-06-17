@@ -120,7 +120,7 @@ export function Login() {
 
           {error && (
             <div className="text-sm text-red-500 bg-red-500/10 border border-red-500/40 rounded-md px-3 py-2">
-              {error}xx
+              {error}
             </div>
           )}
 
