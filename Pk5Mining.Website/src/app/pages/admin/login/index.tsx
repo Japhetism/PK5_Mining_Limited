@@ -5,9 +5,9 @@ import imgImage15 from "../../../../../src/imports/MacBookPro1429/c36f9bd2b0feaf
 import imgImage103 from "../../../../../src/imports/MacBookPro1429/0920571d191ee92fb66ed9adf50760ecb26368a5.png";
 import { useTenant } from "@/tenants/useTenant";
 import useLoginViewModel from "./viewmodel";
-
+ 
 /* ── Logo pieces ─────────────────────────────────────────────────────────── */
-
+ 
 function Group1() {
   return (
     <div className="absolute contents left-[2.11px] top-[17.13px]">
@@ -25,7 +25,7 @@ function Group1() {
     </div>
   );
 }
-
+ 
 function Group2() {
   return (
     <div className="absolute h-[61.083px] left-[-5.81px] top-[-3.26px] w-[60px]">
@@ -40,7 +40,7 @@ function Group2() {
     </div>
   );
 }
-
+ 
 function Pk5Logo() {
   return (
     <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[58.08px] left-[calc(50%+1.89px)] top-[calc(50%+1.2px)] w-[170.4px]">
@@ -49,7 +49,7 @@ function Pk5Logo() {
     </div>
   );
 }
-
+ 
 function Group3() {
   return (
     <div className="absolute h-[67.547px] left-0 top-0 w-[65.76px]">
@@ -70,7 +70,7 @@ function Group3() {
     </div>
   );
 }
-
+ 
 function Pk5AgroAlliedLogo() {
   return (
     <div className="absolute h-[67px] left-[47px] top-[47px] w-[184px] z-20">
@@ -79,9 +79,9 @@ function Pk5AgroAlliedLogo() {
     </div>
   );
 }
-
+ 
 /* ── Form panel background ───────────────────────────────────────────────── */
-
+ 
 function FormPanel() {
   return (
     <div className="absolute inset-y-0 right-0 drop-shadow-[0px_4px_2px_rgba(0,0,0,0.25)] opacity-65 overflow-hidden w-full h-full">
@@ -89,9 +89,9 @@ function FormPanel() {
     </div>
   );
 }
-
+ 
 /* ── Icon badge above form ───────────────────────────────────────────────── */
-
+ 
 function Frame6() {
   return (
     <div className="-translate-x-1/2 absolute left-1/2 size-[79.2px] top-[14%] z-20">
@@ -103,9 +103,9 @@ function Frame6() {
     </div>
   );
 }
-
+ 
 /* ── Email icon in input ─────────────────────────────────────────────────── */
-
+ 
 function EmailIcon() {
   return (
     <>
@@ -126,29 +126,9 @@ function EmailIcon() {
     </>
   );
 }
-function LockIcon() {
-  return (
-    <>
-      <div className="absolute inset-[39.37%_93.22%_50.24%_5.2%]">  {/* Reusing same position as email icon for simplicity */}  
-        <div className="absolute inset-[-10.11%_-7.94%]">               
-          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 7.58653 6.18213">
-            <path d={svgPaths.p1753f000} stroke="#C89B3C" strokeLinecap="round" strokeWidth="1.0395" />
-          </svg>
-        </div>
-      </div>
-      <div className="absolute inset-[49.76%_92.57%_36.38%_4.55%]">  {/* Reusing same position as email icon for simplicity */}  
-        <div className="absolute inset-[-7.58%_-4.33%]">
-          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13.0424 7.89634">
-            <path d={svgPaths.pd186900} stroke="#C89B3C" strokeLinecap="round" strokeWidth="1.0395" />
-          </svg>
-        </div>
-      </div>
-    </>
-  )
-}
-
+ 
 /* ── Arrow icon ──────────────────────────────────────────────────────────── */
-
+ 
 function ArrowRight() {
   return (
     <div className="h-[8.446px] relative shrink-0 w-[12.285px]">
@@ -166,9 +146,9 @@ function ArrowRight() {
     </div>
   );
 }
-
+ 
 /* ── Stats bar ───────────────────────────────────────────────────────────── */
-
+ 
 function StatsBar() {
   return (
     <div className="absolute bg-[rgba(0,0,0,0.46)] h-[117px] left-[47px] overflow-hidden rounded-[18px] bottom-[10%] w-[607.5px] z-20">
@@ -188,12 +168,12 @@ function StatsBar() {
           </div>
         </div>
       ))}
-
+ 
       {/* Values */}
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[36px] top-[36px] whitespace-nowrap">3+</p>
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[238.5px] top-[36px] whitespace-nowrap">2.3M</p>
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[441px] top-[36px] whitespace-nowrap">99.9%</p>
-
+ 
       {/* Labels */}
       <p className="absolute font-['Rajdhani',sans-serif] font-bold text-[18px] text-white left-[calc(50%-267.75px)] top-[calc(50%+10.5px)] whitespace-nowrap">ACTIVE SITES</p>
       <p className="absolute font-['Rajdhani',sans-serif] font-bold text-[18px] text-white left-[calc(50%-65.25px)] top-[calc(50%+10.5px)] whitespace-nowrap">DAILY OUTPUT</p>
@@ -201,128 +181,103 @@ function StatsBar() {
     </div>
   );
 }
-
+ 
 /* ── Interactive login form ──────────────────────────────────────────────── */
-
+ 
 function LoginForm() {
-  // const [email, setEmail] = useState("");
-  // const [error, setError] = useState("");
-  // const [submitted, setSubmitted] = useState(false);
-
-  const { colors } = useTenant();
   const {
     email,
     password,
     error,
     loading,
+    showPassword,
+    isEmailStep,
+    setFormType,
     setEmail,
     setPassword,
-    onSubmit,
     handleSSOSignin,
+    handleFormSubmit,
+    setShowPassword,
   } = useLoginViewModel();
 
   return (
     <div className="absolute flex flex-col gap-[40px] items-start left-[103px] top-[35%] w-[415.9px] z-30">
-      <form onSubmit={onSubmit} className="flex flex-col gap-[40px] items-start w-[415.9px]">
-        {/* Email input */}
-        <div className="bg-white h-[49.5px] relative rounded-[10.395px] shrink-0 w-full">
-          <div className="relative rounded-[inherit] size-full overflow-hidden">
-            {/* Icon background circle */}
-            <div className="absolute left-[11.9px] size-[25px] top-[12.25px]">
-              <svg className="absolute block inset-0 size-full" fill="none" viewBox="0 0 25 25">
-                <circle cx="12.5" cy="12.5" fill="#D9D9D9" fillOpacity="0.4" r="12.5" />
-              </svg>
-            </div>
-            <EmailIcon />
-            {/* Functional input overlaid on top */}
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter"}
-              placeholder="Enter your email"
-              className="absolute inset-0 w-full h-full rounded-[10.395px] bg-transparent pl-[47px] pr-3 text-[14px] text-black font-['Inter',sans-serif] font-light focus:outline-none placeholder:text-black/50"
-            />
+      {/* Email input */}
+      <div className="bg-white h-[49.5px] relative rounded-[10.395px] shrink-0 w-full">
+        <div className="relative rounded-[inherit] size-full overflow-hidden">
+          {/* Icon background circle */}
+          <div className="absolute left-[11.9px] size-[25px] top-[12.25px]">
+            <svg className="absolute block inset-0 size-full" fill="none" viewBox="0 0 25 25">
+              <circle cx="12.5" cy="12.5" fill="#D9D9D9" fillOpacity="0.4" r="12.5" />
+            </svg>
           </div>
-          <div aria-hidden className="absolute border-[1.039px] border-[rgba(200,155,60,0.99)] border-solid inset-0 pointer-events-none rounded-[10.395px]" />
+          <EmailIcon />
+          {/* Functional input overlaid on top */}
+          <input
+            required
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            className="absolute inset-0 w-full h-full rounded-[10.395px] bg-transparent pl-[47px] pr-3 text-[14px] text-black font-['Inter',sans-serif] font-light focus:outline-none placeholder:text-black/50"
+          />
         </div>
-
-        {/* Password */}
-        <div className="bg-white h-[49.5px] relative rounded-[10.395px] shrink-0 w-full">
-          <div className="relative rounded-[inherit] size-full overflow-hidden">
-            {/* Icon background circle */}
-            <div className="absolute left-[11.9px] size-[25px] top-[12.25px]">
-              <svg className="absolute block inset-0 size-full" fill="none" viewBox="0 0 25 25">
-                <circle cx="12.5" cy="12.5" fill="#D9D9D9" fillOpacity="0.4" r="12.5" />
-              </svg>
-            </div>
-            <LockIcon />
-            {/* Functional input overlaid on top */}
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter"}
-              placeholder="Enter your password"
-              className="absolute inset-0 w-full h-full rounded-[10.395px] bg-transparent pl-[47px] pr-3 text-[14px] text-black font-['Inter',sans-serif] font-light focus:outline-none placeholder:text-black/50"
-            />
-          </div>
-          <div aria-hidden className="absolute border-[1.039px] border-[rgba(200,155,60,0.99)] border-solid inset-0 pointer-events-none rounded-[10.395px]" />
+        <div aria-hidden className="absolute border-[1.039px] border-[rgba(200,155,60,0.99)] border-solid inset-0 pointer-events-none rounded-[10.395px]" />
+      </div>
+ 
+      {/* Validation / success message */}
+      {error && (
+        <p className="-mt-6 ml-1 text-[13px] font-['Inter',sans-serif] text-red-400">{error}</p>
+      )}
+      {/* Continue button */}
+      <button
+        type="button"
+        disabled={!email}
+        onClick={handleFormSubmit}
+        className="bg-[#c89b3c] h-[49.5px] overflow-hidden relative rounded-[10.395px] shrink-0 w-full cursor-pointer hover:brightness-110 active:scale-[0.98] transition-all"
+      >
+        <div className="absolute inset-0 flex items-center justify-center gap-[9.356px]">
+          <span className="font-['Inter',sans-serif] font-bold text-[14.553px] text-black">Continue</span>
+          <ArrowRight />
         </div>
-
-        {/* Validation / success message */}
-        {error && (
-          <p className="-mt-6 ml-1 text-[13px] font-['Inter',sans-serif] text-red-400">{error}</p>
-        )}
-
-        {/* Continue button */}
-        <button
-          type="submit"
-          disabled={loading}
-          // onClick={handleContinue}
-        >
-          <div className="absolute inset-0 flex items-center justify-center gap-[9.356px]">
-            <span className="font-['Inter',sans-serif] font-bold text-[14.553px] text-black">Continue</span>
-            <ArrowRight />
-          </div>
-        </button>
-
-        {/* OR divider */}
-        <div className="flex gap-[21px] items-center shrink-0 w-full">
-          <div className="h-0 shrink-0 w-[175px] relative">
-            <div className="absolute inset-[-1px_0_0_0]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 175 1">
-                <line stroke="#C89B3C" x2="175" y1="0.5" y2="0.5" />
-              </svg>
-            </div>
-          </div>
-          <p className="font-['Inter',sans-serif] font-normal shrink-0 text-[16px] text-white whitespace-nowrap">OR</p>
-          <div className="h-0 shrink-0 w-[175px] relative">
-            <div className="absolute inset-[-1px_0_0_0]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 175 1">
-                <line stroke="#C89B3C" x2="175" y1="0.5" y2="0.5" />
-              </svg>
-            </div>
+      </button>
+ 
+      {/* OR divider */}
+      <div className="flex gap-[21px] items-center shrink-0 w-full">
+        <div className="h-0 shrink-0 w-[175px] relative">
+          <div className="absolute inset-[-1px_0_0_0]">
+            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 175 1">
+              <line stroke="#C89B3C" x2="175" y1="0.5" y2="0.5" />
+            </svg>
           </div>
         </div>
-
-        {/* SSO button */}
-        <button
-          onClick={handleSSOSignin}
-          className="bg-black h-[49.5px] relative rounded-[10.395px] shrink-0 w-full cursor-pointer hover:bg-[#111] active:scale-[0.98] transition-all"
-        >
-          <div className="overflow-hidden relative rounded-[inherit] size-full flex items-center justify-center">
-            <span className="font-['Inter',sans-serif] font-bold text-[14.553px] text-white">Sign in with SSO</span>
+        <p className="font-['Inter',sans-serif] font-normal shrink-0 text-[16px] text-white whitespace-nowrap">OR</p>
+        <div className="h-0 shrink-0 w-[175px] relative">
+          <div className="absolute inset-[-1px_0_0_0]">
+            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 175 1">
+              <line stroke="#C89B3C" x2="175" y1="0.5" y2="0.5" />
+            </svg>
           </div>
-          <div aria-hidden className="absolute border border-[rgba(255,255,255,0.8)] border-solid inset-0 pointer-events-none rounded-[10.395px]" />
-        </button>
-      </form>
+        </div>
+      </div>
+ 
+      {/* SSO button */}
+      <button
+        type="button"
+        onClick={handleSSOSignin}
+        className="bg-black h-[49.5px] relative rounded-[10.395px] shrink-0 w-full cursor-pointer hover:bg-[#111] active:scale-[0.98] transition-all"
+      >
+        <div className="overflow-hidden relative rounded-[inherit] size-full flex items-center justify-center">
+          <span className="font-['Inter',sans-serif] font-bold text-[14.553px] text-white">Sign in with SSO</span>
+        </div>
+        <div aria-hidden className="absolute border border-[rgba(255,255,255,0.8)] border-solid inset-0 pointer-events-none rounded-[10.395px]" />
+      </button>
     </div>
   );
 }
-
+ 
 /* ── Root ────────────────────────────────────────────────────────────────── */
-
+ 
 export function Login() {
   return (
     <div className="bg-black relative w-screen h-screen overflow-hidden">
@@ -334,45 +289,20 @@ export function Login() {
           src={imgImage98}
         />
       </div>
-
+ 
       {/* ── PK5 logo ── */}
-      <div style={{ position: "absolute", left: "calc(40% - 552px)", top: 47, width: 184, height: 67, transform: "translateX(-50%)" }}>
-        <div style={{ position: "absolute", left: 0, top: 0, width: 65.76, height: 67.547 }}>
-          <svg width="68.083" height="68.699" viewBox="0 0 68.083 68.6989" fill="none">
-            <path d={svgPaths.pdf49f00} stroke="url(#gradLogo)" strokeWidth="2.304" />
-            <path d={svgPaths.p1fcf9a00} fill="#EAD09C" />
-            <defs>
-              <linearGradient id="gradLogo" gradientUnits="userSpaceOnUse" x1="1.30033" x2="68.6883" y1="23.4409" y2="37.03">
-                <stop stopColor="#C89B3C" /><stop offset="1" stopColor="#EED7A7" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-        <div style={{ position: "absolute", left: "calc(50% + 1.89px)", top: "calc(50% + 1.2px)", width: 170.4, height: 58.08, transform: "translate(-50%,-50%)" }}>
-          <p style={{ position: "absolute", left: 99.55, top: 20.73, fontFamily: "'Iceland', sans-serif", fontSize: 60, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", lineHeight: "7.92px", letterSpacing: "-2.4px", margin: 0 }}>PK5</p>
-          <p style={{ position: "absolute", left: 93.68, top: 46.4, fontFamily: "'Girassol', sans-serif", fontSize: 18, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", letterSpacing: 5, lineHeight: "27.648px", margin: 0 }}>MINING</p>
-          <div style={{ position: "absolute", left: 2.11, top: 17.13, width: 51.6, height: 20.4, overflow: "hidden" }}>
-            <img alt="" src={imgImage15} style={{ position: "absolute", left: 0, top: "-12.13%", width: "100%", height: "143.82%", maxWidth: "none" }} />
-          </div>
-          <div style={{ position: "absolute", left: -5.81, top: -3.26, width: 60, height: 61.083 }}>
-            <svg width="60.241" height="61.203" viewBox="0 0 60.2414 61.2031" fill="none">
-              <path d={svgPaths.p2c0e9960} stroke="#E7DFCD" strokeWidth="0.24" />
-              <path d={svgPaths.p344e8700} fill="#E7DFCD" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
+      <Pk5AgroAlliedLogo />
+ 
       {/* ── Hero headline ── */}
       <p
-        className="absolute font-['Rajdhani',sans-serif] font-bold text-[64px] text-white h-[132px] w-[450] left-[47px] top-[160px] z-20"
+        className="absolute font-['Rajdhani',sans-serif] font-bold text-[64px] text-white h-[132px] w-[652px] left-[47px] top-[160px] z-20"
         style={{ lineHeight: "normal" }}
       >
         Powering the Future
         <br />
         of Mineral Development
       </p>
-
+ 
       {/* ── Gold rule under headline ── */}
       <div className="absolute flex h-[2.195px] items-center justify-center left-[47px] top-[310px] w-[179.987px] z-20">
         <div className="rotate-[-0.7deg]">
@@ -385,37 +315,37 @@ export function Login() {
           </div>
         </div>
       </div>
-
+ 
       {/* ── Sub-headline ── */}
       <p
-        className="absolute font-['Segoe_UI',sans-serif] text-[22px] text-white h-[50px] w-[530px] left-[47px] top-[315px] z-20"
+        className="absolute font-['Segoe_UI',sans-serif] text-[22px] text-white h-[50px] w-[530px] left-[47px] top-[350px] z-20"
         style={{ lineHeight: "normal" }}
       >
         Enterprise grade administrative control for global mining operations
       </p>
-
+ 
       {/* ── Stats bar ── */}
       <StatsBar />
-
+ 
       {/* ── Right login panel (Locked to right edge, takes up 100% height) ── */}
       <div className="absolute inset-y-0 right-0 w-[622px] z-20">
         <FormPanel />
         <Frame6 />
-
+ 
         <p
           className="-translate-x-1/2 absolute font-['Segoe_UI',sans-serif] font-semibold text-[34px] text-white whitespace-nowrap left-1/2 top-[24%] z-30"
           style={{ lineHeight: "normal" }}
         >
           Admin Login
         </p>
-
+ 
         <p
-          className="absolute font-['Inter',sans-serif] font-normal text-[16px] text-white whitespace-nowrap left-25 top-[31%] z-30"
+          className="-translate-x-1/2 absolute font-['Inter',sans-serif] font-normal text-[16px] text-white whitespace-nowrap left-1/2 top-[31%] z-30"
           style={{ lineHeight: "normal" }}
         >
           Email Address
         </p>
-
+ 
         <LoginForm />
       </div>
     </div>
