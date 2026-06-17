@@ -187,17 +187,10 @@ function StatsBar() {
 function LoginForm() {
   const {
     email,
-    password,
     error,
-    loading,
-    showPassword,
-    isEmailStep,
-    setFormType,
     setEmail,
-    setPassword,
     handleSSOSignin,
     handleFormSubmit,
-    setShowPassword,
   } = useLoginViewModel();
 
   return (
