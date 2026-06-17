@@ -2,10 +2,12 @@ import { useState } from "react";
 import svgPaths from "../../../../../src/imports/MacBookPro1429/svg-gadtsffos9";
 import imgImage98 from "../../../../../src/imports/MacBookPro1429/21c23672ce84dd03d9a6556cc4700d29aaae6e29.png";
 import imgImage15 from "../../../../../src/imports/MacBookPro1429/c36f9bd2b0feaff16979ab1ff556de16182a7aa1.png";
-import imgImage103 from "../../../../imports/MacBookPro1429/c36f9bd2b0feaff16979ab1ff556de16182a7aa1.png";
-
+import imgImage103 from "../../../../../src/imports/MacBookPro1429/0920571d191ee92fb66ed9adf50760ecb26368a5.png";
+import { useTenant } from "@/tenants/useTenant";
+import useLoginViewModel from "./viewmodel";
+ 
 /* ── Logo pieces ─────────────────────────────────────────────────────────── */
-
+ 
 function Group1() {
   return (
     <div className="absolute contents left-[2.11px] top-[17.13px]">
@@ -23,7 +25,7 @@ function Group1() {
     </div>
   );
 }
-
+ 
 function Group2() {
   return (
     <div className="absolute h-[61.083px] left-[-5.81px] top-[-3.26px] w-[60px]">
@@ -38,7 +40,7 @@ function Group2() {
     </div>
   );
 }
-
+ 
 function Pk5Logo() {
   return (
     <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[58.08px] left-[calc(50%+1.89px)] top-[calc(50%+1.2px)] w-[170.4px]">
@@ -47,7 +49,7 @@ function Pk5Logo() {
     </div>
   );
 }
-
+ 
 function Group3() {
   return (
     <div className="absolute h-[67.547px] left-0 top-0 w-[65.76px]">
@@ -68,7 +70,7 @@ function Group3() {
     </div>
   );
 }
-
+ 
 function Pk5AgroAlliedLogo() {
   return (
     <div className="absolute h-[67px] left-[47px] top-[47px] w-[184px] z-20">
@@ -77,9 +79,9 @@ function Pk5AgroAlliedLogo() {
     </div>
   );
 }
-
+ 
 /* ── Form panel background ───────────────────────────────────────────────── */
-
+ 
 function FormPanel() {
   return (
     <div className="absolute inset-y-0 right-0 drop-shadow-[0px_4px_2px_rgba(0,0,0,0.25)] opacity-65 overflow-hidden w-full h-full">
@@ -87,9 +89,9 @@ function FormPanel() {
     </div>
   );
 }
-
+ 
 /* ── Icon badge above form ───────────────────────────────────────────────── */
-
+ 
 function Frame6() {
   return (
     <div className="-translate-x-1/2 absolute left-1/2 size-[79.2px] top-[14%] z-20">
@@ -101,9 +103,9 @@ function Frame6() {
     </div>
   );
 }
-
+ 
 /* ── Email icon in input ─────────────────────────────────────────────────── */
-
+ 
 function EmailIcon() {
   return (
     <>
@@ -126,7 +128,7 @@ function EmailIcon() {
 }
 
 /* ── Arrow icon ──────────────────────────────────────────────────────────── */
-
+ 
 function ArrowRight() {
   return (
     <div className="h-[8.446px] relative shrink-0 w-[12.285px]">
@@ -144,9 +146,9 @@ function ArrowRight() {
     </div>
   );
 }
-
+ 
 /* ── Stats bar ───────────────────────────────────────────────────────────── */
-
+ 
 function StatsBar() {
   return (
     <div className="absolute bg-[rgba(0,0,0,0.46)] h-[117px] left-[47px] overflow-hidden rounded-[18px] bottom-[10%] w-[607.5px] z-20">
@@ -166,12 +168,12 @@ function StatsBar() {
           </div>
         </div>
       ))}
-
+ 
       {/* Values */}
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[36px] top-[36px] whitespace-nowrap">3+</p>
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[238.5px] top-[36px] whitespace-nowrap">2.3M</p>
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[441px] top-[36px] whitespace-nowrap">99.9%</p>
-
+ 
       {/* Labels */}
       <p className="absolute font-['Rajdhani',sans-serif] font-bold text-[18px] text-white left-[calc(50%-267.75px)] top-[calc(50%+10.5px)] whitespace-nowrap">ACTIVE SITES</p>
       <p className="absolute font-['Rajdhani',sans-serif] font-bold text-[18px] text-white left-[calc(50%-65.25px)] top-[calc(50%+10.5px)] whitespace-nowrap">DAILY OUTPUT</p>
@@ -179,26 +181,17 @@ function StatsBar() {
     </div>
   );
 }
-
+ 
 /* ── Interactive login form ──────────────────────────────────────────────── */
-
+ 
 function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleContinue() {
-    setError("");
-    if (!email.trim()) {
-      setError("Please enter your email address.");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-    setSubmitted(true);
-  }
+  const {
+    email,
+    error,
+    setEmail,
+    handleSSOSignin,
+    handleFormSubmit,
+  } = useLoginViewModel();
 
   return (
     <div className="absolute flex flex-col gap-[40px] items-start left-[103px] top-[35%] w-[415.9px] z-30">
@@ -214,30 +207,26 @@ function LoginForm() {
           <EmailIcon />
           {/* Functional input overlaid on top */}
           <input
+            required
             type="email"
             value={email}
-            onChange={(e) => { setEmail(e.target.value); setError(""); setSubmitted(false); }}
-            onKeyDown={(e) => e.key === "Enter" && handleContinue()}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             className="absolute inset-0 w-full h-full rounded-[10.395px] bg-transparent pl-[47px] pr-3 text-[14px] text-black font-['Inter',sans-serif] font-light focus:outline-none placeholder:text-black/50"
           />
         </div>
         <div aria-hidden className="absolute border-[1.039px] border-[rgba(200,155,60,0.99)] border-solid inset-0 pointer-events-none rounded-[10.395px]" />
       </div>
-
+ 
       {/* Validation / success message */}
       {error && (
         <p className="-mt-6 ml-1 text-[13px] font-['Inter',sans-serif] text-red-400">{error}</p>
       )}
-      {submitted && !error && (
-        <p className="-mt-6 ml-1 text-[13px] font-['Inter',sans-serif] text-green-400">
-          Verification link sent — check your inbox.
-        </p>
-      )}
-
       {/* Continue button */}
       <button
-        onClick={handleContinue}
+        type="button"
+        disabled={!email}
+        onClick={handleFormSubmit}
         className="bg-[#c89b3c] h-[49.5px] overflow-hidden relative rounded-[10.395px] shrink-0 w-full cursor-pointer hover:brightness-110 active:scale-[0.98] transition-all"
       >
         <div className="absolute inset-0 flex items-center justify-center gap-[9.356px]">
@@ -245,7 +234,7 @@ function LoginForm() {
           <ArrowRight />
         </div>
       </button>
-
+ 
       {/* OR divider */}
       <div className="flex gap-[21px] items-center shrink-0 w-full">
         <div className="h-0 shrink-0 w-[175px] relative">
@@ -264,10 +253,11 @@ function LoginForm() {
           </div>
         </div>
       </div>
-
+ 
       {/* SSO button */}
       <button
-        onClick={() => alert("Redirecting to SSO provider…")}
+        type="button"
+        onClick={handleSSOSignin}
         className="bg-black h-[49.5px] relative rounded-[10.395px] shrink-0 w-full cursor-pointer hover:bg-[#111] active:scale-[0.98] transition-all"
       >
         <div className="overflow-hidden relative rounded-[inherit] size-full flex items-center justify-center">
@@ -278,9 +268,9 @@ function LoginForm() {
     </div>
   );
 }
-
+ 
 /* ── Root ────────────────────────────────────────────────────────────────── */
-
+ 
 export function Login() {
   return (
     <div className="bg-black relative w-screen h-screen overflow-hidden">

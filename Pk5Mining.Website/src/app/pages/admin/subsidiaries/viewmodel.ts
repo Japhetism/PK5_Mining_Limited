@@ -278,6 +278,7 @@ function useSubsidiaryListViewModel() {
   };
 
   const handleCloseModal = () => {
+    setFieldErrors({});
     setSelectedSubsidiary(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);

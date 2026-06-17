@@ -10,10 +10,15 @@ import {
 } from "@/app/interfaces";
 import { cleanParams } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
+import { useTenant } from "@/tenants/useTenant";
 
 function useJobDetailsViewModel() {
   const queryClient = useQueryClient();
   const { jobId } = useParams<{ jobId: string }>();
+  const { isAgro } = useTenant();
+
+  const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
+    const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
 
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(9);
@@ -87,6 +92,19 @@ function useJobDetailsViewModel() {
     setPageNumber(1);
   };
 
+  const handleNavigateToJobDetailWebsite = (jobId: number | undefined) => {
+    if (!jobId) {
+      toastUtil.error("Job ID is missing. Cannot navigate to job details.");
+      return;
+    }
+
+    const targetUrl = SHOULD_USE_AGRO_URL
+      ? `${AGRO_BASE_URL}/${jobId}/apply`
+      : `/careers/job/${jobId}`;
+
+    window.open(targetUrl, "_blank", "noopener,noreferrer");
+  };
+
   const job = jobData ?? undefined;
   const applications: JobApplicationDto[] = jobApplications?.data ?? [];
   const totalCount = jobApplications?.totalCount ?? 0;
@@ -112,6 +130,7 @@ function useJobDetailsViewModel() {
     onChangePageSize,
     setIsViewerOpen,
     setSelectedApplicant,
+    handleNavigateToJobDetailWebsite,
   };
 }
 

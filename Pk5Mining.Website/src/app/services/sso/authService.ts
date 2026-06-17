@@ -25,9 +25,6 @@ class AuthService {
     return AuthService.instance;
   }
 
-  /**
-   * Initializes MSAL and handles the redirect result from Microsoft.
-   */
   public async initialize(): Promise<AuthenticationResult | null> {
     if (!this.isInitialized) {
       if (!this.initializingPromise) {
@@ -82,36 +79,16 @@ class AuthService {
     return this.msalInstance.getActiveAccount();
   }
 
-  // public async logout(): Promise<boolean> {
-  //   try {
-  //     const account = this.getAccount();
-  //     await this.msalInstance.logoutRedirect({ account });
-  //     return true;
-  //   } catch (error) {
-  //     return false;
-  //   } finally {
-  //     tokenStore.clear();
-  //     setAuthToken(undefined);
-  //   }
-  // }
-
   public async logout(): Promise<boolean> {
     try {
       const account = this.getAccount();
-      console.log("from logout account ", account);
-
       if (account) {
-        console.log("if block.....")
         await this.msalInstance.logoutRedirect({
           account: account,
-          // The logoutHint helps skip the "Which account?" screen
           logoutHint: account.username,
-          // Redirect back to your app immediately after MS clears the session
-          postLogoutRedirectUri: window.location.origin,
+          postLogoutRedirectUri: `${window.location.origin}/admin/login`,
         });
       } else {
-        console.log("logout else block.....")
-        // Fallback if no account is found in cache
         await this.msalInstance.logoutRedirect();
       }
 
@@ -120,7 +97,6 @@ class AuthService {
       console.error("Logout failed", error);
       return false;
     } finally {
-      // Clear local state
       tokenStore.clear();
       setAuthToken(undefined);
     }

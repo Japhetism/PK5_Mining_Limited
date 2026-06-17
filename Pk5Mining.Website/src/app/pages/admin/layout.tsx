@@ -32,8 +32,9 @@ export function AdminLayout() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden inline-flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-2 text-gray-300 transition-colors"
+              className="lg:hidden inline-flex items-center justify-center rounded-lg border p-2 text-gray-300 transition-colors"
               aria-label="Open menu"
+              style={{ backgroundColor: colors.card, borderColor: colors.border }}
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -141,7 +142,8 @@ export function AdminLayout() {
               {mobileMenuOpen && (
                 <>
                   <motion.div
-                    className="lg:hidden fixed inset-0 z-40 bg-black/60"
+                    className="lg:hidden fixed inset-0 z-40"
+                    style={{ backgroundColor: colors.bg + "cc" }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -149,7 +151,8 @@ export function AdminLayout() {
                   />
 
                   <motion.aside
-                    className="lg:hidden fixed left-0 top-0 z-50 h-full w-[85%] max-w-[300px] bg-[#1a1a1a] border-r border-gray-800 p-4 flex flex-col overflow-hidden"
+                    className="lg:hidden fixed left-0 top-0 z-50 h-full w-[85%] max-w-[300px] p-4 flex flex-col overflow-hidden"
+                    style={{ backgroundColor: colors.bg, borderColor: colors.border }}
                     initial={{ x: "-100%" }}
                     animate={{ x: 0 }}
                     exit={{ x: "-100%" }}
@@ -167,7 +170,7 @@ export function AdminLayout() {
                           loading="lazy"
                           className="w-14 h-auto object-contain shrink-0"
                         />
-                        <span className="font-bold text-sm truncate">
+                        <span className="font-bold text-sm truncate" style={{ color: colors.text }}>
                           Admin Portal
                         </span>
                       </Link>

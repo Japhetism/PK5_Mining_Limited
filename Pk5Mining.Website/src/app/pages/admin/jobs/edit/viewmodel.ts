@@ -11,9 +11,10 @@ import {
   UpdateJobPayload,
   WorkArrangement,
 } from "@/app/interfaces";
-import { validateJob } from "@/app/utils/validator";
 import { toastUtil } from "@/app/utils/toast";
-import { ddmmyyyyToApiDate } from "@/app/utils/helper";
+import { ddmmyyyyToApiDate, mapZodErrors } from "@/app/utils/helper";
+import { getDepartmentsForDropdown } from "@/app/api/departments";
+import { createJobSchema, updateJobSchema } from "@/app/schemas/job.schema";
 
 const defaultFormData = {
   title: "",
@@ -79,6 +80,16 @@ function useJobEditViewModel() {
     });
   }, [existing]);
 
+  const {
+    data: departmentsData,
+    isLoading: isLoadingDepartments,
+    error: departmentsError,
+  } = useQuery({
+    queryKey: ["light-departments"],
+    queryFn: () => getDepartmentsForDropdown(),
+    staleTime: 30_000,
+  });
+
   const createMutation = useMutation({
     mutationFn: (payload: CreateJobPayload) => createJob(payload),
     onSuccess: (data) => {
@@ -138,10 +149,15 @@ function useJobEditViewModel() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const errors: JobErrors = validateJob(form);
+    const result = jobId
+      ? updateJobSchema.safeParse({ ...form, id: Number(jobId) })
+      : createJobSchema.safeParse(form);
 
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
+    if (!result.success) {
+      type JobPayload = typeof jobId extends string
+        ? UpdateJobPayload
+        : CreateJobPayload;
+      setFieldErrors(mapZodErrors<JobPayload>(result.error));
       return;
     }
 
@@ -158,11 +174,14 @@ function useJobEditViewModel() {
     });
   };
 
+  const departments = departmentsData ?? [];
+
   return {
     existing,
     form,
     fieldErrors,
     loading: loading || jobLoading,
+    departments,
     navigate,
     onSubmit,
     setFieldErrors,

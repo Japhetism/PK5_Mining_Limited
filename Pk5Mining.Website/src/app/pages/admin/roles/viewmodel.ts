@@ -17,6 +17,7 @@ import { createRole, deleteRole, getRoles, updateRole, updateRoleStatus } from "
 import { getPermissions } from "@/app/api/permissions";
 import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 import { createRoleSchema, updateRoleSchema } from "@/app/schemas/role.schema";
+import { useTenant } from "@/tenants/useTenant";
 
 const defaultFormData: Role = {
   id: "",
@@ -30,10 +31,11 @@ const defaultFormData: Role = {
 };
 
 function useRoleViewModel() {
+  const { subsidiaryId } = useTenant();
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("");
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [confirmUpdateStatusOpen, setConfirmUpdateStatusOpen] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
@@ -53,21 +55,21 @@ function useRoleViewModel() {
   );
 
   const [filters, setFilters] = useState({
-    search: searchParams.get("search") ?? "",
+    name: searchParams.get("name") ?? "",
   });
 
   const debouncedFilters = useDebouncedValue(filters, 400);
 
   useEffect(() => {
     setPageNumber(1);
-  }, [debouncedFilters.search]);
+  }, [debouncedFilters.name, filterStatus]);
 
   const queryParams: RolesQuery = useMemo(() => {
     const raw: RolesQuery = {
       pageNumber,
       pageSize,
-      isActive:
-        filterStatus === "closed" ? false : filterStatus === "open" ? true : "",
+      name: debouncedFilters.name,
+      status: filterStatus,
     };
 
     // clean out empty strings
@@ -79,7 +81,8 @@ function useRoleViewModel() {
       "roles",
       queryParams.pageNumber,
       queryParams.pageSize,
-      queryParams.isActive ?? "",
+      queryParams.name,
+      queryParams.status,
     ],
     queryFn: () => getRoles(queryParams),
     staleTime: 30_000,
@@ -92,17 +95,6 @@ function useRoleViewModel() {
   } = useQuery({
     queryKey: ["permissions"],
     queryFn: () => getPermissions(),
-    staleTime: 30_000,
-  });
-
-  // for dropdown
-  const {
-    data: subsidiaryData,
-    isLoading: isLoadingSubsidiary,
-    error: subsidiaryError,
-  } = useQuery({
-    queryKey: ["light-subsidiaries"],
-    queryFn: () => getLightSubsidiaries(),
     staleTime: 30_000,
   });
 
@@ -287,6 +279,7 @@ function useRoleViewModel() {
     const payload: CreateRolePayload = {
       ...result.data,
       status: "Active",
+      subsidiaryId: subsidiaryId,
     };
 
     createMutation.mutate(payload);
@@ -307,6 +300,7 @@ function useRoleViewModel() {
     const payload = {
       ...result.data,
       status: selectedRole.status,
+      subsidiaryId: subsidiaryId,
     };
 
     setFieldErrors({});
@@ -330,6 +324,7 @@ function useRoleViewModel() {
   }
 
   const handleCloseModal = () => {
+    setFieldErrors({});
     setSelectedRole(null);
     setForm(defaultFormData);
     setConfirmEditOpen(false);
@@ -350,8 +345,6 @@ function useRoleViewModel() {
   const totalPages: number = data?.totalPages ?? 0;
 
   const permissions: Permission[] = permissionData ?? [];
-
-  const subsidiaries = subsidiaryData ?? [];
 
   return {
     roles,
@@ -375,7 +368,6 @@ function useRoleViewModel() {
     fieldErrors,
     permissions,
     permissionError,
-    subsidiaries,
     onChange,
     setIsFilter,
     setFilterStatus,

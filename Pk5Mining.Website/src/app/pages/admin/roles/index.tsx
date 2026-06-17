@@ -21,8 +21,13 @@ import { Role } from "@/app/interfaces/role";
 import { EditModal } from "./components/edit-modal";
 import { DetailModal } from "./components/detail-modal";
 import useRoleViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 export function Roles() {
+  const { colors } = useTenant();
+  9;
   const {
     roles,
     filters,
@@ -45,7 +50,6 @@ export function Roles() {
     queryClient,
     permissions,
     permissionError,
-    subsidiaries,
     setConfirmOpen,
     setConfirmDeleteOpen,
     setConfirmEditOpen,
@@ -86,9 +90,7 @@ export function Roles() {
       key: "isSystem",
       header: "System Role",
       render: (role) => (
-        <span
-          className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs text-grey-400"
-        >
+        <span className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs text-grey-400">
           {role.isSystem ? "Yes" : "No"}
         </span>
       ),
@@ -108,11 +110,6 @@ export function Roles() {
           {role.status}
         </span>
       ),
-    },
-    {
-      key: "subsidiary",
-      header: "Subsidiary",
-      render: (role) => role.subsidiary?.name
     },
     {
       key: "dT_Created",
@@ -146,7 +143,8 @@ export function Roles() {
             <DropdownMenu.Content
               align="end"
               sideOffset={6}
-              className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
+              className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
+              style={{ backgroundColor: colors.bg, border: colors.border }}
             >
               <DropdownMenu.Item
                 onClick={() => {
@@ -159,47 +157,53 @@ export function Roles() {
                 View details
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item
-                onClick={() => {
-                  setSelectedRole(role);
-                  setConfirmEditOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Pencil className="w-4 h-4" />
-                Edit Role
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.roleUpdate}>
+                <DropdownMenu.Item
+                  onClick={() => {
+                    setSelectedRole(role);
+                    setConfirmEditOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Role
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedRole(role);
-                  setConfirmUpdateStatusOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                {role.status === "Active" ? (
-                  <>
-                    <XCircle className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">Deactivate</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">Activate</span>
-                  </>
-                )}
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.roleUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedRole(role);
+                    setConfirmUpdateStatusOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  {role.status === "Active" ? (
+                    <>
+                      <XCircle className="w-4 h-4 text-red-400" />
+                      <span className="text-red-400">Deactivate</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400">Activate</span>
+                    </>
+                  )}
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedRole(role);
-                  setConfirmDeleteOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Trash className="w-4 h-4 text-red-400" />
-                <span className="text-red-400">Delete Role</span>
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.roleUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedRole(role);
+                    setConfirmDeleteOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Trash className="w-4 h-4 text-red-400" />
+                  <span className="text-red-400">Delete Role</span>
+                </DropdownMenu.Item>
+              </PermissionGuard>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
@@ -218,15 +222,17 @@ export function Roles() {
           </p>
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => setConfirmEditOpen(true)}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-        >
-          <Plus className="w-4 h-4" />
-          New Role
-        </motion.button>
+        <PermissionGuard permission={PERMISSIONS.roleCreate}>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setConfirmEditOpen(true)}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+          >
+            <Plus className="w-4 h-4" />
+            New Role
+          </motion.button>
+        </PermissionGuard>
       </div>
 
       {/* Filters */}
@@ -234,12 +240,17 @@ export function Roles() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="w-full sm:w-[760px]">
             <input
-              name="search"
+              name="name"
               type="search"
-              value={filters.search}
-              onChange={(e) => updateFilter("search", e.target.value)}
+              value={filters.name}
+              onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
@@ -250,12 +261,17 @@ export function Roles() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                <option key={opt.label2} value={opt.label2}>
+                  {opt.label2}
                 </option>
               ))}
             </select>
@@ -283,7 +299,7 @@ export function Roles() {
 
       <ConfirmModal
         open={confirmUpdateStatusOpen}
-        onClose={() => setConfirmUpdateStatusOpen(false)}
+        onClose={handleCloseModal}
         onConfirm={handleUpdateStatus}
         title={selectedRole?.isActive ? "Deactivate Role" : "Activate Role"}
         description={`Are you sure you want to ${selectedRole?.isActive ? "deactivate" : "activate"} "${selectedRole?.name}"?`}
@@ -294,7 +310,7 @@ export function Roles() {
 
       <ConfirmModal
         open={confirmDeleteOpen}
-        onClose={() => setConfirmDeleteOpen(false)}
+        onClose={handleCloseModal}
         onConfirm={handleDeleteRole}
         title="Delete Role"
         description={`Are you sure you want to delete "${selectedRole?.name}"?`}
@@ -311,7 +327,6 @@ export function Roles() {
         loading={isUpdating}
         permissions={permissions}
         permissionError={permissionError}
-        subsidiaries={subsidiaries}
         onClose={handleCloseModal}
         onConfirm={selectedRole ? handleUpdateRole : handleCreateRole}
         setFieldErrors={setFieldErrors}

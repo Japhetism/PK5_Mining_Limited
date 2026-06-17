@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { ChangePassword } from "./components/change-password";
 import { UserInfo } from "./components/user-info";
+import { UserPermissions } from "./components/user-permissions";
 
 export function Account() {
   return (
@@ -30,6 +31,11 @@ export function Account() {
           {/* <div className="w-full">
             <ChangePassword />
           </div> */}
+
+          {/* RIGHT: USER PERMISSIONS */}
+          <div className="w-full">
+            <UserPermissions />
+          </div>
 
         </div>
       </motion.div>
