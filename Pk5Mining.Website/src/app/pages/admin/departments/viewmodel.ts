@@ -13,8 +13,8 @@ import {
   CreateDepartmentPayload,
 } from "@/app/interfaces/department";
 import { getDepartments,updateDepartment,  updateDepartmentStatus, createDepartment, deleteDepartment } from "@/app/api/departments";
-import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.shcema";
-import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
+import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.schema";
+import { useTenant } from "@/tenants/useTenant";
 
 
 const defaultFormData: Department = {
@@ -43,6 +43,7 @@ const successMessages: Record<DepartmentAction, string> = {
 };
 
 function useDepartmentViewModel() {
+  const { subsidiaryId } = useTenant();
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -126,17 +127,6 @@ function useDepartmentViewModel() {
     });
   }, [selectedDepartment]);
 
-  // for dropdown
-  const {
-    data: subsidiaryData,
-    isLoading: isLoadingSubsidiary,
-    error: subsidiaryError,
-  } = useQuery({
-    queryKey: ["light-subsidiaries"],
-    queryFn: () => getLightSubsidiaries(),
-    staleTime: 30_000,
-  });
-
   const createMutation = useMutation({
     mutationFn: (payload: CreateDepartmentPayload) => createDepartment(payload),
     onMutate: () => {
@@ -145,6 +135,7 @@ function useDepartmentViewModel() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["departments"] });
       setConfirmEditOpen(false);
+      setForm(defaultFormData);
       toastUtil.success("Department created successfully");
     },
     onError: (err) => {
@@ -179,6 +170,7 @@ function useDepartmentViewModel() {
       const msg =
         successMessages[actionType as DepartmentAction] ??
         successMessages[DepartmentAction.Update];
+      setForm(defaultFormData);
       handleCloseModal();
       toastUtil.success(msg);
     },
@@ -213,6 +205,7 @@ function useDepartmentViewModel() {
         setConfirmOpen(false);
         setConfirmDeleteOpen(false);
         setSelectedDepartment(null);
+        setForm(defaultFormData);
         toastUtil.success(
           `Department status updated to ${data?.isActive} successfully`,
         );
@@ -246,6 +239,7 @@ function useDepartmentViewModel() {
       await queryClient.invalidateQueries({ queryKey: ["departments"] });
       setConfirmDeleteOpen(false);
       setSelectedDepartment(null);
+      setForm(defaultFormData);
       toastUtil.success("Department deleted successfully");
     },
     onError: (err) => {
@@ -283,10 +277,9 @@ function useDepartmentViewModel() {
 
     const payload: CreateDepartmentPayload = {
       ...result.data,
-      subsidiaryId: result.data.subsidiaryId ? Number(result.data.subsidiaryId) : undefined,
       status: "Active",
+      subsidiaryId: subsidiaryId,
       dT_Updated: new Date().toISOString(),
-
     };
 
     createMutation.mutate(payload);
@@ -307,6 +300,7 @@ function useDepartmentViewModel() {
     const payload = {
       ...result.data,
       status: selectedDepartment.status,
+      subsidiaryId: subsidiaryId,
     };
     setFieldErrors({});
 
@@ -340,6 +334,7 @@ function useDepartmentViewModel() {
 
   const handleCloseModal = () => {
     setSelectedDepartment(null);
+    setFieldErrors({});
     setForm(defaultFormData);
     setConfirmEditOpen(false);
     setConfirmOpen(false);
@@ -347,7 +342,6 @@ function useDepartmentViewModel() {
     setConfirmViewOpen(false);
   };
 
-  const subsidiaries = subsidiaryData ?? [];
   const departments: Department[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -373,7 +367,6 @@ function useDepartmentViewModel() {
     queryClient,
     form,
     fieldErrors,
-    subsidiaries,
     onChange,
     setIsFilter,
     setFilterStatus,

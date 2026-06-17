@@ -8,9 +8,10 @@ import {
 import { formatDate, formatDateTime } from "@/app/utils/helper";
 import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
 import useApplicationsListViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function ApplicationList() {
-
+  const { isAgro, colors } = useTenant();
   const {
     queryClient,
     apps,
@@ -51,15 +52,21 @@ export function ApplicationList() {
       header: "Job Applied For",
       render: (app) => app?.job?.title ?? "-",
     },
-    {
-      key: "country",
-      header: "Country",
-      render: (app) => app.country ?? "-",
-    },
+    ...(isAgro
+      ? []
+      : [
+          {
+            key: "country",
+            header: "Country",
+            render: (app: any) => app.country ?? "-",
+          },
+        ]),
     {
       key: "status",
       header: "Status",
-      render: (app) => <ApplicationStatusPill status={app.status?.toLowerCase()} />,
+      render: (app) => (
+        <ApplicationStatusPill status={app.status?.toLowerCase()} />
+      ),
     },
     {
       key: "submitted",
@@ -81,10 +88,7 @@ export function ApplicationList() {
           to={`/admin/applications/${app.id}`}
           title="View application details"
           onClick={() => {
-            queryClient.setQueryData(
-              ["applications", String(app.id)],
-              app,
-            );
+            queryClient.setQueryData(["applications", String(app.id)], app);
           }}
         >
           <button className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-700 text-xs text-gray-100 hover:border-[#c89b3c]">
@@ -118,6 +122,11 @@ export function ApplicationList() {
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
               className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
         </div>
@@ -127,9 +136,6 @@ export function ApplicationList() {
         data={apps}
         columns={columns}
         isLoading={isLoading}
-        searchPlaceholder="Search name, email, role, country..."
-        statusValue={status}
-        onStatusChange={(v) => setStatus(v as ApplicationStatusFilter)}
         emptyTitle="No applications yet. Once candidates apply, they will appear here."
         noResultsTitle="No results found. Try changing your filters."
         setPageNumber={onChangePage}

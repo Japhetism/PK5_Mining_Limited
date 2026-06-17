@@ -8,6 +8,7 @@ import { Subsidiary } from "@/app/interfaces/subsidiary";
 import { Role } from "@/app/interfaces/role";
 import { SearchableSelect } from "@/app/components/searchable-select";
 import { Department } from "@/app/interfaces/department";
+import { useTenant } from "@/tenants/useTenant";
 
 type EditModalProps = {
   form: User;
@@ -17,7 +18,6 @@ type EditModalProps = {
   cancelText?: string;
   loading?: boolean;
   fieldErrors: any;
-  subsidiaries: Subsidiary[];
   roles: Role[];
   departments: Department[];
   onClose: () => void;
@@ -36,13 +36,13 @@ export function EditModal({
   loading = false,
   fieldErrors,
   roles,
-  subsidiaries,
   departments,
   onClose,
   onConfirm,
   setFieldErrors,
   onChange,
 }: EditModalProps) {
+  const { colors } = useTenant();
   return (
     <Modal
       open={open}
@@ -99,8 +99,13 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                     ${fieldErrors?.firstName ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors?.firstName && (
                     <p className="text-xs text-red-500 mt-1">
@@ -132,8 +137,13 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                     ${fieldErrors?.lastName ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors?.lastName && (
                     <p className="text-xs text-red-500 mt-1">
@@ -167,8 +177,13 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                     ${fieldErrors?.email ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {Boolean(form.id) && (
                     <span className="text-[10px] text-gray-500">
@@ -204,34 +219,19 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                     ${fieldErrors?.username ? "border-red-500" : "border-gray-800"} focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors?.username && (
                     <p className="text-xs text-red-500 mt-1">
                       {fieldErrors?.username}
                     </p>
                   )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Subsidiary <span className="text-red-500">*</span>
-                  </label>
-                  <SearchableSelect
-                    name="subsidiaryId"
-                    value={form.subsidiaryId ?? ""}
-                    options={subsidiaries.map((s) => ({
-                      value: s.id,
-                      label: s.name,
-                    }))}
-                    error={fieldErrors?.subsidiaryId}
-                    onChange={onChange}
-                    placeholder="Select subsidiary"
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                      ${fieldErrors?.subsidiaryId ? "border-red-500" : "border-gray-800"}
-                      focus:border-[#c89b3c]`}
-                  />
                 </div>
 
                 <div>
@@ -248,9 +248,14 @@ export function EditModal({
                     error={fieldErrors?.departmentId}
                     onChange={onChange}
                     placeholder="Select department"
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                       ${fieldErrors?.departmentId ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
+                    styles={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                 </div>
 
@@ -268,9 +273,14 @@ export function EditModal({
                     error={fieldErrors?.roleId}
                     onChange={onChange}
                     placeholder="Select role"
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                       ${fieldErrors?.roleId ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
+                    styles={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                 </div>
 

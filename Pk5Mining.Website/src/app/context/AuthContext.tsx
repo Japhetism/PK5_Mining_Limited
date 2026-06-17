@@ -15,6 +15,8 @@ import { tokenStore } from "../auth/token";
 import { authService } from "../services/sso/authService";
 import { USERROLES } from "../constants/role";
 import { isEmailAuthorized } from "../utils/helper";
+import { useTenant } from "@/tenants/useTenant";
+import { RolePermission } from "../interfaces/role";
 
 type AuthState = {
   user: IUser | null;
@@ -31,6 +33,7 @@ const AuthContext = createContext<AuthState | null>(null);
 const DEFAULT_INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 Minutes
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { emailDomain } = useTenant();
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const logoutRef = useRef<() => void>(() => {});
@@ -88,12 +91,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await authService.initialize();
         const ssoAccount = authService.getAccount();
 
-        console.log("SSO account ", ssoAccount);
-
         if (ssoAccount) {
-          if (
-            !isEmailAuthorized(ssoAccount.username, window.location.hostname)
-          ) {
+          if (!isEmailAuthorized(ssoAccount.username, emailDomain)) {
             await authService.logout();
             return;
           }
@@ -102,12 +101,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setAuthToken(msToken);
             tokenStore.set(msToken);
 
-            const backendUser = await microsoftLogin();
-            if (backendUser) {
-              const finalToken = backendUser.jwtToken || msToken;
+            const backendResponseData = await microsoftLogin();
+            if (backendResponseData) {
+              const finalToken = backendResponseData.token || msToken;
+              const permissionNames =
+                backendResponseData.user.role?.permissions?.map(
+                  (permission) => permission.name,
+                );
               const authenticatedUser = {
-                ...backendUser,
+                ...backendResponseData.user,
                 jwtToken: finalToken,
+                userPermissions: permissionNames as RolePermission[],
               };
 
               setUser(authenticatedUser);
@@ -214,7 +218,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       user,
       isLoading,
-      isAdmin: user?.role === USERROLES.superAdmin,
+      isAdmin: user?.role?.name === USERROLES.superAdmin,
       isAuthenticated: !!user,
       login,
       logout,

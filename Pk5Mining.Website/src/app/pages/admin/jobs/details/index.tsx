@@ -20,6 +20,8 @@ import { ResumeViewerModal } from "@/app/components/ui/resume-viewer-modal";
 import useJobDetailsViewModel from "./viewmodel";
 import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
 import { useTenant } from "@/tenants/useTenant";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 export function JobDetail() {
   const { colors } = useTenant();
@@ -39,6 +41,7 @@ export function JobDetail() {
     onChangePageSize,
     setIsViewerOpen,
     setSelectedApplicant,
+    handleNavigateToJobDetailWebsite,
   } = useJobDetailsViewModel();
 
   const navigate = useNavigate();
@@ -63,9 +66,7 @@ export function JobDetail() {
               </Badge>
             )}
             <h1 className="text-2xl font-bold mb-1">{job?.title}</h1>
-            <p className="text-sm">
-              {job?.briefDescription}
-            </p>
+            <p className="text-sm">{job?.briefDescription}</p>
             <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-6">
               {job?.location && (
                 <span className="flex items-center gap-2">
@@ -98,7 +99,10 @@ export function JobDetail() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
-          <div className="border rounded-xl p-5" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+          <div
+            className="border rounded-xl p-5"
+            style={{ backgroundColor: colors.card, borderColor: colors.border }}
+          >
             <div
               className="text-sm leading-relaxed
                 [&_p]:mb-3
@@ -113,10 +117,16 @@ export function JobDetail() {
         </div>
 
         <div className="space-y-4">
-          <div className="border rounded-xl p-4 text-sm text-gray-300" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+          <div
+            className="border rounded-xl p-4 text-sm text-gray-300"
+            style={{ backgroundColor: colors.card, borderColor: colors.border }}
+          >
             {job && (
               <>
-                <p className="text-xs font-semibold mb-1" style={{ color: colors.label }}>
+                <p
+                  className="text-xs font-semibold mb-1"
+                  style={{ color: colors.label }}
+                >
                   Status
                 </p>
                 <p className="mb-3">
@@ -136,7 +146,10 @@ export function JobDetail() {
 
             {job?.experience && (
               <>
-                <p className="text-xs font-semibold mb-1" style={{ color: colors.label }}>
+                <p
+                  className="text-xs font-semibold mb-1"
+                  style={{ color: colors.label }}
+                >
                   Experience
                 </p>
                 <p className="mb-3" style={{ color: colors.text }}>
@@ -147,7 +160,10 @@ export function JobDetail() {
 
             {job?.dT_Created && (
               <>
-                <p className="text-xs font-semibold mb-1" style={{ color: colors.label }}>
+                <p
+                  className="text-xs font-semibold mb-1"
+                  style={{ color: colors.label }}
+                >
                   Posted
                 </p>
                 <p className="mb-3" style={{ color: colors.text }}>
@@ -158,7 +174,10 @@ export function JobDetail() {
 
             {job?.dT_Modified && (
               <>
-                <p className="text-xs font-semibold mb-1" style={{ color: colors.label }}>
+                <p
+                  className="text-xs font-semibold mb-1"
+                  style={{ color: colors.label }}
+                >
                   Updated
                 </p>
                 <p className="mb-3" style={{ color: colors.text }}>
@@ -197,28 +216,25 @@ export function JobDetail() {
 
             {job && (
               <div className="flex gap-2 mt-4">
-                <Link to={`/admin/jobs/${job?.id}/edit`} className="flex-1">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-700 text-xs font-semibold hover:border-[#c89b3c]"
-                  >
-                    Edit job
-                  </motion.button>
-                </Link>
-                <Link
-                  to={`/careers/job/${job?.id}`}
-                  className="flex-1"
-                  target="_blank"
+                <PermissionGuard permission={PERMISSIONS.jobUpdate}>
+                  <Link to={`/admin/jobs/${job?.id}/edit`} className="flex-1">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-700 text-xs font-semibold hover:border-[#c89b3c]"
+                    >
+                      Edit job
+                    </motion.button>
+                  </Link>
+                </PermissionGuard>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleNavigateToJobDetailWebsite(job.id)}
+                  className="flex-1 w-full px-3 py-2 rounded-lg bg-[#c89b3c]/10 text-[#c89b3c] text-xs font-semibold hover:bg-[#c89b3c]/20"
                 >
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full px-3 py-2 rounded-lg bg-[#c89b3c]/10 text-[#c89b3c] text-xs font-semibold hover:bg-[#c89b3c]/20"
-                  >
-                    View public page
-                  </motion.button>
-                </Link>
+                  View public page
+                </motion.button>
               </div>
             )}
           </div>
@@ -226,7 +242,7 @@ export function JobDetail() {
       </div>
 
       <div className="mt-20">
-        <h3 className="mb-2" style={{ color: colors.text }}>
+        <h3 className="mb-2" style={{ color: colors.headerText }}>
           Applications
         </h3>
         <PaginatedCard<JobApplicationDto>

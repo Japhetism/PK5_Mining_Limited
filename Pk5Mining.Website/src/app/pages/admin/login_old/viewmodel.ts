@@ -4,11 +4,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
 import { authService } from "@/app/services/sso/authService";
 import { ApiError } from "@/app/interfaces";
-import { isEmailAuthorized } from "@/app/utils/helper";
+import { getBestAdminRoute, isEmailAuthorized } from "@/app/utils/helper";
+import { useTenant } from "@/tenants/useTenant";
 
 function useLoginViewModel() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { emailDomain } = useTenant();
   const { login: authLogin, user: authUser } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -36,7 +38,8 @@ function useLoginViewModel() {
     // } else {
     //   navigate("/admin/change/password", { replace: true });
     // }
-    navigate("/admin/dashboard", { replace: true });
+    const redirectTo = getBestAdminRoute(authUser.userPermissions ?? []);
+    navigate(`/admin/${redirectTo}`, { replace: true });
   }, [authUser, navigate]);
 
   const mutation = useMutation({
@@ -60,7 +63,7 @@ function useLoginViewModel() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isEmailAuthorized(email, window.location.hostname)) {
+    if (!isEmailAuthorized(email, emailDomain)) {
       return setError(
         "Access Denied: Please sign in with an authorized organizational account.",
       );

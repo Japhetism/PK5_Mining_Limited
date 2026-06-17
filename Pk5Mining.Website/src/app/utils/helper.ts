@@ -9,6 +9,7 @@ import {
   Permission as BackendPermission,
   BackendPermissionGroup,
 } from "../interfaces/permission";
+import { adminRoutes } from "../routes/admin-routes";
 
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
@@ -164,7 +165,7 @@ export const ddmmyyyyToApiDate = (value?: string | null) => {
 };
 
 export const hasRole = (
-  userRole?: UserRole,
+  userRole?: string,
   requiredRoles?: UserRole[],
 ): boolean => {
   if (!enforceRole || !requiredRoles) return true;
@@ -192,7 +193,6 @@ export const hasPermissions = (
 export const getVisibleNav = (
   items: AdminRouteItem[],
   userPermissions: RolePermission[] = [],
-  userRole?: UserRole,
 ): NavItem[] => {
   return items
     .filter(
@@ -202,8 +202,7 @@ export const getVisibleNav = (
           userPermissions,
           item.permissions ?? [],
           item.requireAllPermissions,
-        ) &&
-        hasRole(userRole, item.roles),
+        ) 
     )
     .map((item) => ({
       to: `/admin/${item.path}`,
@@ -273,7 +272,7 @@ export const getWebsiteName = (appId: string): string => {
 export const getFilterSubjects = (appId: string | undefined) => {
   const subjectMap: Record<string, typeof miningSubjects> = {
     "com.pk5.mining": miningSubjects,
-    "com.pk5.agro": agroSubjects,
+    "com.pk5.agro.allied": agroSubjects,
   };
 
   const subjects = !appId
@@ -338,21 +337,17 @@ export const generateAppId = (name: string): string => {
   );
 };
 
-export const isEmailAuthorized = (email: string, hostname: string): boolean => {
-  if (!email) return false;
+export const isEmailAuthorized = (username: string, emailDomain: string): boolean => {
+  const parts = username.trim().toLowerCase().split("@");
 
-  const emailDomain = email.split("@")[1]?.toLowerCase();
-  const adminDomain = import.meta.env.VITE_ADMIN_DOMAIN?.toLowerCase();
-
-  if (adminDomain && emailDomain === adminDomain) {
-    return true;
+  if (parts.length !== 2) {
+    return false; // invalid email
   }
 
-  if (!hostname) return false;
-  const hostBrand = hostname.split(".")[0].toLowerCase();
-  
-  return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
-};
+  const domain = parts[1];
+
+  return domain === emailDomain.trim().toLowerCase();
+}
 
 export const shouldChangePassword = (email: string, hostname: string): boolean => {
   if (!email) return false;
@@ -374,3 +369,67 @@ export const getAppId = (hostname: string): string => {
 
   return envKey ? (import.meta.env[envKey] ?? "") : "";
 };
+
+export const formatFileSize = (bytes?: number): string => {
+  if (bytes === undefined || bytes === null || bytes < 0) return "Unknown size";
+
+  const units = ["B", "KB", "MB", "GB", "TB"] as const;
+
+  let size = bytes;
+  let unitIndex = 0;
+
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex++;
+  }
+
+  return `${size.toFixed(unitIndex === 0 ? 0 : 2)} ${units[unitIndex]}`;
+};
+
+export const getRemoteFileSize = async (url: string): Promise<string> => {
+  try {
+    const res = await fetch(url, { method: "HEAD" });
+    const contentLength = res.headers.get("content-length");
+
+    return formatFileSize(contentLength ? Number(contentLength) : undefined);
+  } catch {
+    return "Unknown size";
+  }
+};
+
+export function getBestAdminRoute(userPermissions: RolePermission[]) {
+  const accessibleRoutes = adminRouteItems
+    .filter((route) => route.path !== "account")
+    .filter((route) =>
+      hasPermissions(
+        userPermissions,
+        route.permissions || [],
+        route.requireAllPermissions
+      )
+    );
+
+  const priorityOrder = [
+    "dashboard",
+    "jobs",
+    "applications",
+    "contact-messages",
+    "users",
+    "roles",
+    "departments",
+    "subsidiaries",
+  ];
+
+  const getGroup = (path: string) => path.split("/")[0];
+
+  const sorted = [...accessibleRoutes].sort((a, b) => {
+    const aGroup = getGroup(a.path);
+    const bGroup = getGroup(b.path);
+
+    const aIndex = priorityOrder.indexOf(aGroup);
+    const bIndex = priorityOrder.indexOf(bGroup);
+
+    return aIndex - bIndex;
+  });
+
+  return sorted[0]?.path || "/unauthorized";
+}

@@ -100,8 +100,14 @@ export default function LocationsMap({
 
   return (
     <div
-      className={className}
-      style={{ width: "100%", height: "100%", minHeight }}
+      className={`${className || ''} relative z-0`}
+      style={{
+        width: "100%",
+        height: "100%",
+        minHeight,
+        position: "relative",
+        zIndex: 0
+      }}
     >
       <MapContainer
         // center={[9.082, 8.6753]} // fallback center (Nigeria)

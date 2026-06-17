@@ -3,8 +3,7 @@ import { X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { isValidName } from "@/app/utils/validator";
 import { Department, DepartmentErrors } from "@/app/interfaces/department";
-import { SearchableSelect } from "@/app/components/searchable-select";
-import { Subsidiary } from "@/app/interfaces/subsidiary";
+import { useTenant } from "@/tenants/useTenant";
 
 type EditModalProps = {
   form: Department;
@@ -13,8 +12,7 @@ type EditModalProps = {
   confirmText?: string;
   cancelText?: string;
   loading?: boolean;
-  fieldErrors: any;  
-  subsidiaries: Subsidiary[];
+  fieldErrors: any;
   onClose: () => void;
   onConfirm: () => void;
   setFieldErrors: React.Dispatch<React.SetStateAction<DepartmentErrors>>;
@@ -30,12 +28,12 @@ export function EditModal({
   open,
   loading = false,
   fieldErrors,
-  subsidiaries,
   onClose,
   onConfirm,
   setFieldErrors,
   onChange,
 }: EditModalProps) {
+  const { colors } = useTenant();
   return (
     <Modal
       open={open}
@@ -72,28 +70,6 @@ export function EditModal({
               className="p-6 space-y-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
-                    Subsidiary
-                    <span className="ml-1 text-red-500">*</span>
-                  </label>
-                  <SearchableSelect
-                    name="subsidiaryId"
-                    value={form.subsidiaryId ?? ""}
-                    options={subsidiaries.map((s) => ({
-                      value: s.id,
-                      label: s.name,
-                    }))}
-                    error={fieldErrors.subsidiaryId}
-                    onChange={onChange}
-                    placeholder="Select subsidiary"
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                                      ${fieldErrors.subsidiaryId ? "border-red-500" : "border-gray-800"}
-                                      focus:border-[#c89b3c]`}
-                  />
-                </div>
-                
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Name
@@ -117,9 +93,14 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
+                      ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors.name && (
                     <p className="text-xs text-red-500 mt-1">
@@ -130,7 +111,6 @@ export function EditModal({
                 <div>
                   <label className="block text-xs font-semibold text-gray-300 mb-2">
                     Description
-                    <span className="ml-1 text-red-500">*</span>
                   </label>
                   <motion.textarea
                     name="description"
@@ -150,9 +130,14 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
-                ${fieldErrors.description ? "border-red-500" : "border-gray-800"}
-                focus:border-[#c89b3c]`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
+                      ${fieldErrors.description ? "border-red-500" : "border-gray-800"}
+                      focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors.description && (
                     <p className="text-xs text-red-500 mt-1">

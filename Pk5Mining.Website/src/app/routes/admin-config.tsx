@@ -109,7 +109,6 @@ export const adminRouteItems: AdminRouteItem[] = [
     permissions: [PERMISSIONS.dashboardView],
     element: Dashboard,
   },
-
   {
     path: "jobs",
     label: "Job Openings",
@@ -143,7 +142,6 @@ export const adminRouteItems: AdminRouteItem[] = [
     permissions: [PERMISSIONS.jobUpdate],
     element: JobEdit,
   },
-
   {
     path: "applications",
     label: "Applications",
@@ -161,7 +159,6 @@ export const adminRouteItems: AdminRouteItem[] = [
     permissions: [PERMISSIONS.applicationView, PERMISSIONS.applicationUpdate],
     element: ApplicationDetail,
   },
-
   {
     path: "contact-messages",
     label: "Contact Messages",
@@ -174,7 +171,6 @@ export const adminRouteItems: AdminRouteItem[] = [
     ],
     element: ContactMessageList,
   },
-
   {
     path: "users",
     label: "Users",
@@ -185,17 +181,6 @@ export const adminRouteItems: AdminRouteItem[] = [
     permissions: [PERMISSIONS.userView],
     element: Users,
   },
-  
-  {
-    path: "subsidiaries",
-    label: "Subsidiaries",
-    icon: Building,
-    show: true,
-    canAccess: true,
-    permissions: [PERMISSIONS.subsidiarView],
-    element: Subsidiaries,
-  },
-
   {
     path: "roles",
     label: "Roles",
@@ -205,7 +190,6 @@ export const adminRouteItems: AdminRouteItem[] = [
     permissions: [PERMISSIONS.roleView],
     element: Roles,
   },
-
   {
     path: "departments",
     label: "Departments",
@@ -215,7 +199,15 @@ export const adminRouteItems: AdminRouteItem[] = [
     permissions: [PERMISSIONS.departmentView],
     element: Departments,
   },
-
+  {
+    path: "subsidiaries",
+    label: "Subsidiaries",
+    icon: Building,
+    show: true,
+    canAccess: true,
+    permissions: [PERMISSIONS.subsidiarView],
+    element: Subsidiaries,
+  },
   {
     path: "account",
     label: "Account",
