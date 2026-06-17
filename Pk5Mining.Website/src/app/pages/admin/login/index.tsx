@@ -289,20 +289,45 @@ export function Login() {
           src={imgImage98}
         />
       </div>
- 
+
       {/* ── PK5 logo ── */}
-      <Pk5AgroAlliedLogo />
- 
+      <div style={{ position: "absolute", left: "calc(40% - 552px)", top: 47, width: 184, height: 67, transform: "translateX(-50%)" }}>
+        <div style={{ position: "absolute", left: 0, top: 0, width: 65.76, height: 67.547 }}>
+          <svg width="68.083" height="68.699" viewBox="0 0 68.083 68.6989" fill="none">
+            <path d={svgPaths.pdf49f00} stroke="url(#gradLogo)" strokeWidth="2.304" />
+            <path d={svgPaths.p1fcf9a00} fill="#EAD09C" />
+            <defs>
+              <linearGradient id="gradLogo" gradientUnits="userSpaceOnUse" x1="1.30033" x2="68.6883" y1="23.4409" y2="37.03">
+                <stop stopColor="#C89B3C" /><stop offset="1" stopColor="#EED7A7" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div style={{ position: "absolute", left: "calc(50% + 1.89px)", top: "calc(50% + 1.2px)", width: 170.4, height: 58.08, transform: "translate(-50%,-50%)" }}>
+          <p style={{ position: "absolute", left: 99.55, top: 20.73, fontFamily: "'Iceland', sans-serif", fontSize: 60, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", lineHeight: "7.92px", letterSpacing: "-2.4px", margin: 0 }}>PK5</p>
+          <p style={{ position: "absolute", left: 93.68, top: 46.4, fontFamily: "'Girassol', sans-serif", fontSize: 18, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", letterSpacing: 5, lineHeight: "27.648px", margin: 0 }}>MINING</p>
+          <div style={{ position: "absolute", left: 2.11, top: 17.13, width: 51.6, height: 20.4, overflow: "hidden" }}>
+            <img alt="" src={imgImage15} style={{ position: "absolute", left: 0, top: "-12.13%", width: "100%", height: "143.82%", maxWidth: "none" }} />
+          </div>
+          <div style={{ position: "absolute", left: -5.81, top: -3.26, width: 60, height: 61.083 }}>
+            <svg width="60.241" height="61.203" viewBox="0 0 60.2414 61.2031" fill="none">
+              <path d={svgPaths.p2c0e9960} stroke="#E7DFCD" strokeWidth="0.24" />
+              <path d={svgPaths.p344e8700} fill="#E7DFCD" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
       {/* ── Hero headline ── */}
       <p
-        className="absolute font-['Rajdhani',sans-serif] font-bold text-[64px] text-white h-[132px] w-[652px] left-[47px] top-[160px] z-20"
+        className="absolute font-['Rajdhani',sans-serif] font-bold text-[64px] text-white h-[132px] w-[450] left-[47px] top-[160px] z-20"
         style={{ lineHeight: "normal" }}
       >
         Powering the Future
         <br />
         of Mineral Development
       </p>
- 
+
       {/* ── Gold rule under headline ── */}
       <div className="absolute flex h-[2.195px] items-center justify-center left-[47px] top-[310px] w-[179.987px] z-20">
         <div className="rotate-[-0.7deg]">
@@ -315,37 +340,37 @@ export function Login() {
           </div>
         </div>
       </div>
- 
+
       {/* ── Sub-headline ── */}
       <p
-        className="absolute font-['Segoe_UI',sans-serif] text-[22px] text-white h-[50px] w-[530px] left-[47px] top-[350px] z-20"
+        className="absolute font-['Segoe_UI',sans-serif] text-[22px] text-white h-[50px] w-[530px] left-[47px] top-[315px] z-20"
         style={{ lineHeight: "normal" }}
       >
         Enterprise grade administrative control for global mining operations
       </p>
- 
+
       {/* ── Stats bar ── */}
       <StatsBar />
- 
+
       {/* ── Right login panel (Locked to right edge, takes up 100% height) ── */}
       <div className="absolute inset-y-0 right-0 w-[622px] z-20">
         <FormPanel />
         <Frame6 />
- 
+
         <p
           className="-translate-x-1/2 absolute font-['Segoe_UI',sans-serif] font-semibold text-[34px] text-white whitespace-nowrap left-1/2 top-[24%] z-30"
           style={{ lineHeight: "normal" }}
         >
           Admin Login
         </p>
- 
+
         <p
-          className="-translate-x-1/2 absolute font-['Inter',sans-serif] font-normal text-[16px] text-white whitespace-nowrap left-1/2 top-[31%] z-30"
+          className="absolute font-['Inter',sans-serif] font-normal text-[16px] text-white whitespace-nowrap left-25 top-[31%] z-30"
           style={{ lineHeight: "normal" }}
         >
           Email Address
         </p>
- 
+
         <LoginForm />
       </div>
     </div>
