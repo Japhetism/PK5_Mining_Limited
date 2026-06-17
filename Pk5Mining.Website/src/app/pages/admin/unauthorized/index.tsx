@@ -105,7 +105,7 @@ export function Unauthorized() {
             disabled={loading}
           >
             <LogOut className="w-4 h-4" />
-            {loading ? "Clearing Session..." : "Log Out / Switch Account"}
+            {loading ? "Clearing Session..." : "Log Out"}
           </motion.button>
         </div>
       </motion.div>
