@@ -23,6 +23,7 @@ type AuthState = {
   isLoading: boolean;
   isAdmin: boolean;
   isAuthenticated: boolean;
+  isUnauthorized: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   setUser: (user: IUser | null) => void;
@@ -35,6 +36,7 @@ const DEFAULT_INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 Minutes
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { emailDomain } = useTenant();
   const [user, setUser] = useState<IUser | null>(null);
+  const [unathorized, setIsUnauthorized] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   const logoutRef = useRef<() => void>(() => {});
 
@@ -61,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         tokenStore.clear();
         setAuthToken(undefined);
         setUser(null);
+        setIsUnauthorized(false);
       }
     } else {
       // 3. For manual/local users, just redirect to login
@@ -102,6 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tokenStore.set(msToken);
 
             const backendResponseData = await microsoftLogin();
+            console.log("backend response ", backendResponseData)
             if (backendResponseData) {
               const finalToken = backendResponseData.token || msToken;
               const permissionNames =
@@ -128,7 +132,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.error("❌ Auth Initialization Failed:", error);
-        logoutRef.current();
+        console.log("auth error ", error);
+        setIsUnauthorized(true);
+        // logoutRef.current();
       } finally {
         setIsLoading(false);
       }
@@ -220,9 +226,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       isAdmin: user?.role?.name === USERROLES.superAdmin,
       isAuthenticated: !!user,
+      isUnauthorized: unathorized,
       login,
       logout,
       setUser,
+      setIsUnauthorized,
     }),
     [user, isLoading],
   );
