@@ -3,11 +3,10 @@ import svgPaths from "../../../../../src/imports/MacBookPro1429/svg-gadtsffos9";
 import imgImage98 from "../../../../../src/imports/MacBookPro1429/21c23672ce84dd03d9a6556cc4700d29aaae6e29.png";
 import imgImage15 from "../../../../../src/imports/MacBookPro1429/c36f9bd2b0feaff16979ab1ff556de16182a7aa1.png";
 import imgImage103 from "../../../../../src/imports/MacBookPro1429/0920571d191ee92fb66ed9adf50760ecb26368a5.png";
-import { useTenant } from "@/tenants/useTenant";
 import useLoginViewModel from "./viewmodel";
- 
+
 /* ── Logo pieces ─────────────────────────────────────────────────────────── */
- 
+
 function Group1() {
   return (
     <div className="absolute contents left-[2.11px] top-[17.13px]">
@@ -25,7 +24,7 @@ function Group1() {
     </div>
   );
 }
- 
+
 function Group2() {
   return (
     <div className="absolute h-[61.083px] left-[-5.81px] top-[-3.26px] w-[60px]">
@@ -40,7 +39,7 @@ function Group2() {
     </div>
   );
 }
- 
+
 function Pk5Logo() {
   return (
     <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[58.08px] left-[calc(50%+1.89px)] top-[calc(50%+1.2px)] w-[170.4px]">
@@ -49,7 +48,7 @@ function Pk5Logo() {
     </div>
   );
 }
- 
+
 function Group3() {
   return (
     <div className="absolute h-[67.547px] left-0 top-0 w-[65.76px]">
@@ -70,7 +69,7 @@ function Group3() {
     </div>
   );
 }
- 
+
 function Pk5AgroAlliedLogo() {
   return (
     <div className="absolute h-[67px] left-[47px] top-[47px] w-[184px] z-20">
@@ -79,22 +78,22 @@ function Pk5AgroAlliedLogo() {
     </div>
   );
 }
- 
+
 /* ── Form panel background ───────────────────────────────────────────────── */
- 
+
 function FormPanel() {
   return (
-    <div className="absolute inset-y-0 right-0 drop-shadow-[0px_4px_2px_rgba(0,0,0,0.25)] opacity-65 overflow-hidden w-full h-full">
+    <div className="absolute inset-0 lg:inset-y-0 lg:right-0 drop-shadow-[0px_4px_2px_rgba(0,0,0,0.25)] opacity-65 overflow-hidden w-full h-[500px] lg:h-full">
       <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgImage103} />
     </div>
   );
 }
- 
+
 /* ── Icon badge above form ───────────────────────────────────────────────── */
- 
+
 function Frame6() {
   return (
-    <div className="-translate-x-1/2 absolute left-1/2 size-[79.2px] top-[14%] z-20">
+    <div className="-translate-x-1/2 absolute left-1/2 size-[79.2px] top-[40px] lg:top-[14%] z-20">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 79.2 79.2">
         <rect fill="white" fillOpacity="0.97" height="78.21" rx="39.105" width="78.21" x="0.495" y="0.495" />
         <rect height="78.21" rx="39.105" stroke="#C89B3C" strokeWidth="0.99" width="78.21" x="0.495" y="0.495" />
@@ -103,9 +102,9 @@ function Frame6() {
     </div>
   );
 }
- 
+
 /* ── Email icon in input ─────────────────────────────────────────────────── */
- 
+
 function EmailIcon() {
   return (
     <>
@@ -128,7 +127,7 @@ function EmailIcon() {
 }
 
 /* ── Arrow icon ──────────────────────────────────────────────────────────── */
- 
+
 function ArrowRight() {
   return (
     <div className="h-[8.446px] relative shrink-0 w-[12.285px]">
@@ -146,12 +145,12 @@ function ArrowRight() {
     </div>
   );
 }
- 
+
 /* ── Stats bar ───────────────────────────────────────────────────────────── */
- 
+
 function StatsBar() {
   return (
-    <div className="absolute bg-[rgba(0,0,0,0.46)] h-[117px] left-[47px] overflow-hidden rounded-[18px] bottom-[10%] w-[607.5px] z-20">
+    <div className="absolute bg-[rgba(0,0,0,0.46)] h-[117px] left-[47px] overflow-hidden rounded-[18px] bottom-[5%] w-[607.5px] z-20">
       {/* Dividers */}
       {[202.5, 405].map((left) => (
         <div
@@ -168,12 +167,12 @@ function StatsBar() {
           </div>
         </div>
       ))}
- 
+
       {/* Values */}
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[36px] top-[36px] whitespace-nowrap">3+</p>
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[238.5px] top-[36px] whitespace-nowrap">2.3M</p>
       <p className="absolute font-['Inter',sans-serif] font-bold text-[#c89b3c] text-[24px] left-[441px] top-[36px] whitespace-nowrap">99.9%</p>
- 
+
       {/* Labels */}
       <p className="absolute font-['Rajdhani',sans-serif] font-bold text-[18px] text-white left-[calc(50%-267.75px)] top-[calc(50%+10.5px)] whitespace-nowrap">ACTIVE SITES</p>
       <p className="absolute font-['Rajdhani',sans-serif] font-bold text-[18px] text-white left-[calc(50%-65.25px)] top-[calc(50%+10.5px)] whitespace-nowrap">DAILY OUTPUT</p>
@@ -181,9 +180,9 @@ function StatsBar() {
     </div>
   );
 }
- 
+
 /* ── Interactive login form ──────────────────────────────────────────────── */
- 
+
 function LoginForm() {
   const {
     email,
@@ -194,7 +193,7 @@ function LoginForm() {
   } = useLoginViewModel();
 
   return (
-    <div className="absolute flex flex-col gap-[40px] items-start left-[103px] top-[35%] w-[415.9px] z-30">
+    <div className="absolute flex flex-col gap-[40px] items-start left-[24px] right-[24px] lg:right-auto lg:left-[103px] top-[220px] lg:top-[35%] lg:w-[415.9px] z-30">
       {/* Email input */}
       <div className="bg-white h-[49.5px] relative rounded-[10.395px] shrink-0 w-full">
         <div className="relative rounded-[inherit] size-full overflow-hidden">
@@ -217,7 +216,7 @@ function LoginForm() {
         </div>
         <div aria-hidden className="absolute border-[1.039px] border-[rgba(200,155,60,0.99)] border-solid inset-0 pointer-events-none rounded-[10.395px]" />
       </div>
- 
+
       {/* Validation / success message */}
       {error && (
         <p className="-mt-6 ml-1 text-[13px] font-['Inter',sans-serif] text-red-400">{error}</p>
@@ -234,7 +233,7 @@ function LoginForm() {
           <ArrowRight />
         </div>
       </button>
- 
+
       {/* OR divider */}
       <div className="flex gap-[21px] items-center shrink-0 w-full">
         <div className="h-0 shrink-0 w-[175px] relative">
@@ -253,7 +252,7 @@ function LoginForm() {
           </div>
         </div>
       </div>
- 
+
       {/* SSO button */}
       <button
         type="button"
@@ -268,12 +267,12 @@ function LoginForm() {
     </div>
   );
 }
- 
+
 /* ── Root ────────────────────────────────────────────────────────────────── */
- 
+
 export function Login() {
   return (
-    <div className="bg-black relative w-screen h-screen overflow-hidden">
+    <div className="bg-black relative w-screen min-h-screen lg:h-screen overflow-x-hidden overflow-y-auto lg:overflow-hidden">
       {/* ── Background image (Spans completely across screen edge-to-edge) ── */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <img
@@ -284,36 +283,37 @@ export function Login() {
       </div>
 
       {/* ── PK5 logo ── */}
-       <div style={{ position: "absolute", left: "calc(50% - 552px)", top: 47, width: 184, height: 67, transform: "translateX(-50%)" }}>
-            <div style={{ position: "absolute", left: 0, top: 0, width: 65.76, height: 67.547 }}>
-              <svg width="68.083" height="68.699" viewBox="0 0 68.083 68.6989" fill="none">
-                <path d={svgPaths.pdf49f00} stroke="url(#gradLogo)" strokeWidth="2.304" />
-                <path d={svgPaths.p1fcf9a00} fill="#EAD09C" />
-                <defs>
-                  <linearGradient id="gradLogo" gradientUnits="userSpaceOnUse" x1="1.30033" x2="68.6883" y1="23.4409" y2="37.03">
-                    <stop stopColor="#C89B3C" /><stop offset="1" stopColor="#EED7A7" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-            <div style={{ position: "absolute", left: "calc(50% + 1.89px)", top: "calc(50% + 1.2px)", width: 170.4, height: 58.08, transform: "translate(-50%,-50%)" }}>
-              <p style={{ position: "absolute", left: 99.55, top: 20.73, fontFamily: "'Iceland', sans-serif", fontSize: 60, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", lineHeight: "7.92px", letterSpacing: "-2.4px", margin: 0 }}>PK5</p>
-              <p style={{ position: "absolute", left: 93.68, top: 46.4, fontFamily: "'Girassol', sans-serif", fontSize: 18, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", letterSpacing: 5, lineHeight: "27.648px", margin: 0 }}>MINING</p>
-              <div style={{ position: "absolute", left: 2.11, top: 17.13, width: 51.6, height: 20.4, overflow: "hidden" }}>
-                <img alt="" src={imgImage15} style={{ position: "absolute", left: 0, top: "-12.13%", width: "100%", height: "143.82%", maxWidth: "none" }} />
-              </div>
-              <div style={{ position: "absolute", left: -5.81, top: -3.26, width: 60, height: 61.083 }}>
-                <svg width="60.241" height="61.203" viewBox="0 0 60.2414 61.2031" fill="none">
-                  <path d={svgPaths.p2c0e9960} stroke="#E7DFCD" strokeWidth="0.24" />
-                  <path d={svgPaths.p344e8700} fill="#E7DFCD" />
-                </svg>
-              </div>
-            </div>
+      <div className="absolute left-8 md:left-16 top-[47px] w-[184px] h-[67px]">
+        <div style={{ position: "absolute", left: 0, top: 0, width: 65.76, height: 67.547 }}>
+          <svg width="68.083" height="68.699" viewBox="0 0 68.083 68.6989" fill="none">
+            <path d={svgPaths.pdf49f00} stroke="url(#gradLogo)" strokeWidth="2.304" />
+            <path d={svgPaths.p1fcf9a00} fill="#EAD09C" />
+            <defs>
+              <linearGradient id="gradLogo" gradientUnits="userSpaceOnUse" x1="1.30033" x2="68.6883" y1="23.4409" y2="37.03">
+                <stop stopColor="#C89B3C" />
+                <stop offset="1" stopColor="#EED7A7" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div style={{ position: "absolute", left: "calc(50% + 1.89px)", top: "calc(50% + 1.2px)", width: 170.4, height: 58.08, transform: "translate(-50%,-50%)" }}>
+          <p style={{ position: "absolute", left: 99.55, top: 20.73, fontFamily: "'Iceland', sans-serif", fontSize: 60, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", lineHeight: "7.92px", letterSpacing: "-2.4px", margin: 0 }}>PK5</p>
+          <p style={{ position: "absolute", left: 93.68, top: 46.4, fontFamily: "'Girassol', sans-serif", fontSize: 18, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", letterSpacing: 5, lineHeight: "27.648px", margin: 0 }}>MINING</p>
+          <div style={{ position: "absolute", left: 2.11, top: 17.13, width: 51.6, height: 20.4, overflow: "hidden" }}>
+            <img alt="" src={imgImage15} style={{ position: "absolute", left: 0, top: "-12.13%", width: "100%", height: "143.82%", maxWidth: "none" }} />
           </div>
+          <div style={{ position: "absolute", left: -5.81, top: -3.26, width: 60, height: 61.083 }}>
+            <svg width="60.241" height="61.203" viewBox="0 0 60.2414 61.2031" fill="none">
+              <path d={svgPaths.p2c0e9960} stroke="#E7DFCD" strokeWidth="0.24" />
+              <path d={svgPaths.p344e8700} fill="#E7DFCD" />
+            </svg>
+          </div>
+        </div>
+      </div>
 
       {/* ── Hero headline ── */}
       <p
-        className="absolute font-['Rajdhani',sans-serif] font-bold text-[64px] text-white h-[132px] w[600px] left-[47px] top-[160px] z-20"
+        className="absolute font-['Rajdhani',sans-serif] font-bold text-[32px] sm:text-[42px] lg:text-[50px] text-white left-[20px] sm:left-[30px] lg:left-[47px] top-[130px] lg:top-[160px] z-20 max-w-[90%] lg:max-w-[600px]"
         style={{ lineHeight: "normal" }}
       >
         Powering the Future
@@ -336,29 +336,32 @@ export function Login() {
 
       {/* ── Sub-headline ── */}
       <p
-        className="absolute font-['Segoe_UI',sans-serif] text-[22px] text-white h-[50px] w-[530px] left-[47px] top-[315px] z-20"
+        className="absolute font-['Segoe_UI',sans-serif] text-[15px] sm:text-[18px] lg:text-[22px] text-white w-[90%] lg:w-[530px] left-[20px] lg:left-[47px] top-[260px] sm:top-[290px] lg:top-[280px] z-20"
         style={{ lineHeight: "normal" }}
       >
         Enterprise grade administrative control for global mining operations
       </p>
 
       {/* ── Stats bar ── */}
-      <StatsBar />
+
+      <div className="hidden lg:block">
+        <StatsBar />
+      </div>
 
       {/* ── Right login panel (Locked to right edge, takes up 100% height) ── */}
-      <div className="absolute inset-y-0 right-0 w-[622px] z-20">
+    <div className="absolute lg:inset-y-0 right-0 w-full lg:w-[622px] h-auto lg:h-full z-20 top-[380px] lg:top-0">
         <FormPanel />
         <Frame6 />
 
         <p
-          className="-translate-x-1/2 absolute font-['Segoe_UI',sans-serif] font-semibold text-[34px] text-white whitespace-nowrap left-1/2 top-[24%] z-30"
+          className="-translate-x-1/2 absolute font-['Segoe_UI',sans-serif] font-semibold text-[26px] lg:text-[34px] text-white whitespace-nowrap left-1/2 top-[140px] lg:top-[24%] z-30"
           style={{ lineHeight: "normal" }}
         >
           Admin Login
         </p>
 
         <p
-          className="absolute font-['Inter',sans-serif] font-normal text-[16px] text-white whitespace-nowrap left-26 top-[31%] z-30"
+         className="absolute font-['Inter',sans-serif] font-normal text-[16px] text-white whitespace-nowrap left-[24px] lg:left-[103px] top-[190px] lg:top-[31%] z-30"
           style={{ lineHeight: "normal" }}
         >
           Email Address
