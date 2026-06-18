@@ -15,6 +15,7 @@ import { getAxiosErrorMessage } from "@/app/utils/axios-error";
 import {
   cleanParams,
   generatePassword,
+  isEmailAuthorized,
   mapZodErrors,
   toNumber,
 } from "@/app/utils/helper";
@@ -25,6 +26,7 @@ import { createUserSchema, updateUserSchema } from "@/app/schemas/user.schema";
 import { getLightRoles } from "@/app/api/roles";
 import { getLightSubsidiaries } from "@/app/api/subsidiaries";
 import { getDepartmentsForDropdown } from "@/app/api/departments";
+import { useTenant } from "@/tenants/useTenant";
 
 const defaultFormData: User = {
   id: 0,
@@ -54,6 +56,7 @@ const successMessages: Record<UserAction, string> = {
 };
 
 function useUserViewModel() {
+  const { subsidiaryId, emailDomain } = useTenant();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -141,16 +144,6 @@ function useUserViewModel() {
   });
 
   const {
-    data: subsidiariesData,
-    isLoading: isLoadingSubsidiaries,
-    error: subsidiariesError,
-  } = useQuery({
-    queryKey: ["light-subsidiaries"],
-    queryFn: () => getLightSubsidiaries(),
-    staleTime: 30_000,
-  });
-
-  const {
     data: departmentsData,
     isLoading: isLoadingDepartments,
     error: departmentsError,
@@ -171,6 +164,8 @@ function useUserViewModel() {
     setForm({
       ...defaultFormData,
       ...selectedUser,
+      roleId: selectedUser?.role?.id ?? 0,
+      departmentId: selectedUser?.department?.id ?? 0,
     });
   }, [selectedUser, confirmEditOpen]);
 
@@ -295,9 +290,20 @@ function useUserViewModel() {
       return;
     }
 
+    if (!isEmailAuthorized(form.email, emailDomain)) {
+      setFieldErrors({ email: "Email address is not allowed" });
+      return;
+    }
+
     setFieldErrors({});
 
-    createMutation.mutate(result.data);
+    const payload = {
+      ...result.data,
+      isActive: true,
+      subsidiaryId: subsidiaryId,
+    }
+
+    createMutation.mutate(payload);
   };
 
   const handleUpdateUser = () => {
@@ -314,7 +320,13 @@ function useUserViewModel() {
 
     setFieldErrors({});
     setActionType(UserAction.Update);
-    updateMutation.mutate(result.data);
+
+    const payload = {
+      ...result.data,
+      isActive: true,
+      subsidiaryId: subsidiaryId,
+    }
+    updateMutation.mutate(payload);
   };
 
   const onChange = (
@@ -346,7 +358,6 @@ function useUserViewModel() {
     }
   };
 
-  const subsidiaries = subsidiariesData ?? [];
   const roles = rolesData ?? [];
   const departments = departmentsData ?? [];
   const users: User[] = data?.data ?? [];
@@ -373,7 +384,6 @@ function useUserViewModel() {
     isProcessing,
     confirmUpdateStatusOpen,
     roles,
-    subsidiaries,
     departments,
     onChange,
     updateFilter,

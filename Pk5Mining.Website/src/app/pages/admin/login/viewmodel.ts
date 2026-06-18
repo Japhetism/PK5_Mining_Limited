@@ -4,12 +4,19 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
 import { authService } from "@/app/services/sso/authService";
 import { ApiError } from "@/app/interfaces";
-import { isEmailAuthorized, shouldChangePassword } from "@/app/utils/helper";
+import {
+  getBestAdminRoute,
+  isEmailAuthorized,
+  shouldChangePassword,
+} from "@/app/utils/helper";
 import { tokenStore } from "@/app/auth/token";
+import { useTenant } from "@/tenants/useTenant";
+import { RolePermission } from "@/app/interfaces/role";
 
 function useLoginViewModel() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { emailDomain } = useTenant();
   const { login: authLogin, user: authUser, isLoading } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -43,14 +50,8 @@ function useLoginViewModel() {
   useEffect(() => {
     if (!authUser) return;
 
-    // const changePassword = authUser.hasChangedPassword && !(authUser.email && shouldChangePassword(authUser.email, window.location.hostname));
-
-    // if (!changePassword) {
-    //   navigate("/admin/dashboard", { replace: true });
-    // } else {
-    //   navigate("/admin/change/password", { replace: true });
-    // }
-    navigate("/admin/dashboard", { replace: true });
+    const redirectTo = getBestAdminRoute(authUser.userPermissions ?? []);
+    navigate(`/admin/${redirectTo}`, { replace: true });
   }, [authUser, navigate]);
 
   const mutation = useMutation({
@@ -72,7 +73,7 @@ function useLoginViewModel() {
   });
 
   const onSubmit = () => {
-    if (!isEmailAuthorized(email, window.location.hostname)) {
+    if (!isEmailAuthorized(email, emailDomain)) {
       return setError(
         "Access Denied: Please sign in with an authorized organizational account.",
       );
@@ -88,7 +89,7 @@ function useLoginViewModel() {
   };
 
   const handleSSOSigninByEmail = async () => {
-    if (!isEmailAuthorized(email, window.location.hostname)) {
+    if (!isEmailAuthorized(email, emailDomain)) {
       return setError(
         "Access Denied: Please sign in with an authorized organizational account.",
       );
@@ -102,7 +103,7 @@ function useLoginViewModel() {
   const handleContinue = () => {
     const domain = email.split("@")[1];
 
-    if (domain !== "pk5miningltd.com") {
+    if (domain !== emailDomain) {
       setFormType("passwordForm");
     } else {
       handleSSOSigninByEmail();
@@ -113,7 +114,7 @@ function useLoginViewModel() {
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    isEmailStep ? handleContinue() : onSubmit();
+    handleSSOSigninByEmail();
   };
 
   return {

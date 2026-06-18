@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs, updateJob } from "@/app/api/jobs";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
@@ -12,9 +12,16 @@ import {
 } from "@/app/interfaces";
 import { cleanParams, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
+import { useTenant } from "@/tenants/useTenant";
+import { getDepartmentsForDropdown } from "@/app/api/departments";
 
 function useJobListViewModel() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { isAgro } = useTenant();
+
+  const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
+  const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
@@ -70,6 +77,16 @@ function useJobListViewModel() {
       queryParams.jobType ?? "",
     ],
     queryFn: () => getJobs(queryParams),
+    staleTime: 30_000,
+  });
+
+  const {
+    data: departmentsData,
+    isLoading: isLoadingDepartments,
+    error: departmentsError,
+  } = useQuery({
+    queryKey: ["light-departments"],
+    queryFn: () => getDepartmentsForDropdown(),
     staleTime: 30_000,
   });
 
@@ -139,9 +156,23 @@ function useJobListViewModel() {
     });
   };
 
+  const handleNavigateToJobDetailWebsite = (jobId: number | undefined) => {
+    if (!jobId) {
+      toastUtil.error("Job ID is missing. Cannot navigate to job details.");
+      return;
+    }
+
+    const targetUrl = SHOULD_USE_AGRO_URL
+      ? `${AGRO_BASE_URL}/${jobId}/apply`
+      : `/careers/job/${jobId}`;
+
+    window.open(targetUrl, "_blank", "noopener,noreferrer");
+  };
+
   const jobs: JobDto[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
+  const departments = departmentsData ?? [];
 
   return {
     jobs,
@@ -161,6 +192,7 @@ function useJobListViewModel() {
     confirmOpen,
     filters,
     queryClient,
+    departments,
     setIsFilter,
     setFilterStatus,
     setFilterJobType,
@@ -172,6 +204,7 @@ function useJobListViewModel() {
     onChangePage,
     onChangePageSize,
     setConfirmOpen,
+    handleNavigateToJobDetailWebsite,
   };
 }
 

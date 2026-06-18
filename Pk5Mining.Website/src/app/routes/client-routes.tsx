@@ -12,6 +12,12 @@ const Home = lazy(() =>
 const About = lazy(() =>
   import("@/app/pages/client/about").then((m) => ({ default: m.About })),
 );
+const OperationsPage = lazy(() =>
+  import("@/app/pages/client/operations").then((m) => ({ default: m.OperationsPage })),
+);
+const ImpactPage = lazy(() =>   
+  import("@/app/pages/client/impact").then((m) => ({ default: m.ImpactPage })), 
+);
 const Careers = lazy(() =>
   import("@/app/pages/client/careers").then((m) => ({ default: m.Careers })),
 );
@@ -35,6 +41,8 @@ export const clientRoutes: RouteObject[] = [
     children: [
       { index: true, element: <Home /> },
       { path: "about", element: <About /> },
+      { path: "operations", element: <OperationsPage /> },
+      { path: "impact", element: <ImpactPage /> },
       { path: "sustainability", element: <Sustainability /> },
       { path: "careers", element: <Careers /> },
       { path: "contact", element: <Contact /> },

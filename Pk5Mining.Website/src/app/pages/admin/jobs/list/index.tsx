@@ -19,6 +19,9 @@ import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { jobTypes, statusOptions } from "@/app/constants";
 import useJobListViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
+import { SearchableSelect } from "@/app/components/searchable-select";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 export function JobList() {
   const { colors } = useTenant();
@@ -38,6 +41,7 @@ export function JobList() {
     selectedJob,
     isUpdating,
     queryClient,
+    departments,
     setConfirmOpen,
     setSelectedJob,
     updateFilter,
@@ -47,6 +51,7 @@ export function JobList() {
     onChangePage,
     onChangePageSize,
     handleUpdateStatus,
+    handleNavigateToJobDetailWebsite,
   } = useJobListViewModel();
 
   const columns: PaginatedTableColumn<JobDto>[] = [
@@ -55,14 +60,13 @@ export function JobList() {
       header: "Title",
       render: (job) => (
         <div>
-          <Link
-            to={`/careers/job/${job.id}`}
-            className="flex-1"
-            target="_blank"
+          <button
+            onClick={() => handleNavigateToJobDetailWebsite(job.id)}
+            className="flex-1 cursor-pointer"
             title="View public page"
           >
             <div className="font-semibold text-[#c89b3c]">{job.title}</div>
-          </Link>
+          </button>
           <div className="text-xs text-gray-500 line-clamp-2">{job.id}</div>
         </div>
       ),
@@ -158,40 +162,44 @@ export function JobList() {
                 </Link>
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item asChild>
-                <Link
-                  to={`/admin/jobs/${job.id}/edit`}
-                  onClick={() => {
-                    queryClient.setQueryData(["jobs", String(job.id)], job);
+              <PermissionGuard permission={PERMISSIONS.jobUpdate}>
+                <DropdownMenu.Item asChild>
+                  <Link
+                    to={`/admin/jobs/${job.id}/edit`}
+                    onClick={() => {
+                      queryClient.setQueryData(["jobs", String(job.id)], job);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                    style={{ color: colors.text }}
+                  >
+                    <Pencil className="w-4 h-4" />
+                    Edit Job
+                  </Link>
+                </DropdownMenu.Item>
+              </PermissionGuard>
+
+              <PermissionGuard permission={PERMISSIONS.jobUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedJob(job);
+                    setConfirmOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
                   style={{ color: colors.text }}
                 >
-                  <Pencil className="w-4 h-4" />
-                  Edit Job
-                </Link>
-              </DropdownMenu.Item>
-
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedJob(job);
-                  setConfirmOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-                style={{ color: colors.text }}
-              >
-                {job.isActive ? (
-                  <>
-                    <XCircle className="w-4 h-4 text-red-400" />
-                    Close job
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    Reopen job
-                  </>
-                )}
-              </DropdownMenu.Item>
+                  {job.isActive ? (
+                    <>
+                      <XCircle className="w-4 h-4 text-red-400" />
+                      Close job
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      Reopen job
+                    </>
+                  )}
+                </DropdownMenu.Item>
+              </PermissionGuard>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
@@ -210,16 +218,18 @@ export function JobList() {
           </p>
         </div>
 
-        <Link to="/admin/jobs/new" className="w-full sm:w-auto">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-          >
-            <Plus className="w-4 h-4" />
-            New job
-          </motion.button>
-        </Link>
+        <PermissionGuard permission={PERMISSIONS.jobCreate}>
+          <Link to="/admin/jobs/new" className="w-full sm:w-auto">
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+            >
+              <Plus className="w-4 h-4" />
+              New job
+            </motion.button>
+          </Link>
+        </PermissionGuard>
       </div>
 
       {/* Filters */}
@@ -229,21 +239,29 @@ export function JobList() {
             <label className="block text-xs font-semibold mb-2">
               Department
             </label>
-            <input
-              name="department"
-              type="text"
-              value={filters.department}
+            <SearchableSelect
+              name="departmentId"
+              value={filters.department ?? ""}
+              options={[
+                { value: "", label: "All Departments" },
+                ...departments.map((d) => ({
+                  value: d.name,
+                  label: d.name,
+                })),
+              ]}
               onChange={(e) => updateFilter("department", e.target.value)}
               placeholder="Search by department"
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              styles={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Location
-            </label>
+            <label className="block text-xs font-semibold mb-2">Location</label>
             <input
               name="location"
               type="text"
@@ -251,14 +269,16 @@ export function JobList() {
               onChange={(e) => updateFilter("location", e.target.value)}
               placeholder="Search by location"
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Status
-            </label>
+            <label className="block text-xs font-semibold mb-2">Status</label>
             <select
               value={filterStatus}
               onChange={(e) => {
@@ -266,7 +286,11 @@ export function JobList() {
                 setIsFilter(true);
               }}
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
               {statusOptions.map((opt) => (
@@ -278,9 +302,7 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Job Type
-            </label>
+            <label className="block text-xs font-semibold mb-2">Job Type</label>
             <select
               value={filterJobType}
               onChange={(e) => {
@@ -288,7 +310,11 @@ export function JobList() {
                 setIsFilter(true);
               }}
               className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Job Type</option>
               {jobTypes.map((opt) => (

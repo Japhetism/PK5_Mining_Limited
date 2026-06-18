@@ -72,7 +72,6 @@ export function UserMenu({
           className={`w-4 h-4 shrink-0 transition-transform text-black ${
             open ? "rotate-180" : ""
           }`}
-          // style={{ color: colors.text }}
         />
       </button>
 

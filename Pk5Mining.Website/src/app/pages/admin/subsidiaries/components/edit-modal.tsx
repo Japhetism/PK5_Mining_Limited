@@ -6,6 +6,7 @@ import { isValidName } from "@/app/utils/validator";
 import { Subsidiary, SubsidiaryErrors } from "@/app/interfaces/subsidiary";
 import { SearchableSelect } from "@/app/components/searchable-select";
 import AddressAutocomplete from "@/app/components/address-autocomplete";
+import { useTenant } from "@/tenants/useTenant";
 
 type EditModalProps = {
   form: Subsidiary;
@@ -35,6 +36,7 @@ export function EditModal({
   setFieldErrors,
   onChange,
 }: EditModalProps) {
+  const { colors } = useTenant();
   const countryList = Object.entries(countries).map(([code, country]) => ({
     label: country.name,
     value: country.name,
@@ -99,9 +101,14 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                       ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors.name && (
                     <p className="text-xs text-red-500 mt-1">
@@ -133,9 +140,14 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                       ${fieldErrors.code ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors.code && (
                     <p className="text-xs text-red-500 mt-1">
@@ -167,9 +179,14 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                       ${fieldErrors.email ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
+                    style={{
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    }}
                   />
                   {fieldErrors.email && (
                     <p className="text-xs text-red-500 mt-1">
@@ -187,9 +204,14 @@ export function EditModal({
                   error={fieldErrors.country}
                   placeholder="Select Country"
                   onChange={onChange}
-                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
                     ${fieldErrors.country ? "border-red-500" : "border-gray-800"}
                     focus:border-[#c89b3c]`}
+                  styles={{
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    color: colors.text,
+                  }}
                 />
               </div>
 

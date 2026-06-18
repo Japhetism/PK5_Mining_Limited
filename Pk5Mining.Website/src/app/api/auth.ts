@@ -1,4 +1,4 @@
-import { ApiResponse, ILoginPayload, IUser } from "../interfaces";
+import { ApiResponse, ILoginPayload, ISSOAUTH, IUser } from "../interfaces";
 import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 import { IChangePasswordPayload } from "../interfaces/user";
@@ -60,7 +60,7 @@ export async function changePassword(payload: IChangePasswordPayload) {
 
 export async function microsoftLogin() {
   try {
-    const { data } = await http.post<ApiResponse<IUser>>(
+    const { data } = await http.post<ApiResponse<ISSOAUTH>>(
       "/SingleSignOn/microsoft/login",
       {},
     );

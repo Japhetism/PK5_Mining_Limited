@@ -7,6 +7,8 @@ import {
 } from "@/app/api/applications";
 import { toastUtil } from "@/app/utils/toast";
 import { ApiError } from "@/app/interfaces";
+import { getRemoteFileSize } from "@/app/utils/helper";
+import { statusStyles } from "@/app/constants";
 
 function useApplicationDetailsViewModel() {
   const queryClient = useQueryClient();
@@ -18,6 +20,9 @@ function useApplicationDetailsViewModel() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+
+  const [noteText, setNoteText] = useState("");
+  const [size, setSize] = useState("Loading...");
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["applications", applicationId],
@@ -42,6 +47,7 @@ function useApplicationDetailsViewModel() {
       setUpdating(false);
       setEditStatus(false);
       setConfirmOpen(false);
+      setSelectedStatus(null);
       queryClient.invalidateQueries({
         queryKey: ["applications", applicationId],
       });
@@ -111,6 +117,45 @@ function useApplicationDetailsViewModel() {
     if (isViewerOpen && resumeUrl) setResumeLoading(true);
   }, [isViewerOpen, resumeUrl]);
 
+  useEffect(() => {
+    if (!app?.resume) {
+      setSize("No file");
+      return;
+    }
+
+    const fetchSize = async () => {
+      const result = await getRemoteFileSize(app.resume);
+      setSize(result);
+    };
+
+    fetchSize();
+  }, [app?.resume]);
+
+  const timelineEvents = [];
+
+  if (app?.dT_Created) {
+    timelineEvents.push({
+      title: "Application Received",
+      time: new Date(app.dT_Created).toLocaleString("en-GB"),
+      isNote: false,
+    });
+  }
+
+  if (app?.dT_Modified) {
+    timelineEvents.push({
+      title: "Application Updated",
+      time: new Date(app.dT_Modified).toLocaleString("en-GB"),
+      isNote: true,
+    });
+  }
+
+  const initials =
+    `${app?.firstName?.[0] ?? ""}${app?.lastName?.[0] ?? ""}`.toUpperCase();
+
+  const statusStyle =
+    statusStyles[app?.status?.toLowerCase() as keyof typeof statusStyles] ??
+    statusStyles.new;
+
   return {
     app,
     isLoading,
@@ -130,6 +175,10 @@ function useApplicationDetailsViewModel() {
     error,
     handleUpdateStatus,
     updating,
+    size,
+    timelineEvents,
+    initials,
+    statusStyle,
   };
 }
 

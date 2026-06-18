@@ -119,7 +119,7 @@ export function PaginatedTable<T>({
           ) : (
             <table className="min-w-full text-sm">
 
-              <thead className="bg-black/40 text-gray-300">
+              <thead className="text-gray-300" style={{ background: colors.bg }}>
                 <tr>
                   {columns.map((col) => (
                     <th

@@ -2,7 +2,10 @@ import type { LucideIcon } from "lucide-react";
 import { statuses } from "../constants";
 import { UserRole } from "../constants/role";
 import { Permission } from "./permission";
-import { RolePermission } from "./role";
+import { RolePermission, Role as AppRole } from "./role";
+import { Department } from "./department";
+import { Subsidiary } from "./subsidiary";
+import { ReactNode } from "react";
 
 export type JobType = "full-time" | "part-time" | "contract" | "freelance";
 
@@ -11,6 +14,7 @@ export type WorkArrangement = "onsite" | "hybrid" | "remote";
 export type ApiError = { message?: string };
 
 export interface IMineral {
+  index: ReactNode;
   name: string;
   image: string;
   use: string;
@@ -181,7 +185,8 @@ export interface JobApplicationDto {
   linkedIn: string;
   dT_Created: string;
   dT_Modified: string;
-  job: JobDto | null;
+  job?: JobDto | null;
+  jobs?: JobDto | null;
 }
 
 export interface IApplicantBioData {
@@ -208,13 +213,21 @@ export interface IUser {
   email?: string;
   password?: string;
   jwtToken: string;
-  role?: UserRole;
+  role?: AppRole;
+  department?: Department;
+  subsidiary?: Subsidiary;
   phoneNumber?: string;
   isDeleted?: boolean;
   isActive?: boolean;
   hasChangedPassword?: boolean;
   permissions?: RolePermission[];
+  userPermissions?: RolePermission[];
   dT_Created?: string;
+}
+
+export interface ISSOAUTH {
+  user: IUser,
+  token: string;
 }
 
 export interface ILoginPayload {
@@ -419,7 +432,6 @@ export type AdvanceFilter = {
   subject?: string;
   phoneNumber?: string;
   name?: string;
-  appId?: string;
   startDate?: string;
   endDate?: string;
 }

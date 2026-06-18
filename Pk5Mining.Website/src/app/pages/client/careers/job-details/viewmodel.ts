@@ -4,8 +4,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { applyToJob } from "@/app/api/applications";
 import { getJobById } from "@/app/api/jobs";
 import { defaultFormData } from "@/app/constants";
-import { ApplicationErrors, JobDto } from "@/app/interfaces";
+import { ApplicationErrors, JobApplicationDto, JobDto } from "@/app/interfaces";
 import { validateApplication } from "@/app/utils/validator";
+import { ApplicationInput, applicationSchema } from "@/app/schemas/application.schema";
+import { mapZodErrors } from "@/app/utils/helper";
 
 function useJobDetailsViewModel() {
   const { jobId } = useParams<{ jobId: string }>();
@@ -80,10 +82,10 @@ function useJobDetailsViewModel() {
       return;
     }
 
-    const errors = validateApplication(formData, resumeFile, hasAgreedToTerms);
+    const result = applicationSchema.safeParse({ ...formData, resumeFile, hasAgreedToTerms });
 
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
+    if (!result.success) {
+      setFieldErrors(mapZodErrors<ApplicationInput>(result.error));
       return;
     }
 

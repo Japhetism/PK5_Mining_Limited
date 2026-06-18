@@ -45,10 +45,8 @@ export function RichTextEditor({
         [&_.ql-toolbar]:border-0
         [&_.ql-toolbar]:border-b
         [&_.ql-toolbar]:border-gray-800
-        [&_.ql-toolbar]:bg-black
-
+        
         [&_.ql-container]:border-0
-        [&_.ql-container]:bg-[#0f0f0f]
         [&_.ql-container]:rounded-b-lg
 
         [&_.ql-editor]:min-h-[260px]
@@ -64,7 +62,7 @@ export function RichTextEditor({
         [&_.ql-picker-options]:border
         [&_.ql-picker-options]:border-gray-800
       `}
-      style={{ backgroundColor: colors.card, borderColor: error ? "#f87171" : colors.border }}
+      style={{ backgroundColor: colors.bg, borderColor: error ? "#f87171" : colors.border }}
     >
       <ReactQuill
         theme="snow"

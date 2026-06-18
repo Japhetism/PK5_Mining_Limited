@@ -9,8 +9,10 @@ import { ContactStatusPill } from "@/app/components/ui/contact-status-pill";
 import { ContactMessageFilterPanel } from "../components/contact-message-filter-panel";
 import { ContactViewModal } from "../components/contact-message-modal";
 import useContactListViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 export function ContactMessageList() {
+  const { isAgro, colors } = useTenant();
   const {
     contactMessages,
     isLoading,
@@ -47,7 +49,7 @@ export function ContactMessageList() {
       header: "Name",
       render: (row) => (
         <div>
-          <div className="font-semibold text-gray-100">
+          <div className="font-semibold text-gray-100 capitalize">
             {row.firstName} {row.lastName}
           </div>
           <div className="text-xs text-gray-500">{row.email}</div>
@@ -58,34 +60,31 @@ export function ContactMessageList() {
       key: "subject",
       header: "Subject",
       render: (row) => (
-        <span className="text-gray-300">{row.subject ?? "-"}</span>
+        <span className="text-gray-300 capitalize">{row.subject ?? "-"}</span>
       ),
     },
     {
       key: "company",
       header: "Company",
       render: (row) => (
-        <span className="text-gray-300">{row.company ?? "-"}</span>
+        <span className="text-gray-300 capitalize">{row.company ?? "-"}</span>
       ),
     },
-    {
-      key: "phoneNumber",
-      header: "Phone",
-      render: (row) => (
-        <span className="text-gray-300">{row.phoneNumber ?? "-"}</span>
-      ),
-    },
+    ...(isAgro
+      ? [
+          {
+            key: "phoneNumber",
+            header: "Phone",
+            render: (row: ContactMessageDto) => (
+              <span className="text-gray-300">{row.phoneNumber ?? "-"}</span>
+            ),
+          },
+        ]
+      : []),
     {
       key: "status",
       header: "Status",
       render: (row) => <ContactStatusPill status={row.status ?? "new"} />,
-    },
-    {
-      key: "appId",
-      header: "Website",
-      render: (row) => (
-        <span>{row.appId ? getWebsiteName(row.appId) : "-"}</span>
-      ),
     },
     {
       key: "dT_Created",
@@ -139,7 +138,12 @@ export function ContactMessageList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email..."
-              className="w-full rounded-lg border border-gray-800 bg-[#1a1a1a] px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
+              className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
@@ -147,7 +151,8 @@ export function ContactMessageList() {
           <button
             type="button"
             onClick={() => setIsFilterPanelOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-800 bg-[#1a1a1a] px-4 py-2 text-sm text-gray-200 hover:border-[#c89b3c] hover:text-[#c89b3c] transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-200 hover:border-[#c89b3c] hover:text-[#c89b3c] transition-colors"
+            style={{ background: colors.bg }}
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters
@@ -188,9 +193,10 @@ export function ContactMessageList() {
                   return (
                     <button
                       key={key}
-                      className="inline-flex items-center gap-1 rounded-full border border-gray-800 bg-[#1a1a1a] px-2.5 py-1 text-xs text-gray-200"
+                      className="inline-flex items-center gap-1 rounded-full border border-gray-800 px-2.5 py-1 text-xs text-gray-200"
+                      style={{ background: colors.bg }}
                     >
-                      <span>
+                      <span className={key === "subject" ? "capitalize" : ""}>
                         {displayKey
                           .replace(/([A-Z])/g, " $1")
                           .replace(/^./, (str) => str.toUpperCase())}

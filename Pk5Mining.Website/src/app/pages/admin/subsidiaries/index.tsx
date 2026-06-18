@@ -11,7 +11,6 @@ import {
   Pencil,
   Trash,
 } from "lucide-react";
-import { StatusFilter } from "@/app/interfaces";
 import { formatDateTime } from "@/app/utils/helper";
 import {
   PaginatedTable,
@@ -25,8 +24,12 @@ import { DetailModal } from "./components/detail-modal";
 import { SearchableSelect } from "@/app/components/searchable-select";
 import { statusOptions } from "@/app/constants";
 import { useMemo } from "react";
+import { useTenant } from "@/tenants/useTenant";
+import { PermissionGuard } from "@/app/components/permission-guard";
+import { PERMISSIONS } from "@/app/constants/permissions";
 
 export function SubsidiaryList() {
+  const { colors } = useTenant();
   const {
     subsidaries,
     filters,
@@ -159,7 +162,8 @@ export function SubsidiaryList() {
             <DropdownMenu.Content
               align="end"
               sideOffset={6}
-              className="z-50 min-w-[180px] rounded-lg bg-[#111111] p-1 shadow-xl"
+              className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
+              style={{ backgroundColor: colors.bg, border: colors.border }}
             >
               <DropdownMenu.Item
                 onClick={() => {
@@ -172,47 +176,57 @@ export function SubsidiaryList() {
                 View Details
               </DropdownMenu.Item>
 
-              <DropdownMenu.Item
-                onClick={() => {
-                  setSelectedSubsidiary(subsidiary);
-                  setConfirmEditOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Pencil className="w-4 h-4" />
-                Edit Subsidiary
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.subsidiaryUpdate}>
+                <DropdownMenu.Item
+                  onClick={() => {
+                    setSelectedSubsidiary(subsidiary);
+                    setConfirmEditOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Subsidiary
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedSubsidiary(subsidiary);
-                  setConfirmUpdateStatusOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                {subsidiary.status === "Active" ? (
-                  <>
-                    <XCircle className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">Deactivate Subsidiary</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">Activate Subsidiary</span>
-                  </>
-                )}
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.subsidiaryUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedSubsidiary(subsidiary);
+                    setConfirmUpdateStatusOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  {subsidiary.status === "Active" ? (
+                    <>
+                      <XCircle className="w-4 h-4 text-red-400" />
+                      <span className="text-red-400">
+                        Deactivate Subsidiary
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400">
+                        Activate Subsidiary
+                      </span>
+                    </>
+                  )}
+                </DropdownMenu.Item>
+              </PermissionGuard>
 
-              <DropdownMenu.Item
-                onSelect={() => {
-                  setSelectedSubsidiary(subsidiary);
-                  setConfirmDeleteOpen(true);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
-              >
-                <Trash className="w-4 h-4 text-red-400" />
-                <span className="text-red-400">Delete Subsidiary</span>
-              </DropdownMenu.Item>
+              <PermissionGuard permission={PERMISSIONS.subsidiaryUpdate}>
+                <DropdownMenu.Item
+                  onSelect={() => {
+                    setSelectedSubsidiary(subsidiary);
+                    setConfirmDeleteOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                >
+                  <Trash className="w-4 h-4 text-red-400" />
+                  <span className="text-red-400">Delete Subsidiary</span>
+                </DropdownMenu.Item>
+              </PermissionGuard>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
@@ -230,85 +244,97 @@ export function SubsidiaryList() {
             Manage company subsidiaries and their details.
           </p>
         </div>
-
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => setConfirmEditOpen(true)}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
-        >
-          <Plus className="w-4 h-4" />
-          New Subsidiary
-        </motion.button>
+        <PermissionGuard permission={PERMISSIONS.subsidiaryCreate}>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setConfirmEditOpen(true)}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+          >
+            <Plus className="w-4 h-4" />
+            New Subsidiary
+          </motion.button>
+        </PermissionGuard>
       </div>
 
       {/* Filters */}
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Name
-            </label>
+            <label className="block text-xs font-semibold mb-2">Name</label>
             <input
               name="name"
               type="text"
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Email
-            </label>
+            <label className="block text-xs font-semibold mb-2">Email</label>
             <input
               name="email"
               type="text"
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Status
-            </label>
+            <label className="block text-xs font-semibold mb-2">Status</label>
             <select
               value={filterStatus}
               onChange={(e) => {
                 setFilterStatus(e.target.value);
                 setIsFilter(true);
               }}
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             >
               <option value="">All Statuses</option>
-              {["Active", "Inactive"].map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
+              {statusOptions.map((opt) => (
+                <option key={opt.label2} value={opt.label2}>
+                  {opt.label2}
                 </option>
               ))}
             </select>
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">
-              Country
-            </label>
+            <label className="block text-xs font-semibold mb-2">Country</label>
             <SearchableSelect
               name="country"
               value={filterCountry}
               options={countryList}
-              error={fieldErrors.country}
               onChange={(e) => {
                 setFilterCountry(e.target.value);
                 setIsFilter(true);
               }}
               placeholder="All Countries"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              styles={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                color: colors.text,
+              }}
             />
           </div>
         </div>

@@ -34,7 +34,8 @@ export type RoleErrors = {
 export type RolesQuery = {
   pageNumber: number;
   pageSize: number;
-  isActive?: boolean | string;
+  name: string;
+  status: string;
 };
 
 export type RolePermission =

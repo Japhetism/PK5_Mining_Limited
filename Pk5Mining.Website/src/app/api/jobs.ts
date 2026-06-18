@@ -10,6 +10,8 @@ import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 
 const displayJobs = import.meta.env.VITE_DISPLAY_JOBS_PRODUCTION === "true";
+const code = import.meta.env.VITE_APP_ID ?? "";
+const agroCode = import.meta.env.VITE_APP_AGRO_ID ?? "";
 
 export async function getActiveJobs() {
   try {
@@ -18,6 +20,9 @@ export async function getActiveJobs() {
     }
     const { data } = await http.get<ApiResponse<JobDto[]>>("/Job", {
       requiresApiKey: true,
+      params: {
+        code
+      }
     });
 
     if (data.responseStatus !== "SUCCESS") {
@@ -74,7 +79,13 @@ export async function getJobsForDropdown() {
 
 export async function getJobById(id: string) {
   try {
-    const { data } = await http.get<ApiResponse<JobDto>>(`/Job/${id}`, { requiresApiKey: true });
+    const { data } = await http.get<ApiResponse<JobDto>>(`/Job/${id}`, 
+      { 
+        requiresApiKey: true,
+        params: {
+          code: window.location.hostname.includes("agro") ? agroCode : code
+        }
+      });
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
