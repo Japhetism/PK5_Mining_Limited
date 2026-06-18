@@ -16,7 +16,7 @@ export function SSO() {
   useEffect(() => {
     if (!isLoading) {
       const redirectTo = getBestAdminRoute(user?.userPermissions ?? []);
-      const targetPath = user ? `/admin/${redirectTo}` : "/admin/login";
+      const targetPath = user ? `/admin/${redirectTo}` : "/admin/unauthorized";
       navigate(targetPath, { replace: true });
     }
   }, [user, isLoading, navigate]);

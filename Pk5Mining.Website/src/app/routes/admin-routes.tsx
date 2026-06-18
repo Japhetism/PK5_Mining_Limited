@@ -29,6 +29,10 @@ const SSO = lazy(() =>
   import("@/app/pages/admin/sso").then((m) => ({ default: m.SSO })),
 );
 
+const Unauthorized = lazy(() =>
+  import("@/app/pages/admin/unauthorized").then((m) => ({ default: m.Unauthorized })),
+);
+
 
 function AdminAccessGuard({
   canAccess,
@@ -82,7 +86,10 @@ function mapAdminRoutes(items: AdminRouteItem[]): RouteObject[] {
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: <Login /> },
-  // { path: "/admin/change/password", element: <ChangePassword /> },
+  {
+    path: "/admin/unauthorized",
+    element: <Unauthorized />
+  },
   { 
     path: "/admin/sso", 
     element: <SSO /> 

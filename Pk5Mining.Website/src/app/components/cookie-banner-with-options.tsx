@@ -88,7 +88,6 @@ export function CookieBannerWithOptions() {
 
   if (isAdminRoute) return null;
 
-  // Responsive Variants: Slide from bottom on mobile (y), from right on desktop (x)
   const variants: Variants = {
     initial: { y: 100, x: 0, opacity: 0, scale: 0.95 },
     animate: {
@@ -96,7 +95,7 @@ export function CookieBannerWithOptions() {
       x: 0,
       opacity: 1,
       scale: 1,
-      transition: { type: "spring" as const, damping: 25, stiffness: 200 },
+      transition: { type: "spring", damping: 25, stiffness: 200 },
     },
     exit: { y: 100, opacity: 0, scale: 0.95 },
   };
@@ -104,117 +103,120 @@ export function CookieBannerWithOptions() {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          variants={variants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto w-full sm:max-w-[400px] z-[100] overflow-hidden sm:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)] sm:shadow-2xl border-t sm:border border-[#C89B3C]"
-        >
-          <div className="bg-white text-black font-sans pb-safe sm:pb-0">
-            <div className="bg-[#C89B3C] text-white px-5 sm:px-6 py-3 sm:py-4 flex justify-between items-center relative">
-              <span className="font-bold text-base sm:text-lg tracking-tight">
-                PK5 Mining
-              </span>
-              <button
-                onClick={() => {
-                  setHasConsented(true);
-                  closeModal("cookies");
-                }}
-                className="p-1 text-gray-400 hover:text-white transition-colors"
-                aria-label="Close"
-              >
-                <X size={20} color="#FFF" />
-              </button>
-            </div>
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-transparent z-[99] pointer-events-auto cursor-not-allowed"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+          />
 
-            <div className="p-5 sm:py-2 bg-[#F6F6F6]">
-              <h3 className="text-[20px] sm:text-md font-bold text-black mb-2">
-                Cookie settings
-              </h3>
-              <p className="text-[11px] sm:text-sm text-black leading-relaxed mb-5 sm:mb-6">
-                PK5 Mining uses cookies to enhance your experience and analyze
-                site traffic. By clicking "Accept", you agree to our use of
-                cookies as described in our{" "}
-                <span
-                  className="text-black font-bold underline cursor-pointer"
-                  onClick={() => openModal("privacy")}
-                >
-                  Privacy Policy
+          {/* Main Cookie Banner Container */}
+          <motion.div
+            variants={variants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto w-full sm:max-w-[400px] z-[100] overflow-hidden sm:rounded-xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)] sm:shadow-2xl border-t sm:border border-[#C89B3C]"
+          >
+            <div className="bg-white text-black font-sans pb-safe sm:pb-0">
+              <div className="bg-[#C89B3C] text-white px-5 sm:px-6 py-3 sm:py-4 flex justify-between items-center relative">
+                <span className="font-bold text-base sm:text-lg tracking-tight">
+                  PK5 Mining
                 </span>
-                .
-              </p>
-
-              {/* Grid: 2 columns on slightly larger mobile screens, 1 column on small */}
-              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-1 gap-4 mb-6">
-                {(
-                  Object.keys(preferences) as Array<keyof CookiePreferences>
-                ).map((key) => (
-                  <div
-                    key={key}
-                    className="flex justify-between items-center p-2.5 sm:p-3 border border-[#C89B3C] rounded-lg bg-[#DDDCD9]"
-                  >
-                    <span className="text-[10px] sm:text-sm font-semibold capitalize text-black">
-                      {key}
-                    </span>
-                    <button
-                      onClick={() => togglePreference(key)}
-                      className={`relative inline-flex h-4 w-8 sm:h-5 sm:w-10 items-center rounded-full transition-colors duration-200 ${
-                        preferences[key] ? "bg-[#C89B3C]" : "bg-[#9F9F9F]"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-2.5 w-2.5 sm:h-3 sm:w-3 transform rounded-full transition duration-200 ${
-                          preferences[key]
-                            ? "translate-x-4 sm:translate-x-6 bg-[#F7E8C3]"
-                            : "translate-x-1 bg-[#E0E0E0]"
-                        }`}
-                      />
-                    </button>
-                  </div>
-                ))}
               </div>
 
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-2 sm:gap-3">
-                  <button
-                    onClick={() =>
-                      handleSave("rejected_all", {
-                        functionality: false,
-                        experience: false,
-                        measurement: false,
-                        marketing: false,
-                      })
-                    }
-                    className="flex-1 py-2 sm:py-2.5 bg-white border border-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-gray-50 active:bg-gray-100 transition-colors"
+              <div className="p-5 sm:py-2 bg-[#F6F6F6]">
+                <h3 className="text-[20px] sm:text-md font-bold text-black mb-2">
+                  Cookie settings
+                </h3>
+                <p className="text-[11px] sm:text-sm text-black leading-relaxed mb-5 sm:mb-6">
+                  PK5 Mining uses cookies to enhance your experience and analyze
+                  site traffic. By clicking "Accept", you agree to our use of
+                  cookies as described in our{" "}
+                  <span
+                    className="text-black font-bold underline cursor-pointer"
+                    onClick={() => openModal("privacy")}
                   >
-                    Reject all
-                  </button>
-                  <button
-                    onClick={() => handleSave("custom_preferences")}
-                    className="flex-1 py-2 sm:py-2.5 bg-[#C89B3C] text-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-[#C89B3C] active:scale-95 transition-all"
-                  >
-                    Accept Selection
-                  </button>
+                    Privacy Policy
+                  </span>
+                  .
+                </p>
+
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-1 gap-4 mb-6">
+                  {(
+                    Object.keys(preferences) as Array<keyof CookiePreferences>
+                  ).map((key) => (
+                    <div
+                      key={key}
+                      className="flex justify-between items-center p-2.5 sm:p-3 border border-[#C89B3C] rounded-lg bg-[#DDDCD9]"
+                    >
+                      <span className="text-[10px] sm:text-sm font-semibold capitalize text-black">
+                        {key}
+                      </span>
+                      <button
+                        onClick={() => togglePreference(key)}
+                        className={`relative inline-flex h-4 w-8 sm:h-5 sm:w-10 items-center rounded-full transition-colors duration-200 ${
+                          preferences[key] ? "bg-[#C89B3C]" : "bg-[#9F9F9F]"
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-2.5 w-2.5 sm:h-3 sm:w-3 transform rounded-full transition duration-200 ${
+                            preferences[key]
+                              ? "translate-x-4 sm:translate-x-6 bg-[#F7E8C3]"
+                              : "translate-x-1 bg-[#E0E0E0]"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  ))}
                 </div>
 
-                <button
-                  onClick={() =>
-                    handleSave("accepted_all", {
-                      functionality: true,
-                      experience: true,
-                      measurement: true,
-                      marketing: true,
-                    })
-                  }
-                  className="w-full py-2.5 sm:py-2 mt-1 bg-gray-100 text-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-gray-200 transition-colors"
-                >
-                  Accept all cookies
-                </button>
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2 sm:gap-3">
+                    <button
+                      onClick={() =>
+                        handleSave("rejected_all", {
+                          functionality: false,
+                          experience: false,
+                          measurement: false,
+                          marketing: false,
+                        })
+                      }
+                      className="flex-1 py-2 sm:py-2.5 bg-white border border-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                    >
+                      Reject all
+                    </button>
+                    <button
+                      onClick={() => handleSave("custom_preferences")}
+                      className="flex-1 py-2 sm:py-2.5 bg-[#C89B3C] text-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-[#C89B3C] active:scale-95 transition-all"
+                    >
+                      Accept Selection
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() =>
+                      handleSave("accepted_all", {
+                        functionality: true,
+                        experience: true,
+                        measurement: true,
+                        marketing: true,
+                      })
+                    }
+                    className="w-full py-2.5 sm:py-2 mt-1 bg-gray-100 text-black text-[10px] sm:text-sm font-bold rounded-full hover:bg-gray-200 transition-colors"
+                  >
+                    Accept all cookies
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   );
