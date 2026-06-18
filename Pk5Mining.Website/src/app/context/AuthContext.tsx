@@ -125,7 +125,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
       }
     } catch (error) {
-      console.error("Authentication error encountered", error);
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
         if (status === 401) {

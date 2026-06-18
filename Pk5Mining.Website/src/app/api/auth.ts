@@ -61,7 +61,7 @@ export async function changePassword(payload: IChangePasswordPayload) {
 export async function microsoftLogin() {
   try {
     const { data } = await http.post<ApiResponse<ISSOAUTH>>(
-      "/SingleSignOn/microsoft/login",
+      "/SingleSignOn/microsoft/login-kkk",
       {},
     );
 
@@ -75,7 +75,7 @@ export async function microsoftLogin() {
     }
 
     return data.responseData;
-  } catch (err: unknown) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to authenticate user"));
+  } catch (err: any) {
+    throw err;
   }
 }
