@@ -7,6 +7,7 @@ using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
 using Pk5Mining.Server.Repositories.Job.Job_Specific_Repo;
+using Pk5Mining.Server.Services.Permission_Handler;
 
 namespace Pk5Mining.Server.Controllers.Job
 {
@@ -27,12 +28,12 @@ namespace Pk5Mining.Server.Controllers.Job
 
         [RequireApiKey]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IJobs>>> Get()
+        public async Task<ActionResult<IEnumerable<IJobs>>> Get([FromQuery] string code)
         {
-            IEnumerable<IJobs> jobs = await _jobRepo.GetRepoItems();
+            IEnumerable<IJobs> jobs = await _jobSpecificRepo.GetRepoItems(code);
             return Ok(ApiResponse.SuccessMessage(jobs, "Jobs retrieved successfully."));
         }
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
         [HttpGet("light")]
         public async Task<ActionResult<IEnumerable<JobLightResponseDTO>>> GetLight()
         {
@@ -45,9 +46,9 @@ namespace Pk5Mining.Server.Controllers.Job
         }
         [RequireApiKey]
         [HttpGet("{id}")]
-        public async Task<ActionResult<IJobs>> Get(long id)
+        public async Task<ActionResult<IJobs>> Get(long id, [FromQuery] string code)
         {
-            (IJobs? job, string? error) = await _jobRepo.GetRepoItem(id);
+            (IJobs? job, string? error) = await _jobSpecificRepo.GetRepoItem(id, code);
 
             if (job == null)
             {
@@ -55,8 +56,8 @@ namespace Pk5Mining.Server.Controllers.Job
             }
             return Ok(ApiResponse.SuccessMessage(job, "Job retrieved successfully."));
         }
-
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("job.create")]
         [HttpPost]
         public async Task<ActionResult<IJobs>> Post([FromBody] JobsDTO value)
         {
@@ -88,7 +89,7 @@ namespace Pk5Mining.Server.Controllers.Job
                 }
             }
         }
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
         [HttpGet("filter")]
         public async Task<IActionResult> GetJobs(
             [FromQuery] int pageNumber = 1,
@@ -120,7 +121,8 @@ namespace Pk5Mining.Server.Controllers.Job
             return Ok(ApiResponse.SuccessMessage(response, "Jobs retrieved successfully."));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("job.update")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] JobsDTO value)
         {
@@ -133,6 +135,38 @@ namespace Pk5Mining.Server.Controllers.Job
                 return NotFound(ApiResponse.NotFoundException(null, error ?? $"Job with ID {id} not found."));
             }
             return Ok(ApiResponse.SuccessMessage(job, "Job updated successfully."));
+        }
+        [Authorize]
+        [HttpPost("agro")]
+        public async Task<ActionResult<IJobs>> PostAgro([FromBody] JobsDTO value)
+        {
+            string? error = null;
+            bool isInternalError = false;
+
+            try
+            {
+                (IJobs? job, error, isInternalError) = await _jobSpecificRepo.AgroPostRepoItem(value);
+
+                if (error != null)
+                {
+                    return BadRequest(ApiResponse.Failure(null, error));
+                }
+
+                return CreatedAtAction(nameof(Get), new { id = job?.Id },
+                ApiResponse.SuccessMessage(job, "Job created successfully."));
+
+            }
+            catch (Exception)
+            {
+                if (isInternalError)
+                {
+                    return StatusCode(500, "Internal server error.");
+                }
+                else
+                {
+                    return BadRequest("Failed to create Job.");
+                }
+            }
         }
     }
 }

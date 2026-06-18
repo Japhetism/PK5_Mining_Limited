@@ -25,8 +25,11 @@ namespace Pk5Mining.Server.Configuration.Mapper
             CreateMap<ContactUs, ContactUsDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, LoginResponseDTO>().ReverseMap();
-            CreateMap<User, UpdateUserDto>().ReverseMap();
+            CreateMap<UpdateUserDto, User>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<User, UserResponseDto>().ReverseMap();
+            CreateMap<Subsidiary, LookupDto>().ReverseMap();
+            CreateMap<Department, LookupDto>().ReverseMap();
+            CreateMap<UserRole, LookupDto>().ReverseMap();
             CreateMap<Subsidiary, SubsidiaryDto>().ReverseMap();
             CreateMap<Subsidiary, SubsidiaryStatusUpdateDto>().ReverseMap();
             CreateMap<UserRole, UserRoleDto>().ReverseMap();

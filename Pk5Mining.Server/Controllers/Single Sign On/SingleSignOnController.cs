@@ -2,7 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Admin;
+using Pk5Mining.Server.Models.Departments;
+using Pk5Mining.Server.Models.Permissions.DTOs;
 using Pk5Mining.Server.Models.Response;
+using Pk5Mining.Server.Models.Roles;
+using Pk5Mining.Server.Models.Subsidiaries;
+using Pk5Mining.Server.Models.User;
 using Pk5Mining.Server.Repositories.Admin;
 using Pk5Mining.Server.Services;
 
@@ -43,9 +48,44 @@ namespace Pk5Mining.Server.Controllers.Single_Sign_On
             }
             string token = _tokenService.CreateJWTToken(user);
 
+            var userResponse = new LoginUserResponseDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                IsActive = user.IsActive,
+
+                Subsidiary = user.Subsidiary == null  ? null : new SubsidiaryDto
+                {
+                    Id = user.Subsidiary.Id,
+                    Name = user.Subsidiary.Name
+                },
+
+                Department = user.Department == null ? null : new DepartmentDto
+                {
+                    Id = user.Department.Id,
+                     Name = user.Department.Name
+                },
+
+                Role = user.UserRoles == null ? null : new RoleWithPermissionDto
+                {
+                    Id = user.UserRoles.Id,
+                    Name = user.UserRoles.Name,
+
+                    Permissions = user.UserRoles.Permissions
+                    .Select(p => new PermissionResponseDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name
+                    }).ToList()
+                }
+            };
+
             return Ok(ApiResponse.SuccessMessage(new
             {
-                User = user,
+                User = userResponse,
                 Token = token
             }, "Login successful"));
         }

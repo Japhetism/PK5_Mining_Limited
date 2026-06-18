@@ -21,7 +21,7 @@ namespace Pk5Mining.Server.Controllers.Authentication
             _tokenService = tokenService;
             _mapper = mapper;
         }
-        [HttpPost("login")]
+       /* [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] LoginDTO dto)
         {
             var (user, error) = await _userRepo.LoginAsync(dto);
@@ -35,6 +35,6 @@ namespace Pk5Mining.Server.Controllers.Authentication
             response.JwtToken = _tokenService.CreateJWTToken(user);
 
             return Ok(ApiResponse.SuccessMessage(response, "Login Successful"));
-        }
+        } */
     }
 }

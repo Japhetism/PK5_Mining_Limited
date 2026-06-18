@@ -164,6 +164,8 @@ function useUserViewModel() {
     setForm({
       ...defaultFormData,
       ...selectedUser,
+      roleId: selectedUser?.role?.id ?? 0,
+      departmentId: selectedUser?.department?.id ?? 0,
     });
   }, [selectedUser, confirmEditOpen]);
 

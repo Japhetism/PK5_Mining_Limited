@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Pk5Mining.Server.Configuration.Mapper;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Job;
@@ -19,6 +20,7 @@ using Pk5Mining.Server.Services;
 using Pk5Mining.Server.Services.Cloud_Service;
 using Pk5Mining.Server.Services.Email;
 using Pk5Mining.Server.Services.Email.Agro_Mail;
+using Pk5Mining.Server.Services.Permission_Handler;
 using System.IO;
 
 namespace Pk5Mining.Server.Extensions
@@ -50,6 +52,13 @@ namespace Pk5Mining.Server.Extensions
             services.AddScoped<ITokenService , TokenService>();
             services.AddTransient<IMailService  , MailService>();
             services.AddTransient<IAgroMailService, AgroMailService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+            services.AddHostedService<QueuedHostedService>();
+            services.AddAuthorization();
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 
             services.AddCors(options =>

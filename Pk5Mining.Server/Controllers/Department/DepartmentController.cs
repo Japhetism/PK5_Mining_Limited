@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Departments;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories.Departments;
+using Pk5Mining.Server.Services.Permission_Handler;
 
 namespace Pk5Mining.Server.Controllers.Department
 {
@@ -18,7 +19,8 @@ namespace Pk5Mining.Server.Controllers.Department
             _repo = repo;
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("department.create")]
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] DepartmentDto dto)
         {
@@ -32,7 +34,8 @@ namespace Pk5Mining.Server.Controllers.Department
             return Ok(ApiResponse.SuccessMessage(data, "Department created successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("department.view")]
         [HttpGet("all")]
         public async Task<IActionResult> Get(
             [FromQuery] int pageNumber = 1,
@@ -57,7 +60,8 @@ namespace Pk5Mining.Server.Controllers.Department
             return Ok(ApiResponse.SuccessMessage(response, "Departments retrieved successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("department.view")]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
         {
@@ -76,7 +80,8 @@ namespace Pk5Mining.Server.Controllers.Department
             return Ok(ApiResponse.SuccessMessage(data, "Department retrieved successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("department.update")]
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] DepartmentDto dto)
         {
@@ -90,7 +95,8 @@ namespace Pk5Mining.Server.Controllers.Department
             return Ok(ApiResponse.SuccessMessage(data, "Department updated successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("department.update")]
         [HttpPut("update-status/{id}")]
         public async Task<IActionResult> UpdateStatus(long id, [FromQuery] bool isActive)
         {
@@ -104,7 +110,7 @@ namespace Pk5Mining.Server.Controllers.Department
             return Ok(ApiResponse.SuccessMessage(data, "Status updated successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
         [HttpGet("light-responses")]
         public async Task<IActionResult> GetLightResponses()
         {
@@ -118,7 +124,8 @@ namespace Pk5Mining.Server.Controllers.Department
             return Ok(ApiResponse.SuccessMessage(data, "Departments retrieved successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("department.update")]
         [HttpDelete]
         public async Task<IActionResult> Delete(long id)
         {

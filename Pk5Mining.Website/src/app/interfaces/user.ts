@@ -10,8 +10,19 @@ export type User = {
   username: string;
   roleId?: number;
   subsidiaryId?: number;
+  subsidiary?: {
+    id: number;
+    name: string;
+  }
   departmentId?: number;
-  role?: string;
+  department?: {
+    id: number;
+    name: string;
+  }
+  role?: {
+    id: number;
+    name: string;
+  }
   isActive?: boolean;
   isDeleted?: boolean;
   dT_Created?: string; 

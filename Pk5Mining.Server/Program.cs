@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -7,6 +8,7 @@ using Pk5Mining.Server.Extensions;
 using Pk5Mining.Server.Middleware;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Services.Email;
+using Pk5Mining.Server.Services.Permission_Handler;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -154,6 +156,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             }
         };
     });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.s

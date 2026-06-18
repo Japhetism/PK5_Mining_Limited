@@ -114,7 +114,7 @@ function useLoginViewModel() {
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    isEmailStep ? handleContinue() : onSubmit();
+    handleSSOSigninByEmail();
   };
 
   return {

@@ -6,6 +6,7 @@ using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
 using Pk5Mining.Server.Repositories.Contact_Us;
+using Pk5Mining.Server.Services.Permission_Handler;
 
 namespace Pk5Mining.Server.Controllers.Contact_Us
 {
@@ -53,11 +54,12 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             }
             return Ok(ApiResponse.SuccessMessage(contact, "Your message has been sent successfully."));
         }
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("contact-message.view")]
         [HttpGet("{id:long}")]
-        public async Task<IActionResult> Get(long id)
+        public async Task<IActionResult> Get(long id, string appId)
         {
-            var (contact, error) = await _repo.GetById(id);
+            var (contact, error) = await _repo.GetById(id, appId);
             if (error != null)
             {
                 return NotFound(ApiResponse.Failure(null, error));
@@ -65,14 +67,15 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             return Ok(ApiResponse.SuccessMessage(contact, "Data Retrieved"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string appId)
         {
-            var contacts = await _repo.GetAll();
+            var contacts = await _repo.GetAll(appId);
             return Ok(ApiResponse.SuccessMessage(contacts, "Data Retrieved"));
         }
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("contact-message.view")]
         [HttpGet("filter")]
         public async Task<IActionResult> Get(
              [FromQuery] int pageNumber = 1,
@@ -111,7 +114,8 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             };
             return Ok(ApiResponse.SuccessMessage(response, "Contact requests retrieved successfully."));
         }
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("contact-message.update")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] ContactUsUpdateDTO value)
         {

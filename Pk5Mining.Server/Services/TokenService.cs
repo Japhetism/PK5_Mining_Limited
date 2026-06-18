@@ -22,13 +22,18 @@ namespace Pk5Mining.Server.Services
                 new Claim(ClaimTypes.GivenName, user.FirstName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim(ClaimTypes.Role, user.Role),
                 new Claim("UserId", user.Id.ToString()),
-                new Claim("SubsidiaryId", user.SubsidiaryId?.ToString() ?? ""),
-                new Claim("RoleId", user.RoleId?.ToString() ?? ""),
-                new Claim("DepartmentId", user.DepartmentId?.ToString() ?? "")
+                new Claim("SubsidiaryId", user.SubsidiaryId.ToString() ?? ""),
+                new Claim("RoleId", user.RoleId.ToString() ?? ""),
+                new Claim("DepartmentId", user.DepartmentId.ToString() ?? "")
             };
-
+            if (user.UserRoles?.Permissions != null)
+            {
+                foreach (var permission in user.UserRoles.Permissions)
+                {
+                    claims.Add( new Claim("permission", permission.Name));
+                }
+            }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));// Encoding the Key
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256); //Keepeing the credential in a variable
 
