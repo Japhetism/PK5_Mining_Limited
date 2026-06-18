@@ -61,7 +61,7 @@ export async function changePassword(payload: IChangePasswordPayload) {
 export async function microsoftLogin() {
   try {
     const { data } = await http.post<ApiResponse<ISSOAUTH>>(
-      "/SingleSignOn/microsoft/login-kkk",
+      "/SingleSignOn/microsoft/login",
       {},
     );
 
