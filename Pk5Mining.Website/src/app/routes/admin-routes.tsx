@@ -11,10 +11,6 @@ const Login = lazy(() =>
   import("@/app/pages/admin/login").then((m) => ({ default: m.Login }))
 );
 
-const ChangePassword = lazy(() =>
-  import("@/app/pages/admin/password/change").then((m) => ({ default: m.ChangePassword }))
-);
-
 const ProtectedRoute = lazy(() =>
   import("@/app/auth/ProtectedRoute").then((m) => ({
     default: m.ProtectedRoute,
