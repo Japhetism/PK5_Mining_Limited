@@ -17,7 +17,13 @@ function useLoginViewModel() {
   const navigate = useNavigate();
   const location = useLocation();
   const { emailDomain } = useTenant();
-  const { login: authLogin, user: authUser, isLoading } = useAuth();
+  const {
+    login: authLogin,
+    user: authUser,
+    isLoading,
+    isServerError,
+    isUnauthorized,
+  } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,8 +37,19 @@ function useLoginViewModel() {
   useEffect(() => {
     if (isLoading) {
       navigate("/admin/sso", { replace: true });
+      return;
     }
-  }, [isLoading]);
+
+    if (isServerError) {
+      navigate("/admin/error", { replace: true });
+      return;
+    }
+
+    if (isUnauthorized) {
+      navigate("/admin/unauthorized", { replace: true });
+      return;
+    }
+  }, [isLoading, isServerError, isUnauthorized, navigate]);
 
   useEffect(() => {
     const hasMsalParams =

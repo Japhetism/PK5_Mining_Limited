@@ -33,6 +33,10 @@ const Unauthorized = lazy(() =>
   import("@/app/pages/admin/unauthorized").then((m) => ({ default: m.Unauthorized })),
 );
 
+const Error = lazy(() =>
+  import("@/app/pages/admin/error").then((m) => ({ default: m.Error })),
+);
+
 
 function AdminAccessGuard({
   canAccess,
@@ -89,6 +93,10 @@ export const adminRoutes: RouteObject[] = [
   {
     path: "/admin/unauthorized",
     element: <Unauthorized />
+  },
+  {
+    path: "/admin/error",
+    element: <Error />
   },
   { 
     path: "/admin/sso", 

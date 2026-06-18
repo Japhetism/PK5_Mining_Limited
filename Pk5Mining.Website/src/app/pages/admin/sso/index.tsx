@@ -5,7 +5,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { getBestAdminRoute } from "@/app/utils/helper";
 
 export function SSO() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, isUnauthorized, isServerError } = useAuth();
   const {
     colors: { bg },
     logo,
@@ -14,12 +14,26 @@ export function SSO() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading) {
-      const redirectTo = getBestAdminRoute(user?.userPermissions ?? []);
-      const targetPath = user ? `/admin/${redirectTo}` : "/admin/unauthorized";
-      navigate(targetPath, { replace: true });
+    if (isLoading) return;
+
+    if (isServerError) {
+      navigate("/admin/error", { replace: true });
+      return;
     }
-  }, [user, isLoading, navigate]);
+
+    if (isUnauthorized) {
+      navigate("/admin/unauthorized", { replace: true });
+      return;
+    }
+
+    if (user) {
+      const redirectTo = getBestAdminRoute(user.userPermissions ?? []);
+      navigate(`/admin/${redirectTo}`, { replace: true });
+      return;
+    }
+
+    navigate("/login", { replace: true });
+  }, [user, isLoading, isUnauthorized, isServerError, navigate]);
 
   return (
     <div
