@@ -235,22 +235,12 @@ function LoginForm() {
       </button>
 
       {/* OR divider */}
-      <div className="flex gap-[21px] items-center shrink-0 w-full">
-        <div className="h-0 shrink-0 w-[175px] relative">
-          <div className="absolute inset-[-1px_0_0_0]">
-            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 175 1">
-              <line stroke="#C89B3C" x2="175" y1="0.5" y2="0.5" />
-            </svg>
-          </div>
-        </div>
-        <p className="font-['Inter',sans-serif] font-normal shrink-0 text-[16px] text-white whitespace-nowrap">OR</p>
-        <div className="h-0 shrink-0 w-[175px] relative">
-          <div className="absolute inset-[-1px_0_0_0]">
-            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 175 1">
-              <line stroke="#C89B3C" x2="175" y1="0.5" y2="0.5" />
-            </svg>
-          </div>
-        </div>
+      <div className="flex items-center w-full gap-4">
+        <div className="flex-1 h-px bg-[#C89B3C]" />
+        <p className="px-3 text-[14px] sm:text-[16px] text-white font-['Inter',sans-serif] whitespace-nowrap">
+          OR
+        </p>
+        <div className="flex-1 h-px bg-[#C89B3C]" />
       </div>
 
       {/* SSO button */}
@@ -349,7 +339,7 @@ export function Login() {
       </div>
 
       {/* ── Right login panel (Locked to right edge, takes up 100% height) ── */}
-    <div className="absolute lg:inset-y-0 right-0 w-full lg:w-[622px] h-auto lg:h-full z-20 top-[380px] lg:top-0">
+      <div className="absolute lg:inset-y-0 right-0 w-full lg:w-[622px] h-auto lg:h-full z-20 top-[380px] lg:top-0">
         <FormPanel />
         <Frame6 />
 
@@ -361,7 +351,7 @@ export function Login() {
         </p>
 
         <p
-         className="absolute font-['Inter',sans-serif] font-normal text-[16px] text-white whitespace-nowrap left-[24px] lg:left-[103px] top-[190px] lg:top-[31%] z-30"
+          className="absolute font-['Inter',sans-serif] font-normal text-[16px] text-white whitespace-nowrap left-[24px] lg:left-[103px] top-[190px] lg:top-[31%] z-30"
           style={{ lineHeight: "normal" }}
         >
           Email Address
