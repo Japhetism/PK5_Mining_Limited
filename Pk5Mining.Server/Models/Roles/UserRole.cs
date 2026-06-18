@@ -7,8 +7,8 @@ namespace Pk5Mining.Server.Models.Roles
     public class UserRole
     {
         public long Id { get; set; }
-        public long SubsidiaryId { get; set; }
         public string Name { get; set; } = string.Empty;
+        public long SubsidiaryId { get; set; }
         public bool IsSystem { get; set; } = false;
         public string Status { get; set; } = string.Empty;
         public DateTime DT_Created { get; set; }

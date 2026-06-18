@@ -51,7 +51,7 @@ namespace Pk5Mining.Server.Services.Email
             }
         }
 
-        public bool SendHTMLMail(MailData htmlMailData)
+        public async Task<bool> SendHTMLMailAsync(MailData htmlMailData)
         {
             try
             {
@@ -82,10 +82,10 @@ namespace Pk5Mining.Server.Services.Email
                         Debug.WriteLine($"Sending to... {MailKit.Security.SecureSocketOptions.StartTls}");
 
                         mailClient.SslProtocols = System.Security.Authentication.SslProtocols.None;
-                        mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-                        mailClient.Authenticate(_mailSettings.SenderEmail, _mailSettings.Password);
-                        mailClient.Send(emailMessage);
-                        mailClient.Disconnect(true);
+                        await mailClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                        await mailClient.AuthenticateAsync(_mailSettings.SenderEmail, _mailSettings.Password);
+                        await mailClient.SendAsync(emailMessage);
+                        await mailClient.DisconnectAsync(true);
                     }
                 }
                 Debug.WriteLine("Email Sent success");
@@ -100,7 +100,7 @@ namespace Pk5Mining.Server.Services.Email
             }
         }
 
-        public bool SendMailWithAttachment(MailDataWithAttachment mailData)
+        public async Task<bool> SendMailWithAttachmentAsync(MailDataWithAttachment mailData)    
         {
             try
             {
@@ -143,10 +143,10 @@ namespace Pk5Mining.Server.Services.Email
                     //this is the SmtpClient from the Mailkit.Net.Smtp namespace, not the System.Net.Mail one
                     using (SmtpClient mailClient = new SmtpClient())
                     {
-                        mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-                        mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
-                        mailClient.Send(emailMessage);
-                        mailClient.Disconnect(true);
+                        await mailClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                        await mailClient.AuthenticateAsync(_mailSettings.UserName, _mailSettings.Password);
+                        await mailClient.SendAsync(emailMessage);
+                        await mailClient.DisconnectAsync(true);
                     }
                 }
 

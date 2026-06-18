@@ -5,9 +5,10 @@ using Pk5Mining.Server.Services;
 
 namespace Pk5Mining.Server.Repositories.Job
 {
-    public class JobRepo(Pk5MiningDBContext dbContext, IMapper mapper) : Abs_Pk5Repo<IJobs, IJobsDTO>(dbContext)
+    public class JobRepo(Pk5MiningDBContext dbContext, IMapper mapper, ICurrentUserService currentUserService) : Abs_Pk5Repo<IJobs, IJobsDTO>(dbContext)
     {
         private readonly IMapper _mapper = mapper;
+        private readonly ICurrentUserService _currentUserService = currentUserService;
 
         public override Task<(IJobs?, string?)> DeleteRepoItem(long Id)
         {
@@ -45,6 +46,7 @@ namespace Pk5Mining.Server.Repositories.Job
                 job.Id = IdGenerator.GenerateUniqueId();
                 job.DT_Created = DateTime.UtcNow;
                 job.Status = "Open";
+                job.SubsidiaryId = _currentUserService.SubsidiaryId.Value;
                 job.DT_Expiry = job.DT_Created?.AddMonths(3);
                 (IJobs? savedJob, string? error) = await base.PostRepoItemAsync(job);
                 return (savedJob, error, false);

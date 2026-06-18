@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Models.Subsidiaries;
 using Pk5Mining.Server.Repositories.Subsidiaries;
+using Pk5Mining.Server.Services.Permission_Handler;
 
 namespace Pk5Mining.Server.Controllers.Subsidiary
 {
@@ -18,7 +19,8 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             _repo = repo;
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("subsidiary.create")]
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] SubsidiaryDto dto)
         {
@@ -30,7 +32,7 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(data, "Subsidiary created successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> Get(
             [FromQuery] int pageNumber = 1,
@@ -57,7 +59,8 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(response, "Subsidiaries retrieved successfully."));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("subsidiary.view")]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
         {
@@ -76,7 +79,8 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(data, "Subsidiary retrieved successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("subsidiary.update")]
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] SubsidiaryDto dto)
         {
@@ -90,7 +94,8 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(data, "Subsidiary updated successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("subsidiary.update")]
         [HttpPut("update-status/{id}")]
         public async Task<IActionResult> UpdateStatus(long id, [FromBody] SubsidiaryStatusUpdateDto dto)
         {
@@ -102,7 +107,7 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(data, "Status updated successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
         [HttpGet("light-responses")]
         public async Task<IActionResult> GetLightResponses()
         {
@@ -114,7 +119,8 @@ namespace Pk5Mining.Server.Controllers.Subsidiary
             return Ok(ApiResponse.SuccessMessage(data, "Subsidiaries retrieved successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("subsidiary.update")]
         [HttpDelete]
         public async Task<IActionResult> Delete(long id)
         {

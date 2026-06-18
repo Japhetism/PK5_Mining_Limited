@@ -13,11 +13,13 @@ namespace Pk5Mining.Server.Repositories.Roles
     {
         private readonly Pk5MiningDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UserRoleRepo(Pk5MiningDBContext dbContext, IMapper mapper)
+        public UserRoleRepo(Pk5MiningDBContext dbContext, IMapper mapper, ICurrentUserService currentUserService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<(UserRole?, string?, bool)> CreateAsync(UserRoleDto dto)
@@ -61,16 +63,38 @@ namespace Pk5Mining.Server.Repositories.Roles
             }
         }
 
+        public async Task<(IEnumerable<RoleLightResponse>?, string?, bool)> GetLightResponsesAsync()
+        {
+            try
+            {
+                var subsidiaryId = _currentUserService.SubsidiaryId;
+
+                var data = await _dbContext.UserRoles
+                    .AsNoTracking()
+                    .Where(r => r.SubsidiaryId == subsidiaryId)
+                    .ProjectTo<RoleLightResponse>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
+
+                return (data, null, false);
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message, true);
+            }
+        }
+
         public async Task<(UserRole?, string?, bool)> GetByIdAsync(long id)
         {
             try
             {
-                UserRole? entity = await _dbContext.UserRoles.Include(r => r.Permissions).Include(s => s.Subsidiary).FirstOrDefaultAsync(x => x.Id == id);
+                var subsidiaryId = _currentUserService.SubsidiaryId;
 
+                UserRole? entity = await _dbContext.UserRoles.Include(r => r.Permissions).Include(s => s.Subsidiary).FirstOrDefaultAsync(x =>x.Id == id &&x.SubsidiaryId == subsidiaryId);
                 if (entity == null)
                 {
                     return (null, "Role not found.", true);
                 }
+
                 return (entity, null, false);
             }
             catch (Exception ex)
@@ -79,28 +103,50 @@ namespace Pk5Mining.Server.Repositories.Roles
             }
         }
 
-        public async Task<(IEnumerable<UserRole>, int)> GetAllAsync(int pageNumber, int pageSize, long? subsidiaryId, string? name, string? status, bool? isSystem)
+        public async Task<(IEnumerable<UserRole>, int)> GetAllAsync(
+            int pageNumber,
+            int pageSize,
+            long? subsidiaryId,
+            string? name,
+            string? status,
+            bool? isSystem)
         {
-            IQueryable<UserRole> query = _dbContext.UserRoles.Include(r => r.Permissions).Include(s => s.Subsidiary).AsQueryable();
+            var currentSubsidiaryId = _currentUserService.SubsidiaryId;
+
+            IQueryable<UserRole> query = _dbContext.UserRoles
+                .Include(r => r.Permissions)
+                .Include(s => s.Subsidiary)
+                .Where(r => r.SubsidiaryId == currentSubsidiaryId);
+
+            // Optional extra filter within same tenant
             if (subsidiaryId.HasValue)
             {
-                query =query.Where(r => r.SubsidiaryId == subsidiaryId.Value);
+                query = query.Where(r => r.SubsidiaryId == subsidiaryId.Value);
             }
+
             if (!string.IsNullOrWhiteSpace(name))
             {
                 query = query.Where(r => r.Name.Contains(name));
             }
+
             if (!string.IsNullOrWhiteSpace(status))
             {
                 query = query.Where(r => r.Status.ToLower() == status.ToLower());
             }
+
             if (isSystem.HasValue)
             {
                 query = query.Where(r => r.IsSystem == isSystem.Value);
             }
+
             int totalCount = await query.CountAsync();
 
-            var data = await query.OrderByDescending(x => x.DT_Created).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var data = await query
+                .OrderByDescending(x => x.DT_Created)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
             return (data, totalCount);
         }
 
@@ -157,6 +203,11 @@ namespace Pk5Mining.Server.Repositories.Roles
                 {
                     return (null, "Status is required.", true);
                 }
+                bool roleInUse = await _dbContext.Users.AnyAsync(u => u.RoleId == id && !u.IsDeleted);
+                if (roleInUse)
+                {
+                    return (null, "This role cannot be deactivated because it is currently assigned to one or more users. Reassign those users to another role before deactivating it.", true);
+                }
                 entity.Status = dto.Status;
                 entity.DT_Modified = DateTime.UtcNow;
                 _dbContext.UserRoles.Update(entity);
@@ -177,26 +228,15 @@ namespace Pk5Mining.Server.Repositories.Roles
             {
                 return (false, "Role not found.", true);
             }
+            bool roleInUse = await _dbContext.Users.AnyAsync(u => u.RoleId == id && !u.IsDeleted);
+
+            if (roleInUse)
+            {
+                return (false, "This role cannot be deleted because it is currently assigned to one or more users. Reassign those users to another role before deleting it.", true);
+            }
             _dbContext.UserRoles.Remove(userRole);
             await _dbContext.SaveChangesAsync();
             return (true, null, false);
-        }
-
-        public async Task<(IEnumerable<RoleLightResponse>?, string?, bool)> GetLightResponsesAsync()
-        {
-            try
-            {
-                var data = await _dbContext.UserRoles
-                    .AsNoTracking()
-                    .ProjectTo<RoleLightResponse>(_mapper.ConfigurationProvider)
-                    .ToListAsync();
-
-                return (data, null, false);
-            }
-            catch (Exception ex)
-            {
-                return (null, ex.Message, true);
-            }
         }
     }
 }

@@ -7,5 +7,8 @@ namespace Pk5Mining.Server.Repositories.Job.Job_Specific_Repo
         Task<(IEnumerable<JobsDTO> Jobs, int TotalCount)> GetJobsAsync(int pageNumber, int pageSize, bool? isActive, string? department, string? location, string? jobType);
         Task<(IJobs?, string?, bool)> UpdateRepoItem(long id, JobsDTO dto);
         Task<(List<JobLightResponseDTO>?, string?)> GetJob();
+        Task<(IJobs?, string?)> GetRepoItem(long id, string code);
+        Task<IEnumerable<IJobs>> GetRepoItems(string code);
+        Task<(IJobs?, string?, bool)> AgroPostRepoItem(IJobsDTO item);
     }
 }

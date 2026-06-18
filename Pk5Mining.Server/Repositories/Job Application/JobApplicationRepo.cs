@@ -1,20 +1,18 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Services;
 using Pk5Mining.Server.Services.Email;
-using System.Numerics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Pk5Mining.Server.Repositories.Job_Application
 {
-    public class JobApplicationRepo(Pk5MiningDBContext dbContext, IMapper mapper, IMailService mailService, IEmailTemplateService templateService) : Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>(dbContext)
+    public class JobApplicationRepo(Pk5MiningDBContext dbContext, IMapper mapper, IMailService mailService, IBackgroundTaskQueue taskQueue, IEmailTemplateService templateService, ICurrentUserService currentUserService) : Abs_Pk5Repo<IJobApplication, IJobApplicationDTO>(dbContext)
     {
         private readonly IMapper _mapper = mapper;
         private readonly IMailService _mailService = mailService;
+        private readonly IBackgroundTaskQueue _taskQueue = taskQueue;
         private readonly IEmailTemplateService _templateService = templateService;
-
+        private readonly ICurrentUserService _currentUserService = currentUserService;
         public override Task<(IJobApplication?, string?)> DeleteRepoItem(long Id)
         {
             throw new NotImplementedException();
@@ -22,27 +20,37 @@ namespace Pk5Mining.Server.Repositories.Job_Application
 
         public async override Task<(IJobApplication?, string?)> GetRepoItem(long Id)
         {
-            JobApplication? jobApplication = await DbContext.JobApplications.Include(j => j.Jobs).FirstOrDefaultAsync(c => c.Id == Id);
+            var subsidiaryId = _currentUserService.SubsidiaryId;
+
+            JobApplication? jobApplication = await DbContext.JobApplications.Include(j => j.Jobs).FirstOrDefaultAsync(c =>c.Id == Id &&c.Jobs.SubsidiaryId == subsidiaryId);
             if (jobApplication == null)
             {
                 return (null, "Job Application not found");
             }
+
             return (jobApplication, null);
         }
 
         public async override Task<IEnumerable<IJobApplication>> GetRepoItems()
         {
-            return await DbContext.JobApplications.Include(j=> j.Jobs).ToListAsync();
+            var subsidiaryId = _currentUserService.SubsidiaryId;
+            return await DbContext.JobApplications.Include(j => j.Jobs).Where(j => j.Jobs.SubsidiaryId == subsidiaryId).ToListAsync();
         }
 
         public async override Task<(IJobApplication?, string?, bool)> PostRepoItem(IJobApplicationDTO item)
         {
             try
             {
-                bool alreadyApplied = await DbContext.JobApplications.AnyAsync(x =>x.JobId == item.JobId && x.Email!.ToLower() == item.Email!.ToLower());
-                if (alreadyApplied)
+                if (string.IsNullOrWhiteSpace(item.Email))
                 {
-                    return (null, "This email has already applied for this job.", false);
+                    return (null, "Email is required.", true);
+                }
+                var existingApplication = await DbContext.JobApplications.Include(x => x.Jobs).FirstOrDefaultAsync(x =>x.JobId == item.JobId && x.Email!.ToLower() == item.Email!.ToLower());
+                if (existingApplication != null)
+                {
+                    string jobTitle = existingApplication.Jobs?.Title ?? "this role";
+                    string applicationDate = existingApplication.DT_Created?.ToString("yyyy-MM-dd") ?? "an earlier date";
+                    return ( null, $"An application for the {jobTitle} role was already submitted using {existingApplication.Email} on {applicationDate}.", false );
                 }
                 JobApplication jobApplication = _mapper.Map<JobApplication>(item);
                 if (jobApplication == null)
@@ -57,44 +65,71 @@ namespace Pk5Mining.Server.Repositories.Job_Application
                 {
                     return (null, error, true);
                 }
-  
-                var adminBody = await _templateService.RenderTemplateAsync("AdminJobApp.txt",
-                new Dictionary<string, string>
-                {
-                    { "FirstName", item.FirstName ?? "N/A"},
-                    { "LastName", item.LastName ?? "N/A"},
-                    { "Email", item.Email },
-                    { "PhoneNumber", item.PhoneNumber ?? "N/A" }
-                });
 
-                var mailData = new MailDataWithAttachment
+                _taskQueue.QueueBackgroundWorkItem(async token =>
                 {
-                    EmailToId = "dev-test-emails@pk5miningltd.com",
-                    EmailToName = "Admin",
-                    EmailSubject = "New Job Application Received — PK5 Mining Limited",
-                    EmailBody = adminBody,
-                    EmailAttachments = new FormFileCollection()
-                };
-
-                if (item.ResumeFile != null)
-                {
-                    mailData.EmailAttachments.Add(item.ResumeFile);
-                }
-                _mailService.SendMailWithAttachment(mailData);
-
-                // Client email
-                var clientBody = await _templateService.RenderTemplateAsync("ClientJobApp.txt",
-                    new Dictionary<string, string>
+                    try
                     {
-                          { "FirstName", item.FirstName }
-                    });
+                        // Admin Email
+                        var adminBody = await _templateService.RenderTemplateAsync(
+                            "AdminJobApp.txt",
+                            new Dictionary<string, string>
+                            {
+                                { "FirstName", item.FirstName ?? "N/A"},
+                                { "LastName", item.LastName ?? "N/A"},
+                                { "Email", item.Email },
+                                { "PhoneNumber", item.PhoneNumber ?? "N/A" }
+                            });
 
-                 _mailService.SendHTMLMail(new MailData
-                {
-                    EmailToId = item.Email,
-                    EmailToName = $"{item.FirstName} {item.LastName}",
-                    EmailSubject = "Job Application Received",
-                    EmailBody = clientBody
+                        var adminMail = new MailDataWithAttachment
+                        {
+                            EmailToId = "dev-test-emails@pk5miningltd.com",
+                            EmailToName = "Admin",
+                            EmailSubject = "New Job Application Received — PK5 Mining Limited",
+                            EmailBody = adminBody,
+                            EmailAttachments = new FormFileCollection()
+                        };
+
+                        if (item.ResumeFile != null)
+                        {
+                            adminMail.EmailAttachments.Add(item.ResumeFile);
+                        }
+
+                        // Client Email
+                        var clientBody = await _templateService.RenderTemplateAsync(
+                            "ClientJobApp.txt",
+                            new Dictionary<string, string>
+                            {
+                                  { "FirstName", item.FirstName }
+                            });
+
+                        var clientMail = new MailData
+                        {
+                            EmailToId = item.Email,
+                            EmailToName = $"{item.FirstName} {item.LastName}",
+                            EmailSubject = "Job Application Received",
+                            EmailBody = clientBody
+                        };
+
+                        bool[] results = await Task.WhenAll(
+                            _mailService.SendMailWithAttachmentAsync(adminMail),
+                            _mailService.SendHTMLMailAsync(clientMail)
+                        );
+
+                        if (!results[0])
+                        {
+                            Console.WriteLine("Admin job application email failed.");
+                        }
+
+                        if (!results[1])
+                        {
+                            Console.WriteLine("Client job application email failed.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
                 });
                 return (savedJobApplication, null, false);
             }
@@ -132,3 +167,6 @@ namespace Pk5Mining.Server.Repositories.Job_Application
         }
     }
 }
+
+
+

@@ -8,7 +8,15 @@
         public string LastName { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public bool IsActive { get; set; }
-        public string Role { get; set; } = string.Empty;
         public DateTime DT_Created { get; set; }
+
+        public LookupDto Subsidiary { get; set; } = new();
+        public LookupDto Department { get; set; } = new();
+        public LookupDto Role { get; set; } = new();
+    }
+    public class LookupDto
+    {
+        public long Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

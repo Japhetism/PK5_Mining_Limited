@@ -11,11 +11,13 @@ namespace Pk5Mining.Server.Repositories.Departments
     {
         private readonly Pk5MiningDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public DepartmentRepo(Pk5MiningDBContext dbContext, IMapper mapper)
+        public DepartmentRepo(Pk5MiningDBContext dbContext, IMapper mapper, ICurrentUserService currentUserService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<(Department?, string?, bool)> CreateAsync(DepartmentDto dto)
@@ -57,7 +59,13 @@ namespace Pk5Mining.Server.Repositories.Departments
         {
             try
             {
-                var entity = await _dbContext.Departments.Include(d => d.Subsidiary).FirstOrDefaultAsync(d => d.Id == id);
+                var subsidiaryId = _currentUserService.SubsidiaryId;
+
+                var entity = await _dbContext.Departments
+                    .Include(d => d.Subsidiary)
+                    .FirstOrDefaultAsync(d =>
+                        d.Id == id &&
+                        d.SubsidiaryId == subsidiaryId);
 
                 if (entity == null)
                 {
@@ -72,18 +80,28 @@ namespace Pk5Mining.Server.Repositories.Departments
             }
         }
 
-        public async Task<(IEnumerable<Department>, int)> GetAllAsync(int pageNumber, int pageSize, string? name, bool? isActive)
+        public async Task<(IEnumerable<Department>?, int)> GetAllAsync(
+            int pageNumber,
+            int pageSize,
+            string? name,
+            bool? isActive)
         {
-            IQueryable<Department> query = _dbContext.Departments.Include(d => d.Subsidiary).AsQueryable();
+            var subsidiaryId = _currentUserService.SubsidiaryId;
+
+            IQueryable<Department> query = _dbContext.Departments
+                .Include(d => d.Subsidiary)
+                .Where(d => d.SubsidiaryId == subsidiaryId);
 
             if (!string.IsNullOrWhiteSpace(name))
             {
                 query = query.Where(d => d.Name.StartsWith(name));
             }
+
             if (isActive.HasValue)
             {
                 query = query.Where(d => d.IsActive == isActive.Value);
             }
+
             int totalCount = await query.CountAsync();
 
             var data = await query
@@ -173,8 +191,11 @@ namespace Pk5Mining.Server.Repositories.Departments
         {
             try
             {
+                var subsidiaryId = _currentUserService.SubsidiaryId;
+
                 var data = await _dbContext.Departments
                     .AsNoTracking()
+                    .Where(d => d.SubsidiaryId == subsidiaryId)
                     .ProjectTo<DepartmentLightResponse>(_mapper.ConfigurationProvider)
                     .ToListAsync();
 

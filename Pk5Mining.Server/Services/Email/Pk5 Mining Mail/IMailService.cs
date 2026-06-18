@@ -5,7 +5,7 @@ namespace Pk5Mining.Server.Services.Email
     public interface IMailService
     {
         bool SendMail(MailData mailData);
-        bool SendHTMLMail(MailData htmlMailData);
-        bool SendMailWithAttachment(MailDataWithAttachment mailData);
+        Task<bool> SendHTMLMailAsync(MailData htmlMailData);
+        Task<bool> SendMailWithAttachmentAsync(MailDataWithAttachment mailData);
     }
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pk5Mining.Server.Models.Job
 {
-    [Table("Jobss", Schema = "pk5")]
+    [Table("Jobs", Schema = "pk5")]
     public class Jobs : IJobs
     {
         public long Id { get; set; }

@@ -7,6 +7,7 @@ using Pk5Mining.Server.Models.Roles;
 using Pk5Mining.Server.Models.Subsidiaries;
 using Pk5Mining.Server.Models.UserRoles;
 using Pk5Mining.Server.Repositories.Roles;
+using Pk5Mining.Server.Services.Permission_Handler;
 
 namespace Pk5Mining.Server.Controllers.Role
 {
@@ -21,7 +22,8 @@ namespace Pk5Mining.Server.Controllers.Role
             _repo = repo;
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("role.create")]
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] UserRoleDto dto)
         {
@@ -35,7 +37,8 @@ namespace Pk5Mining.Server.Controllers.Role
             return Ok(ApiResponse.SuccessMessage(data, "Role created successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("role.view")]
         [HttpGet("all")]
         public async Task<IActionResult> Get([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] long? subsidiaryId = null, [FromQuery] string? name = null, [FromQuery] RoleStatus? status = null, [FromQuery] bool? isSystem = null)
         {
@@ -80,7 +83,8 @@ namespace Pk5Mining.Server.Controllers.Role
             return Ok(ApiResponse.SuccessMessage(response, "Roles retrieved successfully."));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("role.view")]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
         {
@@ -99,7 +103,8 @@ namespace Pk5Mining.Server.Controllers.Role
             return Ok(ApiResponse.SuccessMessage(data, "Role retrieved successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("role.update")]
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] UserRoleDto dto)
         {
@@ -113,7 +118,8 @@ namespace Pk5Mining.Server.Controllers.Role
             return Ok(ApiResponse.SuccessMessage(data, "Role updated successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("role.update")]
         [HttpPut("update-status/{id}")]
         public async Task<IActionResult> UpdateStatus(long id, [FromBody] UserRoleStatusUpdateDto dto)
         {
@@ -126,7 +132,7 @@ namespace Pk5Mining.Server.Controllers.Role
             return Ok(ApiResponse.SuccessMessage(data, "Status updated successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
         [HttpGet("light-responses")]
         public async Task<IActionResult> GetLightResponses()
         {
@@ -138,7 +144,8 @@ namespace Pk5Mining.Server.Controllers.Role
             return Ok(ApiResponse.SuccessMessage(data, "Roles retrieved successfully"));
         }
 
-        [Authorize(AuthenticationSchemes = "SSOScheme")]
+        [Authorize]
+        [HasPermission("role.update")]
         [HttpDelete]
         public async Task<IActionResult> Delete(long id)
         {
