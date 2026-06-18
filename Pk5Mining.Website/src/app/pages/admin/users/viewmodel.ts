@@ -267,7 +267,7 @@ function useUserViewModel() {
   const handleDeleteUser = () => {
     if (!selectedUser) return;
 
-    const formWithId = { ...form, id: Number(form.id), isDeleted: true };
+    const formWithId = { ...form, id: Number(form.id), isDeleted: true, subsidiaryId };
 
     setActionType(UserAction.Delete);
     updateMutation.mutate(formWithId);
@@ -276,7 +276,7 @@ function useUserViewModel() {
   const handleActivateDeactivateUser = (isActive: boolean) => {
     if (!selectedUser) return;
 
-    const formWithId = { ...form, id: Number(form.id), isActive: isActive };
+    const formWithId = { ...form, id: Number(form.id), isActive: isActive, subsidiaryId };
 
     setActionType(isActive ? UserAction.Activate : UserAction.Deactivate);
     updateMutation.mutate(formWithId);
