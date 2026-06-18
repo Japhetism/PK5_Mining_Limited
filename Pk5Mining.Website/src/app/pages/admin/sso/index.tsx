@@ -16,7 +16,6 @@ export function SSO() {
   useEffect(() => {
     if (!isLoading) {
       const redirectTo = getBestAdminRoute(user?.userPermissions ?? []);
-      console.log("user from sync page ", user);
       const targetPath = user ? `/admin/${redirectTo}` : "/admin/unauthorized";
       navigate(targetPath, { replace: true });
     }

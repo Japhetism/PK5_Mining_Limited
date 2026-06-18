@@ -105,7 +105,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tokenStore.set(msToken);
 
             const backendResponseData = await microsoftLogin();
-            console.log("backend response ", backendResponseData)
             if (backendResponseData) {
               const finalToken = backendResponseData.token || msToken;
               const permissionNames =
@@ -131,8 +130,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
         }
       } catch (error) {
-        console.error("❌ Auth Initialization Failed:", error);
-        console.log("auth error ", error);
         setIsUnauthorized(true);
         // logoutRef.current();
       } finally {
