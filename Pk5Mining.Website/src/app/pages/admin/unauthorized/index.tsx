@@ -16,12 +16,6 @@ export function Unauthorized() {
     }
   }, [isUnauthorized, isLoading, navigate]);
   
-  const handleLogout = () => {
-
-  }
-
-  const loading = false;
-
   return (
     <div
       className="min-h-screen text-white flex items-center justify-center px-6"
@@ -98,14 +92,14 @@ export function Unauthorized() {
         <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
           <motion.button
             type="button"
-            whileHover={!loading ? { scale: 1.01 } : undefined}
-            whileTap={!loading ? { scale: 0.99 } : undefined}
+            whileHover={!isLoading ? { scale: 1.01 } : undefined}
+            whileTap={!isLoading ? { scale: 0.99 } : undefined}
             className="w-full px-6 py-3 bg-[#c89b3c] text-black font-bold rounded-lg hover:bg-[#d4a84a] transition-colors flex items-center justify-center gap-2"
             onClick={logout}
-            disabled={loading}
+            disabled={isLoading}
           >
             <LogOut className="w-4 h-4" />
-            {loading ? "Clearing Session..." : "Log Out"}
+            {isLoading ? "Clearing Session..." : "Log Out"}
           </motion.button>
         </div>
       </motion.div>
