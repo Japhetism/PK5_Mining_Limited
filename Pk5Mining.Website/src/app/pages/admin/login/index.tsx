@@ -1,9 +1,11 @@
 import { useState } from "react";
 import svgPaths from "../login/components/svg-gadtsffos9";
 import miningimage2 from "../../../../assets/images/miningimage2.png";
+import agroimage2 from "../../../../assets/images/agrobg.png";
 import mininglogo from "../../../../assets/images/mininglogo.png";
 import miningimage1 from "../../../../assets/images/miningimage1.png";
 import useLoginViewModel from "./viewmodel";
+import { useTenant } from "@/tenants/useTenant";
 
 /* ── Logo pieces ─────────────────────────────────────────────────────────── */
 
@@ -263,6 +265,7 @@ function LoginForm() {
 /* ── Root ────────────────────────────────────────────────────────────────── */
 
 export function Login() {
+  const { isAgro, logo } = useTenant();
   return (
     <div className="bg-black relative w-screen min-h-screen lg:h-screen overflow-x-hidden overflow-y-auto lg:overflow-hidden">
       {/* ── Background image (Spans completely across screen edge-to-edge) ── */}
@@ -270,36 +273,14 @@ export function Login() {
         <img
           alt="Mining operations background"
           className="w-full h-full object-cover"
-          src={miningimage2}
+          src={isAgro ? agroimage2 : miningimage2}
         />
       </div>
 
       {/* ── PK5 logo ── */}
       <div className="absolute left-8 md:left-16 top-[47px] w-[184px] h-[67px]">
-        <div style={{ position: "absolute", left: 0, top: 0, width: 65.76, height: 67.547 }}>
-          <svg width="68.083" height="68.699" viewBox="0 0 68.083 68.6989" fill="none">
-            <path d={svgPaths.pdf49f00} stroke="url(#gradLogo)" strokeWidth="2.304" />
-            <path d={svgPaths.p1fcf9a00} fill="#EAD09C" />
-            <defs>
-              <linearGradient id="gradLogo" gradientUnits="userSpaceOnUse" x1="1.30033" x2="68.6883" y1="23.4409" y2="37.03">
-                <stop stopColor="#C89B3C" />
-                <stop offset="1" stopColor="#EED7A7" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
         <div style={{ position: "absolute", left: "calc(50% + 1.89px)", top: "calc(50% + 1.2px)", width: 170.4, height: 58.08, transform: "translate(-50%,-50%)" }}>
-          <p style={{ position: "absolute", left: 99.55, top: 20.73, fontFamily: "'Iceland', sans-serif", fontSize: 60, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", lineHeight: "7.92px", letterSpacing: "-2.4px", margin: 0 }}>PK5</p>
-          <p style={{ position: "absolute", left: 93.68, top: 46.4, fontFamily: "'Girassol', sans-serif", fontSize: 18, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", letterSpacing: 5, lineHeight: "27.648px", margin: 0 }}>MINING</p>
-          <div style={{ position: "absolute", left: 2.11, top: 17.13, width: 51.6, height: 20.4, overflow: "hidden" }}>
-            <img alt="" src={mininglogo} style={{ position: "absolute", left: 0, top: "-12.13%", width: "100%", height: "143.82%", maxWidth: "none" }} />
-          </div>
-          <div style={{ position: "absolute", left: -5.81, top: -3.26, width: 60, height: 61.083 }}>
-            <svg width="60.241" height="61.203" viewBox="0 0 60.2414 61.2031" fill="none">
-              <path d={svgPaths.p2c0e9960} stroke="#E7DFCD" strokeWidth="0.24" />
-              <path d={svgPaths.p344e8700} fill="#E7DFCD" />
-            </svg>
-          </div>
+          <img alt="" src={logo} />
         </div>
       </div>
 
@@ -308,9 +289,9 @@ export function Login() {
         className="absolute font-['Rajdhani',sans-serif] font-bold text-[32px] sm:text-[42px] lg:text-[50px] text-white left-[20px] sm:left-[30px] lg:left-[47px] top-[130px] lg:top-[160px] z-20 max-w-[90%] lg:max-w-[600px]"
         style={{ lineHeight: "normal" }}
       >
-        Powering the Future
+        {isAgro ? "Sustaining the Future" : "Powering the Future"}
         <br />
-        of Mineral Development
+        {isAgro ? "of Agribusiness" : "of Mineral Development"}
       </p>
 
       {/* ── Gold rule under headline ── */}
@@ -331,7 +312,7 @@ export function Login() {
         className="absolute font-['Segoe_UI',sans-serif] text-[15px] sm:text-[18px] lg:text-[22px] text-white w-[90%] lg:w-[530px] left-[20px] lg:left-[47px] top-[260px] sm:top-[290px] lg:top-[280px] z-20"
         style={{ lineHeight: "normal" }}
       >
-        Enterprise grade administrative control for global mining operations
+        {isAgro ? "Enterprise-grade operational control for global agricultural value chains" : "Enterprise grade administrative control for global mining operations"}
       </p>
 
       {/* ── Stats bar ── */}
