@@ -4,6 +4,7 @@ import miningimage2 from "../../../../assets/images/miningimage2.png";
 import agroimage2 from "../../../../assets/images/agrobg.png";
 import mininglogo from "../../../../assets/images/mininglogo.png";
 import miningimage1 from "../../../../assets/images/miningimage1.png";
+import agroimage1 from "../../../../assets/images/agroimage1.png";
 import useLoginViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
 
@@ -84,9 +85,10 @@ function Pk5AgroAlliedLogo() {
 /* ── Form panel background ───────────────────────────────────────────────── */
 
 function FormPanel() {
+  const { isAgro } = useTenant();
   return (
     <div className="absolute inset-0 lg:inset-y-0 lg:right-0 drop-shadow-[0px_4px_2px_rgba(0,0,0,0.25)] opacity-65 overflow-hidden w-full h-[500px] lg:h-full">
-      <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={miningimage1} />
+      <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={isAgro ? agroimage1 : miningimage1} />
     </div>
   );
 }
