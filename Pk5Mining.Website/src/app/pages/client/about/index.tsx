@@ -505,7 +505,7 @@ export function About() {
               <AnimatedSection key={value} delay={index * 0.1}>
                 <motion.div
                   className="p-10 bg-[#141414] rounded-xl border border-[#2a2a2a] text-center"
-                  whileHover={{ scale: 1.05, borderColor: '#D4AF37' }}
+                  whileHover={{  borderColor: '#D4AF37' }}
                   transition={{ duration: 0.3 }}
                 >
                   <Award className="w-12 h-12 text-[#D4AF37] mx-auto mb-4" />
