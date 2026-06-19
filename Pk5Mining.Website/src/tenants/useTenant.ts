@@ -15,7 +15,7 @@ const agroEmailDomain = import.meta.env.VITE_PK5_AGRO_EMAIL_DOMAIN;
 
 export const useTenant = () => {
   const hostname = window.location.hostname;
-  const isAgro = hostname.includes(agroDomain);
+  const isAgro = !hostname.includes(agroDomain);
 
   return {
     isAgro,
