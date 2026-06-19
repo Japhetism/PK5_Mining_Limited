@@ -27,6 +27,7 @@ import { getLightRoles } from "@/app/api/roles";
 import { getLightSubsidiaries } from "@/app/api/subsidiaries";
 import { getDepartmentsForDropdown } from "@/app/api/departments";
 import { useTenant } from "@/tenants/useTenant";
+import { useAuth } from "@/app/context/AuthContext";
 
 const defaultFormData: User = {
   id: 0,
@@ -57,6 +58,7 @@ const successMessages: Record<UserAction, string> = {
 
 function useUserViewModel() {
   const { subsidiaryId, emailDomain } = useTenant();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -164,7 +166,7 @@ function useUserViewModel() {
     setForm({
       ...defaultFormData,
       ...selectedUser,
-      roleId: selectedUser?.role?.id ?? 0,
+      roleId: selectedUser?.userRole?.id ?? 0,
       departmentId: selectedUser?.department?.id ?? 0,
     });
   }, [selectedUser, confirmEditOpen]);
@@ -267,7 +269,7 @@ function useUserViewModel() {
   const handleDeleteUser = () => {
     if (!selectedUser) return;
 
-    const formWithId = { ...form, id: Number(form.id), isDeleted: true };
+    const formWithId = { ...form, id: Number(form.id), isDeleted: true, subsidiaryId: user?.subsidiary?.id ?? subsidiaryId };
 
     setActionType(UserAction.Delete);
     updateMutation.mutate(formWithId);
@@ -276,7 +278,7 @@ function useUserViewModel() {
   const handleActivateDeactivateUser = (isActive: boolean) => {
     if (!selectedUser) return;
 
-    const formWithId = { ...form, id: Number(form.id), isActive: isActive };
+    const formWithId = { ...form, id: Number(form.id), isActive: isActive, subsidiaryId: user?.subsidiary?.id ?? subsidiaryId };
 
     setActionType(isActive ? UserAction.Activate : UserAction.Deactivate);
     updateMutation.mutate(formWithId);
@@ -300,7 +302,7 @@ function useUserViewModel() {
     const payload = {
       ...result.data,
       isActive: true,
-      subsidiaryId: subsidiaryId,
+      subsidiaryId: user?.subsidiary?.id ?? subsidiaryId,
     }
 
     createMutation.mutate(payload);
@@ -324,7 +326,7 @@ function useUserViewModel() {
     const payload = {
       ...result.data,
       isActive: true,
-      subsidiaryId: subsidiaryId,
+      subsidiaryId: user?.subsidiary?.id ?? subsidiaryId,
     }
     updateMutation.mutate(payload);
   };
