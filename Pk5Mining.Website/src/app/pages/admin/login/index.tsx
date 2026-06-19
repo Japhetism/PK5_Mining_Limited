@@ -18,7 +18,16 @@ export function Login() {
         />
       </div>
 
-      <div className="absolute left-8 md:left-16 top-[47px] w-[184px] h-[67px]">
+      <div className="absolute inset-0 lg:inset-y-0 lg:right-0 drop-shadow-[0px_4px_2px_rgba(0,0,0,0.25)] opacity-65 overflow-hidden w-full h-full lg:h-full lg:hidden">
+        <img
+          alt={data.bgAlt}
+          className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
+          src={data.formBgImage}
+          loading="lazy"
+        />
+      </div>
+
+      <div className="absolute left-8 md:left-16 top-[47px] w-[184px] h-[67px] ">
         <div
           style={{
             position: "absolute",
@@ -34,14 +43,14 @@ export function Login() {
       </div>
 
       <p
-        className="absolute font-['Rajdhani',sans-serif] font-bold text-[32px] sm:text-[42px] lg:text-[50px] text-white left-[20px] sm:left-[30px] lg:left-[47px] top-[130px] lg:top-[160px] z-20 max-w-[90%] lg:max-w-[600px]"
+        className="absolute font-['Rajdhani',sans-serif] font-bold text-[32px] sm:text-[42px] lg:text-[50px] text-white left-[20px] sm:left-[30px] lg:left-[47px] top-[130px] lg:top-[160px] z-20 max-w-[90%] lg:max-w-[600px] hidden lg:block"
         style={{ lineHeight: "normal" }}
       >
         {data.headline}
       </p>
 
       <p
-        className="absolute font-['Segoe_UI',sans-serif] text-[15px] sm:text-[18px] lg:text-[22px] text-white w-[90%] lg:w-[530px] left-[20px] lg:left-[47px] top-[260px] sm:top-[290px] lg:top-[280px] z-20"
+        className="absolute font-['Segoe_UI',sans-serif] text-[15px] sm:text-[18px] lg:text-[22px] text-white w-[90%] lg:w-[530px] left-[20px] lg:left-[47px] top-[260px] sm:top-[290px] lg:top-[280px] z-20 hidden lg:block"
         style={{ lineHeight: "normal" }}
       >
         {data.description}
@@ -51,11 +60,11 @@ export function Login() {
         <StatsBar stats={data.stats} />
       </div>
 
-      <div className="absolute lg:inset-y-0 right-0 w-full lg:w-[622px] h-auto lg:h-full z-20 top-[380px] lg:top-0">
+      <div className="absolute lg:inset-y-0 right-0 w-full lg:w-[622px] h-auto lg:h-full z-20 top-[180px] lg:top-0">
         <div className="absolute inset-0 lg:inset-y-0 lg:right-0 drop-shadow-[0px_4px_2px_rgba(0,0,0,0.25)] opacity-65 overflow-hidden w-full h-[500px] lg:h-full">
           <img
             alt={data.bgAlt}
-            className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
+            className="absolute inset-0 max-w-none object-cover pointer-events-none size-full hidden lg:block"
             src={data.formBgImage}
             loading="lazy"
           />
