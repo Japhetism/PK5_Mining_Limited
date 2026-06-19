@@ -2,14 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import { Target, Eye, Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users, Mountain } from 'lucide-react';
-import { leadership, timeline } from '@/app/fixtures';
-import { ILeader, ITimelineEvent } from '@/app/interfaces';
-import { ImpactCard } from '@/app/components/impact-card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
+import {Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users, Mountain } from 'lucide-react';
+import { timeline } from '@/app/fixtures';
+import { ITimelineEvent } from '@/app/interfaces';
 import { LeadershipAccordionCard } from '@/app/components/leadership-accordion-card';
 import { executiveLeadership } from '@/app/data/leadership';
-import { TimelineSection } from '@/app/components/timeline-section';
 import visionimage1 from '../../../../assets/images/visionimage1.png';
 import visionimage2 from '../../../../assets/images/visionimage2.png';
 import visionimage3 from '../../../../assets/images/visionimage3.png';
@@ -79,14 +76,6 @@ export function About() {
       window.clearInterval(interval);
     };
   }, []);
-
-  // --- MOCK CAROUSEL DATA COMPATIBLE WITH ALL ICON AND PROPERTY LAYOUTS ---
-  // const missionCards = [
-  //   { id: 1, number: '01', title: 'Develop World Class Mining Operations', description: 'Our mission is to establish efficient and innovative mining processes that meet international standards for safety, productivity, and environmental responsibility.​', icon: Target, accent: 'Pillar One', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
-  //   { id: 2, number: '02', title: 'Deliver High Quality Processed Minerals', description: 'Our mission is to ensure the consistent production of minerals that meet rigorous quality requirements to satisfy market demands.​', icon: Eye, accent: 'Pillar Two', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
-  //   { id: 3, number: '03', title: 'Drive Sustainable Economic Growth​', description: 'Our mission is to promote initiatives that support economic development while minimizing environmental impact and fostering community well-being.​', icon: Users, accent: 'Pillar Three', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' },
-  //   { id: 4, number: '04', title: 'Create Long Term Stakeholder Value​', description: 'Our mission is to build enduring relationships with stakeholders by focusing on transparency, ethical practices, and sustained financial performance.', icon: Award, accent: 'Pillar Four', image: 'https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080' }
-  // ];
 
   function handleTouchStart(event: React.TouchEvent<HTMLDivElement>): void {
     // UI gesture placeholder
@@ -257,29 +246,29 @@ export function About() {
           {/* Carousel track */}
           <div
             ref={carouselContainerRef}
-            className="overflow-hidden"
+            className="overflow-hidden mx-auto max-w-[1380px]"
           >
             <div
               className="flex gap-5"
               style={{
-                transform: `translateX(calc(${cardStepPx > 0 ? `-${missionIndex * cardStepPx}px` : '0px'} + clamp(24px, calc((100vw - 1380px) / 2 + 64px), 120px)))`,
+                transform: `translateX(-${(missionIndex % missionCards.length) * cardStepPx}px)`,
                 transition: 'transform 0.72s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                 willChange: 'transform',
               }}
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
-              {missionCards.map((card, index) => {
+              {[...missionCards, ...missionCards].map((card, index) => {
                 const Icon = card.icon;
-                const isActive = index === missionIndex;
+                const isActive = (index % missionCards.length) === missionIndex;
                 return (
                   <motion.div
                     data-slide
-                    key={card.id}
+                    key={`${card.id}-${index}`}
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.75, delay: index * 0.08 }}
+                    transition={{ duration: 0.75, delay: (index % missionCards.length) * 0.08 }}
                     className="flex-shrink-0 w-[82vw] sm:w-[65vw] md:w-[52vw] lg:w-[480px]"
                   >
                     <motion.div
@@ -291,15 +280,14 @@ export function About() {
                           : '0 20px 55px rgba(0,0,0,0.55)',
                         transition: 'box-shadow 0.4s ease',
                       }}
-                      whileHover={{ y: -7 }}
                       transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      onClick={() => goToMissionSlide(index)}
+                      onClick={() => goToMissionSlide(index % missionCards.length)}
                     >
                       {/* Background image */}
                       <ImageWithFallback
                         src={card.image}
                         alt={card.title}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out"
                       />
 
                       {/* Gradient overlays */}
@@ -368,9 +356,6 @@ export function About() {
                   </motion.div>
                 );
               })}
-
-              {/* Right spacer so last card can scroll into partial-preview position */}
-              <div className="flex-shrink-0 w-8 md:w-16 lg:w-24" />
             </div>
           </div>
 
