@@ -5,7 +5,7 @@ import { useTenant } from "@/tenants/useTenant";
 import { LOGIN_CONTENT } from "@/app/constants/login";
 
 export function Login() {
-  const { isAgro, logo } = useTenant();
+  const { isAgro } = useTenant();
   const data = isAgro ? LOGIN_CONTENT.agro : LOGIN_CONTENT.mining;
   return (
     <div className="bg-black relative w-screen min-h-screen lg:h-screen overflow-x-hidden overflow-y-auto lg:overflow-hidden">
@@ -38,7 +38,7 @@ export function Login() {
             transform: "translate(-50%,-50%)",
           }}
         >
-          <img alt={data.logoAlt} src={logo} loading="lazy" />
+          <img alt={data.logoAlt} src={data.logo} loading="lazy" />
         </div>
       </div>
 

@@ -2,9 +2,12 @@ import miningBgImg from "@/assets/images/miningloginbg.png";
 import agroBgImg from "@/assets/images/agrologinbg.png";
 import miningFormBgImg from "@/assets/images/miningloginformbg.png";
 import agroFormBgImg from "@/assets/images/agrologinformbg.png";
+import miningLogo from "@/assets/images/logo.png";
+import agroLogo from "@/assets/images/agrologo.png";
 
 export const LOGIN_CONTENT = {
   agro: {
+    logo: agroLogo,
     bgImage: agroBgImg,
     formBgImage: agroFormBgImg,
     bgAlt: "PK5 Agro Allied operations background",
@@ -25,6 +28,7 @@ export const LOGIN_CONTENT = {
     ],
   },
   mining: {
+    logo: miningLogo,
     bgImage: miningBgImg,
     formBgImage: miningFormBgImg,
     bgAlt: "PK5 Mining operations background",
