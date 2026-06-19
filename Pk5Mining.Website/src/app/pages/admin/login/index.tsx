@@ -1,8 +1,8 @@
 import { useState } from "react";
-import svgPaths from "../../../../../src/imports/MacBookPro1429/svg-gadtsffos9";
-import imgImage98 from "../../../../../src/imports/MacBookPro1429/21c23672ce84dd03d9a6556cc4700d29aaae6e29.png";
-import imgImage15 from "../../../../../src/imports/MacBookPro1429/c36f9bd2b0feaff16979ab1ff556de16182a7aa1.png";
-import imgImage103 from "../../../../../src/imports/MacBookPro1429/0920571d191ee92fb66ed9adf50760ecb26368a5.png";
+import svgPaths from "../login/components/svg-gadtsffos9";
+import miningimage2 from "../../../../assets/images/miningimage2.png";
+import mininglogo from "../../../../assets/images/mininglogo.png";
+import miningimage1 from "../../../../assets/images/miningimage1.png";
 import useLoginViewModel from "./viewmodel";
 
 /* ── Logo pieces ─────────────────────────────────────────────────────────── */
@@ -18,7 +18,7 @@ function Group1() {
       </p>
       <div className="absolute h-[20.4px] left-[2.11px] top-[17.13px] w-[51.6px]">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="" className="absolute h-[143.82%] left-0 max-w-none top-[-12.13%] w-full" src={imgImage15} />
+          <img alt="" className="absolute h-[143.82%] left-0 max-w-none top-[-12.13%] w-full" src={mininglogo} />
         </div>
       </div>
     </div>
@@ -84,7 +84,7 @@ function Pk5AgroAlliedLogo() {
 function FormPanel() {
   return (
     <div className="absolute inset-0 lg:inset-y-0 lg:right-0 drop-shadow-[0px_4px_2px_rgba(0,0,0,0.25)] opacity-65 overflow-hidden w-full h-[500px] lg:h-full">
-      <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgImage103} />
+      <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={miningimage1} />
     </div>
   );
 }
@@ -236,12 +236,14 @@ function LoginForm() {
 
       {/* OR divider */}
       <div className="flex items-center w-full gap-4">
-        <div className="flex-1 h-px bg-[#C89B3C]" />
-        <p className="px-3 text-[14px] sm:text-[16px] text-white font-['Inter',sans-serif] whitespace-nowrap">
-          OR
-        </p>
-        <div className="flex-1 h-px bg-[#C89B3C]" />
-      </div>
+  <div className="flex-1 h-px bg-[#C89B3C]" />
+
+  <p className="px-3 text-[14px] sm:text-[16px] text-white font-['Inter',sans-serif] whitespace-nowrap">
+    OR
+  </p>
+
+  <div className="flex-1 h-px bg-[#C89B3C]" />
+</div>
 
       {/* SSO button */}
       <button
@@ -268,7 +270,7 @@ export function Login() {
         <img
           alt="Mining operations background"
           className="w-full h-full object-cover"
-          src={imgImage98}
+          src={miningimage2}
         />
       </div>
 
@@ -290,7 +292,7 @@ export function Login() {
           <p style={{ position: "absolute", left: 99.55, top: 20.73, fontFamily: "'Iceland', sans-serif", fontSize: 60, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", lineHeight: "7.92px", letterSpacing: "-2.4px", margin: 0 }}>PK5</p>
           <p style={{ position: "absolute", left: 93.68, top: 46.4, fontFamily: "'Girassol', sans-serif", fontSize: 18, color: "#fff", transform: "translateX(-50%)", whiteSpace: "nowrap", letterSpacing: 5, lineHeight: "27.648px", margin: 0 }}>MINING</p>
           <div style={{ position: "absolute", left: 2.11, top: 17.13, width: 51.6, height: 20.4, overflow: "hidden" }}>
-            <img alt="" src={imgImage15} style={{ position: "absolute", left: 0, top: "-12.13%", width: "100%", height: "143.82%", maxWidth: "none" }} />
+            <img alt="" src={mininglogo} style={{ position: "absolute", left: 0, top: "-12.13%", width: "100%", height: "143.82%", maxWidth: "none" }} />
           </div>
           <div style={{ position: "absolute", left: -5.81, top: -3.26, width: 60, height: 61.083 }}>
             <svg width="60.241" height="61.203" viewBox="0 0 60.2414 61.2031" fill="none">
