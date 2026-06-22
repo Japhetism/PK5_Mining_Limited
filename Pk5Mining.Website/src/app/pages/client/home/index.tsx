@@ -133,7 +133,7 @@ export function Home() {
               <AnimatedSection key={mineral.name} delay={index * 0.1}>
                 <motion.div
                   className="group relative rounded-xl overflow-hidden cursor-pointer"
-                  whileHover={{ y: -8 }}
+                  // whileHover={{ y: -8 }}
                   transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                   style={{
                     boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
@@ -144,7 +144,7 @@ export function Home() {
                     <ImageWithFallback
                       src={mineral.image}
                       alt={mineral.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
+                      // className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
                     />
                   </div>
 

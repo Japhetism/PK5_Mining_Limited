@@ -90,7 +90,7 @@ export function Sustainability() {
               <AnimatedSection key={metric.label} delay={index * 0.1}>
                 <motion.div
                   className="p-6 bg-[#0f0f0f] rounded-lg border border-gray-800"
-                  whileHover={{ borderColor: '#c89b3c', y: -5 }}
+                  whileHover={{ borderColor: '#c89b3c', }}
                   transition={{ duration: 0.3 }}
                 >
                   <div className="flex items-center gap-4 mb-4">
@@ -129,8 +129,9 @@ export function Sustainability() {
             {initiatives.map((initiative: IInitiative, index: number) => (
               <AnimatedSection key={initiative.title} delay={index * 0.1}>
                 <motion.div
-                  className="p-8 bg-[#1a1a1a] rounded-lg"
-                  whileHover={{ scale: 1.02, y: -5 }}
+                  className="p-8 bg-[#1a1a1a] rounded-lg border"
+                  // whileHover={{ scale: 1.02, y: -5, }}
+                   whileHover={{ borderColor: '#c89b3c', }} 
                   transition={{ duration: 0.3 }}
                 >
                   <motion.div
@@ -215,8 +216,9 @@ export function Sustainability() {
             ].map((item, index) => (
               <AnimatedSection key={item.title} delay={index * 0.1}>
                 <motion.div
-                  className="p-6 bg-[#1a1a1a] rounded-lg text-center"
-                  whileHover={{ y: -10, scale: 1.05 }}
+                  className="p-6 bg-[#1a1a1a] rounded-lg text-center border"
+                  // whileHover={{ y: -10, scale: 1.05 }}
+                   whileHover={{ borderColor: '#c89b3c', }}
                   transition={{ duration: 0.3 }}
                 >
                   <motion.div
