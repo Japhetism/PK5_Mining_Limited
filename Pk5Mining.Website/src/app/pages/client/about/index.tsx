@@ -235,14 +235,17 @@ export function About() {
           {/* Carousel track */}
           <div
             ref={carouselContainerRef}
-            className="overflow-hidden mx-auto max-w-[1380px]"
+            className="w-full overflow-hidden mx-auto max-w-[1380px]"
           >
             <div
-              className="flex gap-5"
+              className="flex"
               style={{
-                transform: `translateX(-${(missionIndex % missionCards.length) * cardStepPx}px)`,
+                // On mobile/tablet, it slides exactly by 100% of the screen. On desktop (lg), it switches to your exact pixel step.
+                transform: `translateX(calc(-1 * (var(--slide-step, 100%) * ${missionIndex % missionCards.length})))`,
                 transition: 'transform 0.72s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                 willChange: 'transform',
+                // Inject your pixel step into a CSS variable scoped only for desktop
+                ['--slide-step' as any]: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${cardStepPx}px` : '100%',
               }}
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
@@ -251,17 +254,17 @@ export function About() {
                 const Icon = card.icon;
                 const isActive = (index % missionCards.length) === missionIndex;
                 return (
-                  <motion.div
-                    data-slide
+                  <div
                     key={`${card.id}-${index}`}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.75, delay: (index % missionCards.length) * 0.08 }}
-                    className="flex-shrink-0 w-[82vw] sm:w-[65vw] md:w-[52vw] lg:w-[480px]"
+                    // w-full on mobile (1 card per frame), snaps to fixed 480px columns with standard spacing on desktop
+                    className="w-full flex-shrink-0 px-4 sm:w-[65vw] md:w-[52vw] lg:w-[480px] lg:px-0 lg:mr-5"
                   >
                     <motion.div
-                      className="relative rounded-2xl overflow-hidden group"
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.75, delay: (index % missionCards.length) * 0.08 }}
+                      className="relative rounded-2xl overflow-hidden group w-full"
                       style={{
                         height: 'clamp(460px, 50vh, 560px)',
                         boxShadow: isActive
@@ -269,7 +272,6 @@ export function About() {
                           : '0 20px 55px rgba(0,0,0,0.55)',
                         transition: 'box-shadow 0.4s ease',
                       }}
-                      transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                       onClick={() => goToMissionSlide(index % missionCards.length)}
                     >
                       {/* Background image */}
@@ -291,7 +293,6 @@ export function About() {
                           opacity: isActive ? 0.5 : 0,
                         }}
                       />
-                      <div className="absolute inset-0 rounded-2xl border-2 border-[#D4AF37] opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none" />
 
                       {/* Card number watermark */}
                       <div
@@ -312,24 +313,19 @@ export function About() {
                         </div>
 
                         {/* Icon */}
-                        <motion.div
+                        <div
                           className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
                           style={{
                             background: 'rgba(212, 175, 55, 0.1)',
                             border: '1px solid rgba(212, 175, 55, 0.22)',
                             backdropFilter: 'blur(8px)',
                           }}
-                          whileHover={{ scale: 1.12 }}
-                          transition={{ duration: 0.25 }}
                         >
                           <Icon className="w-5 h-5 text-[#D4AF37]" />
-                        </motion.div>
+                        </div>
 
                         {/* Title */}
-                        <h3
-                          className="text-xl md:text-[1.4rem] font-bold text-white mb-3 leading-snug"
-                          style={{ letterSpacing: '-0.015em' }}
-                        >
+                        <h3 className="text-xl md:text-[1.4rem] font-bold text-white mb-3 leading-snug">
                           {card.title}
                         </h3>
 
@@ -342,7 +338,7 @@ export function About() {
                         <div className="mt-6 h-px bg-gradient-to-r from-[#D4AF37]/50 via-[#D4AF37]/20 to-transparent" />
                       </div>
                     </motion.div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
