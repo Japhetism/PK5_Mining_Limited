@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import {Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users, Mountain } from 'lucide-react';
+import { Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users, Mountain } from 'lucide-react';
 import { timeline } from '@/app/fixtures';
 import { ITimelineEvent } from '@/app/interfaces';
 import { LeadershipAccordionCard } from '@/app/components/leadership-accordion-card';
@@ -156,17 +156,6 @@ export function About() {
         <div className="relative z-10 w-full py-36">
           <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
             {/* Vision label */}
-            {/* <motion.h2
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.15 }}
-                className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-white leading-tight mb-4"
-                style={{ letterSpacing: '-0.025em' }}
-              >
-                Our Vision
-              </motion.h2> */}
-
             {/* Cinematic statement */}
             <div className="relative">
               {/* Decorative oversized quotation mark */}
@@ -178,24 +167,24 @@ export function About() {
               </div>
 
               <div className="relative">
-              {/* Decorative oversized quotation mark */}
-              <div
-                className="absolute -top-4 -left-2 text-white select-none pointer-events-none font-serif leading-none"
-                style={{ fontSize: 'clamp(7rem, 16vw, 18rem)', opacity: 0.04, lineHeight: 1 }}
-              >
-                "
-              </div>
+                {/* Decorative oversized quotation mark */}
+                <div
+                  className="absolute -top-4 -left-2 text-white select-none pointer-events-none font-serif leading-none"
+                  style={{ fontSize: 'clamp(7rem, 16vw, 18rem)', opacity: 0.04, lineHeight: 1 }}
+                >
+                  "
+                </div>
 
-              <motion.h2
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.05, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative text-4xl sm:text-5xl md:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] font-bold leading-[1.12] text-white max-w-[1080px]"
-                style={{ letterSpacing: '-0.025em' }}
-              >
-                At PK5 Mining, our vision is to be a trusted leader in the global mining sector, recognized for integrity, sustainability, and operational excellence.
-              </motion.h2>
+                <motion.h2
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.05, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  className="relative text-4xl sm:text-5xl md:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] font-bold leading-[1.12] text-white max-w-[1080px]"
+                  style={{ letterSpacing: '-0.025em' }}
+                >
+                  At PK5 Mining, our vision is to be a trusted leader in the global mining sector, recognized for integrity, sustainability, and operational excellence.
+                </motion.h2>
               </div>
 
             </div>
@@ -272,7 +261,7 @@ export function About() {
                     className="flex-shrink-0 w-[82vw] sm:w-[65vw] md:w-[52vw] lg:w-[480px]"
                   >
                     <motion.div
-                      className="relative rounded-2xl overflow-hidden cursor-pointer group"
+                      className="relative rounded-2xl overflow-hidden group"
                       style={{
                         height: 'clamp(460px, 50vh, 560px)',
                         boxShadow: isActive
