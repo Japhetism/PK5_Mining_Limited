@@ -46,7 +46,7 @@ export function LeadershipAccordionCard({
         <div className={`absolute inset-0 bg-gradient-to-br from-[#D4AF37]/5 to-transparent transition-opacity duration-500 ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
 
         {/* Executive Photo Container */}
-        <div className="relative h-125 overflow-hidden">
+        <div className="relative h-120 overflow-hidden">
           <motion.div
             whileHover={{ scale: isExpanded ? 1 : 1.05 }}
             transition={{ duration: 0.6 }}
@@ -77,7 +77,7 @@ export function LeadershipAccordionCard({
 
         {/* Executive Header Metadata Details */}
         <div className="relative p-8">
-          <h3 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${isExpanded ? 'text-[#D4AF37]' : 'text-white group-hover:text-[#D4AF37]'}`}>
+          <h3 className={`text-2xl font-bold mb-2 transition-colors duration-300`}>
             {exec?.name}
           </h3>
           <p className="text-[#D4AF37] text-sm font-semibold mb-4 uppercase tracking-wider">
