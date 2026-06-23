@@ -11,10 +11,6 @@ const Login = lazy(() =>
   import("@/app/pages/admin/login").then((m) => ({ default: m.Login }))
 );
 
-const ChangePassword = lazy(() =>
-  import("@/app/pages/admin/password/change").then((m) => ({ default: m.ChangePassword }))
-);
-
 const ProtectedRoute = lazy(() =>
   import("@/app/auth/ProtectedRoute").then((m) => ({
     default: m.ProtectedRoute,
@@ -31,6 +27,10 @@ const SSO = lazy(() =>
 
 const Unauthorized = lazy(() =>
   import("@/app/pages/admin/unauthorized").then((m) => ({ default: m.Unauthorized })),
+);
+
+const Error = lazy(() =>
+  import("@/app/pages/admin/error").then((m) => ({ default: m.Error })),
 );
 
 
@@ -89,6 +89,10 @@ export const adminRoutes: RouteObject[] = [
   {
     path: "/admin/unauthorized",
     element: <Unauthorized />
+  },
+  {
+    path: "/admin/error",
+    element: <Error />
   },
   { 
     path: "/admin/sso", 

@@ -20,7 +20,7 @@ export function Home() {
 
     return () => clearInterval(t);
   }, []);
-  
+
   const content = slideShowContent[slide];
 
   return (
@@ -90,7 +90,7 @@ export function Home() {
               <motion.button
                 whileHover={{ scale: 1.05, backgroundColor: "#d4a84a" }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-[#c89b3c] text-black font-bold rounded flex items-center gap-2 justify-center"
+                className="px-8 py-4 bg-[#c89b3c] text-black font-bold rounded flex items-center gap-2 justify-center mx-auto"
               >
                 Explore Our Operations
                 <ArrowRight size={20} />
@@ -133,7 +133,7 @@ export function Home() {
               <AnimatedSection key={mineral.name} delay={index * 0.1}>
                 <motion.div
                   className="group relative rounded-xl overflow-hidden cursor-pointer"
-                  whileHover={{ y: -8 }}
+                  // whileHover={{ y: -8 }}
                   transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                   style={{
                     boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
@@ -144,7 +144,7 @@ export function Home() {
                     <ImageWithFallback
                       src={mineral.image}
                       alt={mineral.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
+                    // className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
                     />
                   </div>
 
@@ -190,7 +190,7 @@ export function Home() {
       </section>
 
       {/* Operations Overview */}
-       <section className="py-28 bg-[#0d0d0d]">
+      <section className="py-28 bg-[#0d0d0d]">
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <AnimatedSection>
@@ -273,9 +273,9 @@ export function Home() {
           </div>
         </div>
       </section>
-      
+
       {/* Why Choose PK5 */}
-       <section className="py-28 bg-[#0d0d0d] relative overflow-hidden">
+      <section className="py-28 bg-[#0d0d0d] relative overflow-hidden">
         <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[120px] pointer-events-none" />
 

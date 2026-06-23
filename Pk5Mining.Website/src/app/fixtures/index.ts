@@ -306,7 +306,7 @@ export const socialLinks: ISocialLink[] = [
   },
   {
     name: "Instagram",
-    url: "https://www.instagram.com/pk5miningltd/",
+    url: "https://www.instagram.com/pk5mining/",
     icon: Instagram,
   },
 ];

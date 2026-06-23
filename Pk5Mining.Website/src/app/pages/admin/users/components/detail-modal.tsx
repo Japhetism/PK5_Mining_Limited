@@ -62,7 +62,7 @@ export function DetailModal({ user, open, onClose }: DetailModalProps) {
               <DetailItem label="Name" value={`${user.firstName} ${user.lastName}`} />
               <DetailItem label="Email" value={user.email} />
               <DetailItem label="Username" value={user.username} />
-              <DetailItem label="Role" value={user?.role?.name} />
+              <DetailItem label="Role" value={user?.userRole?.name} />
               <DetailItem label="Department" value={user?.department?.name} />
               <DetailItem
                 label="Status"

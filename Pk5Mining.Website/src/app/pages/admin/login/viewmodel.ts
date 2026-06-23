@@ -1,23 +1,25 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/app/context/AuthContext";
 import { authService } from "@/app/services/sso/authService";
 import { ApiError } from "@/app/interfaces";
-import {
-  getBestAdminRoute,
-  isEmailAuthorized,
-  shouldChangePassword,
-} from "@/app/utils/helper";
+import { getBestAdminRoute, isEmailAuthorized } from "@/app/utils/helper";
 import { tokenStore } from "@/app/auth/token";
 import { useTenant } from "@/tenants/useTenant";
-import { RolePermission } from "@/app/interfaces/role";
+import { isValidEmail } from "@/app/utils/validator";
 
 function useLoginViewModel() {
   const navigate = useNavigate();
   const location = useLocation();
   const { emailDomain } = useTenant();
-  const { login: authLogin, user: authUser, isLoading } = useAuth();
+  const {
+    login: authLogin,
+    user: authUser,
+    isLoading,
+    isServerError,
+    isUnauthorized,
+  } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,8 +33,19 @@ function useLoginViewModel() {
   useEffect(() => {
     if (isLoading) {
       navigate("/admin/sso", { replace: true });
+      return;
     }
-  }, [isLoading]);
+
+    if (isServerError) {
+      navigate("/admin/error", { replace: true });
+      return;
+    }
+
+    if (isUnauthorized) {
+      navigate("/admin/unauthorized", { replace: true });
+      return;
+    }
+  }, [isLoading, isServerError, isUnauthorized, navigate]);
 
   useEffect(() => {
     const hasMsalParams =
@@ -89,33 +102,25 @@ function useLoginViewModel() {
   };
 
   const handleSSOSigninByEmail = async () => {
-    if (!isEmailAuthorized(email, emailDomain)) {
+    setError(null);
+
+    const sanitizedEmail = email.trim();
+
+    if (!sanitizedEmail) return setError("Error: Please enter email address.");
+
+    if (!isValidEmail(sanitizedEmail))
+      return setError("Error: Please enter a valid email address.");
+
+    if (!isEmailAuthorized(sanitizedEmail, emailDomain)) {
       return setError(
         "Access Denied: Please sign in with an authorized organizational account.",
       );
     }
 
-    if (email.trim()) {
-      await authService.login(email);
-    }
-  };
-
-  const handleContinue = () => {
-    const domain = email.split("@")[1];
-
-    if (domain !== emailDomain) {
-      setFormType("passwordForm");
-    } else {
-      handleSSOSigninByEmail();
-    }
+    await authService.login(sanitizedEmail);
   };
 
   const isEmailStep = formType === "emailForm";
-
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    handleSSOSigninByEmail();
-  };
 
   return {
     email,
@@ -130,8 +135,7 @@ function useLoginViewModel() {
     setPassword,
     onSubmit,
     handleSSOSignin,
-    handleContinue,
-    handleFormSubmit,
+    handleSSOSigninByEmail,
     setShowPassword,
   };
 }

@@ -71,7 +71,7 @@ export function Contact() {
               <AnimatedSection key={info.title} delay={index * 0.1}>
                 <motion.div
                   className="p-8 bg-[#0f0f0f] rounded-lg border border-gray-800 text-center"
-                  whileHover={{ y: -10, borderColor: "#c89b3c", scale: 1.02 }}
+                  whileHover={{ borderColor: "#c89b3c", scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                 >
                   <motion.div

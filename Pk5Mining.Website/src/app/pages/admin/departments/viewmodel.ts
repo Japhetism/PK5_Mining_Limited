@@ -15,6 +15,7 @@ import {
 import { getDepartments,updateDepartment,  updateDepartmentStatus, createDepartment, deleteDepartment } from "@/app/api/departments";
 import { createDepartmentSchema, updateDepartmentSchema } from "@/app/schemas/department.schema";
 import { useTenant } from "@/tenants/useTenant";
+import { useAuth } from "@/app/context/AuthContext";
 
 
 const defaultFormData: Department = {
@@ -44,6 +45,7 @@ const successMessages: Record<DepartmentAction, string> = {
 
 function useDepartmentViewModel() {
   const { subsidiaryId } = useTenant();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -278,7 +280,7 @@ function useDepartmentViewModel() {
     const payload: CreateDepartmentPayload = {
       ...result.data,
       status: "Active",
-      subsidiaryId: subsidiaryId,
+      subsidiaryId: user?.subsidiary?.id ?? subsidiaryId,
       dT_Updated: new Date().toISOString(),
     };
 
@@ -300,7 +302,7 @@ function useDepartmentViewModel() {
     const payload = {
       ...result.data,
       status: selectedDepartment.status,
-      subsidiaryId: subsidiaryId,
+      subsidiaryId: user?.subsidiary?.id ?? subsidiaryId,
     };
     setFieldErrors({});
 
