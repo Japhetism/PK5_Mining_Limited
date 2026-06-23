@@ -58,12 +58,13 @@ export function LeadershipAccordionCard({
               className="w-full h-full object-cover"
             />
           </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent" />
+          {/* opacity: 0.8on leadership card? */}
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent" /> */}
 
           {/* Hover Image Overlay */}
-          <motion.div
+          {/* <motion.div
             className={`absolute inset-0 bg-[#D4AF37]/10 transition-opacity duration-500 ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-          />
+          /> */}
 
           {/* Top Arrow Button */}
           <motion.div
