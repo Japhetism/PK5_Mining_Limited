@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { AnimatedSection } from '@/app/components/animated-section';
 import { ImageWithFallback } from '@/app/components/ui/ImageWithFallback';
-import {Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users, Mountain } from 'lucide-react';
+import { Award, DollarSign, Network, TrendingUp, Briefcase, Globe, BarChart3, Factory, ChevronRight, ChevronLeft, Users, Mountain } from 'lucide-react';
 import { timeline } from '@/app/fixtures';
 import { ITimelineEvent } from '@/app/interfaces';
 import { LeadershipAccordionCard } from '@/app/components/leadership-accordion-card';
@@ -156,17 +156,6 @@ export function About() {
         <div className="relative z-10 w-full py-36">
           <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
             {/* Vision label */}
-            {/* <motion.h2
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.15 }}
-                className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-white leading-tight mb-4"
-                style={{ letterSpacing: '-0.025em' }}
-              >
-                Our Vision
-              </motion.h2> */}
-
             {/* Cinematic statement */}
             <div className="relative">
               {/* Decorative oversized quotation mark */}
@@ -178,24 +167,24 @@ export function About() {
               </div>
 
               <div className="relative">
-              {/* Decorative oversized quotation mark */}
-              <div
-                className="absolute -top-4 -left-2 text-white select-none pointer-events-none font-serif leading-none"
-                style={{ fontSize: 'clamp(7rem, 16vw, 18rem)', opacity: 0.04, lineHeight: 1 }}
-              >
-                "
-              </div>
+                {/* Decorative oversized quotation mark */}
+                <div
+                  className="absolute -top-4 -left-2 text-white select-none pointer-events-none font-serif leading-none"
+                  style={{ fontSize: 'clamp(7rem, 16vw, 18rem)', opacity: 0.04, lineHeight: 1 }}
+                >
+                  "
+                </div>
 
-              <motion.h2
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.05, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative text-4xl sm:text-5xl md:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] font-bold leading-[1.12] text-white max-w-[1080px]"
-                style={{ letterSpacing: '-0.025em' }}
-              >
-                At PK5 Mining, our vision is to be a trusted leader in the global mining sector, recognized for integrity, sustainability, and operational excellence.
-              </motion.h2>
+                <motion.h2
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.05, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  className="relative text-4xl sm:text-5xl md:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] font-bold leading-[1.12] text-white max-w-[1080px]"
+                  style={{ letterSpacing: '-0.025em' }}
+                >
+                  At PK5 Mining, our vision is to be a trusted leader in the global mining sector, recognized for integrity, sustainability, and operational excellence.
+                </motion.h2>
               </div>
 
             </div>
@@ -246,14 +235,17 @@ export function About() {
           {/* Carousel track */}
           <div
             ref={carouselContainerRef}
-            className="overflow-hidden mx-auto max-w-[1380px]"
+            className="w-full overflow-hidden mx-auto max-w-[1380px]"
           >
             <div
-              className="flex gap-5"
+              className="flex"
               style={{
-                transform: `translateX(-${(missionIndex % missionCards.length) * cardStepPx}px)`,
+                // On mobile/tablet, it slides exactly by 100% of the screen. On desktop (lg), it switches to your exact pixel step.
+                transform: `translateX(calc(-1 * (var(--slide-step, 100%) * ${missionIndex % missionCards.length})))`,
                 transition: 'transform 0.72s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                 willChange: 'transform',
+                // Inject your pixel step into a CSS variable scoped only for desktop
+                ['--slide-step' as any]: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${cardStepPx}px` : '100%',
               }}
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
@@ -262,17 +254,17 @@ export function About() {
                 const Icon = card.icon;
                 const isActive = (index % missionCards.length) === missionIndex;
                 return (
-                  <motion.div
-                    data-slide
+                  <div
                     key={`${card.id}-${index}`}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.75, delay: (index % missionCards.length) * 0.08 }}
-                    className="flex-shrink-0 w-[82vw] sm:w-[65vw] md:w-[52vw] lg:w-[480px]"
+                    // w-full on mobile (1 card per frame), snaps to fixed 480px columns with standard spacing on desktop
+                    className="w-full flex-shrink-0 px-4 sm:w-[65vw] md:w-[52vw] lg:w-[480px] lg:px-0 lg:mr-5"
                   >
                     <motion.div
-                      className="relative rounded-2xl overflow-hidden cursor-pointer group"
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.75, delay: (index % missionCards.length) * 0.08 }}
+                      className="relative rounded-2xl overflow-hidden group w-full"
                       style={{
                         height: 'clamp(460px, 50vh, 560px)',
                         boxShadow: isActive
@@ -280,7 +272,6 @@ export function About() {
                           : '0 20px 55px rgba(0,0,0,0.55)',
                         transition: 'box-shadow 0.4s ease',
                       }}
-                      transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                       onClick={() => goToMissionSlide(index % missionCards.length)}
                     >
                       {/* Background image */}
@@ -302,7 +293,6 @@ export function About() {
                           opacity: isActive ? 0.5 : 0,
                         }}
                       />
-                      <div className="absolute inset-0 rounded-2xl border-2 border-[#D4AF37] opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none" />
 
                       {/* Card number watermark */}
                       <div
@@ -323,24 +313,19 @@ export function About() {
                         </div>
 
                         {/* Icon */}
-                        <motion.div
+                        <div
                           className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
                           style={{
                             background: 'rgba(212, 175, 55, 0.1)',
                             border: '1px solid rgba(212, 175, 55, 0.22)',
                             backdropFilter: 'blur(8px)',
                           }}
-                          whileHover={{ scale: 1.12 }}
-                          transition={{ duration: 0.25 }}
                         >
                           <Icon className="w-5 h-5 text-[#D4AF37]" />
-                        </motion.div>
+                        </div>
 
                         {/* Title */}
-                        <h3
-                          className="text-xl md:text-[1.4rem] font-bold text-white mb-3 leading-snug"
-                          style={{ letterSpacing: '-0.015em' }}
-                        >
+                        <h3 className="text-xl md:text-[1.4rem] font-bold text-white mb-3 leading-snug">
                           {card.title}
                         </h3>
 
@@ -353,7 +338,7 @@ export function About() {
                         <div className="mt-6 h-px bg-gradient-to-r from-[#D4AF37]/50 via-[#D4AF37]/20 to-transparent" />
                       </div>
                     </motion.div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
