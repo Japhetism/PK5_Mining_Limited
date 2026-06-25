@@ -36,7 +36,7 @@ export function LoginForm() {
           {error}
         </p>
       )}
-      
+
       <button
         type="button"
         onClick={handleSSOSigninByEmail}
@@ -67,7 +67,7 @@ export function LoginForm() {
         onClick={handleSSOSignin}
         className="bg-black h-[49.5px] relative rounded-[10.395px] shrink-0 w-full cursor-pointer hover:bg-[#111] active:scale-[0.98] transition-all"
       >
-        <div className="overflow-hidden relative rounded-[inherit] size-full flex items-center justify-center">
+        <div className="relative flex items-center justify-center w-full h-full rounded-[10.395px] border border-white/80 bg-[#072C1E] overflow-hidden">
           <span className="font-['Inter',sans-serif] font-bold text-[14.553px] text-white">
             Sign in with SSO
           </span>
