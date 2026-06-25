@@ -1,30 +1,30 @@
 import miningBgImg from "@/assets/images/miningloginbg.png";
-import agroBgImg from "@/assets/images/agrologinbg.png";
+import agrobgimage from "@/assets/images/agrobgimage.png";
 import miningFormBgImg from "@/assets/images/miningloginformbg.png";
-import agroFormBgImg from "@/assets/images/agrologinformbg.png";
+import agrologinbg from "@/assets/images/agrologinbg.png";
 import miningLogo from "@/assets/images/logo.png";
 import agroLogo from "@/assets/images/agrologo.png";
 
 export const LOGIN_CONTENT = {
   agro: {
     logo: agroLogo,
-    bgImage: agroBgImg,
-    formBgImage: agroFormBgImg,
+    bgImage: agrobgimage,
+    formBgImage: agrologinbg,
     bgAlt: "PK5 Agro Allied operations background",
     logoAlt: "PK5 Agro Allied logo",
     headline: (
       <>
-        Sustaining the Future
+        Powering the Future of 
         <br />
-        of Agribusiness
+        Agriculture
       </>
     ),
     description:
-      "Enterprise-grade operational control for global agricultural value chains",
+      "Enterprise-grade agricultural solutions designed to improve productivity, sustainability, and operational excellence.",
     stats: [
-      { value: "50+", label: "HUBS" },
-      { value: "10.5M", label: "TONS YIELD" },
-      { value: "99.99%", label: "UPTIME" },
+      { value: "10+", label: "Partner Farms" },
+      { value: "2.3M", label: "Products Output" },
+      { value: "99.99%", label: "Supply Reliability" },
     ],
   },
   mining: {

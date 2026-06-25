@@ -24,6 +24,7 @@ export const useTenant = () => {
     logo: isAgro ? agroLogo : miningLogo,
     colors: {
       bg: isAgro ? "#041A12" : "#0F0F0F",
+      statsbg: isAgro ? "#072C1E80" : "#00000075",
       card: isAgro ? "#072C1E" : "#1a1a1a",
       accent: isAgro ? "#4ade80" : "#c89b3c",
       text: isAgro ? "#ffffff" : "#ffffff",
