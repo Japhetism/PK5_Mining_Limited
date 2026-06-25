@@ -1,10 +1,14 @@
+import { useTenant } from "@/tenants/useTenant";
+
 interface StatsBarProps {
   stats: { value: string; label: string }[];
 }
 
 export function StatsBar({ stats }: StatsBarProps) {
+  const { colors } = useTenant();
   return (
-    <div className="absolute left-[47px] bottom-[5%] w-[657.5px] h-[117px] rounded-[18px] bg-[rgba(7,44,30,0.5)] z-20 flex items-center overflow-hidden px-8">
+    <div className="absolute left-[47px] bottom-[5%] w-[657.5px] h-[117px] rounded-[18px] z-20 flex items-center overflow-hidden px-8"
+      style={{ backgroundColor: colors.statsbg }}>
       <div className="grid grid-cols-3 w-full h-[85.5px]">
         {stats.map((stat, idx) => (
           <div
