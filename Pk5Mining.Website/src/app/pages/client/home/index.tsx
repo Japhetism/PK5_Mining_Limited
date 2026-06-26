@@ -123,9 +123,9 @@ export function Home() {
             >
               Minerals We Mine
             </h2>
-            <p className="text-lg text-[#787878] max-w-xl leading-relaxed mx-auto">
-              High-purity strategic minerals for the modern industrial age
-            </p>
+           <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed mx-auto">
+  High-purity strategic minerals for the modern industrial age
+</p>
           </AnimatedSection>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -200,10 +200,11 @@ export function Home() {
               >
                 Our Footprints
               </h2>
-              <p className="text-lg text-[#787878] mb-12 leading-relaxed max-w-lg">
-                Strategically located mining sites with state-of-the-art infrastructure and advanced
-                extraction technology.
-              </p>
+                 
+  <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed text-left">
+  Strategically located mining sites with state-of-the-art infrastructure and advanced
+  extraction technology.
+</p>
 
               {/* Stats row */}
               <div className="grid grid-cols-3 gap-0 mb-12 border border-[#2a2a2a] rounded-xl overflow-hidden">
@@ -287,7 +288,7 @@ export function Home() {
             >
               Why Choose PK5
             </h2>
-            <p className="text-lg text-[#787878] max-w-xl leading-relaxed mx-auto">
+            <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed mx-auto"> 
               Industry-leading expertise combined with commitment to excellence
             </p>
           </AnimatedSection>
@@ -348,7 +349,8 @@ export function Home() {
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Ready to Partner With Us?
             </h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+            <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed mx-auto"> </p>
+            <p className="text-xl mb-8 max-w-xl mx-auto opacity-90">
               Join industry leaders who trust PK5 Mining for their mineral
               supply needs
             </p>

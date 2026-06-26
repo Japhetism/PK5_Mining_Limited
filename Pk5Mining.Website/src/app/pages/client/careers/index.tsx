@@ -56,7 +56,7 @@ export function Careers() {
           </motion.h1>
 
           <motion.p
-            className="text-xl text-gray-300 max-w-2xl mx-auto"
+            className="text-2xl text-gray-300 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -84,7 +84,7 @@ export function Careers() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Why Work With Us?
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-2xl text-gray-400 max-w-3xl mx-auto">
               We invest in our people because they are our greatest asset
             </p>
           </AnimatedSection>
@@ -106,7 +106,7 @@ export function Careers() {
                   </motion.div>
 
                   <h3 className="text-2xl font-bold mb-3">{benefit.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">
+                  <p className=" md:text-2xl text-gray-400 leading-relaxed">
                     {benefit.description}
                   </p>
                 </motion.div>
@@ -125,12 +125,12 @@ export function Careers() {
                 Our <span className="text-[#c89b3c]">Culture</span>
               </h2>
 
-              <p className="text-xl text-gray-400 mb-6">
+              <p className=" md:text-2xl text-gray-400 mb-6">
                 At PK5 Mining, we foster a culture of innovation, collaboration,
                 and continuous improvement.
               </p>
 
-              <div className="space-y-4">
+              <div className=" md:text-1x space-y-4">
                 {[
                   "Safety-first mindset in everything we do",
                   "Diverse and inclusive work environment",
@@ -180,10 +180,10 @@ export function Careers() {
       >
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="  md: text-4xl md:text-5xl font-bold mb-4">
               Open Positions
             </h2>
-            <p className="text-xl text-gray-400">
+            <p className=" md:text-2xl text-gray-400">
               Find your next opportunity with PK5 Mining
             </p>
           </AnimatedSection>

@@ -81,7 +81,7 @@ export function OperationsPage() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed"
+                        className="text-2xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed"
                     >
                         World-class mining operations powered by innovation, sustainable practices, and strategic vision
                     </motion.p>
@@ -121,7 +121,7 @@ export function OperationsPage() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.75, delay: 0.25 }}
-                                className="text-lg text-[#787878] leading-relaxed max-w-2xl mx-auto"
+                                className=" md:text-2xl text-lg text-[#787878] leading-relaxed max-w-2xl mx-auto"
                             >
                                 PK5 Mining specializes in the exploration and extraction of mineral resources across
                                 nations. Our company is committed to sustainable mining practices and delivering
@@ -229,7 +229,7 @@ export function OperationsPage() {
                         <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white mx-auto">
                             Strategic Focus Areas
                         </h2>
-                        <p className="text-xl text-[#a0a0a0] max-w-4xl leading-relaxed mx-auto">
+                        <p className="text-2xl text-[#a0a0a0] max-w-4xl leading-relaxed mx-auto">
                            PK5 Mining strategically aligns its core focus areas to enhance operational efficiency and drive sustainable growth. This approach ensures the company remains competitive while meeting industry demands and stakeholder expectations.
 
                         </p>
@@ -296,7 +296,7 @@ export function OperationsPage() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.75, delay: 0.2 }}
-                            className="text-lg text-[#848484] leading-relaxed max-w-4xl mx-auto"
+                            className=" md:text-2xl text-lg text-[#848484] leading-relaxed max-w-4xl mx-auto"
                         >
                            PK5 Mining designs integrated processing plants to enhance the value of raw minerals using advanced 
                            technologies. We promote sustainable mining and local economic growth through infrastructure 
@@ -369,7 +369,7 @@ export function OperationsPage() {
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
                                 {/* Description */}
-                                <p className="text-[#888] leading-relaxed text-[0.95rem]">
+                                <p className=" md:text-2xl text-[#888] leading-relaxed text-[0.95rem]">
                                   We set up facilities to process raw minerals locally to enhance their value and create jobs.
                                 </p>
 
@@ -421,7 +421,7 @@ export function OperationsPage() {
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
-                                <p className="text-[#888] leading-relaxed text-[0.95rem]">
+                                <p className=" md:text-2xl text-[#888] leading-relaxed text-[0.95rem]">
                                     We enhance the quality by transforming minerals into finished or semi-finished products 
                                     to increase export revenues.
 
@@ -494,7 +494,7 @@ export function OperationsPage() {
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
-                                <p className="text-[#888] leading-relaxed text-[0.95rem]">
+                                <p className=" md:text-2xl text-[#888] leading-relaxed text-[0.95rem]">
                                    We decrease reliance on exporting unprocessed minerals by promoting local processing and 
                                    manufacturing.
                                 </p>
@@ -544,7 +544,7 @@ export function OperationsPage() {
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
-                                <p className="text-[#888] leading-relaxed text-[0.95rem]">
+                                <p className=" md:text-2xl text-[#888] leading-relaxed text-[0.95rem]">
                                    We encourage industries that utilize processed minerals to produce finished goods, 
                                    thereby boosting economic growth and diversification.
 
@@ -604,7 +604,7 @@ export function OperationsPage() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.75, delay: 0.2 }}
-                            className="text-lg text-[#848484] leading-relaxed max-w-4xl mx-auto"
+                            className=" md:text-2xl text-lg text-[#848484] leading-relaxed max-w-4xl mx-auto"
                         >
                            PK5 Mining maintains a competitive edge through its commitment to sustainable mining practices and 
                            advanced technological integration. Our focus on efficient resource management and community 

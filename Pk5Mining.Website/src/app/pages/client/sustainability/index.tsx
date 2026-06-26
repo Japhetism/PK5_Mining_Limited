@@ -62,7 +62,7 @@ export function Sustainability() {
             Sustainability <span className="text-[#c89b3c]">& ESG</span>
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-300 max-w-2xl mx-auto"
+            className="text-2xl text-gray-300 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -79,7 +79,7 @@ export function Sustainability() {
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Our ESG Commitment</h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-2xl text-gray-400 max-w-3xl mx-auto">
               At PK5 Mining, responsible resource development is both a moral commitment and a sound business strategy.
               Our comprehensive ESG framework directly translates these values into every decision we execute on the ground.
             </p>
@@ -119,7 +119,7 @@ export function Sustainability() {
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Sustainability Initiatives</h2>
-            <p className="text-xl text-gray-400">
+            <p className=" md:text-2xl text-26xl text-gray-400">
               We don’t just manage resources, we protect ecosystems. At PK5 Mining, <br />
               we design and implement forward-thinking environmental initiatives that honor the land <br /> and empower local communities.
             </p>
@@ -158,10 +158,10 @@ export function Sustainability() {
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 Land <span className="text-[#c89b3c]">Reclamation</span>
               </h2>
-              <p className="text-xl text-gray-400 mb-6">
+              <p className="text-2xl text-gray-400 mb-6">
                 Every site we operate becomes a testament to our commitment to environmental restoration.
               </p>
-              <p className="text-gray-400 mb-6 leading-relaxed">
+              <p className="text-2xl text-gray-400 mb-6 ">
                 Our land reclamation program goes beyond compliance. We don't just restore—we enhance.
                 Former mining sites are transformed into thriving ecosystems with native vegetation,
                 restored waterways, and protected habitats for local wildlife.
@@ -203,7 +203,7 @@ export function Sustainability() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Environmental Protection
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-2xl text-gray-400 max-w-3xl mx-auto">
               Proactive measures to minimize environmental impact and protect ecosystems
             </p>
           </AnimatedSection>

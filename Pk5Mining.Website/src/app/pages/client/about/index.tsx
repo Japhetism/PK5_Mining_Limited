@@ -129,7 +129,7 @@ export function About() {
             About <span className="text-[#c89b3c]">PK5 Mining</span>
           </motion.h1>
           <motion.div
-            className="text-md md:text-xl text-gray-300 md:w-3/6 xs:w-5/6 mx-auto"
+            className="text-lg md:text-2xl text-gray-300 md:w-3/6 xs:w-5/6 mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -247,7 +247,8 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.25 }}
-                className="text-lg text-[#787878] max-w-2xl leading-relaxed mx-auto"
+                // <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed mx-auto"> </p>
+                className="text-lg md:text-2xl text-[#787878] max-w-2xl leading-relaxed mx-auto"
               >
                 Four pillars that define our commitment to excellence, sustainability, and long-term value creation.
               </motion.p>
@@ -429,7 +430,7 @@ export function About() {
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">Our Journey</h2>
-            <p className="text-xl text-gray-400">5 years of mining excellence</p>
+            <p className="text-lg md:text-2xl  text-gray-400">5 years of mining excellence</p>
           </AnimatedSection>
 
           <div className="max-w-4xl mx-auto">
@@ -452,9 +453,8 @@ export function About() {
                   >
                     {item.year}
                   </motion.div>
-
                   {/* Content */}
-                  <div className="flex-1 pb-8 text-white">
+                  <div className="text-lg md:text-2xl flex-1 pb-8 text-white">
                     <h3 className="text-2xl font-bold mb-2">{item.event}</h3>
                     <p className="text-gray-400">{item.description}</p>
                   </div>
@@ -472,7 +472,7 @@ export function About() {
             <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               PK5 Mining Leadership
             </h2>
-            <p className="text-xl text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg  md:text-2xl  text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed">
               Our executive leadership team brings world-class expertise in mining operations, sustainable resource
               development, and technological innovation. With deep industry experience and unwavering commitment to
               operational excellence, environmental responsibility, and long-term economic growth, our leaders position

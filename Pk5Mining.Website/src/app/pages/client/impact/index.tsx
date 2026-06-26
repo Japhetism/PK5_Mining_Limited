@@ -42,7 +42,7 @@ export function ImpactPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed"
+            className="text-2xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed"
           >
             Driving economic growth and sustainable development across communities and nations
           </motion.p>
@@ -68,7 +68,7 @@ export function ImpactPage() {
             <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               Economic Impact
             </h2>
-            <p className="text-xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed">
+            <p className="text-2xl text-[#a0a0a0] max-w-3xl mx-auto leading-relaxed">
               PK5 Mining drives local, state, and national economic growth through sustainable mineral extraction, leveraging advanced
               technologies to enhance efficiency and support responsible environmental and socioeconomic development.
             </p>
@@ -120,7 +120,7 @@ export function ImpactPage() {
             <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white ">
               Aligned with Government Priorities
             </h2>
-            <p className="text-xl text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed">
+            <p className="text-2xl text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed">
               PK5 Mining aligns closely with government priorities by promoting economic development through responsible mineral exploitation. Our company emphasizes job creation, infrastructure enhancement,
                and export-driven growth to support sustainable local, state, and national progress.
             </p>

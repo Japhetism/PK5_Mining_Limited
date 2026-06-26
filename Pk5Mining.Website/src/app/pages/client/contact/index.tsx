@@ -55,7 +55,7 @@ export function Contact() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Get In <span className="text-[#c89b3c]">Touch</span>
             </h1>
-            <p className="text-xl text-gray-400">
+            <p className="text-2xl text-gray-400">
               We're here to answer your questions and discuss partnership
               opportunities
             </p>
@@ -299,7 +299,7 @@ export function Contact() {
                 <div className="text-center flex-1 flex flex-col items-center justify-center">
                   <MapPin className="w-24 h-24 text-[#c89b3c] mx-auto mb-6" />
                   <h3 className="text-2xl font-bold mb-4">Interactive Map</h3>
-                  <p className="text-gray-400 max-w-md mx-auto">
+                  <p className=" md:text-2xl text-gray-400 max-w-md mx-auto">
                     Our mining operations span across multiple strategic
                     locations worldwide. Visit us at our head office or any of
                     our operational sites.
