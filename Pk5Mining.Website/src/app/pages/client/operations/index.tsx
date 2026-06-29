@@ -325,7 +325,7 @@ export function OperationsPage() {
                                 <ImageWithFallback
                                     src="https://images.unsplash.com/photo-1652211955967-99c892925469?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080"
                                     alt="Agro-Processing Facilities"
-                                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                    // className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/20 to-black/60" />
                                 {/* Diagonal corner accent */}
@@ -435,7 +435,7 @@ export function OperationsPage() {
                                 <ImageWithFallback
                                     src="https://images.unsplash.com/photo-1668838225765-daa3a5da6207?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080"
                                     alt="Value Addition Before Market Distribution"
-                                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                    className="w-full h-full object-cover transition-transform duration-700 ease-out "
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/20 to-black/60" />
                                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#D4AF37]/8 blur-2xl" />
@@ -456,7 +456,7 @@ export function OperationsPage() {
                                 <ImageWithFallback
                                     src="https://images.unsplash.com/photo-1496247749665-49cf5b1022e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080"
                                     alt="Reduction of Raw Produce Export Dependency"
-                                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                    className="w-full h-full object-cover transition-transform duration-700 ease-out"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/20 to-black/60" />
                                 <div className="absolute bottom-0 right-0 w-24 h-24 bg-[#D4AF37]/8 blur-2xl" />
@@ -558,7 +558,7 @@ export function OperationsPage() {
                                 <ImageWithFallback
                                     src="https://images.unsplash.com/photo-1582055871659-2fcf2e4d3bd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080"
                                     alt="Development of Agro-Based Industries"
-                                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                    className="w-full h-full object-cover transition-transform duration-700 ease-out"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/20 to-black/60" />
                                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#D4AF37]/8 blur-2xl" />
