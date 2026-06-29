@@ -27,9 +27,9 @@ namespace Pk5Mining.Server.Services
                 new Claim("RoleId", user.RoleId.ToString() ?? ""),
                 new Claim("DepartmentId", user.DepartmentId.ToString() ?? "")
             };
-            if (user.UserRoles?.Permissions != null)
+            if (user.UserRole?.Permissions != null)
             {
-                foreach (var permission in user.UserRoles.Permissions)
+                foreach (var permission in user.UserRole.Permissions)
                 {
                     claims.Add( new Claim("permission", permission.Name));
                 }

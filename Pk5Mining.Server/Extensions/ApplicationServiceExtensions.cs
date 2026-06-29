@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Pk5Mining.Server.Configuration.Mapper;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Job;
@@ -21,6 +23,7 @@ using Pk5Mining.Server.Services.Cloud_Service;
 using Pk5Mining.Server.Services.Email;
 using Pk5Mining.Server.Services.Email.Agro_Mail;
 using Pk5Mining.Server.Services.Permission_Handler;
+using System;
 using System.IO;
 
 namespace Pk5Mining.Server.Extensions
@@ -30,7 +33,18 @@ namespace Pk5Mining.Server.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddAutoMapper(typeof(MapperProfiles));
-            services.AddDbContext<Pk5MiningDBContext>();
+            services.AddDbContext<Pk5MiningDBContext>(options =>
+            {
+                options.UseSqlServer(
+                    config.GetConnectionString("DevPk5MiningDB"),
+                    sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(10),
+                            errorNumbersToAdd: null);
+                    });
+            });
 
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
             services.AddScoped<IFileAccessor, FileAccessor>();

@@ -95,7 +95,7 @@ namespace Pk5Mining.Server
                 entity.ToTable("Users", schema: "pk5");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedNever();
-                entity.HasOne(e => e.UserRoles)
+                entity.HasOne(e => e.UserRole)
                             .WithMany()
                             .HasForeignKey(e => e.RoleId)
                             .OnDelete(DeleteBehavior.SetNull);
