@@ -50,7 +50,7 @@ export function ImpactPage() {
       </section>
 
       {/* Economic Impact */}
-      <section className="py-32 bg-gradient-to-b from-[#0a0a0a] to-[#0f0f0f] relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#0f0f0f] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-[#D4AF37]/5 rounded-full blur-[120px]" />
 
         <div className="container mx-auto px-6 relative z-10">
@@ -112,7 +112,7 @@ export function ImpactPage() {
       </section>
 
       {/* Government Alignment */}
-      <section className="py-32 bg-[#0a0a0a] relative overflow-hidden">
+      <section className="py-20 bg-[#0a0a0a] relative overflow-hidden">
         <div className="absolute bottom-0 left-0 w-[500px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[160px] pointer-events-none" />
 
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
@@ -179,7 +179,7 @@ export function ImpactPage() {
                   <h3 className="text-white mb-3">{item.title}</h3>
 
                   {/* Description */}
-                  <p className="text-[#787878] leading-relaxed text-sm flex-1">{item.description}</p>
+                  <p className="text-[#787878] leading-relaxed text-sm sm:text-base flex-1">{item.description}</p>
                 </motion.div>
               </AnimatedSection>
             ))}

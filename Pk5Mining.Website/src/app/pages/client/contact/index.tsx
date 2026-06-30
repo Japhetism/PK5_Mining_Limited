@@ -42,9 +42,9 @@ export function Contact() {
     setFocusedField,
   } = useContactViewModel();
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       {/* Hero */}
-      <section className="py-24 bg-gradient-to-br from-[#1a1a1a] via-[#0f0f0f] to-[#1a1a1a]">
+      <section className="py-20 bg-gradient-to-br from-[#1a1a1a] via-[#0f0f0f] to-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <motion.div
             className="text-center max-w-4xl mx-auto"
@@ -64,7 +64,7 @@ export function Contact() {
       </section>
 
       {/* Contact Info Cards */}
-      <section className="py-24 bg-[#1a1a1a]">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {contactInfo.map((info, index) => (
@@ -130,7 +130,7 @@ export function Contact() {
       </section>
 
       {/* Contact Form & Map */}
-      <section className="py-24 bg-[#0f0f0f]">
+      <section className="py-20 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
@@ -317,7 +317,7 @@ export function Contact() {
       </section>
 
       {/* Office Hours */}
-      <section className="py-24 bg-[#1a1a1a]">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center">
             <h2 className="text-4xl font-bold mb-8">Office Hours</h2>

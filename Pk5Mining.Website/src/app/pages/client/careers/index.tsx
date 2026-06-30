@@ -28,7 +28,7 @@ export function Careers() {
   } = useCareersViewModel();
 
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       {/* Hero */}
       <section className="relative h-[60vh] flex items-center justify-center">
         <motion.div
@@ -78,7 +78,7 @@ export function Careers() {
       </section>
 
       {/* Why Work Here */}
-      <section className="py-24 bg-[#1a1a1a]">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -106,7 +106,7 @@ export function Careers() {
                   </motion.div>
 
                   <h3 className="text-2xl font-bold mb-3">{benefit.title}</h3>
-                  <p className=" md:text-2xl text-gray-400 leading-relaxed">
+                  <p className=" text-sm sm:text-base text-gray-400 leading-relaxed">
                     {benefit.description}
                   </p>
                 </motion.div>
@@ -117,7 +117,7 @@ export function Careers() {
       </section>
 
       {/* Culture */}
-      <section className="py-24 bg-[#0f0f0f]">
+      <section className="py-20 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <AnimatedSection>
@@ -176,7 +176,7 @@ export function Careers() {
         ref={(el) => {
           openPositionsRef.current = el;
         }}
-        className="py-24 bg-[#1a1a1a]"
+        className="py-20 bg-[#1a1a1a]"
       >
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">

@@ -36,7 +36,7 @@ function AnimatedProgressBar({ value, delay = 0 }: { value: number; delay?: numb
 
 export function Sustainability() {
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       {/* Hero */}
       <section className="relative h-[60vh] flex items-center justify-center">
         <motion.div
@@ -75,7 +75,7 @@ export function Sustainability() {
       </section>
 
       {/* ESG Commitment */}
-      <section className="py-24 bg-[#1a1a1a]">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Our ESG Commitment</h2>
@@ -115,7 +115,7 @@ export function Sustainability() {
       </section>
 
       {/* Sustainability Initiatives */}
-      <section className="py-24 bg-[#0f0f0f]">
+      <section className="py-20 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Sustainability Initiatives</h2>
@@ -151,7 +151,7 @@ export function Sustainability() {
       </section>
 
       {/* Land Reclamation Story */}
-      <section className="py-24 bg-[#1a1a1a]">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <AnimatedSection>
@@ -197,7 +197,7 @@ export function Sustainability() {
       </section>
 
       {/* Environmental Protection */}
-      <section className="py-24 bg-[#0f0f0f]">
+      <section className="py-20 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -229,7 +229,7 @@ export function Sustainability() {
                     <Leaf className="w-6 h-6 text-[#c89b3c]" />
                   </motion.div>
                   <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                  <p className="text-gray-400 text-sm">{item.description}</p>
+                  <p className="text-gray-400 text-sm sm:text-base">{item.description}</p>
                 </motion.div>
               </AnimatedSection>
             ))}

@@ -17,37 +17,37 @@ import {
     Building2,
     Settings
 } from 'lucide-react';
-    
+
 const coreOperations = [
     {
-      number: '01',
-      icon: Compass,
-      title: 'Geological Exploration & Resource Validation:',
-      description:
-        'We conduct detailed surveys and analysis to identify and confirm the presence of valuable mineral deposits.',
+        number: '01',
+        icon: Compass,
+        title: 'Geological Exploration & Resource Validation:',
+        description:
+            'We conduct detailed surveys and analysis to identify and confirm the presence of valuable mineral deposits.',
     },
     {
-      number: '02',
-      icon: Building2,
-      title: 'Mine Development & Infrastructure:',
-      description:
-        'We plan and construct the necessary facilities and systems to support efficient mining operations.',
+        number: '02',
+        icon: Building2,
+        title: 'Mine Development & Infrastructure:',
+        description:
+            'We plan and construct the necessary facilities and systems to support efficient mining operations.',
     },
     {
-      number: '03',
-      icon: Settings,
-      title: 'Extraction & Mineral Processing:',
-      description:
-        'We remove minerals from the earth and refine them to meet quality standards for market readiness.',
+        number: '03',
+        icon: Settings,
+        title: 'Extraction & Mineral Processing:',
+        description:
+            'We remove minerals from the earth and refine them to meet quality standards for market readiness.',
     },
     {
-      number: '04',
-      icon: Globe,
-      title: 'Logistics & Export Operations:',
-      description:
-        'We manage the transportation and shipment of processed minerals to global markets in a timely and cost-effective manner.',
+        number: '04',
+        icon: Globe,
+        title: 'Logistics & Export Operations:',
+        description:
+            'We manage the transportation and shipment of processed minerals to global markets in a timely and cost-effective manner.',
     },
-  ];
+];
 
 export function OperationsPage() {
     const [hoveredAdvantage, setHoveredAdvantage] = useState<number | null>(null);
@@ -89,7 +89,7 @@ export function OperationsPage() {
             </section>
 
             {/* ── CORE OPERATIONS ───────────────────────────────────────────── */}
-            <section className="py-28 bg-[#090909] relative overflow-hidden">
+            <section className="py-20 bg-[#090909] relative overflow-hidden">
                 {/* Industrial grid texture */}
                 <div
                     className="absolute inset-0 opacity-[0.03]"
@@ -201,7 +201,7 @@ export function OperationsPage() {
                                         </h3>
 
                                         {/* Description */}
-                                        <p className="relative z-10 text-[#888] text-sm leading-relaxed">
+                                        <p className="relative z-10 text-[#888] text-sm sm:text-base leading-relaxed">
                                             {op.description}
                                         </p>
                                     </motion.div>
@@ -213,7 +213,7 @@ export function OperationsPage() {
             </section>
 
             {/* Strategic Focus Areas */}
-            <section className="py-32 bg-[#0a0a0a] relative">
+            <section className="py-20 bg-[#0a0a0a] relative">
                 <div className="absolute inset-0 opacity-10">
                     <div
                         className="w-full h-full"
@@ -230,7 +230,7 @@ export function OperationsPage() {
                             Strategic Focus Areas
                         </h2>
                         <p className="text-2xl text-[#a0a0a0] max-w-4xl leading-relaxed mx-auto">
-                           PK5 Mining strategically aligns its core focus areas to enhance operational efficiency and drive sustainable growth. This approach ensures the company remains competitive while meeting industry demands and stakeholder expectations.
+                            PK5 Mining strategically aligns its core focus areas to enhance operational efficiency and drive sustainable growth. This approach ensures the company remains competitive while meeting industry demands and stakeholder expectations.
 
                         </p>
                     </AnimatedSection>
@@ -263,7 +263,7 @@ export function OperationsPage() {
             </section>
 
             {/* ── PROCESSING AND INDUSTRIALIZATION ──────────────────────────── */}
-            <section className="py-32 bg-[#090909] relative overflow-hidden">
+            <section className="py-20 bg-[#090909] relative overflow-hidden">
                 {/* Industrial cross-hatch texture */}
                 <div
                     className="absolute inset-0 opacity-[0.028]"
@@ -298,9 +298,9 @@ export function OperationsPage() {
                             transition={{ duration: 0.75, delay: 0.2 }}
                             className=" md:text-2xl text-lg text-[#848484] leading-relaxed max-w-4xl mx-auto"
                         >
-                           PK5 Mining designs integrated processing plants to enhance the value of raw minerals using advanced 
-                           technologies. We promote sustainable mining and local economic growth through infrastructure 
-                           development.
+                            PK5 Mining designs integrated processing plants to enhance the value of raw minerals using advanced
+                            technologies. We promote sustainable mining and local economic growth through infrastructure
+                            development.
 
                         </motion.p>
                     </AnimatedSection>
@@ -325,7 +325,7 @@ export function OperationsPage() {
                                 <ImageWithFallback
                                     src="https://images.unsplash.com/photo-1652211955967-99c892925469?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080"
                                     alt="Agro-Processing Facilities"
-                                    // className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                // className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/20 to-black/60" />
                                 {/* Diagonal corner accent */}
@@ -369,8 +369,8 @@ export function OperationsPage() {
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
                                 {/* Description */}
-                                <p className=" md:text-2xl text-[#888] leading-relaxed text-[0.95rem]">
-                                  We set up facilities to process raw minerals locally to enhance their value and create jobs.
+                                <p className=" md:text-1xl text-sm sm:text-base leading-relaxed text-[0.95rem]">
+                                    We set up facilities to process raw minerals locally to enhance their value and create jobs.
                                 </p>
 
                                 {/* Bottom edge glow */}
@@ -399,7 +399,7 @@ export function OperationsPage() {
                                     02
                                 </div>
 
-                              
+
 
                                 <div
                                     className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
@@ -421,8 +421,8 @@ export function OperationsPage() {
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
-                                <p className=" md:text-2xl text-[#888] leading-relaxed text-[0.95rem]">
-                                    We enhance the quality by transforming minerals into finished or semi-finished products 
+                                <p className="md:text-1xl text-sm sm:text-base leading-relaxed text-[0.95rem]">
+                                    We enhance the quality by transforming minerals into finished or semi-finished products
                                     to increase export revenues.
 
                                 </p>
@@ -494,9 +494,9 @@ export function OperationsPage() {
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
-                                <p className=" md:text-2xl text-[#888] leading-relaxed text-[0.95rem]">
-                                   We decrease reliance on exporting unprocessed minerals by promoting local processing and 
-                                   manufacturing.
+                                <p className="md:text-1xl text-sm sm:text-base leading-relaxed text-[0.95rem]">
+                                    We decrease reliance on exporting unprocessed minerals by promoting local processing and
+                                    manufacturing.
                                 </p>
 
                                 <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/0 to-transparent group-hover:via-[#D4AF37]/35 transition-all duration-600" />
@@ -544,9 +544,9 @@ export function OperationsPage() {
 
                                 <div className="h-px w-12 bg-gradient-to-r from-[#D4AF37] to-transparent mb-5 group-hover:w-20 transition-all duration-500" />
 
-                                <p className=" md:text-2xl text-[#888] leading-relaxed text-[0.95rem]">
-                                   We encourage industries that utilize processed minerals to produce finished goods, 
-                                   thereby boosting economic growth and diversification.
+                                <p className=" md:text-1xl text-sm sm:text-base leading-relaxed text-[0.95rem]">
+                                    We encourage industries that utilize processed minerals to produce finished goods,
+                                    thereby boosting economic growth and diversification.
 
                                 </p>
 
@@ -570,7 +570,7 @@ export function OperationsPage() {
             </section>
 
             {/* ── COMPETITIVE ADVANTAGE ─────────────────────────────────────── */}
-            <section className="py-32 bg-[#0a0a0a] relative overflow-hidden">
+            <section className="py-20 bg-[#0a0a0a] relative overflow-hidden">
                 {/* Ambient glow blurs */}
                 <div className="absolute top-0 left-1/4 w-[700px] h-[500px] bg-[#D4AF37]/5 rounded-full blur-[200px] pointer-events-none" />
                 <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-[#B8941F]/5 rounded-full blur-[180px] pointer-events-none" />
@@ -606,9 +606,9 @@ export function OperationsPage() {
                             transition={{ duration: 0.75, delay: 0.2 }}
                             className=" md:text-2xl text-lg text-[#848484] leading-relaxed max-w-4xl mx-auto"
                         >
-                           PK5 Mining maintains a competitive edge through its commitment to sustainable mining practices and 
-                           advanced technological integration. Our focus on efficient resource management and community 
-                           engagement further strengthens our market position.
+                            PK5 Mining maintains a competitive edge through its commitment to sustainable mining practices and
+                            advanced technological integration. Our focus on efficient resource management and community
+                            engagement further strengthens our market position.
 
                         </motion.p>
                     </AnimatedSection>
@@ -818,16 +818,16 @@ export function OperationsPage() {
             </section>
 
             {/* Growth Strategy */}
-            <section className="py-32 bg-gradient-to-b from-[#0a0a0a] to-[#0f0f0f]">
+            <section className="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#0f0f0f]">
                 <div className="container mx-auto px-6">
                     <AnimatedSection className="text-center mb-20">
                         <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white mx-auto">
                             Our Growth Strategy
                         </h2>
                         <p className="text-xl text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed ">
-                          PK5 Mining is committed to driving sustainable growth through strategic investments in advanced mining
-                           technologies and expanding our operational capacities. Our growth strategy focuses on enhancing 
-                           resource efficiency, fostering local partnerships, and exploring new markets to maximize value creation.
+                            PK5 Mining is committed to driving sustainable growth through strategic investments in advanced mining
+                            technologies and expanding our operational capacities. Our growth strategy focuses on enhancing
+                            resource efficiency, fostering local partnerships, and exploring new markets to maximize value creation.
 
                         </p>
                     </AnimatedSection>
