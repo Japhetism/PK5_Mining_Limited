@@ -31,7 +31,7 @@ export const executiveLeadership: ExecutiveProfile[] = [
     },
     {
         id: '3',
-        department: "Technology",
+        department: "Information Technology",
         name: 'Alozie Okwukanma',
         role: 'HEAD OF ICT',
         shortBio: 'Alozie Okwukanma is a seasoned Full Stack Software Engineer with over eight years of experience building scalable, enterprise-grade applications, with growing specialization in mineral mining and resource management systems. He leverages deep expertise in the Microsoft .NET ecosystem, cloud platforms, and modern web technologies—including C#, ASP.NET, .NET Core, Angular, React, and Microsoft Azure—to develop digital solutions that support mining operations, data-driven decision-making, and process optimization. He has strong experience in Windows-based enterprise and Microsoft Office-integrated solutions, with solid expertise in financial systems. He has contributed to high-impact projects at global organizations such as Microsoft and Dolby Laboratories, delivering robust systems adaptable to complex, industrial environments.​ He currently serves as a Lead Software Engineer, where he drives system architecture, leads development teams, and collaborates with stakeholders to deliver efficient, high-quality solutions. His experience spans the full software development lifecycle, with increasing focus on applying technology to mining operations, including data analytics, workflow automation, and operational monitoring. Known for his analytical approach and technical depth, he translates complex operational requirements into scalable systems that enhance efficiency, productivity, and strategic decision-making within the mining sector.​',
