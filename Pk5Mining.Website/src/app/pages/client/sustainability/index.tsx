@@ -36,7 +36,7 @@ function AnimatedProgressBar({ value, delay = 0 }: { value: number; delay?: numb
 
 export function Sustainability() {
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       {/* Hero */}
       <section className="relative h-[60vh] flex items-center justify-center">
         <motion.div
@@ -62,7 +62,7 @@ export function Sustainability() {
             Sustainability <span className="text-[#c89b3c]">& ESG</span>
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-300 max-w-2xl mx-auto"
+            className="text-2xl text-gray-300 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -75,11 +75,11 @@ export function Sustainability() {
       </section>
 
       {/* ESG Commitment */}
-      <section className="py-24 bg-[#1a1a1a]">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Our ESG Commitment</h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-2xl text-gray-400 max-w-3xl mx-auto">
               At PK5 Mining, responsible resource development is both a moral commitment and a sound business strategy.
               Our comprehensive ESG framework directly translates these values into every decision we execute on the ground.
             </p>
@@ -115,11 +115,11 @@ export function Sustainability() {
       </section>
 
       {/* Sustainability Initiatives */}
-      <section className="py-24 bg-[#0f0f0f]">
+      <section className="py-20 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Sustainability Initiatives</h2>
-            <p className="text-xl text-gray-400">
+            <p className=" md:text-2xl text-26xl text-gray-400">
               We don’t just manage resources, we protect ecosystems. At PK5 Mining, <br />
               we design and implement forward-thinking environmental initiatives that honor the land <br /> and empower local communities.
             </p>
@@ -151,17 +151,17 @@ export function Sustainability() {
       </section>
 
       {/* Land Reclamation Story */}
-      <section className="py-24 bg-[#1a1a1a]">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <AnimatedSection>
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 Land <span className="text-[#c89b3c]">Reclamation</span>
               </h2>
-              <p className="text-xl text-gray-400 mb-6">
+              <p className="text-2xl text-gray-400 mb-6">
                 Every site we operate becomes a testament to our commitment to environmental restoration.
               </p>
-              <p className="text-gray-400 mb-6 leading-relaxed">
+              <p className="text-2xl text-gray-400 mb-6 ">
                 Our land reclamation program goes beyond compliance. We don't just restore—we enhance.
                 Former mining sites are transformed into thriving ecosystems with native vegetation,
                 restored waterways, and protected habitats for local wildlife.
@@ -197,13 +197,13 @@ export function Sustainability() {
       </section>
 
       {/* Environmental Protection */}
-      <section className="py-24 bg-[#0f0f0f]">
+      <section className="py-20 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Environmental Protection
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-2xl text-gray-400 max-w-3xl mx-auto">
               Proactive measures to minimize environmental impact and protect ecosystems
             </p>
           </AnimatedSection>
@@ -229,7 +229,7 @@ export function Sustainability() {
                     <Leaf className="w-6 h-6 text-[#c89b3c]" />
                   </motion.div>
                   <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                  <p className="text-gray-400 text-sm">{item.description}</p>
+                  <p className="text-gray-400 text-sm sm:text-base">{item.description}</p>
                 </motion.div>
               </AnimatedSection>
             ))}

@@ -112,7 +112,7 @@ export function Home() {
       </section>
 
       {/* Minerals We Mine */}
-      <section className="py-28 bg-[#0a0a0a] relative">
+      <section className="py-20 bg-[#0a0a0a] relative">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#D4AF37]/4 rounded-full blur-[150px] pointer-events-none" />
 
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
@@ -123,7 +123,7 @@ export function Home() {
             >
               Minerals We Mine
             </h2>
-            <p className="text-lg text-[#787878] max-w-xl leading-relaxed mx-auto">
+            <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed mx-auto">
               High-purity strategic minerals for the modern industrial age
             </p>
           </AnimatedSection>
@@ -174,7 +174,7 @@ export function Home() {
                     >
                       {mineral.name}
                     </h3>
-                    <p className="text-[#909090] text-sm">{mineral.use}</p>
+                    <p className="text-[#909090] text-sm sm:text-base">{mineral.use}</p>
 
                     {/* Bottom rule */}
                     <div className="mt-4 h-px bg-gradient-to-r from-[#D4AF37]/50 to-transparent transition-all duration-300 group-hover:from-[#D4AF37]" />
@@ -190,7 +190,7 @@ export function Home() {
       </section>
 
       {/* Operations Overview */}
-      <section className="py-28 bg-[#0d0d0d]">
+      <section className="py-20 bg-[#0d0d0d]">
         <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <AnimatedSection>
@@ -200,7 +200,8 @@ export function Home() {
               >
                 Our Footprints
               </h2>
-              <p className="text-lg text-[#787878] mb-12 leading-relaxed max-w-lg">
+
+              <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed text-left">
                 Strategically located mining sites with state-of-the-art infrastructure and advanced
                 extraction technology.
               </p>
@@ -275,7 +276,7 @@ export function Home() {
       </section>
 
       {/* Why Choose PK5 */}
-      <section className="py-28 bg-[#0d0d0d] relative overflow-hidden">
+      <section className="py-20 bg-[#0d0d0d] relative overflow-hidden">
         <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[120px] pointer-events-none" />
 
@@ -287,7 +288,7 @@ export function Home() {
             >
               Why Choose PK5
             </h2>
-            <p className="text-lg text-[#787878] max-w-xl leading-relaxed mx-auto">
+            <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed mx-auto">
               Industry-leading expertise combined with commitment to excellence
             </p>
           </AnimatedSection>
@@ -329,7 +330,7 @@ export function Home() {
                     >
                       {feature.title}
                     </h3>
-                    <p className="text-[#777] text-sm leading-relaxed">{feature.description}</p>
+                    <p className="text-[#777] text-sm sm:text-base leading-relaxed">{feature.description}</p>
                   </div>
 
                   {/* Vertical gold line on hover */}
@@ -342,13 +343,14 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-[#c89b3c] to-[#9d7a2e] text-black">
+      <section className="py-20 bg-gradient-to-br from-[#c89b3c] to-[#9d7a2e] text-black">
         <div className="container mx-auto px-6 text-center">
           <AnimatedSection>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Ready to Partner With Us?
             </h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+            <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed mx-auto"> </p>
+            <p className="text-xl mb-8 max-w-xl mx-auto opacity-90">
               Join industry leaders who trust PK5 Mining for their mineral
               supply needs
             </p>

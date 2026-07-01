@@ -118,7 +118,7 @@ export function About() {
             About <span className="text-[#c89b3c]">PK5 Mining</span>
           </motion.h1>
           <motion.div
-            className="text-md md:text-xl text-gray-300 md:w-3/6 xs:w-5/6 mx-auto"
+            className="text-lg md:text-2xl text-gray-300 md:w-3/6 xs:w-5/6 mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -129,71 +129,124 @@ export function About() {
         </div>
       </section>
 
-      {/* ── VISION ─────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[75vh] flex items-center overflow-hidden">
-        {/* Cinematic background */}
-        <div className="absolute inset-0">
-          {/* <ImageWithFallback
-            src="https://images.unsplash.com/photo-1767416657497-6af140eac750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
-            alt="PK5 Mining Vision"
-            className="w-full h-full object-cover"
-          /> */}
-          {/* Multi-layer cinematic overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/92 via-black/78 to-[#0a0a0a]/95" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
-          {/* Subtle gold dot texture */}
-          <div
-            className="absolute inset-0 opacity-[0.045]"
-            style={{
-              backgroundImage: 'radial-gradient(circle at 2px 2px, #D4AF37 1px, transparent 0)',
-              backgroundSize: '44px 44px',
-            }}
-          />
-          {/* Gold atmospheric glow */}
-          <div className="absolute bottom-0 left-1/3 w-[700px] h-[280px] bg-[#D4AF37]/8 rounded-full blur-[130px]" />
-        </div>
 
-        <div className="relative z-10 w-full py-36">
-          <div className="container mx-auto px-6 lg:px-16 max-w-[1380px]">
-            {/* Vision label */}
-            {/* Cinematic statement */}
-            <div className="relative">
-              {/* Decorative oversized quotation mark */}
-              <div
-                className="absolute -top-4 -left-2 text-[#D4AF37] select-none pointer-events-none font-serif leading-none"
-                style={{ fontSize: 'clamp(7rem, 16vw, 18rem)', opacity: 0.055, lineHeight: 1 }}
+ {/* ── VISION ─────────────────────────────────────────────────────── */}
+      <section className="relative py-20 bg-[#090909] overflow-hidden">
+        {/* Ambient gold glow */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[600px] h-[400px] bg-[#C89B3C]/8 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[300px] bg-[#C89B3C]/5 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="relative z-10 container mx-auto px-6 lg:px-16 max-w-[1280px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-center">
+
+            {/* ── Left: Image ── */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="relative group order-2 lg:order-1"
+            >
+              {/* Gold border accent */}
+              <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-[#C89B3C]/40 via-transparent to-[#C89B3C]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              {/* Outer shadow frame */}
+              <div className="rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.6),0_0_0_1px_rgba(200,155,60,0.15)] group-hover:shadow-[0_40px_100px_rgba(0,0,0,0.7),0_0_0_1px_rgba(200,155,60,0.3)] transition-shadow duration-500">
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+                >
+                  <ImageWithFallback
+                    src="https://images.unsplash.com/photo-1767433072492-949406a337ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080"
+                    alt="Green hills with exposed mineral rock formations — responsible mining and landscape preservation"
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Dark gradient overlay for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
+                  {/* Gold corner accent */}
+                  <div className="absolute top-5 left-5 w-8 h-8 border-t-2 border-l-2 border-[#C89B3C]/70 rounded-tl-sm" />
+                  <div className="absolute bottom-5 right-5 w-8 h-8 border-b-2 border-r-2 border-[#C89B3C]/70 rounded-br-sm" />
+                </motion.div>
+              </div>
+
+              {/* Floating stat badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.5 }}
+                className="absolute -bottom-5 -right-5 bg-[#0f0f0f] border border-[#C89B3C]/25 rounded-xl px-5 py-4 shadow-2xl backdrop-blur-sm"
               >
-                &ldquo;
-              </div>
+                <p className="text-[#C89B3C] text-2xl font-bold leading-none">5+</p>
+                <p className="text-gray-400 text-xs mt-1 tracking-wider uppercase">Years of Impact</p>
+              </motion.div>
+            </motion.div>
 
-              <div className="relative">
-                {/* Decorative oversized quotation mark */}
-                <div
-                  className="absolute -top-4 -left-2 text-white select-none pointer-events-none font-serif leading-none"
-                  style={{ fontSize: 'clamp(7rem, 16vw, 18rem)', opacity: 0.04, lineHeight: 1 }}
-                >
-                  "
-                </div>
+            {/* ── Right: Content ── */}
+            <div className="order-1 lg:order-2 flex flex-col justify-center">
+              {/* Heading */}
+              <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="text-3xl sm:text-4xl lg:text-[2.6rem] xl:text-5xl font-bold text-white leading-[1.15] mb-6"
+                style={{ letterSpacing: '-0.02em' }}
+              >
+                Our Vision
+              </motion.h2>
 
-                <motion.h2
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.05, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="relative text-4xl sm:text-5xl md:text-[3.25rem] lg:text-[3.75rem] xl:text-[4.25rem] font-bold leading-[1.12] text-white max-w-[1080px]"
-                  style={{ letterSpacing: '-0.025em' }}
-                >
-                  At PK5 Mining, our vision is to be a trusted leader in the global mining sector, recognized for integrity, sustainability, and operational excellence.
-                </motion.h2>
-              </div>
 
+              {/* Vision statement */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="text-gray-300 text-lg leading-relaxed mb-8"
+              >
+                At PK5 Mining, our vision is to be a trusted leader in the global mining sector, recognized for integrity, sustainability, and operational excellence.
+              </motion.p>
+
+              {/* Supporting line */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="text-gray-500 text-base leading-relaxed mb-10"
+              >
+                We are committed to driving long-term value for our stakeholders while preserving the natural landscapes and communities that make our operations possible — building a legacy that endures for generations.
+              </motion.p>
+
+              {/* Pillars row */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.55 }}
+                className="flex flex-wrap gap-3"
+              >
+                {['Integrity', 'Sustainability', 'Excellence'].map((pillar, i) => (
+                  <span
+                    key={pillar}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#C89B3C]/20 bg-[#C89B3C]/5 text-sm text-gray-300"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C89B3C]" />
+                    {pillar}
+                  </span>
+                ))}
+              </motion.div>
             </div>
+
           </div>
         </div>
       </section>
 
+
       {/* ── MISSION CAROUSEL ───────────────────────────────────────────── */}
-      <section className="py-28 bg-[#090909] relative overflow-hidden">
+      <section className="py-20 bg-[#090909] relative overflow-hidden">
         {/* Background elements */}
         <div
           className="absolute inset-0 opacity-[0.025]"
@@ -225,7 +278,8 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.25 }}
-                className="text-lg text-[#787878] max-w-2xl leading-relaxed mx-auto"
+                // <p className="text-lg md:text-2xl text-[#787878] max-w-xl leading-relaxed mx-auto"> </p>
+                className="text-lg md:text-2xl text-[#787878] max-w-2xl leading-relaxed mx-auto"
               >
                 Four pillars that define our commitment to excellence, sustainability, and long-term value creation.
               </motion.p>
@@ -395,11 +449,11 @@ export function About() {
       </section>
 
       {/* Timeline */}
-      <section className="py-24 bg-[#0f0f0f]">
+      <section className="py-20 bg-[#0f0f0f]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">Our Journey</h2>
-            <p className="text-xl text-gray-400">5 years of mining excellence</p>
+            <p className="text-lg md:text-2xl  text-gray-400">5 years of mining excellence</p>
           </AnimatedSection>
 
           <div className="max-w-4xl mx-auto">
@@ -422,9 +476,8 @@ export function About() {
                   >
                     {item.year}
                   </motion.div>
-
                   {/* Content */}
-                  <div className="flex-1 pb-8 text-white">
+                  <div className="text-lg md:text-2xl flex-1 pb-8 text-white">
                     <h3 className="text-2xl font-bold mb-2">{item.event}</h3>
                     <p className="text-gray-400">{item.description}</p>
                   </div>
@@ -436,13 +489,13 @@ export function About() {
       </section>
 
       {/* Leadership */}
-      <section className="py-24 bg-[#0a0a0a]">
+      <section className="py-20 bg-[#0a0a0a]">
         <div className="container mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               PK5 Mining Leadership
             </h2>
-            <p className="text-xl text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg  md:text-2xl  text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed">
               Our executive leadership team brings world-class expertise in mining operations, sustainable resource
               development, and technological innovation. With deep industry experience and unwavering commitment to
               operational excellence, environmental responsibility, and long-term economic growth, our leaders position
@@ -464,7 +517,7 @@ export function About() {
       </section>
 
       {/* Values */}
-      <section className="py-24 bg-gradient-to-b from-[#0f0f0f] to-[#0a0a0a]">
+      <section className="py-20 bg-gradient-to-b from-[#0f0f0f] to-[#0a0a0a]">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">Our Core Values</h2>
