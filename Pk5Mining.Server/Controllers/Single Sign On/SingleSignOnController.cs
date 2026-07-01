@@ -69,12 +69,12 @@ namespace Pk5Mining.Server.Controllers.Single_Sign_On
                      Name = user.Department.Name
                 },
 
-                Role = user.UserRoles == null ? null : new RoleWithPermissionDto
+                Role = user.UserRole == null ? null : new RoleWithPermissionDto
                 {
-                    Id = user.UserRoles.Id,
-                    Name = user.UserRoles.Name,
+                    Id = user.UserRole.Id,
+                    Name = user.UserRole.Name,
 
-                    Permissions = user.UserRoles.Permissions
+                    Permissions = user.UserRole.Permissions
                     .Select(p => new PermissionResponseDto
                     {
                         Id = p.Id,

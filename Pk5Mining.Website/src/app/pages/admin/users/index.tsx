@@ -94,7 +94,7 @@ export function UserList() {
         key: "role",
         header: "Role",
         render: (user) => (
-          <span className="text-xs text-gray-300">{user.role?.name ?? "-"}</span>
+          <span className="text-xs text-gray-300">{user.userRole?.name ?? "-"}</span>
         ),
       },
       {

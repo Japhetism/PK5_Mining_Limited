@@ -75,7 +75,7 @@ export async function microsoftLogin() {
     }
 
     return data.responseData;
-  } catch (err: unknown) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to authenticate user"));
+  } catch (err: any) {
+    throw err;
   }
 }

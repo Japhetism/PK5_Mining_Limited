@@ -17,6 +17,7 @@ import { USERROLES } from "../constants/role";
 import { isEmailAuthorized } from "../utils/helper";
 import { useTenant } from "@/tenants/useTenant";
 import { RolePermission } from "../interfaces/role";
+import axios from "axios";
 
 type AuthState = {
   user: IUser | null;
@@ -24,19 +25,22 @@ type AuthState = {
   isAdmin: boolean;
   isAuthenticated: boolean;
   isUnauthorized: boolean;
+  isServerError: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  retryLogin: () => Promise<void>;
   setUser: (user: IUser | null) => void;
 };
 
 const AuthContext = createContext<AuthState | null>(null);
 
-const DEFAULT_INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 Minutes
+const DEFAULT_INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { emailDomain } = useTenant();
   const [user, setUser] = useState<IUser | null>(null);
-  const [unathorized, setIsUnauthorized] = useState<boolean>(false);
+  const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
+  const [isServerError, setIsServerError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   const logoutRef = useRef<() => void>(() => {});
 
@@ -45,28 +49,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     DEFAULT_INACTIVITY_TIMEOUT_MS;
 
   async function logout() {
-    // 1. Clear local session data immediately
     sessionStorage.removeItem(AUTH_KEY);
-
     const ssoAccount = authService.getAccount();
 
     if (ssoAccount) {
       try {
-        const res = await authService.logout();
+        await authService.logout();
       } catch (error) {
-        console.error(
-          "SSO Logout failed, falling back to manual redirect",
-          error,
-        );
+        console.error("SSO Logout failed, falling back to manual redirect", error);
         window.location.href = `${window.location.origin}/admin/login`;
       } finally {
         tokenStore.clear();
         setAuthToken(undefined);
         setUser(null);
         setIsUnauthorized(false);
+        setIsServerError(false);
       }
     } else {
-      // 3. For manual/local users, just redirect to login
       tokenStore.clear();
       setAuthToken(undefined);
       setUser(null);
@@ -76,69 +75,82 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   logoutRef.current = logout;
 
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const token = tokenStore.get();
-        const rawUser = sessionStorage.getItem(AUTH_KEY);
+  const checkSsoHandshake = async () => {
+    setIsLoading(true);
+    setIsServerError(false);
+    setIsUnauthorized(false);
 
-        // Standard Session Restore
-        if (token && rawUser && !isJwtExpired(token)) {
-          setAuthToken(token);
-          setUser(JSON.parse(rawUser) as IUser);
-          setIsLoading(false);
+    try {
+      const token = tokenStore.get();
+      const rawUser = sessionStorage.getItem(AUTH_KEY);
+
+      if (token && rawUser && !isJwtExpired(token)) {
+        setAuthToken(token);
+        setUser(JSON.parse(rawUser) as IUser);
+        return;
+      }
+
+      await authService.initialize();
+      const ssoAccount = authService.getAccount();
+
+      if (ssoAccount) {
+        if (!isEmailAuthorized(ssoAccount.username, emailDomain)) {
+          await authService.logout();
           return;
         }
+        const msToken = await authService.getToken();
+        if (msToken) {
+          setAuthToken(msToken);
+          tokenStore.set(msToken);
 
-        // Microsoft SSO Handshake
-        await authService.initialize();
-        const ssoAccount = authService.getAccount();
+          const backendResponseData = await microsoftLogin();
+          if (backendResponseData) {
+            const finalToken = backendResponseData.token || msToken;
+            const permissionNames = backendResponseData.user.role?.permissions?.map(
+              (permission) => permission.name,
+            );
+            const authenticatedUser = {
+              ...backendResponseData.user,
+              jwtToken: finalToken,
+              userPermissions: permissionNames as RolePermission[],
+            };
 
-        if (ssoAccount) {
-          if (!isEmailAuthorized(ssoAccount.username, emailDomain)) {
-            await authService.logout();
-            return;
+            setUser(authenticatedUser);
+            sessionStorage.setItem(AUTH_KEY, JSON.stringify(authenticatedUser));
+            tokenStore.set(finalToken);
+            setAuthToken(finalToken);
           }
-          const msToken = await authService.getToken();
-          if (msToken) {
-            setAuthToken(msToken);
-            tokenStore.set(msToken);
-
-            const backendResponseData = await microsoftLogin();
-            if (backendResponseData) {
-              const finalToken = backendResponseData.token || msToken;
-              const permissionNames =
-                backendResponseData.user.role?.permissions?.map(
-                  (permission) => permission.name,
-                );
-              const authenticatedUser = {
-                ...backendResponseData.user,
-                jwtToken: finalToken,
-                userPermissions: permissionNames as RolePermission[],
-              };
-
-              setUser(authenticatedUser);
-              sessionStorage.setItem(
-                AUTH_KEY,
-                JSON.stringify(authenticatedUser),
-              );
-              tokenStore.set(finalToken);
-              setAuthToken(finalToken);
-            }
-          }
-        } else {
-          setUser(null);
         }
-      } catch (error) {
-        setIsUnauthorized(true);
-        // logoutRef.current();
-      } finally {
-        setIsLoading(false);
+      } else {
+        setUser(null);
       }
-    };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        if (status === 401) {
+          setIsUnauthorized(true);
+        } else {
+          setIsServerError(true);
+        }
 
-    initAuth();
-  }, []);
+        if (!error.response && error.request) {
+          setIsServerError(true);
+        }
+      } else {
+        setIsServerError(true);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    checkSsoHandshake();
+  }, [emailDomain]);
+
+  const retryLogin = async () => {
+    await checkSsoHandshake();
+  };
 
   useEffect(() => {
     let timer: number | undefined;
@@ -162,10 +174,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // Stop timer when user leaves the tab
         clearTimer();
       } else {
-        // User is back: verify session still exists in storage (cross-tab sync)
         const sessionActive = !!sessionStorage.getItem(AUTH_KEY);
         if (!sessionActive && user) {
           logoutRef.current();
@@ -176,17 +186,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const activityEvents: (keyof WindowEventMap)[] = [
-      "mousemove",
-      "mousedown",
-      "keydown",
-      "touchstart",
-      "scroll",
+      "mousemove", "mousedown", "keydown", "touchstart", "scroll"
     ];
 
-    // Initialize
     resetTimer();
 
-    // Listeners
     activityEvents.forEach((event) =>
       window.addEventListener(event, resetTimer, { passive: true }),
     );
@@ -223,13 +227,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       isAdmin: user?.role?.name === USERROLES.superAdmin,
       isAuthenticated: !!user,
-      isUnauthorized: unathorized,
+      isUnauthorized,
+      isServerError,
       login,
       logout,
+      retryLogin,
       setUser,
-      setIsUnauthorized,
     }),
-    [user, isLoading],
+    [user, isLoading, isUnauthorized, isServerError],
   );
 
   return (

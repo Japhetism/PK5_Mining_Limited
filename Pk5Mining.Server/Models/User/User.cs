@@ -28,6 +28,6 @@ namespace Pk5Mining.Server.Models.Admin
         [ForeignKey("DepartmentId")]
         public virtual Department? Department { get; set; }
         [ForeignKey("RoleId")]
-        public virtual UserRole? UserRoles { get; set; }
+        public virtual UserRole? UserRole { get; set; }
     }
 }

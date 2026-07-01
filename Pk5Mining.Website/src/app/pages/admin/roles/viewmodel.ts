@@ -18,6 +18,7 @@ import { getPermissions } from "@/app/api/permissions";
 import { getLightSubsidiaries, getSubsidiaries } from "@/app/api/subsidiaries";
 import { createRoleSchema, updateRoleSchema } from "@/app/schemas/role.schema";
 import { useTenant } from "@/tenants/useTenant";
+import { useAuth } from "@/app/context/AuthContext";
 
 const defaultFormData: Role = {
   id: "",
@@ -32,6 +33,7 @@ const defaultFormData: Role = {
 
 function useRoleViewModel() {
   const { subsidiaryId } = useTenant();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -279,7 +281,7 @@ function useRoleViewModel() {
     const payload: CreateRolePayload = {
       ...result.data,
       status: "Active",
-      subsidiaryId: subsidiaryId,
+      subsidiaryId: user?.subsidiary?.id ?? subsidiaryId,
     };
 
     createMutation.mutate(payload);
@@ -300,7 +302,7 @@ function useRoleViewModel() {
     const payload = {
       ...result.data,
       status: selectedRole.status,
-      subsidiaryId: subsidiaryId,
+      subsidiaryId: user?.subsidiary?.id ?? subsidiaryId,
     };
 
     setFieldErrors({});

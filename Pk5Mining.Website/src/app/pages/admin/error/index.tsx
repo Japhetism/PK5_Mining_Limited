@@ -1,21 +1,21 @@
 import { useEffect } from "react"; 
 import { motion } from "framer-motion";
-import { ShieldAlert, LogOut, Mail, UserPlus } from "lucide-react";
+import { AlertTriangle, LogOut, Mail, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTenant } from "@/tenants/useTenant";
 import { useAuth } from "@/app/context/AuthContext";
 
-export function Unauthorized() {
+export function Error() {
   const { colors } = useTenant();
-  const { isLoading, isUnauthorized, logout } = useAuth();
+  const { isLoading, isServerError, retryLogin, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && !isUnauthorized) {
-        history.back()
+    if (!isLoading && !isServerError) {
+      history.back();
     }
-  }, [isUnauthorized, isLoading, navigate]);
-  
+  }, [isServerError, isLoading, navigate]);
+
   return (
     <div
       className="min-h-screen text-white flex items-center justify-center px-6"
@@ -29,41 +29,41 @@ export function Unauthorized() {
         style={{ backgroundColor: colors.card }}
       >
         <div className="flex items-center gap-4 border-b border-gray-800 pb-6 mb-6">
-          <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center justify-center shrink-0">
-            <ShieldAlert className="w-6 h-6 text-amber-500" />
+          <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0 border bg-red-500/10 border-red-500/30">
+            <AlertTriangle className="w-6 h-6 text-red-500" />
           </div>
           <div>
-            <span className="text-xs font-mono tracking-widest text-amber-400 uppercase font-bold">
-              Auth Status: 401 Profile Missing
+            <span className="text-xs font-mono tracking-widest uppercase font-bold text-red-400">
+              System Status: 500 Error
             </span>
             <h1 className="text-2xl font-bold tracking-tight" style={{ color: colors.text }}>
-              Unprovisioned Account
+              Internal Server Error
             </h1>
           </div>
         </div>
 
         <div className="space-y-4 text-sm text-gray-400 leading-relaxed mb-8">
           <p>
-            Your Microsoft SSO authentication was successful, but your corporate account hasn't been granted access to this portal's database yet.
+            Something went wrong on our end while processing your authorization. The corporate database is currently unreachable or experiencing an unexpected outage.
           </p>
           <p>
-            This internal admin portal operates on a **strict pre-registration policy**. An administrator must manually register your email address in the system before you can log in.
+            This issue is typically temporary. You can safely drop your current active session and try logging back into the portal securely.
           </p>
         </div>
 
         <div className="bg-black/20 border border-gray-800 rounded-xl p-5 mb-8 space-y-4">
           <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
-            Required Actions
+            Recommended Steps
           </h3>
 
           <div className="flex gap-3 items-start">
-            <UserPlus className="w-4 h-4 text-[#c89b3c] mt-0.5 shrink-0" />
+            <RefreshCw className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
             <div>
               <p className="text-sm font-semibold text-gray-200" style={{ color: colors.text }}>
-                Request Portal Provisioning
+                Attempt Session Recovery
               </p>
               <p className="text-xs text-gray-400 mt-0.5">
-                Ask your manager or department head to submit an access request to add your corporate email to the portal whitelist.
+                Click "Retry Login" below to see if connection handshakes can be safely re-established with your organization's backend profile.
               </p>
             </div>
           </div>
@@ -71,13 +71,13 @@ export function Unauthorized() {
           <div className="h-[1px] bg-gray-800 w-full" />
 
           <div className="flex gap-3 items-start">
-            <Mail className="w-4 h-4 text-[#c89b3c] mt-0.5 shrink-0" />
+            <Mail className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
             <div>
               <p className="text-sm font-semibold text-gray-200" style={{ color: colors.text }}>
-                Contact App Administration
+                Report Infrastructure Downtime
               </p>
               <p className="text-xs text-gray-400 mt-0.5">
-                If an administrator has already added you, the change might need a moment to propagate. For urgent issues, contact App Admin: 
+                If this error persists across multiple login attempts, please alert the IT Infrastructure team regarding localized service drops.
               </p>
             </div>
           </div>
@@ -88,7 +88,19 @@ export function Unauthorized() {
             type="button"
             whileHover={!isLoading ? { scale: 1.01 } : undefined}
             whileTap={!isLoading ? { scale: 0.99 } : undefined}
-            className="w-full px-6 py-3 bg-[#c89b3c] text-black font-bold rounded-lg hover:bg-[#d4a84a] transition-colors flex items-center justify-center gap-2"
+            className="w-full sm:w-1/2 px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+            onClick={retryLogin}
+            disabled={isLoading}
+          >
+            <RefreshCw className="w-4 h-4" />
+            Retry Login
+          </motion.button>
+
+          <motion.button
+            type="button"
+            whileHover={!isLoading ? { scale: 1.01 } : undefined}
+            whileTap={!isLoading ? { scale: 0.99 } : undefined}
+            className="w-full sm:w-1/2 px-6 py-3 bg-transparent border border-gray-700 hover:bg-gray-800 text-gray-300 font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
             onClick={logout}
             disabled={isLoading}
           >
