@@ -464,7 +464,7 @@ export function About() {
           {/* Accordion list header row */}
           <div className="hidden md:grid grid-cols-[3rem_3.5rem_1fr_auto_8rem_2rem] gap-6 pb-4 border-b border-[rgba(200,155,60,0.1)] mb-1">
             {["#", "", "Name","  ", "Department", ""].map((col, i) => (
-              <span key={i} className="font-['DM_Mono'] text-lg uppercase tracking-[0.25em] text-[#726647]">
+              <span key={i} className="font-['DM_Mono'] text-xs uppercase tracking-[0.25em] text-[#726647]">
                 {col}
               </span>
             ))}
