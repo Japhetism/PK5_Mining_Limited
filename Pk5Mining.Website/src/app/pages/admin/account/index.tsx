@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-import { ChangePassword } from "./components/change-password";
 import { UserInfo } from "./components/user-info";
 import { UserPermissions } from "./components/user-permissions";
 

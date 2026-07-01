@@ -90,7 +90,7 @@ export function Home() {
               <motion.button
                 whileHover={{ scale: 1.05, backgroundColor: "#d4a84a" }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-[#c89b3c] text-black font-bold rounded flex items-center gap-2 justify-center"
+                className="px-8 py-4 bg-[#c89b3c] text-black font-bold rounded flex items-center gap-2 justify-center mx-auto"
               >
                 Explore Our Operations
                 <ArrowRight size={20} />

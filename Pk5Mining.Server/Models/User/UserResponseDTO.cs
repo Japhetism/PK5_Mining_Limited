@@ -12,7 +12,7 @@
 
         public LookupDto Subsidiary { get; set; } = new();
         public LookupDto Department { get; set; } = new();
-        public LookupDto Role { get; set; } = new();
+        public LookupDto UserRole { get; set; } = new();
     }
     public class LookupDto
     {

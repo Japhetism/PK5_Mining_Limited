@@ -19,7 +19,7 @@ export type User = {
     id: number;
     name: string;
   }
-  role?: {
+  userRole?: {
     id: number;
     name: string;
   }

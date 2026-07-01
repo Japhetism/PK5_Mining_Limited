@@ -83,7 +83,7 @@ namespace Pk5Mining.Server.Repositories.Admin
         {
             var subsidiaryId = _currentUserService.SubsidiaryId;
 
-            IQueryable<User> query = _dbContext.Users.Include(u => u.Subsidiary).Include(u => u.Department).Include(u => u.UserRoles).Where(u => !u.IsDeleted &&u.SubsidiaryId == subsidiaryId);
+            IQueryable<User> query = _dbContext.Users.Include(u => u.Subsidiary).Include(u => u.Department).Include(u => u.UserRole).Where(u => !u.IsDeleted &&u.SubsidiaryId == subsidiaryId);
             if (!string.IsNullOrWhiteSpace(email))
             {
                 query = query.Where(c => c.Email.StartsWith(email));
@@ -152,7 +152,7 @@ namespace Pk5Mining.Server.Repositories.Admin
 
         public async Task<(User?, string?)> GetByEmailForSSOAsync(string email)
         {
-            var user = await _dbContext.Users.Include(x => x.Subsidiary).Include(x => x.Department).Include(x => x.UserRoles).ThenInclude(x => x.Permissions).FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            var user = await _dbContext.Users.Include(x => x.Subsidiary).Include(x => x.Department).Include(x => x.UserRole).ThenInclude(x => x.Permissions).FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
             if (user == null || user.IsDeleted)
             {
                 return (null, "You do not have access to this application.");
