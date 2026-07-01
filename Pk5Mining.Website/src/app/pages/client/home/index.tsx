@@ -276,7 +276,7 @@ export function Home() {
       </section>
 
       {/* Why Choose PK5 */}
-      <section className="py-28 bg-[#0d0d0d] relative overflow-hidden">
+      <section className="py-20 bg-[#0d0d0d] relative overflow-hidden">
         <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[120px] pointer-events-none" />
 
@@ -343,7 +343,7 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-[#c89b3c] to-[#9d7a2e] text-black">
+      <section className="py-20 bg-gradient-to-br from-[#c89b3c] to-[#9d7a2e] text-black">
         <div className="container mx-auto px-6 text-center">
           <AnimatedSection>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
