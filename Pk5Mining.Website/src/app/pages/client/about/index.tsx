@@ -11,6 +11,7 @@ import visionimage1 from '../../../../assets/images/visionimage1.png';
 import visionimage2 from '../../../../assets/images/visionimage2.png';
 import visionimage3 from '../../../../assets/images/visionimage3.png';
 import visionimage4 from '../../../../assets/images/visionimage4.png';
+import LeaderCard from '@/app/components/leader-card';
 
 const missionCards = [
   {
@@ -503,16 +504,31 @@ export function About() {
             </p>
           </AnimatedSection>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto px-6">
+        <div className="gap-8 max-w-7xl mx-auto px-6">
           {/* FIX 2: Changed from 'leadership' to loop through your unique 'executiveLeadership' array */}
-          {executiveLeadership.map((leader) => (
+          {/* {executiveLeadership.map((leader) => (
             <LeadershipAccordionCard
               key={leader.id}
               executive={leader}
               isExpanded={expandedExecutiveId === leader.id}
               onToggle={() => handleToggleExecutive(leader.id)}
             />
-          ))}
+          ))} */}
+          {/* Accordion list header row */}
+          <div className="hidden md:grid grid-cols-[3rem_3.5rem_1fr_auto_8rem_2rem] gap-6 pb-4 border-b border-[rgba(200,155,60,0.1)] mb-1">
+            {["#", "", "Name","  ", "Department", ""].map((col, i) => (
+              <span key={i} className="font-['DM_Mono'] text-xs uppercase tracking-[0.25em] text-[#726647]">
+                {col}
+              </span>
+            ))}
+          </div>
+
+          {/* Leader cards */}
+          <div>
+            {executiveLeadership.map((leader) => (
+              <LeaderCard key={leader.id} leader={leader} />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -528,7 +544,7 @@ export function About() {
               <AnimatedSection key={value} delay={index * 0.1}>
                 <motion.div
                   className="p-10 bg-[#141414] rounded-xl border border-[#2a2a2a] text-center"
-                  whileHover={{  borderColor: '#D4AF37' }}
+                  whileHover={{ borderColor: '#D4AF37' }}
                   transition={{ duration: 0.3 }}
                 >
                   <Award className="w-12 h-12 text-[#D4AF37] mx-auto mb-4" />
