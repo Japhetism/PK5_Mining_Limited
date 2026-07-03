@@ -83,10 +83,12 @@ export function UserList() {
         header: "Name",
         render: (user) => (
           <div className="space-y-0.5">
-            <div className="text-sm text-gray-100">
+            <div className="font-semibold capitalize" style={{ color: colors.text }}>
               {user.firstName} {user.lastName}
             </div>
-            <div className="text-xs text-gray-400">{user.email}</div>
+            <div className="text-xs" style={{ color: colors.text }}>
+              {user.email}
+            </div>
           </div>
         ),
       },
@@ -94,14 +96,18 @@ export function UserList() {
         key: "role",
         header: "Role",
         render: (user) => (
-          <span className="text-xs text-gray-300">{user.userRole?.name ?? "-"}</span>
+          <span className="text-xs" style={{ color: colors.text }}>
+            {user.userRole?.name ?? "-"}
+          </span>
         ),
       },
       {
         key: "department",
         header: "Department",
         render: (user) => (
-          <span className="text-xs text-gray-300">{user.department?.name ?? "-"}</span>
+          <span className="text-xs" style={{ color: colors.text }}>
+            {user.department?.name ?? "-"}
+          </span>
         ),
       },
       {
@@ -234,7 +240,8 @@ export function UserList() {
               setSelectedUser(null); // Resets form for "New User"
               setConfirmEditOpen(true);
             }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-[16px] font-semibold rounded-lg"
+            style={{ backgroundColor: colors.accent }}
           >
             <Plus className="w-4 h-4" />
             New User
@@ -252,10 +259,9 @@ export function UserList() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />
@@ -269,10 +275,9 @@ export function UserList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />
@@ -286,10 +291,9 @@ export function UserList() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             >

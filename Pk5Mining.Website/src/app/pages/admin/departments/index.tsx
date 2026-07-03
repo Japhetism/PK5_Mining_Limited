@@ -75,9 +75,11 @@ export function Departments() {
       render: (dept) => (
         <div>
           <div className="flex-1">
-            <div className="font-semibold text-[#c89b3c]">{dept.name}</div>
+            <div className="font-semibold" style={{ color: colors.text }}>
+              {dept.name}
+            </div>
           </div>
-          <div className="text-xs text-gray-500 line-clamp-2">
+          <div className="text-xs" style={{ color: colors.text }}>
             {dept.description}
           </div>
         </div>
@@ -215,7 +217,8 @@ export function Departments() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => setConfirmEditOpen(true)}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-semibold rounded-lg"
+            style={{ backgroundColor: colors.accent }}
           >
             <Plus className="w-4 h-4" />
             New Department
@@ -233,10 +236,9 @@ export function Departments() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />
@@ -249,10 +251,9 @@ export function Departments() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             >

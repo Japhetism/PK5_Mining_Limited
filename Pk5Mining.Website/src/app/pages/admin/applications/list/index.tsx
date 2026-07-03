@@ -40,7 +40,7 @@ export function ApplicationList() {
       header: "Candidate",
       render: (app) => (
         <div>
-          <div className="font-semibold text-gray-100">
+          <div className="font-semibold" style={{ color: colors.text }}>
             {app.firstName} {app.lastName}
           </div>
           <div className="text-xs text-gray-500">{app.email}</div>
@@ -91,7 +91,9 @@ export function ApplicationList() {
             queryClient.setQueryData(["applications", String(app.id)], app);
           }}
         >
-          <button className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-700 text-xs text-gray-100 hover:border-[#c89b3c]">
+          <button 
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-gray-100 text-white"
+            style={{ backgroundColor: colors.accent }}>
             <Users className="w-3 h-3" />
             View
           </button>
@@ -121,10 +123,9 @@ export function ApplicationList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200"
+              className="w-full bg-[#1a1a1a] rounded-lg px-4 py-3 text-sm text-gray-200"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />

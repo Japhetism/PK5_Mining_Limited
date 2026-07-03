@@ -49,7 +49,7 @@ export function ContactMessageList() {
       header: "Name",
       render: (row) => (
         <div>
-          <div className="font-semibold text-gray-100 capitalize">
+          <div className="font-semibold capitalize" style={{ color: colors.text }}>
             {row.firstName} {row.lastName}
           </div>
           <div className="text-xs text-gray-500">{row.email}</div>
@@ -60,14 +60,18 @@ export function ContactMessageList() {
       key: "subject",
       header: "Subject",
       render: (row) => (
-        <span className="text-gray-300 capitalize">{row.subject ?? "-"}</span>
+        <span className="capitalize" style={{ color: colors.text }}>
+          {row.subject ?? "-"}
+        </span>
       ),
     },
     {
       key: "company",
       header: "Company",
       render: (row) => (
-        <span className="text-gray-300 capitalize">{row.company ?? "-"}</span>
+        <span className="capitalize" style={{ color: colors.text }}>
+          {row.company ?? "-"}
+        </span>
       ),
     },
     ...(isAgro
@@ -76,7 +80,9 @@ export function ContactMessageList() {
             key: "phoneNumber",
             header: "Phone",
             render: (row: ContactMessageDto) => (
-              <span className="text-gray-300">{row.phoneNumber ?? "-"}</span>
+              <span style={{ color: colors.text }}>
+                {row.phoneNumber ?? "-"}
+              </span>
             ),
           },
         ]
@@ -108,7 +114,8 @@ export function ContactMessageList() {
             setConfirmOpen(true);
             setSelectedContactMessage(row);
           }}
-          className="inline-flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-100 hover:border-[#c89b3c] hover:text-[#c89b3c] transition-colors"
+          className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[14px] text-white transition-colors"
+          style={{ backgroundColor: colors.accent }}
         >
           <Eye className="h-3 w-3" />
           View
@@ -138,10 +145,9 @@ export function ContactMessageList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email..."
-              className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />

@@ -65,9 +65,13 @@ export function JobList() {
             className="flex-1 cursor-pointer"
             title="View public page"
           >
-            <div className="font-semibold text-[#c89b3c]">{job.title}</div>
+            <div className="font-semibold" style={{ color: colors.accent }}>
+              {job.title}
+            </div>
           </button>
-          <div className="text-xs text-gray-500 line-clamp-2">{job.id}</div>
+          <div className="text-xs line-clamp-2" style={{ color: colors.subtext }}>
+            {job.id}
+          </div>
         </div>
       ),
     },
@@ -223,7 +227,8 @@ export function JobList() {
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-[14px] font-semibold rounded-lg"
+              style={{ backgroundColor: colors.accent }}
             >
               <Plus className="w-4 h-4" />
               New job
@@ -233,7 +238,7 @@ export function JobList() {
       </div>
 
       {/* Filters */}
-      <div className="space-y-3 mb-10">
+      <div className="space-y-3 mb-10 p-6 rounded-[12px]" style={{ backgroundColor: colors.card }}>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
             <label className="block text-xs font-semibold mb-2">
@@ -251,10 +256,9 @@ export function JobList() {
               ]}
               onChange={(e) => updateFilter("department", e.target.value)}
               placeholder="Search by department"
-              className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               styles={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />
@@ -268,10 +272,9 @@ export function JobList() {
               value={filters.location}
               onChange={(e) => updateFilter("location", e.target.value)}
               placeholder="Search by location"
-              className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />
@@ -285,10 +288,9 @@ export function JobList() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             >
@@ -309,10 +311,9 @@ export function JobList() {
                 setFilterJobType(e.target.value);
                 setIsFilter(true);
               }}
-              className="w-full border rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             >

@@ -78,9 +78,11 @@ export function Roles() {
       render: (role) => (
         <div>
           <div className="flex-1">
-            <div className="font-semibold text-[#c89b3c]">{role.name}</div>
+            <div className="font-semibold" style={{ color: colors.text }}>
+              {role.name}
+            </div>
           </div>
-          <div className="text-xs text-gray-500 line-clamp-2">
+          <div className="text-xs" style={{ color: colors.text }}>
             {role.description}
           </div>
         </div>
@@ -90,7 +92,7 @@ export function Roles() {
       key: "isSystem",
       header: "System Role",
       render: (role) => (
-        <span className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs text-grey-400">
+        <span className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs" style={{ color: colors.text }}>
           {role.isSystem ? "Yes" : "No"}
         </span>
       ),
@@ -245,10 +247,9 @@ export function Roles() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />
@@ -261,10 +262,9 @@ export function Roles() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             >
