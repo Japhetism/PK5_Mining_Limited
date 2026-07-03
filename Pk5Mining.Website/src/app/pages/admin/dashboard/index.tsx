@@ -23,11 +23,10 @@ export function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl text-black font-bold mb-2">
-        {/* <h1 className="text-2xl font-bold mb-2" style={{ color: colors.text }}> */}
+        <h1 className="text-[24px] font-bold mb-2" style={{ color: colors.text }}>
           Dashboard
         </h1>
-        <p className="text-sm text-gray-400">
+        <p className="text-[18px]" style={{ color: colors.subtext }}>
           High-level view of job openings and incoming applications.
         </p>
       </div>
@@ -63,24 +62,27 @@ export function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="border rounded-xl p-5" style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.border }}>
-          <h2 className="text-sm font-semibold mb-4">Applications by role</h2>
+        <div className="border rounded-xl p-5 pb-10" style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.cardBorderColor }}>
+          <h2 className="text-[20px] font-semibold mb-4" style={{ color: colors.text }}>
+            Applications by role
+          </h2>
           {byJob.length === 0 ? (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs" style={{ color: colors.subtext }}>
               No job openings configured yet.
             </p>
           ) : (
-            <ul className="space-y-3">
+            <ul className="space-y-5">
               {byJob.map((row) => (
-                <li key={row.title} className="text-xs text-gray-300">
-                  <div className="flex items-center justify-between mb-1">
+                <li key={row.title} className="text-[16px]" style={{ color: colors.text }}>
+                  <div className="flex items-center justify-between mb-3">
                     <span className="truncate">{row.title}</span>
                     <span className="text-gray-400">{row.count}</span>
                   </div>
-                  <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: colors.progressBgColor}}>
+                  <div className="h-[10px] rounded-full overflow-hidden" style={{ backgroundColor: colors.progressBgColor}}>
                     <div
-                      className="h-full bg-[#c89b3c]"
+                      className="h-full"
                       style={{
+                        backgroundColor: colors.progressBarFilledColor,
                         width:
                           totalApps === 0
                             ? "0%"
@@ -94,17 +96,19 @@ export function Dashboard() {
           )}
         </div>
 
-        <div className="border rounded-xl p-5" style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.border }}>
-          <h2 className="text-sm font-semibold mb-4">Application Pipelines</h2>
-          <div className="grid grid-cols-2 gap-4 text-xs">
+        <div className="border rounded-xl p-5" style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.cardBorderColor }}>
+          <h2 className="text-[20px] font-semibold mb-4" style={{ color: colors.text }}>
+            Application Pipelines
+          </h2>
+          <div className="grid grid-cols-2 gap-10 text-[20px]">
             {statuses.map((s) => {
               const count = byStage[s.value];
               return (
                 <div key={s.value} className="space-y-1">
-                  <p className="uppercase tracking-wide text-gray-400">
+                  <p className="uppercase tracking-wide mb-5">
                     {s.label}
                   </p>
-                  <p className="text-lg font-semibold">{count}</p>
+                  <p>{count}</p>
                 </div>
               );
             })}
@@ -116,7 +120,7 @@ export function Dashboard() {
 }
 
 type StatProps = {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   label: string;
   value: number;
   subtitle?: string;
@@ -128,22 +132,26 @@ function StatCard({ icon: Icon, label, value, subtitle, suffix }: StatProps) {
   return (
     <motion.div
       whileHover={{ y: -2, scale: 1.01 }}
-      className="border rounded-xl p-4 flex items-center gap-3"
-      style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.border }}
+      className="border-[1px] rounded-[12px] p-4 flex items-center gap-5"
+      style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.cardBorderColor }}
     >
-      <div className="w-9 h-9 rounded-lg bg-[#c89b3c]/10 flex items-center justify-center">
-        <Icon className="w-4 h-4 text-[#c89b3c]" />
+      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: colors.cardIconBgColor }}>
+        <Icon className="w-5 h-5" style={{ color: colors.cardIconColor }} />
       </div>
-      <div className="min-w-0">
-        <p className="text-xs text-gray-400">{label}</p>
-        <p className="text-lg font-semibold">
+      <div className="min-w-0 flex flex-col gap-3">
+        <p className="text-[16px]" style={{ color: colors.subtext }}>
+          {label}
+        </p>
+        <p className="text-[24px] font-semibold" style={{ color: colors.text }}>
           {value}
           {suffix ? (
             <span className="text-xs text-gray-400 ml-1">{suffix}</span>
           ) : null}
         </p>
         {subtitle && (
-          <p className="text-[11px] text-gray-500 truncate">{subtitle}</p>
+          <p className="text-[15px] truncate" style={{ color: colors.subtext }}>
+            {subtitle}
+          </p>
         )}
       </div>
     </motion.div>

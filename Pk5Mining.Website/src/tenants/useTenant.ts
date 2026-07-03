@@ -1,7 +1,9 @@
 
 import { agroSubjects, miningSubjects } from "@/app/constants";
 import agroLogo from "@/assets/images/pk5agroimage.png";
-import miningLogo from "@/assets/images/pk5miningimage.png";
+// import miningLogo from "@/assets/images/pk5miningimage.png";
+import miningLogo from "@/assets/images/logo.png";
+import { progress } from "motion/react";
 
 const agroDomain = import.meta.env.VITE_AGRO_DOMAIN;
 const agroAppId = import.meta.env.VITE_APP_AGRO_ID ?? "";
@@ -25,15 +27,25 @@ export const useTenant = () => {
     colors: {
       bg: isAgro ? "#041A12" : "#0F0F0F",
       statsbg: isAgro ? "#072C1E80" : "#00000075",
-      card: isAgro ? "#072C1E" : "#1a1a1a",
+      card: isAgro ? "#072C1E" : "#FFFFFF",
       accent: isAgro ? "#4ade80" : "#c89b3c",
-      text: isAgro ? "#ffffff" : "#ffffff",
+      text: isAgro ? "#ffffff" : "#111827",
+      subtext: isAgro ? "#C3C7C5" : "#6B7280",
       headerText: isAgro ? "#041A12" : "#0F0F0F",
       border: isAgro ? "#e5e7eb" : "#1f2937",
       label: isAgro ? "#c3c7c5" : "#9ca3af",
-      progressBgColor: isAgro ? "#4D6F47" : "#0F0F0F",
+      progressBgColor: isAgro ? "#4D6F47" : "#0000004A",
       iconColor: isAgro ? "#C89B3C" : "#5A5324",
       primaryAccentColor: isAgro ? "#C89B3C" : "#C89B3C70",
+      // new additions
+      headerBorderColor: isAgro ? "#4ade80" : "#E5E7EB",
+      outletBgColor: isAgro ? "#041A12" : "#F5F7FA",
+      sidemenuTextColor: isAgro ? "#C3C7C5" : "#E5E7EB",
+      sidemenuActiveBgColor: isAgro ? "#C89B3C" : "#C89B3C",
+      cardBorderColor: isAgro ? "#4ade80" : "#E5E7EB",
+      cardIconBgColor: isAgro ? "#4ade80" : "#C89B3C",
+      cardIconColor: isAgro ? "#C89B3C" : "#FFFFFF",
+      progressBarFilledColor: isAgro ? "#4ade80" : "#C89B3C",
     },
     appId: isAgro ? agroAppId : miningAppId,
     subsidiaryId: isAgro ? agroSubsidiaryId : miningSubsidiaryId,

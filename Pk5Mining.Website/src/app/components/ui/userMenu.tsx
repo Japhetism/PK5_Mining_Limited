@@ -60,7 +60,7 @@ export function UserMenu({
             : "gap-2 px-3 py-2 text-xs sm:text-sm",
         ].join(" ")}
       >
-        <div className="min-w-0 text-left text-black">
+        <div className="min-w-0 text-left text-black text-[20px]">
         {/* <div className="min-w-0 text-left" style={{ color: colors.text }}> */}
           <span>{greeting}, </span>
           <span className="font-bold truncate">
