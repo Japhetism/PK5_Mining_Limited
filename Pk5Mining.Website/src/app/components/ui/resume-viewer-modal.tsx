@@ -54,23 +54,27 @@ export function ResumeViewerModal({
             initial={{ opacity: 0, scale: 0.98, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.15 }}
-            className="relative w-full max-w-5xl h-[85vh] bg-[#0f0f0f] rounded-xl border border-gray-800 shadow-xl overflow-hidden"
+            className="relative w-full max-w-5xl h-[85vh] rounded-xl border border-gray-800 shadow-xl overflow-hidden"
+            style={{ background: colors.card }}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {/* Modal header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-gray-200 truncate">
+                <p className="text-[18px] font-semibold truncate" style={{ color: colors.text }}>
                   {firstName} {lastName} — Resume
                 </p>
-                <p className="text-xs text-gray-500">Press ESC to close</p>
+                <p className="text-[15px]" style={{ color: colors.text }}>
+                  Press ESC to close
+                </p>
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => onClose()}
-                  className="p-2 rounded-md hover:bg-white/10 text-gray-300"
+                  className="p-2 rounded-md text-[15px]"
+                  style={{ color: colors.text }}
                   title="Close"
                 >
                   <X className="w-4 h-4" />

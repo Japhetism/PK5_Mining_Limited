@@ -35,15 +35,16 @@ export function JobEdit() {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-xs mb-2"
+            className="inline-flex items-center gap-1 text-[16px] mb-2"
+            style={{ color: colors.text }}
           >
             <ArrowLeft className="w-3 h-3" />
             Back
           </button>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-[18px] font-bold" style={{ color: colors.text }}>
             {existing ? "Edit Job" : "Create Job"}
           </h1>
-          <p className="text-sm text-gray-400">
+          <p className="text-[15px]" style={{ color: colors.text }}>
             Configure how this role appears on the public careers page.
           </p>
         </div>
@@ -51,13 +52,13 @@ export function JobEdit() {
 
       <form
         onSubmit={onSubmit}
-        className="border rounded-xl p-6 space-y-6"
-        style={{ backgroundColor: colors.card, borderColor: colors.border }}
+        className="rounded-xl p-6 space-y-6"
+        style={{ backgroundColor: colors.card }}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label
-              className="block text-xs font-semibold mb-2"
+              className="block text-[16px] font-semibold mb-2"
               style={{ color: colors.text }}
             >
               Job title
@@ -81,20 +82,19 @@ export function JobEdit() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+              className={`w-full px-4 py-3 rounded-lg text-[18px] focus:outline-none transition-colors focus:border-[#c89b3c]`}
               style={{
-                backgroundColor: colors.bg,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
-                borderColor: fieldErrors.title ? "#f87171" : colors.border,
               }}
             />
             {fieldErrors.title && (
-              <p className="text-xs text-red-500 mt-1">{fieldErrors.title}</p>
+              <p className="text-[13px] text-red-500 mt-1">{fieldErrors.title}</p>
             )}
           </div>
           <div>
             <label
-              className="block text-xs font-semibold mb-2"
+              className="block text-[16px] font-semibold mb-2"
               style={{ color: colors.text }}
             >
               Department
@@ -109,15 +109,14 @@ export function JobEdit() {
               }))}
               onChange={onChange}
               placeholder="Select department"
-              className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+              className={`w-full px-4 py-3 rounded-lg text-[18px] focus:outline-none transition-colors focus:border-[#c89b3c]`}
               styles={{
-                backgroundColor: colors.bg,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
-                borderColor: fieldErrors.department ? "#f87171" : colors.border,
               }}
             />
             {fieldErrors.department && (
-              <p className="text-xs text-red-500 mt-1">
+              <p className="text-[13px] text-red-500 mt-1">
                 {fieldErrors.department}
               </p>
             )}
@@ -125,7 +124,7 @@ export function JobEdit() {
 
           <div>
             <label
-              className="block text-xs font-semibold mb-2"
+              className="block text-[16px] font-semibold mb-2"
               style={{ color: colors.text }}
             >
               Location
@@ -149,15 +148,14 @@ export function JobEdit() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+              className={`w-full px-4 py-3 rounded-lg text-[18px] focus:outline-none transition-colors focus:border-[#c89b3c]`}
               style={{
-                backgroundColor: colors.bg,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
-                borderColor: fieldErrors.location ? "#f87171" : colors.border,
               }}
             />
             {fieldErrors.location && (
-              <p className="text-xs text-red-500 mt-1">
+              <p className="text-[13px] text-red-500 mt-1">
                 {fieldErrors.location}
               </p>
             )}
@@ -167,7 +165,7 @@ export function JobEdit() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label
-              className="block text-xs font-semibold mb-2"
+              className="block text-[16px] font-semibold mb-2"
               style={{ color: colors.text }}
             >
               Close Date
@@ -193,7 +191,7 @@ export function JobEdit() {
           </div>
           <div>
             <label
-              className="block text-xs font-semibold mb-2"
+              className="block text-[16px] font-semibold mb-2"
               style={{ color: colors.text }}
             >
               Experience
@@ -218,15 +216,14 @@ export function JobEdit() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+              className={`w-full px-4 py-3 rounded-lg text-[16px] focus:outline-none transition-colors focus:border-[#c89b3c]`}
               style={{
-                backgroundColor: colors.bg,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
-                borderColor: fieldErrors.experience ? "#f87171" : colors.border,
               }}
             />
             {fieldErrors.experience && (
-              <p className="text-xs text-red-500 mt-1">
+              <p className="text-[13px] text-red-500 mt-1">
                 {fieldErrors.experience}
               </p>
             )}
@@ -234,7 +231,7 @@ export function JobEdit() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label
-                className="block text-xs font-semibold mb-2"
+                className="block text-[16px] font-semibold mb-2"
                 style={{ color: colors.text }}
               >
                 Type
@@ -264,11 +261,10 @@ export function JobEdit() {
                     }));
                   }
                 }}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+                className={`w-full px-4 py-3 rounded-lg text-[16px] focus:outline-none transition-colors focus:border-[#c89b3c]`}
                 style={{
-                  backgroundColor: colors.bg,
+                  backgroundColor: colors.textInputBgColor,
                   color: colors.text,
-                  borderColor: fieldErrors.jobType ? "#f87171" : colors.border,
                 }}
               >
                 <option value="">Select</option>
@@ -286,7 +282,7 @@ export function JobEdit() {
             </div>
             <div>
               <label
-                className="block text-xs font-semibold mb-2"
+                className="block text-[16px] font-semibold mb-2"
                 style={{ color: colors.text }}
               >
                 Work Arrangement
@@ -316,13 +312,10 @@ export function JobEdit() {
                     }));
                   }
                 }}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c]`}
+                className={`w-full px-4 py-3 rounded-lg text-[16px] focus:outline-none transition-colors focus:border-[#c89b3c]`}
                 style={{
-                  backgroundColor: colors.bg,
+                  backgroundColor: colors.textInputBgColor,
                   color: colors.text,
-                  borderColor: fieldErrors.workArrangement
-                    ? "#f87171"
-                    : colors.border,
                 }}
               >
                 <option value="">Select</option>
@@ -333,7 +326,7 @@ export function JobEdit() {
                 ))}
               </motion.select>
               {fieldErrors.workArrangement && (
-                <p className="text-xs text-red-500 mt-1">
+                <p className="text-[13px] text-red-500 mt-1">
                   {fieldErrors.workArrangement}
                 </p>
               )}
@@ -343,7 +336,7 @@ export function JobEdit() {
 
         <div>
           <label
-            className="block text-xs font-semibold mb-2"
+            className="block text-[16px] font-semibold mb-2"
             style={{ color: colors.text }}
           >
             Brief Description
@@ -394,26 +387,23 @@ export function JobEdit() {
               }
             }}
             rows={3}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors focus:border-[#c89b3c] resize-none`}
+            className={`w-full px-4 py-3 rounded-lg text-[16p] focus:outline-none transition-colors focus:border-[#c89b3c] resize-none`}
             style={{
-              backgroundColor: colors.bg,
+              backgroundColor: colors.textInputBgColor,
               color: colors.text,
-              borderColor: fieldErrors.briefDescription
-                ? "#f87171"
-                : colors.border,
             }}
           />
           <div className="flex justify-between">
-            <p className="mt-1 text-[11px] text-gray-500">
+            <p className="mt-1 text-[14px] text-gray-500">
               Shown in the careers list view. 1–2 concise sentences works best.
             </p>
-            <p className="text-[11px] text-gray-500">
+            <p className="text-[14px] text-gray-500">
               {form.briefDescription.trim().split(/\s+/).filter(Boolean).length}{" "}
               / {maxWordsBriefDescription} words
             </p>
           </div>
           {fieldErrors.briefDescription && (
-            <p className="text-xs text-red-500 mt-1">
+            <p className="text-[13px] text-red-500 mt-1">
               {fieldErrors.briefDescription}
             </p>
           )}
@@ -421,7 +411,7 @@ export function JobEdit() {
 
         <div>
           <label
-            className="block text-xs font-semibold mb-2"
+            className="block text-[16px] font-semibold mb-2"
             style={{ color: colors.text }}
           >
             Full Description (rich text)
@@ -434,12 +424,12 @@ export function JobEdit() {
             }
             error={Boolean(fieldErrors.description)}
           />
-          <p className="mt-1 text-[11px] text-gray-500">
+          <p className="mt-1 text-[14px] text-gray-500">
             You can use bold, italics, and bullet points. The HTML produced here
             is rendered directly on the public job details page.
           </p>
           {fieldErrors.description && (
-            <p className="text-xs text-red-500 mt-1">
+            <p className="text-[13px] text-red-500 mt-1">
               {fieldErrors.description}
             </p>
           )}
@@ -453,7 +443,8 @@ export function JobEdit() {
               type="submit"
               whileHover={!loading ? { scale: 1.02 } : undefined}
               whileTap={!loading ? { scale: 0.98 } : undefined}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#c89b3c] text-black text-sm font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-[16px] font-semibold disabled:opacity-70"
+              style={{ backgroundColor: colors.accent, color: colors.card }}
               disabled={loading}
             >
               <Save className="w-4 h-4" />

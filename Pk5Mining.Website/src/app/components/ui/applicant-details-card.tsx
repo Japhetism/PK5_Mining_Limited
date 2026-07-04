@@ -107,7 +107,7 @@ export function PaginatedCard<T>({
   setPageSize,
 
   gridClassName = "grid gap-3 sm:grid-cols-2 lg:grid-cols-3",
-  cardClassName = "border border-gray-800 rounded-xl p-4",
+  cardClassName = "rounded-xl p-4",
 
   renderCard,
 }: PaginatedCardProps<T>) {
@@ -118,8 +118,8 @@ export function PaginatedCard<T>({
   return (
     <div className="space-y-4">
       <div
-        className="border border-gray-800 rounded-xl overflow-hidden"
-        style={{ background: colors.bg }}
+        className="rounded-xl overflow-hidden"
+        style={{ background: colors.card }}
       >
         <div className="p-4">
           {isLoading ? (
@@ -131,7 +131,7 @@ export function PaginatedCard<T>({
           ) : (
             <div className={gridClassName}>
               {data.map((row, i) => (
-                <div key={i} className={cardClassName}>
+                <div key={i} className={cardClassName} style={{ background: colors.innerCard, color: colors.text }}>
                   {renderCard ? (
                     renderCard(row)
                   ) : (
@@ -159,9 +159,9 @@ export function PaginatedCard<T>({
         {!isLoading && data.length > 0 && (
           <div
             className="flex items-center justify-between px-4 py-3 border-t border-gray-800"
-            style={{ background: colors.bg }}
+            style={{ background: colors.card }}
           >
-            <div className="text-xs text-gray-400">
+            <div className="text-[16px]" style={{ color: colors.text }}>
               Showing {from}–{to} of {totalCount}
             </div>
 
@@ -172,12 +172,12 @@ export function PaginatedCard<T>({
                   setPageSize(Number(e.target.value));
                   setPageNumber(1);
                 }}
-                className="border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200"
-                style={{ background: colors.bg }}
+                className="border border-gray-800 rounded-lg px-4 py-2 text-[16px]"
+                style={{ color: colors.text, background: colors.card }}
               >
                 {pageSizeOptions.map((n) => (
                   <option key={n} value={n}>
-                    {n} / page
+                    {n} per page
                   </option>
                 ))}
               </select>
@@ -185,13 +185,13 @@ export function PaginatedCard<T>({
               <button
                 onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
                 disabled={pageNumber === 1}
-                className="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                className="inline-flex items-center gap-1 px-3 py-2 text-[16px] rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <div className="text-xs text-gray-400 hidden sm:block">
+              <div className="text-[16px] text-gray-400 hidden sm:block">
                 Page {pageNumber} of {totalPages}
               </div>
 
@@ -200,7 +200,7 @@ export function PaginatedCard<T>({
                   setPageNumber(Math.min(totalPages, pageNumber + 1))
                 }
                 disabled={pageNumber === totalPages}
-                className="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                className="inline-flex items-center gap-1 px-3 py-2 text-[16px] rounded-lg border border-gray-800 text-gray-300 hover:bg-white/5 disabled:opacity-40 disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 aria-label="Next page"
               >
                 <ChevronRight className="w-4 h-4" />

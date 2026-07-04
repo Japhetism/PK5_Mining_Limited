@@ -40,7 +40,7 @@ export function RichTextEditor({
 
   return (
     <div
-      className={`w-full border rounded-lg overflow-hidden
+      className={`w-full text-[16px] rounded-lg overflow-hidden
         transition-colors focus-within:border-[#c89b3c]
         [&_.ql-toolbar]:border-0
         [&_.ql-toolbar]:border-b
@@ -62,7 +62,7 @@ export function RichTextEditor({
         [&_.ql-picker-options]:border
         [&_.ql-picker-options]:border-gray-800
       `}
-      style={{ backgroundColor: colors.bg, borderColor: error ? "#f87171" : colors.border }}
+      style={{ backgroundColor: colors.textInputBgColor }}
     >
       <ReactQuill
         theme="snow"
