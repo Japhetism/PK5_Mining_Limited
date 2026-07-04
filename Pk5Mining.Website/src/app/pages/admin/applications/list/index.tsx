@@ -40,10 +40,12 @@ export function ApplicationList() {
       header: "Candidate",
       render: (app) => (
         <div>
-          <div className="font-semibold" style={{ color: colors.text }}>
+          <div className="text-[18px] font-semibold" style={{ color: colors.text }}>
             {app.firstName} {app.lastName}
           </div>
-          <div className="text-xs text-gray-500">{app.email}</div>
+          <div className="text-[15px]" style={{ color: colors.text }}>
+            {app.email}
+          </div>
         </div>
       ),
     },
@@ -92,8 +94,8 @@ export function ApplicationList() {
           }}
         >
           <button 
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-gray-100 text-white"
-            style={{ backgroundColor: colors.accent }}>
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[16px]"
+            style={{ backgroundColor: colors.accent, color: colors.card }}>
             <Users className="w-3 h-3" />
             View
           </button>
@@ -107,8 +109,10 @@ export function ApplicationList() {
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold mb-1">Applications</h1>
-          <p className="text-sm text-gray-400">
+          <h1 className="text-[18px] font-bold mb-1" style={{ color: colors.text }}>
+            Applications
+          </h1>
+          <p className="text-[15px]" style={{ color: colors.text }}>
             Review incoming applications, update status, and download resumes.
           </p>
         </div>
@@ -123,7 +127,7 @@ export function ApplicationList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] rounded-lg px-4 py-3 text-sm text-gray-200"
+              className="w-full rounded-lg px-4 py-3 text-[16px]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,

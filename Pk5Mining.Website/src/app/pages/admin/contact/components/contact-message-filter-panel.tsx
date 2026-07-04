@@ -43,8 +43,8 @@ export function ContactMessageFilterPanel({
 
           {/* Slide-out Panel */}
           <motion.aside
-            className="fixed right-0 top-0 z-50 flex h-screen w-full max-w-md flex-col border-l border-gray-800 shadow-2xl"
-            style={{ background: colors.bg }}
+            className="fixed right-0 top-0 z-50 flex h-screen w-full max-w-md flex-col shadow-2xl"
+            style={{ background: colors.card }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -54,7 +54,7 @@ export function ContactMessageFilterPanel({
             <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-semibold text-gray-100">
+                  <h2 className="text-[18px] font-semibold" style={{ color: colors.text }}>
                     Filters
                   </h2>
                   {filters &&
@@ -68,7 +68,7 @@ export function ContactMessageFilterPanel({
                       </span>
                     )}
                 </div>
-                <p className="text-sm text-gray-400">
+                <p className="text-[15px]" style={{ color: colors.text }}>
                   Set filters and click Apply to filter results.
                 </p>
               </div>
@@ -76,7 +76,8 @@ export function ContactMessageFilterPanel({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-lg border border-gray-800 p-2 text-gray-300 hover:border-[#c89b3c] hover:text-[#c89b3c] transition-colors"
+                className="rounded-lg border border-gray-800 p-2 transition-colors"
+                style={{ color: colors.text }}
                 aria-label="Close filters"
               >
                 <X className="h-4 w-4" />
@@ -92,10 +93,9 @@ export function ContactMessageFilterPanel({
                   value={filters.name}
                   onChange={(e) => updateFilters("name", e.target.value)}
                   placeholder="Filter by Name"
-                  className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  className="w-full rounded-lg px-4 py-3 text-[16px] placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
                   style={{
-                    backgroundColor: colors.card,
-                    borderColor: colors.border,
+                    backgroundColor: colors.textInputBgColor,
                     color: colors.text,
                   }}
                 />
@@ -108,10 +108,9 @@ export function ContactMessageFilterPanel({
                   value={filters.email}
                   onChange={(e) => updateFilters("email", e.target.value)}
                   placeholder="Filter by email"
-                  className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  className="w-full rounded-lg px-4 py-3 text-[16px] placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
                   style={{
-                    backgroundColor: colors.card,
-                    borderColor: colors.border,
+                    backgroundColor: colors.textInputBgColor,
                     color: colors.text,
                   }}
                 />
@@ -124,33 +123,13 @@ export function ContactMessageFilterPanel({
                   value={filters.phoneNumber}
                   onChange={(e) => updateFilters("phoneNumber", e.target.value)}
                   placeholder="Filter by phone number"
-                  className="w-full rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                  className="w-full rounded-lg px-4 py-3 text-[16px] placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
                   style={{
-                    backgroundColor: colors.card,
-                    borderColor: colors.border,
+                    backgroundColor: colors.textInputBgColor,
                     color: colors.text,
                   }}
                 />
               </FilterField>
-
-              {/* Website Filter */}
-              {/* <FilterField label="Website">
-                <div className="relative">
-                  <select
-                    value={filters.appId}
-                    onChange={(e) => updateFilters("appId", e.target.value)}
-                    className="w-full appearance-none rounded-lg border border-gray-800 bg-[#1a1a1a] px-3 py-2 text-sm text-gray-200 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
-                  >
-                    <option value="">All Websites</option>
-                    {websites.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                </div>
-              </FilterField> */}
 
               {/* Subject Filter */}
               <FilterField label="Subject">
@@ -158,10 +137,9 @@ export function ContactMessageFilterPanel({
                   <select
                     value={filters.subject}
                     onChange={(e) => updateFilters("subject", e.target.value)}
-                    className="w-full appearance-none rounded-lg border border-gray-800 px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
+                    className="w-full appearance-none rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-colors"
                     style={{
-                      backgroundColor: colors.card,
-                      borderColor: colors.border,
+                      backgroundColor: colors.textInputBgColor,
                       color: colors.text,
                     }}
                   >
@@ -229,7 +207,8 @@ export function ContactMessageFilterPanel({
               <button
                 type="button"
                 onClick={onClear}
-                className="rounded-lg border border-gray-700 px-4 py-2 text-sm font-medium text-gray-200 hover:border-gray-600 hover:bg-gray-900 transition-colors"
+                className="rounded-lg border border-gray-700 px-6 py-2 text-[16px] font-medium transition-colors"
+                style={{ color: colors.text }}
               >
                 Clear All
               </button>
@@ -237,7 +216,8 @@ export function ContactMessageFilterPanel({
               <button
                 type="button"
                 onClick={onApply}
-                className="rounded-lg bg-[#c89b3c] px-4 py-2 text-sm font-medium text-black hover:opacity-90 hover:shadow-lg hover:shadow-[#c89b3c]/20 transition-all"
+                className="rounded-lg px-6 py-2 text-[16px] font-medium transition-all"
+                style={{ backgroundColor: colors.accent, color: colors.card }}
               >
                 Apply Filters
               </button>
@@ -255,9 +235,12 @@ type FilterFieldProps = {
 };
 
 function FilterField({ label, children }: FilterFieldProps) {
+  const { colors } = useTenant();
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-300">{label}</label>
+      <label className="text-[16px] font-medium" style={{ color: colors.text }}>
+        {label}
+      </label>
       {children}
     </div>
   );

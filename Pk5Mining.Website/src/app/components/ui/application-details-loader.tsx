@@ -7,7 +7,7 @@ export default function ApplicationDetailsSkeleton() {
       {/* --- Top Header Profile Bar --- */}
       <div
         className="border rounded-xl p-4 flex items-center justify-between shadow-lg"
-        style={{ background: colors.card, borderColor: colors.border }}
+        style={{ background: colors.card }}
       >
         <div className="flex items-center space-x-4">
           {/* Avatar */}
@@ -30,7 +30,7 @@ export default function ApplicationDetailsSkeleton() {
           {/* Contact Details Card */}
           <div
             className="border rounded-xl p-6 shadow-md"
-            style={{ background: colors.bg, borderColor: colors.border }}
+            style={{ background: colors.card }}
           >
             <div className="h-5 w-56 bg-gray-700/50 rounded mb-6" />
 
@@ -64,11 +64,11 @@ export default function ApplicationDetailsSkeleton() {
           {/* CV Section Skeleton */}
           <div
             className="border rounded-xl p-6 shadow-md"
-            style={{ background: colors.bg, borderColor: colors.border }}
+            style={{ background: colors.card }}
           >
             <div
               className="rounded-lg p-4 space-y-4"
-              style={{ background: colors.card }}
+              style={{ background: colors.innerCard }}
             >
               <div className="flex space-x-4 items-start">
                 {/* Thumbnail */}
@@ -92,7 +92,7 @@ export default function ApplicationDetailsSkeleton() {
         {/* RIGHT COLUMN */}
         <div
           className="lg:col-span-6 border rounded-xl p-6 shadow-md space-y-8"
-          style={{ background: colors.card, borderColor: colors.border }}
+          style={{ background: colors.card }}
         >
           {/* Workflow */}
           <div className="space-y-4">

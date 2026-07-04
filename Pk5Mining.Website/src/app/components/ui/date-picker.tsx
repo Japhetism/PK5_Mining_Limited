@@ -88,13 +88,13 @@ export function DatePicker({
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className={`flex w-full items-center justify-between rounded-lg border px-4 py-3 text-left transition-colors focus:border-[#c89b3c] focus:outline-none`}
-        style={{ backgroundColor: colors.card, color: colors.text, borderColor: error ? "#f87171" : colors.border }}
+        className={`flex w-full items-center justify-between rounded-lg text-[16px] px-4 py-3 text-left transition-colors focus:border-[#c89b3c] focus:outline-none`}
+        style={{ backgroundColor: colors.textInputBgColor, color: colors.text, borderColor: error ? "#f87171" : colors.border }}
       >
         <span className={value ? colors.text : "text-gray-500"}>
           {value || placeholder}
         </span>
-        <CalendarIcon className="h-4 w-4 text-gray-400" />
+        <CalendarIcon className="h-4 w-4" />
       </button>
 
       {open && (
@@ -108,7 +108,7 @@ export function DatePicker({
 
           <div
             className={`absolute ${classes} top-[calc(100%+8px)] z-50 rounded-xl border p-3 shadow-2xl`}
-            style={{ backgroundColor: colors.card, border: colors.border }}
+            style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
           >
             <DayPicker
               mode="single"
@@ -122,29 +122,29 @@ export function DatePicker({
               disabled={disabledDays}
               showOutsideDays
               classNames={{
-                root: "text-sm text-gray-200",
+                root: "text-sm text-black",
                 month: "space-y-3",
                 caption: "flex items-center justify-between mb-2",
-                caption_label: "text-sm font-semibold text-gray-200",
+                caption_label: "text-sm font-semibold text-black",
                 nav: "flex items-center gap-1",
                 nav_button:
-                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-gray-200 hover:bg-white/10",
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-black hover:bg-white/10",
                 nav_button_previous:
-                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-gray-200 hover:bg-white/10",
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-black hover:bg-white/10",
                 nav_button_next:
-                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-gray-200 hover:bg-white/10",
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-black hover:bg-white/10",
                 table: "w-full border-collapse",
                 head_row: "",
                 head_cell:
-                  "h-9 w-9 text-xs font-medium text-gray-400 text-center",
+                  "h-9 w-9 text-xs font-medium text-black text-center",
                 row: "",
                 cell: "h-9 w-9 text-center",
-                day: "h-9 w-9 rounded-md text-sm text-gray-200 hover:bg-white/10",
-                day_today: "border border-[#c89b3c] text-[#c89b3c]",
-                day_outside: "text-gray-600",
-                day_disabled: "text-gray-600 opacity-50",
+                day: "h-9 w-9 rounded-md text-sm text-black hover:bg-white/10",
+                day_today: "border border-black text-black",
+                day_outside: "text-black/50 opacity-50",
+                day_disabled: "text-black/50 opacity-50",
                 dropdown:
-                  "rounded-md border border-gray-700 bg-[#0f0f0f] px-2 py-1 text-sm text-gray-200",
+                  "rounded-md border border-gray-700 bg-[#0f0f0f] px-2 py-1 text-sm text-black",
               }}
               modifiersStyles={{
                 selected: {

@@ -27,7 +27,7 @@ export function ApplicationStatusPill({ status }: StatusProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${meta.className}`}
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[15px] ${meta.className}`}
     >
       <span className="w-1.5 h-1.5 rounded-full bg-current" />
       {meta.label}

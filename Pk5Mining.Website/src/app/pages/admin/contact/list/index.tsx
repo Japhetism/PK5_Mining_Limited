@@ -49,10 +49,12 @@ export function ContactMessageList() {
       header: "Name",
       render: (row) => (
         <div>
-          <div className="font-semibold capitalize" style={{ color: colors.text }}>
+          <div className="text-[16px] font-semibold capitalize" style={{ color: colors.text }}>
             {row.firstName} {row.lastName}
           </div>
-          <div className="text-xs text-gray-500">{row.email}</div>
+          <div className="text-[15px]" style={{ color: colors.text }}>
+            {row.email}
+          </div>
         </div>
       ),
     },
@@ -114,7 +116,7 @@ export function ContactMessageList() {
             setConfirmOpen(true);
             setSelectedContactMessage(row);
           }}
-          className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[14px] text-white transition-colors"
+          className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[16px] text-white transition-colors"
           style={{ backgroundColor: colors.accent }}
         >
           <Eye className="h-3 w-3" />
@@ -129,8 +131,10 @@ export function ContactMessageList() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="mb-1 text-2xl font-bold">Contact Messages</h1>
-          <p className="text-sm text-gray-400">
+          <h1 className="mb-1 text-[18px] font-bold" style={{ color: colors.text }}>
+            Contact Messages
+          </h1>
+          <p className="text-[15px]" style={{ color: colors.text }}>
             Track contact form submissions.
           </p>
         </div>
@@ -145,7 +149,7 @@ export function ContactMessageList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email..."
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
+              className="w-full rounded-lg px-4 py-3 text-[16px] placeholder-gray-500 outline-none focus:border-[#c89b3c] focus:ring-1 focus:ring-[#c89b3c]/20 transition-all"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,
@@ -157,15 +161,15 @@ export function ContactMessageList() {
           <button
             type="button"
             onClick={() => setIsFilterPanelOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-200 hover:border-[#c89b3c] hover:text-[#c89b3c] transition-colors"
-            style={{ background: colors.bg }}
+            className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-[16px] transition-colors"
+            style={{ background: colors.accent, color: colors.card }}
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters
             {hasActiveFilters &&
               Object.values(advanceFilters).filter((v) => v && v !== "all")
                 .length > 0 && (
-                <span className="ml-1 inline-block rounded-full bg-[#c89b3c] px-2 py-0.5 text-xs text-black font-medium">
+                <span className="ml-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium" style={{ background: colors.card, color: colors.accent }}>
                   {
                     Object.values(advanceFilters).filter(
                       (v) => v && v !== "all",
@@ -178,7 +182,9 @@ export function ContactMessageList() {
 
         {hasActiveFilters && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-gray-400">Active filters:</span>
+            <span className="text-[16px]" style={{ color: colors.text }}>
+              Active filters:
+            </span>
 
             {appliedAdvanceFilters &&
               Object.entries(appliedAdvanceFilters)
@@ -199,8 +205,8 @@ export function ContactMessageList() {
                   return (
                     <button
                       key={key}
-                      className="inline-flex items-center gap-1 rounded-full border border-gray-800 px-2.5 py-1 text-xs text-gray-200"
-                      style={{ background: colors.bg }}
+                      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[14px]"
+                      style={{ background: colors.accent, color: colors.card }}
                     >
                       <span className={key === "subject" ? "capitalize" : ""}>
                         {displayKey
@@ -213,7 +219,8 @@ export function ContactMessageList() {
                 })}
             <button
               onClick={handleClearAdvanceFilters}
-              className="text-xs text-[#c89b3c] hover:underline ml-auto"
+              className="text-[16px] hover:underline ml-auto"
+              style={{ color: colors.text }}
             >
               Clear all
             </button>
