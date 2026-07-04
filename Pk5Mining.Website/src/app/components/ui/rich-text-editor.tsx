@@ -40,7 +40,7 @@ export function RichTextEditor({
 
   return (
     <div
-      className={`w-full text-[16px] rounded-lg overflow-hidden
+      className={`w-full text-[16px] text-black rounded-lg overflow-hidden
         transition-colors focus-within:border-[#c89b3c]
         [&_.ql-toolbar]:border-0
         [&_.ql-toolbar]:border-b
@@ -52,17 +52,17 @@ export function RichTextEditor({
         [&_.ql-editor]:min-h-[260px]
         [&_.ql-editor]:px-4
         [&_.ql-editor]:py-3
-        [&_.ql-editor]:text-sm
-        [&_.ql-editor]:text-gray-200
+        [&_.ql-editor]:text-[16px]
+        [&_.ql-editor]:text-black
 
-        [&_.ql-editor.ql-blank::before]:text-gray-500
+        [&_.ql-editor.ql-blank::before]:text-black
         [&_.ql-editor.ql-blank::before]:not-italic
 
         [&_.ql-picker-options]:bg-black
         [&_.ql-picker-options]:border
         [&_.ql-picker-options]:border-gray-800
       `}
-      style={{ backgroundColor: colors.textInputBgColor }}
+      style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
     >
       <ReactQuill
         theme="snow"

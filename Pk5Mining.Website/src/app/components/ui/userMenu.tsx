@@ -83,16 +83,18 @@ export function UserMenu({
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.18 }}
             className={[
-              "absolute mt-2 rounded-xl border shadow-xl overflow-hidden z-50",
+              "absolute mt-2 rounded-xl shadow-xl overflow-hidden z-50",
               mobile ? "left-0 right-0 top-full" : "right-0 top-full w-56",
             ].join(" ")}
-            style={{ background: colors.bg, borderColor: colors.border }}
+            style={{ background: colors.card }}
           >
             <div className="px-4 py-3 border-b" style={{ color: colors.text, borderColor: colors.border }}>
-              <p className="text-sm font-semibold truncate" style={{ color: colors.text }}>
+              <p className="text-[16px] font-semibold truncate" style={{ color: colors.text }}>
                 {firstName} {lastName}
               </p>
-              <p className="text-xs text-gray-400 truncate">{email}</p>
+              <p className="text-[14px] truncate" style={{ color: colors.subtext }}>
+                {email}
+              </p>
             </div>
 
             <div className="p-2">
@@ -104,7 +106,7 @@ export function UserMenu({
                     key={item.label}
                     to={item.to}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-[16px] hover:bg-black/5 transition-colors"
                     style={{ color: colors.text }}
                   >
                     <Icon className="w-4 h-4" />
@@ -116,7 +118,7 @@ export function UserMenu({
               <button
                 type="button"
                 onClick={onLogout}
-                className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
+                className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-[16px] text-red-400 hover:bg-red-500/10 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>

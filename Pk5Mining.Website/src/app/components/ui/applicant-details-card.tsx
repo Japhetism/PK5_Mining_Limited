@@ -125,7 +125,7 @@ export function PaginatedCard<T>({
           {isLoading ? (
             <CardListSkeleton count={Math.min(pageSize, 6)} />
           ) : data.length === 0 ? (
-            <div className="py-10 text-center text-sm text-gray-500">
+            <div className="py-10 text-center text-[16px]" style={{ color: colors.text }}>
               {!isFilter ? emptyTitle : noResultsTitle}
             </div>
           ) : (

@@ -1,8 +1,10 @@
 import { motion } from "motion/react";
 import { UserInfo } from "./components/user-info";
 import { UserPermissions } from "./components/user-permissions";
+import { useTenant } from "@/tenants/useTenant";
 
 export function Account() {
+  const { colors } = useTenant();
   return (
     <div className="w-full">
       <motion.div
@@ -12,8 +14,8 @@ export function Account() {
       >
         {/* PAGE HEADER */}
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-black">Account</h1>
-          <p className="text-sm text-gray-400 mt-1">
+          <h1 className="text-[18px] font-semibold" style={{ color: colors.text }}>Account</h1>
+          <p className="text-[15px] mt-1" style={{ color: colors.subtext }}>
             View your profile details and update your password.
           </p>
         </div>

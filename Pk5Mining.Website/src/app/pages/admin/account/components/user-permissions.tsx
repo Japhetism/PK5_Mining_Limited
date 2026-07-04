@@ -12,20 +12,22 @@ export function UserPermissions() {
   const permissions = (user?.userPermissions ?? []) as PermissionValue[];
 
   return (
-    <div className="rounded-2xl border border-gray-800 p-4 sm:p-6" style={{ background: colors.card }}>
+    <div className="rounded-2xl p-4 sm:p-6" style={{ background: colors.card }}>
       <div className="mb-6 flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-green-500/20 bg-green-500/10">
           <ShieldCheck className="h-5 w-5 text-green-400" />
         </div>
 
         <div className="min-w-0">
-          <h2 className="text-base font-semibold text-white">Permissions</h2>
+          <h2 className="text-[18px] font-semibold" style={{ color: colors.text }}>
+            Permissions
+          </h2>
 
-          <p className="text-sm text-gray-400">
+          <p className="text-[15px] mt-1" style={{ color: colors.subtext }}>
             Access rights assigned to your account.
           </p>
 
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-[13px]" style={{ color: colors.subtext }}>
             {permissions.length} permission
             {permissions.length !== 1 ? "s" : ""} assigned
           </p>
@@ -40,15 +42,14 @@ export function UserPermissions() {
             return (
               <div
                 key={permission}
-                className="group flex min-h-[56px] items-center gap-3 rounded-xl border border-gray-800 p-3"
+                className="group flex min-h-[56px] bg-[#E5E7EB] items-center gap-3 rounded-xl p-3"
                 title={details?.description}
-                style={{ background: colors.bg }}
               >
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500/10">
-                  <Check className="h-3.5 w-3.5 text-green-400" />
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-200">
+                  <Check className="h-3.5 w-3.5 text-green-800" />
                 </div>
 
-                <span className="break-words text-sm text-gray-300 leading-snug">
+                <span className="break-words text-[14px] leading-snug" style={{ color: colors.text }}>
                   {details?.name ?? permission}
                 </span>
               </div>
