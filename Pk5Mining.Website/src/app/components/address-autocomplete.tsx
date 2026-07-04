@@ -68,7 +68,7 @@ export default function AddressAutocomplete({
   return (
     <div className="relative">
       {label && (
-        <label className="block text-xs font-semibold text-gray-300 mb-2">
+        <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
           {label}
           {required && <span className="ml-1 text-red-500">*</span>}
         </label>
@@ -79,30 +79,32 @@ export default function AddressAutocomplete({
         value={value}
         onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}
-        className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
+        className={`w-full px-4 py-3 rounded-lg text-[16px] focus:outline-none transition-colors
           ${error ? "border-red-500" : "border-gray-800"}
           focus:border-[#c89b3c]`}
         style={{
-          backgroundColor: colors.card,
-          borderColor: colors.border,
+          backgroundColor: colors.textInputBgColor,
           color: colors.text,
         }}
       />
 
       {suggestions.length > 0 && (
         <div
-          className="absolute z-50 border border-gray-800 w-full mt-1 rounded-lg max-h-60 overflow-y-auto"
-          style={{ background: colors.bg }}
+          className="absolute z-50 w-full mt-1 rounded-lg max-h-60 overflow-y-auto"
+          style={{ background: colors.textInputBgColor }}
         >
           {loading && (
-            <div className="p-3 text-sm text-gray-400">Loading...</div>
+            <div className="p-3 text-[13px]" style={{ color: colors.text }}>
+              Loading...
+            </div>
           )}
 
           {suggestions.map((item, index) => (
             <div
               key={index}
-              className="p-3 text-sm cursor-pointer hover:bg-[#1a1a1a]"
+              className="p-3 text-[15px] cursor-pointer hover:bg-white/50"
               onClick={() => handleSelect(item)}
+              style={{ color: colors.text }}
             >
               {item}
             </div>

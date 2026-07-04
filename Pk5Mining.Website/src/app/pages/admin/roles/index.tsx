@@ -82,7 +82,7 @@ export function Roles() {
               {role.name}
             </div>
           </div>
-          <div className="text-xs" style={{ color: colors.text }}>
+          <div className="text-[13px]" style={{ color: colors.text }}>
             {role.description}
           </div>
         </div>
@@ -92,7 +92,7 @@ export function Roles() {
       key: "isSystem",
       header: "System Role",
       render: (role) => (
-        <span className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-xs" style={{ color: colors.text }}>
+        <span className="inline-flex items-center gap-1 rounded-full bg-grey-600/10 px-2 py-0.5 text-[16px]" style={{ color: colors.text }}>
           {role.isSystem ? "Yes" : "No"}
         </span>
       ),
@@ -104,8 +104,8 @@ export function Roles() {
         <span
           className={
             role.status === "Active"
-              ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
-              : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
+              ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[14px] text-green-400"
+              : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-[14px] text-red-400"
           }
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -135,7 +135,8 @@ export function Roles() {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="inline-flex h-8 w-8 items-center justify-center text-gray-300"
+              className="inline-flex h-8 w-8 items-center justify-center"
+              style={{ color: colors.text }}
             >
               <MoreVerticalIcon className="h-4 w-4" />
             </button>
@@ -146,14 +147,15 @@ export function Roles() {
               align="end"
               sideOffset={6}
               className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
-              style={{ backgroundColor: colors.bg, border: colors.border }}
+              style={{ backgroundColor: colors.card, color: colors.text }}
             >
               <DropdownMenu.Item
                 onClick={() => {
                   setSelectedRole(role);
                   setConfirmOpen(true);
                 }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                style={{ color: colors.text }}
               >
                 <Eye className="w-4 h-4" />
                 View details
@@ -165,7 +167,8 @@ export function Roles() {
                     setSelectedRole(role);
                     setConfirmEditOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                  style={{ color: colors.text }}
                 >
                   <Pencil className="w-4 h-4" />
                   Edit Role
@@ -178,7 +181,8 @@ export function Roles() {
                     setSelectedRole(role);
                     setConfirmUpdateStatusOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                  style={{ color: colors.text }}
                 >
                   {role.status === "Active" ? (
                     <>
@@ -200,7 +204,8 @@ export function Roles() {
                     setSelectedRole(role);
                     setConfirmDeleteOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                  style={{ color: colors.text }}
                 >
                   <Trash className="w-4 h-4 text-red-400" />
                   <span className="text-red-400">Delete Role</span>
@@ -218,8 +223,10 @@ export function Roles() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold mb-1">Roles</h1>
-          <p className="text-sm text-gray-400">
+          <h1 className="text-[18px] font-bold mb-1" style={{ color: colors.text }}>
+            Roles
+          </h1>
+          <p className="text-[15px]" style={{ color: colors.text }}>
             Manage roles and permission assignments.
           </p>
         </div>
@@ -229,7 +236,8 @@ export function Roles() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => setConfirmEditOpen(true)}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#c89b3c] text-black text-sm font-semibold rounded-lg hover:bg-[#d4a84a]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2 text-[16px] font-semibold rounded-lg"
+            style={{ color: colors.card, backgroundColor: colors.accent }}
           >
             <Plus className="w-4 h-4" />
             New Role
@@ -247,7 +255,7 @@ export function Roles() {
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,
@@ -262,7 +270,7 @@ export function Roles() {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,

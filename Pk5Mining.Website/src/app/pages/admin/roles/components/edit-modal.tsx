@@ -58,7 +58,7 @@ export function EditModal({
         <div>
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-200 truncate">
+              <p className="text-[18px] font-semibold truncate" style={{ color: colors.text }}>
                 {form.id ? "Update" : "Create"} Role
               </p>
             </div>
@@ -67,7 +67,8 @@ export function EditModal({
               <button
                 type="button"
                 onClick={() => onClose()}
-                className="p-2 rounded-md hover:bg-white/10 text-gray-300"
+                className="p-2 rounded-md text-[15px]"
+                style={{ color: colors.text }}
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -77,12 +78,11 @@ export function EditModal({
 
           <div className="relative w-full h-full">
             <form
-              // onSubmit={onSubmit}
               className="p-6 space-y-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                  <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
                     Name
                     <span className="ml-1 text-red-500">*</span>
                   </label>
@@ -104,12 +104,11 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 rounded-lg text-[16px] focus:outline-none transition-colors
                       ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
                     style={{
-                      backgroundColor: colors.card,
-                      borderColor: colors.border,
+                      backgroundColor: colors.textInputBgColor,
                       color: colors.text,
                     }}
                   />
@@ -123,10 +122,10 @@ export function EditModal({
                 <div className="space-y-4 flex flex-col">
                   {/* Header */}
                   <div className="flex items-center justify-between border-b border-gray-800 pb-2">
-                    <label className="text-xs font-semibold text-gray-300 tracking-wider">
+                    <label className="text-[16px] font-semibold" style={{ color: colors.text }}>
                       Permissions
                     </label>
-                    <span className="text-[10px] text-gray-500 italic">
+                    <span className="text-[14px] text-gray-500 italic" style={{ color: colors.text }}>
                       {form.permissionIds?.length || 0} selected
                     </span>
                   </div>
@@ -147,10 +146,10 @@ export function EditModal({
                         style={{ background: colors.card }}
                       >
                         <tr className="border-b border-gray-800">
-                          <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest w-1/3">
+                          <th className="px-4 py-3 text-[16px] font-bold" style={{ color: colors.text }}>
                             Resource / Group
                           </th>
-                          <th className="px-4 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                          <th className="px-4 py-3 text-[16px] font-bold" style={{ color: colors.text }}>
                             Actions
                           </th>
                         </tr>
@@ -214,7 +213,7 @@ export function EditModal({
                                     )}
                                   </div>
 
-                                  <span className="text-xs font-bold text-gray-200 group-hover/row:text-[#c89b3c] transition-colors">
+                                  <span className="text-[16px] font-bold" style={{ color: colors.text }}>
                                     {group.name}
                                   </span>
                                 </div>
@@ -265,7 +264,7 @@ export function EditModal({
                                         </div>
 
                                         <span
-                                          className={`text-[11px] transition-colors ${
+                                          className={`text-[14px] transition-colors ${
                                             isChecked
                                               ? "text-gray-200"
                                               : "text-gray-500 group-hover/item:text-gray-300"
@@ -285,7 +284,7 @@ export function EditModal({
                     </table>
                   </div>
                   {fieldErrors.permissionIds && (
-                    <p className="text-xs text-red-500 mt-1">
+                    <p className="text-[14px] text-red-500 mt-1">
                       {fieldErrors.permissionIds}
                     </p>
                   )}
@@ -299,7 +298,8 @@ export function EditModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 disabled:opacity-50"
+            className="px-6 py-2 rounded-lg border border-gray-700 text-[16px] disabled:opacity-50"
+            style={{ color: colors.text }}
           >
             Close
           </button>
@@ -310,7 +310,8 @@ export function EditModal({
             disabled={loading}
             whileHover={!loading ? { scale: 1.02 } : undefined}
             whileTap={!loading ? { scale: 0.98 } : undefined}
-            className="px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
+            className="px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-70"
+            style={{ color: colors.card, backgroundColor: colors.accent }}
           >
             {loading ? "Processing..." : form.id ? "Update" : "Create"}
           </motion.button>

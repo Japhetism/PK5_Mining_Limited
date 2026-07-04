@@ -83,7 +83,7 @@ export const SearchableSelect = ({
   return (
     <div ref={containerRef} className="relative">
       {label && (
-        <label className="block text-sm font-medium mb-2">
+        <label className="block text-[16px] font-medium mb-2" style={{ color: colors.text }}>
           {label}
           {required && <span className="ml-1 text-red-500">*</span>}
         </label>

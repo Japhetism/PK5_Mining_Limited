@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { Modal } from "./modal";
+import { useTenant } from "@/tenants/useTenant";
 
 type ConfirmModalProps = {
   open: boolean;
@@ -24,6 +25,8 @@ export function ConfirmModal({
   cancelText = "No",
   loading = false,
 }: ConfirmModalProps) {
+  const { colors } = useTenant();
+  
   return (
     <Modal
       open={open}
@@ -35,18 +38,23 @@ export function ConfirmModal({
     >
       <div className="p-6 space-y-6">
         <div className="space-y-2">
-          <h2 className="text-sm font-semibold text-gray-200">{title}</h2>
+          <h2 className="text-[18px] font-semibold" style={{ color: colors.text }}>
+            {title}
+          </h2>
           {description && (
-            <p className="text-xs text-gray-400">{description}</p>
+            <p className="text-[16px] mt-5" style={{ color: colors.text }}>
+              {description}
+            </p>
           )}
         </div>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-3 mt-10">
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 disabled:opacity-50"
+            className="px-6 py-2 rounded-lg border border-gray-700 text-[16px] hover:bg-white/5 disabled:opacity-50"
+            style={{ color: colors.text }}
           >
             {cancelText}
           </button>
@@ -57,7 +65,8 @@ export function ConfirmModal({
             disabled={loading}
             whileHover={!loading ? { scale: 1.02 } : undefined}
             whileTap={!loading ? { scale: 0.98 } : undefined}
-            className="px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
+            className="px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-70"
+            style={{ color: colors.card, backgroundColor: colors.accent,  }}
           >
             {loading ? "Processing..." : confirmText}
           </motion.button>

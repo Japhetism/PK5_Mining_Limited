@@ -83,10 +83,10 @@ export function UserList() {
         header: "Name",
         render: (user) => (
           <div className="space-y-0.5">
-            <div className="font-semibold capitalize" style={{ color: colors.text }}>
+            <div className="font-semibold capitalize text-[16px]" style={{ color: colors.text }}>
               {user.firstName} {user.lastName}
             </div>
-            <div className="text-xs" style={{ color: colors.text }}>
+            <div className="text-[15px]" style={{ color: colors.text }}>
               {user.email}
             </div>
           </div>
@@ -96,7 +96,7 @@ export function UserList() {
         key: "role",
         header: "Role",
         render: (user) => (
-          <span className="text-xs" style={{ color: colors.text }}>
+          <span className="text-[16px]" style={{ color: colors.text }}>
             {user.userRole?.name ?? "-"}
           </span>
         ),
@@ -105,7 +105,7 @@ export function UserList() {
         key: "department",
         header: "Department",
         render: (user) => (
-          <span className="text-xs" style={{ color: colors.text }}>
+          <span className="text-[16px]" style={{ color: colors.text }}>
             {user.department?.name ?? "-"}
           </span>
         ),
@@ -117,8 +117,8 @@ export function UserList() {
           <span
             className={
               user.isActive
-                ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
-                : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
+                ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[14px] text-green-400"
+                : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-[14px] text-red-400"
             }
           >
             <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -142,7 +142,8 @@ export function UserList() {
             <DropdownMenu.Trigger asChild>
               <button
                 type="button"
-                className="inline-flex h-8 w-8 items-center justify-center text-gray-300"
+                className="inline-flex h-8 w-8 items-center justify-center"
+                style={{ color: colors.text }}
               >
                 <MoreVerticalIcon className="h-4 w-4" />
               </button>
@@ -153,14 +154,15 @@ export function UserList() {
                 align="end"
                 sideOffset={6}
                 className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
-                style={{ backgroundColor: colors.bg, border: colors.border }}
+                style={{ backgroundColor: colors.card }}
               >
                 <DropdownMenu.Item
                   onClick={() => {
                     setSelectedUser(user);
                     setConfirmOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                  style={{ color: colors.text }}
                 >
                   <Eye className="w-4 h-4" />
                   View Details
@@ -172,7 +174,8 @@ export function UserList() {
                       setSelectedUser(user);
                       setConfirmEditOpen(true);
                     }}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                    className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                    style={{ color: colors.text }}
                   >
                     <Pencil className="w-4 h-4" />
                     Edit User
@@ -185,7 +188,8 @@ export function UserList() {
                       setSelectedUser(user);
                       setConfirmUpdateStatusOpen(true);
                     }}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                    className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                    style={{ color: colors.text }}
                   >
                     {user.isActive ? (
                       <>
@@ -207,10 +211,11 @@ export function UserList() {
                       setSelectedUser(user);
                       setConfirmDeleteOpen(true);
                     }}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                    className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                    style={{ color: colors.text }}
                   >
                     <Trash className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">Delete User</span>
+                    <span className="text-red-400">Remove User</span>
                   </DropdownMenu.Item>
                 </PermissionGuard>
               </DropdownMenu.Content>
@@ -228,7 +233,7 @@ export function UserList() {
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold mb-1">Users</h1>
-          <p className="text-sm text-gray-400">
+          <p className="text-[18px]" style={{ color: colors.text }}>
             Manage user accounts, status, and access.
           </p>
         </div>
@@ -240,8 +245,8 @@ export function UserList() {
               setSelectedUser(null); // Resets form for "New User"
               setConfirmEditOpen(true);
             }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-[16px] font-semibold rounded-lg"
-            style={{ backgroundColor: colors.accent }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2 text-[16px] font-semibold rounded-lg"
+            style={{ backgroundColor: colors.accent, color: colors.card }}
           >
             <Plus className="w-4 h-4" />
             New User
@@ -252,14 +257,16 @@ export function UserList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">Name</label>
+            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+              Name
+            </label>
             <input
               name="name"
               type="text"
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,
@@ -268,14 +275,16 @@ export function UserList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">Email</label>
+            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+              Email
+            </label>
             <input
               name="email"
               type="text"
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,
@@ -284,14 +293,16 @@ export function UserList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">Status</label>
+            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+              Status
+            </label>
             <select
               value={filterStatus}
               onChange={(e) => {
                 setFilterStatus(e.target.value as StatusFilter);
                 setIsFilter(true);
               }}
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,
@@ -328,13 +339,13 @@ export function UserList() {
         onClose={handleCloseModal}
         onConfirm={handleDeleteUser}
         loading={isProcessing}
-        title="Delete user"
+        title="Remove User"
         description={
           selectedUser
-            ? `Are you sure you want to delete ${selectedUser.firstName} ${selectedUser.lastName}?`
+            ? `Are you sure you want to remove ${selectedUser.firstName} ${selectedUser.lastName} from this application?`
             : undefined
         }
-        confirmText="Delete"
+        confirmText="Remove"
         cancelText="Cancel"
       />
 

@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { Modal } from "@/app/components/ui/modal";
 import { formatDateTime } from "@/app/utils/helper";
 import { Department } from "@/app/interfaces/department";
+import { useTenant } from "@/tenants/useTenant";
 
 type DetailModalProps = {
   department: Department;
@@ -16,17 +17,21 @@ function DetailItem({
   label: string;
   value?: string | null;
 }) {
+  const { colors } = useTenant();
   return (
     <div className="p-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+      <p className="text-[16px] font-semibold uppercase tracking-wide mb-2" style={{ color: colors.text }}>
         {label}
       </p>
-      <p className="text-sm text-gray-200 break-words">{value || "-"}</p>
+      <p className="text-[15px] break-words" style={{ color: colors.text }}>
+        {value || "-"}
+      </p>
     </div>
   );
 }
 
 export function DetailModal({ department, open, onClose }: DetailModalProps) {
+  const { colors } = useTenant();
   return (
     <Modal
       open={open}
@@ -40,7 +45,7 @@ export function DetailModal({ department, open, onClose }: DetailModalProps) {
         <div>
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-200 truncate">
+              <p className="text-[18px] font-semibold truncate" style={{ color: colors.text }}>
                 Department Information
               </p>
             </div>
@@ -49,7 +54,7 @@ export function DetailModal({ department, open, onClose }: DetailModalProps) {
               <button
                 type="button"
                 onClick={() => onClose()}
-                className="p-2 rounded-md hover:bg-white/10 text-gray-300"
+                className="p-2 rounded-md hover:bg-white/10 text-[15px]"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -89,7 +94,8 @@ export function DetailModal({ department, open, onClose }: DetailModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 disabled:opacity-50"
+            className="px-6 py-2 rounded-lg border border-gray-700 text-[16px] disabled:opacity-50"
+            style={{ color: colors.text }}
           >
             Close
           </button>

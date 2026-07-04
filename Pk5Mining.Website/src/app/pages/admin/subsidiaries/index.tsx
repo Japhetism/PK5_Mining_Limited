@@ -93,7 +93,7 @@ export function SubsidiaryList() {
               {subsidiary.name}
             </div>
           </div>
-          <div className="text-xs" style={{ color: colors.text }}>
+          <div className="text-[13px]" style={{ color: colors.text }}>
             {subsidiary.code}
           </div>
         </div>
@@ -152,7 +152,8 @@ export function SubsidiaryList() {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="inline-flex h-8 w-8 items-center justify-center text-gray-300"
+              className="inline-flex h-8 w-8 items-center justify-center"
+              style={{ color: colors.text }}
             >
               <MoreVerticalIcon className="h-4 w-4" />
             </button>
@@ -163,14 +164,15 @@ export function SubsidiaryList() {
               align="end"
               sideOffset={6}
               className="z-50 min-w-[180px] rounded-lg p-1 shadow-xl"
-              style={{ backgroundColor: colors.bg, border: colors.border }}
+              style={{ backgroundColor: colors.card }}
             >
               <DropdownMenu.Item
                 onClick={() => {
                   setSelectedSubsidiary(subsidiary);
                   setConfirmOpen(true);
                 }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                style={{ color: colors.text }}
               >
                 <Eye className="w-4 h-4" />
                 View Details
@@ -182,7 +184,8 @@ export function SubsidiaryList() {
                     setSelectedSubsidiary(subsidiary);
                     setConfirmEditOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                  style={{ color: colors.text }}
                 >
                   <Pencil className="w-4 h-4" />
                   Edit Subsidiary
@@ -195,7 +198,8 @@ export function SubsidiaryList() {
                     setSelectedSubsidiary(subsidiary);
                     setConfirmUpdateStatusOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                  style={{ color: colors.text }}
                 >
                   {subsidiary.status === "Active" ? (
                     <>
@@ -221,7 +225,8 @@ export function SubsidiaryList() {
                     setSelectedSubsidiary(subsidiary);
                     setConfirmDeleteOpen(true);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-white/10 cursor-pointer outline-none focus:outline-none focus:bg-white/10"
+                  className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
+                  style={{ color: colors.text }}
                 >
                   <Trash className="w-4 h-4 text-red-400" />
                   <span className="text-red-400">Delete Subsidiary</span>
@@ -239,8 +244,10 @@ export function SubsidiaryList() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold mb-1">Subsidiaries</h1>
-          <p className="text-sm text-gray-400">
+          <h1 className="text-[18px] font-bold mb-1" style={{ color: colors.text }}>
+            Subsidiaries
+          </h1>
+          <p className="text-[15px]" style={{ color: colors.subtext }}>
             Manage company subsidiaries and their details.
           </p>
         </div>
@@ -249,8 +256,8 @@ export function SubsidiaryList() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => setConfirmEditOpen(true)}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-semibold rounded-lg"
-            style={{ backgroundColor: colors.accent }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-[16px] font-semibold rounded-lg"
+            style={{ backgroundColor: colors.accent, color: colors.card }}
           >
             <Plus className="w-4 h-4" />
             New Subsidiary
@@ -262,14 +269,16 @@ export function SubsidiaryList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">Name</label>
+            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+              Name
+            </label>
             <input
               name="name"
               type="text"
               value={filters.name}
               onChange={(e) => updateFilter("name", e.target.value)}
               placeholder="Search by name"
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,
@@ -278,14 +287,16 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">Email</label>
+            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+              Email
+            </label>
             <input
               name="email"
               type="text"
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,
@@ -294,14 +305,16 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">Status</label>
+            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+              Status
+            </label>
             <select
               value={filterStatus}
               onChange={(e) => {
                 setFilterStatus(e.target.value);
                 setIsFilter(true);
               }}
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               style={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,
@@ -317,7 +330,9 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-xs font-semibold mb-2">Country</label>
+            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+              Country
+            </label>
             <SearchableSelect
               name="country"
               value={filterCountry}
@@ -327,7 +342,7 @@ export function SubsidiaryList() {
                 setIsFilter(true);
               }}
               placeholder="All Countries"
-              className="w-full rounded-lg px-4 py-3 text-sm text-gray-200 outline-none focus:border-[#c89b3c]"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
               styles={{
                 backgroundColor: colors.textInputBgColor,
                 color: colors.text,

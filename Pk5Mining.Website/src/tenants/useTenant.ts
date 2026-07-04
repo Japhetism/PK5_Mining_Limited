@@ -50,6 +50,7 @@ export const useTenant = () => {
       tableBorderColor: isAgro ? "#4ade80" : "#E5E7EB",
       paginatiionIconColor: isAgro ? "#4ade80" : "#1E3A8A",
       textInputBgColor: isAgro ? "#041A12" : "#E3CA95E5",
+      tableLoaderColor: isAgro ? "#4ade80" : "#E5E7EB",
     },
     appId: isAgro ? agroAppId : miningAppId,
     subsidiaryId: isAgro ? agroSubsidiaryId : miningSubsidiaryId,
