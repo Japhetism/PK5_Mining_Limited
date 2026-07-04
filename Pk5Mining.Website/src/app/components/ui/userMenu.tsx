@@ -88,7 +88,7 @@ export function UserMenu({
             ].join(" ")}
             style={{ background: colors.card }}
           >
-            <div className="px-4 py-3 border-b" style={{ color: colors.text, borderColor: colors.border }}>
+            <div className="px-4 py-3 border-b" style={{ color: colors.text, borderColor: colors.tableHeaderBgColor}}>
               <p className="text-[16px] font-semibold truncate" style={{ color: colors.text }}>
                 {firstName} {lastName}
               </p>
