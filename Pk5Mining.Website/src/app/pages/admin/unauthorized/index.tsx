@@ -52,7 +52,7 @@ export function Unauthorized() {
         </div>
 
         <div className="rounded-xl p-5 mb-8 space-y-4" style={{ backgroundColor: colors.innerCard }}>
-          <h3 className="text-[16px] font-bold uppercase tracking-wider" style={{ color: colors.subtext }}>
+          <h3 className="text-[16px] font-bold uppercase tracking-wider" style={{ color: colors.text }}>
             Required Actions
           </h3>
 
