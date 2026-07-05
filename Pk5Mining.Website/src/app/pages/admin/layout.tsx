@@ -16,7 +16,7 @@ import { useTenant } from "@/tenants/useTenant";
 import { useAdminNav } from "@/app/hooks/useAdminNav";
 
 export function AdminLayout() {
-  const { colors, logo } = useTenant();
+  const { colors, logo, name } = useTenant();
   const { logout, user } = useAuth();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,7 +41,7 @@ export function AdminLayout() {
       >
         {/* Logo + Toggle */}
         <div
-          className="p-4 border-b"
+          className="p-4 mb-10"
           style={{ borderColor: colors.border }}
         >
           <div
@@ -170,7 +170,7 @@ export function AdminLayout() {
 
               <Link to="/admin" className="flex items-center gap-2">
                 <span className="font-bold text-[20px]">
-                  PK5 Admin Portal
+                  {name}{" "}Admin Portal
                 </span>
               </Link>
             </div>
