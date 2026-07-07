@@ -93,7 +93,7 @@ export function SubsidiaryList() {
               {subsidiary.name}
             </div>
           </div>
-          <div className="text-[13px]" style={{ color: colors.text }}>
+          <div className="text-[15px]" style={{ color: colors.text }}>
             {subsidiary.code}
           </div>
         </div>
@@ -117,18 +117,24 @@ export function SubsidiaryList() {
     {
       key: "status",
       header: "Status",
-      render: (subsidiary) => (
-        <span
-          className={
-            subsidiary.status === "Active"
-              ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-400"
-              : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-xs text-red-400"
-          }
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {subsidiary.status}
-        </span>
-      ),
+      render: (subsidiary) => {
+        const isActive = subsidiary?.status?.toLowerCase() === "active";
+
+        return (
+          <span
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-0.5 text-[14px] text-[#111827] ${
+              isActive ? "bg-[#B9F6B5]" : "bg-[#F6C2B5]"
+            }`}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                isActive ? "bg-[#308A1E]" : "bg-[#BF3E17]"
+              }`}
+            />
+            <span>{isActive ? "Active" : "Inactive"}</span>
+          </span>
+        );
+      },
     },
     {
       key: "dT_Created",
@@ -203,15 +209,15 @@ export function SubsidiaryList() {
                 >
                   {subsidiary.status === "Active" ? (
                     <>
-                      <XCircle className="w-4 h-4 text-red-400" />
-                      <span className="text-red-400">
+                      <XCircle className="w-4 h-4 text-red-600" />
+                      <span className="text-red-600">
                         Deactivate Subsidiary
                       </span>
                     </>
                   ) : (
                     <>
-                      <CheckCircle2 className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400">
+                      <CheckCircle2 className="w-4 h-4 text-green-600" />
+                      <span className="text-green-600">
                         Activate Subsidiary
                       </span>
                     </>
@@ -228,8 +234,8 @@ export function SubsidiaryList() {
                   className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
                   style={{ color: colors.text }}
                 >
-                  <Trash className="w-4 h-4 text-red-400" />
-                  <span className="text-red-400">Delete Subsidiary</span>
+                  <Trash className="w-4 h-4 text-red-600" />
+                  <span className="text-red-600">Delete Subsidiary</span>
                 </DropdownMenu.Item>
               </PermissionGuard>
             </DropdownMenu.Content>
@@ -244,7 +250,10 @@ export function SubsidiaryList() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-[18px] font-bold mb-1" style={{ color: colors.text }}>
+          <h1
+            className="text-[18px] font-bold mb-1"
+            style={{ color: colors.text }}
+          >
             Subsidiaries
           </h1>
           <p className="text-[15px]" style={{ color: colors.subtext }}>
@@ -269,7 +278,10 @@ export function SubsidiaryList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Name
             </label>
             <input
@@ -287,7 +299,10 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Email
             </label>
             <input
@@ -305,7 +320,10 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Status
             </label>
             <select
@@ -330,7 +348,10 @@ export function SubsidiaryList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Country
             </label>
             <SearchableSelect
