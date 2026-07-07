@@ -65,11 +65,14 @@ export function JobList() {
             className="flex-1 cursor-pointer"
             title="View public page"
           >
-            <div className="font-semibold" style={{ color: colors.accent }}>
+            <div className="font-semibold" style={{ color: colors.text }}>
               {job.title}
             </div>
           </button>
-          <div className="text-[15px] line-clamp-2" style={{ color: colors.subtext }}>
+          <div
+            className="text-[15px] line-clamp-2"
+            style={{ color: colors.text }}
+          >
             {job.id}
           </div>
         </div>
@@ -99,18 +102,24 @@ export function JobList() {
     {
       key: "status",
       header: "Status",
-      render: (job) => (
-        <span
-          className={
-            job.isActive
-              ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[14px] text-green-400"
-              : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-[14px] text-red-400"
-          }
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {job.isActive ? "Open" : "Closed"}
-        </span>
-      ),
+      render: (job) => {
+        const isActive = job.isActive;
+
+        return (
+          <span
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-0.5 text-[14px] text-[#111827] ${
+              isActive ? "bg-[#B9F6B5]" : "bg-[#F6C2B5]"
+            }`}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                isActive ? "bg-[#308A1E]" : "bg-[#BF3E17]"
+              }`}
+            />
+            <span>{isActive ? "Open" : "Closed"}</span>
+          </span>
+        );
+      },
     },
     {
       key: "applicationsCount",
@@ -191,12 +200,12 @@ export function JobList() {
                   className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
                 >
                   {job.isActive ? (
-                    <span className="flex items-center gap-2 text-red-400">
+                    <span className="flex items-center gap-2 text-red-600">
                       <XCircle className="w-4 h-4" />
                       Close job
                     </span>
                   ) : (
-                    <span className="flex items-center gap-2 text-green-400">
+                    <span className="flex items-center gap-2 text-green-600">
                       <CheckCircle2 className="w-4 h-4" />
                       Reopen job
                     </span>
@@ -215,7 +224,10 @@ export function JobList() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-[18px] font-bold mb-1" style={{ color: colors.text }}>
+          <h1
+            className="text-[18px] font-bold mb-1"
+            style={{ color: colors.text }}
+          >
             Job openings
           </h1>
           <p className="text-[15px]" style={{ color: colors.subtext }}>
@@ -239,10 +251,16 @@ export function JobList() {
       </div>
 
       {/* Filters */}
-      <div className="space-y-3 mb-10 p-6 rounded-[12px]" style={{ backgroundColor: colors.card }}>
+      <div
+        className="space-y-3 mb-10 p-6 rounded-[12px]"
+        style={{ backgroundColor: colors.card }}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Department
             </label>
             <SearchableSelect
@@ -266,7 +284,10 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Location
             </label>
             <input
@@ -284,7 +305,10 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Status
             </label>
             <select
@@ -309,7 +333,10 @@ export function JobList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Job Type
             </label>
             <select
