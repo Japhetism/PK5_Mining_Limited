@@ -79,7 +79,10 @@ export function Departments() {
               {dept.name}
             </div>
           </div>
-          <div className="text-[13px]" style={{ color: colors.text }}>
+          <div
+            className="max-w-xs truncate text-[15px]"
+            style={{ color: colors.text }}
+          >
             {dept.description}
           </div>
         </div>
@@ -88,18 +91,24 @@ export function Departments() {
     {
       key: "isActive",
       header: "Status",
-      render: (dept) => (
-        <span
-          className={
-            dept.isActive === true
-              ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[14px] text-green-400"
-              : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-[14px] text-red-400"
-          }
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {dept.isActive ? "Active" : "Inactive"}
-        </span>
-      ),
+      render: (dept) => {
+        const isActive = dept.isActive === true;
+
+        return (
+          <span
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-0.5 text-[14px] text-[#111827] ${
+              isActive ? "bg-[#B9F6B5]" : "bg-[#F6C2B5]"
+            }`}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                isActive ? "bg-[#308A1E]" : "bg-[#BF3E17]"
+              }`}
+            />
+            <span>{isActive ? "Active" : "Inactive"}</span>
+          </span>
+        );
+      },
     },
     {
       key: "dT_Created",
@@ -171,13 +180,13 @@ export function Departments() {
                 >
                   {dept.isActive ? (
                     <>
-                      <XCircle className="w-4 h-4 text-red-400" />
-                      <span className="text-red-400">Deactivate</span>
+                      <XCircle className="w-4 h-4 text-red-600" />
+                      <span className="text-red-600">Deactivate</span>
                     </>
                   ) : (
                     <>
-                      <CheckCircle2 className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400">Activate</span>
+                      <CheckCircle2 className="w-4 h-4 text-green-600" />
+                      <span className="text-green-600">Activate</span>
                     </>
                   )}
                 </DropdownMenu.Item>
@@ -191,8 +200,8 @@ export function Departments() {
                   }}
                   className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
                 >
-                  <Trash className="w-4 h-4 text-red-400" />
-                  <span className="text-red-400">Delete Department</span>
+                  <Trash className="w-4 h-4 text-red-600" />
+                  <span className="text-red-600">Delete Department</span>
                 </DropdownMenu.Item>
               </PermissionGuard>
             </DropdownMenu.Content>

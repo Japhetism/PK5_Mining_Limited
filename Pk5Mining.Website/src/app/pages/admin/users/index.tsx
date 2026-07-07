@@ -83,7 +83,10 @@ export function UserList() {
         header: "Name",
         render: (user) => (
           <div className="space-y-0.5">
-            <div className="font-semibold capitalize text-[16px]" style={{ color: colors.text }}>
+            <div
+              className="font-semibold capitalize text-[16px]"
+              style={{ color: colors.text }}
+            >
               {user.firstName} {user.lastName}
             </div>
             <div className="text-[15px]" style={{ color: colors.text }}>
@@ -113,18 +116,24 @@ export function UserList() {
       {
         key: "isActive",
         header: "Status",
-        render: (user) => (
-          <span
-            className={
-              user.isActive
-                ? "inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[14px] text-green-400"
-                : "inline-flex items-center gap-1 rounded-full bg-red-600/10 px-2 py-0.5 text-[14px] text-red-400"
-            }
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-current" />
-            {user.isActive ? "Active" : "Inactive"}
-          </span>
-        ),
+        render: (user) => {
+          const isActive = user.isActive;
+
+          return (
+            <span
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-0.5 text-[14px] text-[#111827] ${
+                isActive ? "bg-[#B9F6B5]" : "bg-[#F6C2B5]"
+              }`}
+            >
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  isActive ? "bg-[#308A1E]" : "bg-[#BF3E17]"
+                }`}
+              />
+              <span>{isActive ? "Active" : "Inactive"}</span>
+            </span>
+          );
+        },
       },
       {
         key: "dT_Created",
@@ -193,13 +202,13 @@ export function UserList() {
                   >
                     {user.isActive ? (
                       <>
-                        <XCircle className="w-4 h-4 text-red-400" />
-                        <span className="text-red-400">Deactivate User</span>
+                        <XCircle className="w-4 h-4 text-red-600" />
+                        <span className="text-red-600">Deactivate User</span>
                       </>
                     ) : (
                       <>
-                        <CheckCircle2 className="w-4 h-4 text-green-400" />
-                        <span className="text-green-400">Activate User</span>
+                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                        <span className="text-green-600">Activate User</span>
                       </>
                     )}
                   </DropdownMenu.Item>
@@ -214,8 +223,8 @@ export function UserList() {
                     className="flex items-center gap-2 px-3 py-2 text-[16px] rounded-md hover:bg-black/5 cursor-pointer outline-none focus:outline-none focus:bg-black/5"
                     style={{ color: colors.text }}
                   >
-                    <Trash className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">Remove User</span>
+                    <Trash className="w-4 h-4 text-red-600" />
+                    <span className="text-red-600">Remove User</span>
                   </DropdownMenu.Item>
                 </PermissionGuard>
               </DropdownMenu.Content>
@@ -257,7 +266,10 @@ export function UserList() {
       <div className="space-y-3 mb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Name
             </label>
             <input
@@ -275,7 +287,10 @@ export function UserList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Email
             </label>
             <input
@@ -293,7 +308,10 @@ export function UserList() {
           </div>
 
           <div className="min-w-0">
-            <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
               Status
             </label>
             <select
