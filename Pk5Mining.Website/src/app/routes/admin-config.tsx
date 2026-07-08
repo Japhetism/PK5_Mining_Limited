@@ -143,8 +143,8 @@ export const adminRouteItems: AdminRouteItem[] = [
     element: JobEdit,
   },
   {
-    path: "applications",
-    label: "Applications",
+    path: "candidates",
+    label: "Candidates",
     icon: FileText,
     show: true,
     canAccess: true,
@@ -152,8 +152,8 @@ export const adminRouteItems: AdminRouteItem[] = [
     element: ApplicationList,
   },
   {
-    path: "applications/:applicationId",
-    label: "Application Detail",
+    path: "candidates/:applicationId",
+    label: "Candidate Application Detail",
     show: false,
     canAccess: true,
     permissions: [PERMISSIONS.applicationView, PERMISSIONS.applicationUpdate],

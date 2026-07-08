@@ -87,8 +87,8 @@ export function ApplicationList() {
       className: "text-right",
       render: (app) => (
         <Link
-          to={`/admin/applications/${app.id}`}
-          title="View application details"
+          to={`/admin/candidates/${app.id}`}
+          title="View candidate application details"
           onClick={() => {
             queryClient.setQueryData(["applications", String(app.id)], app);
           }}
@@ -110,10 +110,10 @@ export function ApplicationList() {
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-[18px] font-bold mb-1" style={{ color: colors.text }}>
-            Applications
+            Candidates
           </h1>
           <p className="text-[15px]" style={{ color: colors.text }}>
-            Review incoming applications, update status, and download resumes.
+            Evaluate incoming candidate applications, manage status updates, and retrieve resumes.
           </p>
         </div>
       </div>
