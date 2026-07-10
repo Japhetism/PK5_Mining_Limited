@@ -58,6 +58,14 @@ export function Dashboard() {
           label="Total applications"
           value={totalApps}
           subtitle={`${newApps} new`}
+          onClickSuffix={() =>
+            navigate("/admin/candidates")
+          }
+          onClickSubtitle={() =>
+            navigate("/admin/candidates", {
+              state: { defaultFilter: "new" },
+            })
+          }
         />
         <StatCard
           icon={PieChart}
