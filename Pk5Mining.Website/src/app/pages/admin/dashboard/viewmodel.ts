@@ -43,6 +43,7 @@ function useDashboardViewModel() {
     () =>
       jobs
         .map((job) => ({
+          id: job.jobId,
           title: job.title,
           count: job.applicationCount ?? 0,
         }))

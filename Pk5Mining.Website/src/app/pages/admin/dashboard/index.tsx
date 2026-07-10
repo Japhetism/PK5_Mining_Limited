@@ -58,9 +58,7 @@ export function Dashboard() {
           label="Total applications"
           value={totalApps}
           subtitle={`${newApps} new`}
-          onClickSuffix={() =>
-            navigate("/admin/candidates")
-          }
+          onClickSuffix={() => navigate("/admin/candidates")}
           onClickSubtitle={() =>
             navigate("/admin/candidates", {
               state: { defaultFilter: "new" },
@@ -104,12 +102,13 @@ export function Dashboard() {
               No job openings configured yet.
             </p>
           ) : (
-            <ul className="space-y-5">
+            <div className="flex flex-col space-y-5">
               {byJob.map((row) => (
-                <li
+                <button
                   key={row.title}
-                  className="text-[16px]"
+                  className="text-[16px] font-normal cursor-pointer"
                   style={{ color: colors.text }}
+                  onClick={() => navigate(`/admin/jobs/${row.id}`)}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="truncate">{row.title}</span>
@@ -130,9 +129,9 @@ export function Dashboard() {
                       }}
                     />
                   </div>
-                </li>
+                </button>
               ))}
-            </ul>
+            </div>
           )}
         </div>
 
