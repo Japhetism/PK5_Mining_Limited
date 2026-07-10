@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobs, updateJob } from "@/app/api/jobs";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
@@ -17,14 +17,17 @@ import { getDepartmentsForDropdown } from "@/app/api/departments";
 
 function useJobListViewModel() {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const { isAgro } = useTenant();
 
   const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
   const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
 
+  const defaultFilter = location.state?.defaultFilter ?? "all";
+
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
+  const [filterStatus, setFilterStatus] = useState<StatusFilter>(defaultFilter);
   const [filterJobType, setFilterJobType] = useState<string>("");
   const [filterDepartment, setFilterDepartment] = useState<string>("");
   const [filterLocation, setFilterLocation] = useState<string>("");
