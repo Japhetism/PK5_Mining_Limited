@@ -5,8 +5,8 @@ import { ScrollToTop } from "@/app/components/scrollToTop";
 import { useLocation } from "@/app/hooks/useLocation";
 import Logo from "../../../assets/images/logo.png";
 
-const GLOBAL_URL = "https://pk5miningltd-test-v2.vercel.app";
-const US_HOST = "us-pk5miningltd-test-v2.vercel.app";
+const GLOBAL_URL = import.meta.env.VITE_GLOBAL_URL ?? "";
+const US_HOST = import.meta.env.VITE_US_HOST;
 
 export function ClientLayout() {
   const { data, isLoading } = useLocation();
