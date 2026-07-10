@@ -10,7 +10,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { JobDto, StatusFilter } from "@/app/interfaces";
-import { capitalizeFirstLetter, formatDateTime } from "@/app/utils/helper";
+import { capitalizeFirstLetter, formatDate, formatDateTime } from "@/app/utils/helper";
 import {
   PaginatedTable,
   PaginatedTableColumn,
@@ -129,13 +129,13 @@ export function JobList() {
     {
       key: "dateAdded",
       header: "Date Added",
-      render: (job) => (job.dT_Created ? formatDateTime(job.dT_Created) : "-"),
+      render: (job) => (job.dT_Created ? formatDate(job.dT_Created) : "-"),
     },
     {
       key: "closeDate",
       header: "Close Date",
       render: (job) =>
-        job.dT_Expiry ? formatDateTime(job.dT_Expiry, false) : "-",
+        job.dT_Expiry ? formatDate(job.dT_Expiry) : "-",
     },
     {
       key: "actions",

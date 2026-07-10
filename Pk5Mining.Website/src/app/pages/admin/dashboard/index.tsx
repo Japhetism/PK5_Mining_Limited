@@ -92,7 +92,7 @@ export function Dashboard() {
           }}
         >
           <h2
-            className="text-[20px] font-semibold mb-4"
+            className="text-[18px] font-semibold mb-4"
             style={{ color: colors.text }}
           >
             Applications by role
@@ -144,7 +144,7 @@ export function Dashboard() {
           }}
         >
           <h2
-            className="text-[20px] font-semibold mb-4"
+            className="text-[18px] font-semibold mb-4"
             style={{ color: colors.text }}
           >
             Application Pipelines
@@ -153,10 +153,18 @@ export function Dashboard() {
             {statuses.map((s) => {
               const count = byStage[s.value];
               return (
-                <div key={s.value} className="space-y-1">
+                <button
+                  key={s.value}
+                  className="flex flex-col items-start font-normal text-[16px] cursor-pointer"
+                  onClick={() =>
+                    navigate("/admin/candidates", {
+                      state: { defaultFilter: s.label },
+                    })
+                  }
+                >
                   <p className="uppercase tracking-wide mb-5">{s.label}</p>
                   <p>{count}</p>
-                </div>
+                </button>
               );
             })}
           </div>
