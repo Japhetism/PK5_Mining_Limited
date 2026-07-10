@@ -41,10 +41,12 @@ function useDashboardViewModel() {
   // Best approximation from your response: recent jobs and their applicationCount
   const byJob = useMemo(
     () =>
-      jobs.map((job) => ({
-        title: job.title,
-        count: job.applicationCount,
-      })),
+      jobs
+        .map((job) => ({
+          title: job.title,
+          count: job.applicationCount ?? 0,
+        }))
+        .sort((a, b) => b.count - a.count),
     [jobs],
   );
 
