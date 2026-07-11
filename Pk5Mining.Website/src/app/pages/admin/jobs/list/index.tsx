@@ -10,7 +10,11 @@ import {
   Pencil,
 } from "lucide-react";
 import { JobDto, StatusFilter } from "@/app/interfaces";
-import { capitalizeFirstLetter, formatDate, formatDateTime } from "@/app/utils/helper";
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  formatDateTime,
+} from "@/app/utils/helper";
 import {
   PaginatedTable,
   PaginatedTableColumn,
@@ -52,6 +56,7 @@ export function JobList() {
     onChangePageSize,
     handleUpdateStatus,
     handleNavigateToJobDetailWebsite,
+    handleResetFilters,
   } = useJobListViewModel();
 
   const columns: PaginatedTableColumn<JobDto>[] = [
@@ -134,8 +139,7 @@ export function JobList() {
     {
       key: "closeDate",
       header: "Close Date",
-      render: (job) =>
-        job.dT_Expiry ? formatDate(job.dT_Expiry) : "-",
+      render: (job) => (job.dT_Expiry ? formatDate(job.dT_Expiry) : "-"),
     },
     {
       key: "actions",
@@ -359,6 +363,15 @@ export function JobList() {
               ))}
             </select>
           </div>
+        </div>
+        <div className="flex flex-end">
+        <button
+          onClick={handleResetFilters}
+          className="text-[16px] hover:underline ml-auto"
+          style={{ color: colors.text }}
+        >
+          Clear all
+        </button>
         </div>
       </div>
 

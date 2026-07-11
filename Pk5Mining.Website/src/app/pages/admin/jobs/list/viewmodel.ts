@@ -172,6 +172,16 @@ function useJobListViewModel() {
     window.open(targetUrl, "_blank", "noopener,noreferrer");
   };
 
+  const handleResetFilters = () => {
+    setFilterStatus(defaultFilter);
+    setFilterJobType("");
+    setFilterDepartment("");
+    setFilterLocation("");
+    updateFilter("department", "");
+    updateFilter("location", "");
+    setIsFilter(true);
+  }
+
   const jobs: JobDto[] = data?.data ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
@@ -208,6 +218,7 @@ function useJobListViewModel() {
     onChangePageSize,
     setConfirmOpen,
     handleNavigateToJobDetailWebsite,
+    handleResetFilters,
   };
 }
 
