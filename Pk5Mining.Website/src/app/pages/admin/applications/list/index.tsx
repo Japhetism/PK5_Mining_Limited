@@ -40,7 +40,10 @@ export function ApplicationList() {
       header: "Candidate",
       render: (app) => (
         <div>
-          <div className="text-[18px] font-semibold" style={{ color: colors.text }}>
+          <div
+            className="text-[18px] font-semibold"
+            style={{ color: colors.text }}
+          >
             {app.firstName} {app.lastName}
           </div>
           <div className="text-[15px]" style={{ color: colors.text }}>
@@ -51,8 +54,22 @@ export function ApplicationList() {
     },
     {
       key: "job",
-      header: "Job Applied For",
-      render: (app) => app?.job?.title ?? "-",
+      header: "Job Role",
+      render: (app) => (
+        <div>
+          <div
+            className="text-[16px]"
+            style={{ color: colors.text }}
+          >
+            {app?.job?.title ?? "-"}
+          </div>
+          {app?.job?.id && (
+            <div className="text-[15px]" style={{ color: colors.text }}>
+              {app?.job?.id}
+            </div>
+          )}
+        </div>
+      ),
     },
     ...(isAgro
       ? []
@@ -72,12 +89,12 @@ export function ApplicationList() {
     },
     {
       key: "submitted",
-      header: "Submitted",
+      header: "Date Submitted",
       render: (app) => formatDateTime(app.dT_Created),
     },
     {
       key: "modified",
-      header: "Modified",
+      header: "Date Modified",
       render: (app) => formatDateTime(app.dT_Modified),
     },
     {
@@ -93,9 +110,10 @@ export function ApplicationList() {
             queryClient.setQueryData(["applications", String(app.id)], app);
           }}
         >
-          <button 
+          <button
             className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[16px]"
-            style={{ backgroundColor: colors.accent, color: colors.card }}>
+            style={{ backgroundColor: colors.accent, color: colors.card }}
+          >
             <Users className="w-3 h-3" />
             View
           </button>
@@ -109,11 +127,15 @@ export function ApplicationList() {
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-[18px] font-bold mb-1" style={{ color: colors.text }}>
+          <h1
+            className="text-[18px] font-bold mb-1"
+            style={{ color: colors.text }}
+          >
             Candidates
           </h1>
           <p className="text-[15px]" style={{ color: colors.text }}>
-            Evaluate incoming candidate applications, manage status updates, and retrieve resumes.
+            Evaluate incoming candidate applications, manage status updates, and
+            retrieve resumes.
           </p>
         </div>
       </div>
