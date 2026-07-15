@@ -76,7 +76,7 @@ export function Header() {
             src={Logo}
             alt="PK5 Mining Logo"
             loading="lazy"
-            className="w-32 h-auto object-contain transition-transform duration-300 hover:scale-105"
+            className="w-40 h-auto object-contain transition-transform duration-300 hover:scale-105"
           />
         </Link>
 
