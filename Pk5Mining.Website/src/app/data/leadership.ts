@@ -15,15 +15,15 @@ export interface ExecutiveProfile {
 export const executiveLeadership: ExecutiveProfile[] = [
     {
         id: '1',
-        department: "Executive",
+        department: "CEO & Chairman",
         name: 'Barr. Prince Njoku',
         role: 'CEO & Chairman',
-        shortBio: 'Barr. Prince Njoku is a Managing Partner and U.S.-licensed Attorney with over a decade of experience in litigation, regulatory advisory, and corporate counsel.As Chairman of PK5 Mining Nigeria Limited, Mr. Njoku provides strategic leadership and governance oversight for mining operations in Africa, with responsibilities spanning regulatory compliance, risk management, logistics coordination, and export planning. He also served as a Legal & Regulatory Consultant in Tanzania, advising mining companies on compliance frameworks and sector-specific legal requirements​',
+        shortBio: 'Managing Partner and U.S.-licensed Attorney with over a decade of experience spanning litigation, regulatory advisory, and corporate counsel roles. Background includes legal leadership within private practice, in-house advisory, and consulting engagements, with additional exposure to the mining and minerals sector through investment, governance, and regulatory consulting work. Currently serving as Chairman of PK5 Mining Limited (2014–present), providing strategic leadership and governance oversight for mining operations in Africa, including regulatory compliance, risk management, logistics, and export planning. Also served as a Legal & Regulatory Consultant in Tanzania (July 2024–July 2025), advising mining companies on compliance, regulatory frameworks, and legal considerations. Brings a strong blend of legal strategy, business judgment, and cross-border advisory experience.​',
         image: ceo2,
     },
     {
         id: '2',
-        department: "Affairs",
+        department: "Corporate Affairs",
         name: 'Peter Eziakor',
         role: 'CORPORATE AFFAIRS',
         shortBio: 'Peter Eziakor is a seasoned real estate professional with over two decades of experience, with an expanded focus in mineral mining and land asset development since 2004. He brings strong expertise in land acquisition, property brokerage, and investment advisory, supporting miningmprojects through strategic site identification, land negotiations, and stakeholder engagement. His deep understanding of land valuation, regulatory frameworks, and market dynamics positions him as a trusted advisor in securing and managing land assets critical to mining operations.​ Over the years, Peter has built an extensive network across the real estate and land management ecosystem, enabling him to identify high-value mining development opportunities and facilitate seamless land transactions. He is committed to transparency, due diligence, and long-term value creation, consistently guiding investors and project stakeholders through complex land acquisition and development processes with professionalism and strategic insight.​',
@@ -34,7 +34,7 @@ export const executiveLeadership: ExecutiveProfile[] = [
         department: "Information Technology",
         name: 'Alozie Okwukanma',
         role: 'HEAD OF ICT',
-        shortBio: 'Alozie Okwukanma is a seasoned Full Stack Software Engineer with over eight years of experience building scalable, enterprise-grade applications, with growing specialization in mineral mining and resource management systems. He leverages deep expertise in the Microsoft .NET ecosystem, cloud platforms, and modern web technologies—including C#, ASP.NET, .NET Core, Angular, React, and Microsoft Azure—to develop digital solutions that support mining operations, data-driven decision-making, and process optimization. He has strong experience in Windows-based enterprise and Microsoft Office-integrated solutions, with solid expertise in financial systems. He has contributed to high-impact projects at global organizations such as Microsoft and Dolby Laboratories, delivering robust systems adaptable to complex, industrial environments.​ He currently serves as a Lead Software Engineer, where he drives system architecture, leads development teams, and collaborates with stakeholders to deliver efficient, high-quality solutions. His experience spans the full software development lifecycle, with increasing focus on applying technology to mining operations, including data analytics, workflow automation, and operational monitoring. Known for his analytical approach and technical depth, he translates complex operational requirements into scalable systems that enhance efficiency, productivity, and strategic decision-making within the mining sector.​',
+        shortBio:'Alozie Okwukanma brings over eight years of experience delivering scalable, enterprise-grade digital solutions, with a growing focus on mineral mining and resource management systems. He specializes in the Microsoft .NET ecosystem, cloud platforms, and modern web technologies, developing solutions that support mining operations, workflow automation, operational monitoring, and data-driven decision-making. Having contributed to major technology organizations, including Microsoft and Dolby Laboratories, he combines strong technical expertise with strategic leadership to design and deliver high-quality systems that improve operational efficiency and business performance.',
         image: ICT,
     },
 
