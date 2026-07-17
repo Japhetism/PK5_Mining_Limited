@@ -40,26 +40,25 @@ export const useLocation = () => {
     queryFn: fetchLocation,
 
     // Check cache first
-    initialData: () => {
-      const cached = localStorage.getItem(LOCATION_KEY);
+    // initialData: () => {
+    //   const cached = localStorage.getItem(LOCATION_KEY);
 
-      if (!cached) return undefined;
+    //   if (!cached) return undefined;
 
-      const parsed = JSON.parse(cached);
+    //   const parsed = JSON.parse(cached);
 
-      const age = Date.now() - parsed.timestamp;
+    //   const age = Date.now() - parsed.timestamp;
 
-      const ONE_DAY = 24 * 60 * 60 * 1000;
+    //   const ONE_DAY = 24 * 60 * 60 * 1000;
 
-      // if (age > ONE_DAY) {
-      //   return undefined;
-      // }
+    //   if (age > ONE_DAY) {
+    //     return undefined;
+    //   }
 
-      return parsed.data;
-    },
+    //   return parsed.data;
+    // },
 
-    // staleTime: 1000 * 60, // 1 minute
-    staleTime: 1000,
+    staleTime: 1000 * 60, // 1 minute
     gcTime: 1000 * 60,
     retry: 1,
   });
