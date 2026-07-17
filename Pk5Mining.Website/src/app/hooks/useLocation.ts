@@ -51,14 +51,15 @@ export const useLocation = () => {
 
       const ONE_DAY = 24 * 60 * 60 * 1000;
 
-      if (age > ONE_DAY) {
-        return undefined;
-      }
+      // if (age > ONE_DAY) {
+      //   return undefined;
+      // }
 
       return parsed.data;
     },
 
-    staleTime: 1000 * 60, // 1 minute
+    // staleTime: 1000 * 60, // 1 minute
+    staleTime: 1000,
     gcTime: 1000 * 60,
     retry: 1,
   });
