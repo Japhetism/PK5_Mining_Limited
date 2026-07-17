@@ -21,6 +21,8 @@ const fetchLocation = async (): Promise<UserLocation> => {
 
   const data = await response.json();
 
+  console.log("location data ", data);
+
   localStorage.setItem(
     LOCATION_KEY,
     JSON.stringify({
