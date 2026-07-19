@@ -1,5 +1,4 @@
 import { useRoutes, Navigate } from "react-router-dom";
-import { clientRoutes } from "./client-routes";
 import { adminRoutes } from "./admin-routes";
 import { useTenant } from "@/tenants/useTenant";
 import { useAuth } from "../context/AuthContext";
@@ -13,8 +12,6 @@ export function AppRoutes() {
   const path = authUser || isAgro ? "/admin" : "/"
 
   const routes = [
-    ...(!isAgro ? clientRoutes : []),
-
     ...(allowAdminFeatures ? adminRoutes : []),
 
     {

@@ -86,7 +86,7 @@ class AuthService {
         await this.msalInstance.logoutRedirect({
           account: account,
           logoutHint: account.username,
-          postLogoutRedirectUri: `${window.location.origin}/admin/login`,
+          postLogoutRedirectUri: `${window.location.origin}/login`,
         });
       } else {
         await this.msalInstance.logoutRedirect();

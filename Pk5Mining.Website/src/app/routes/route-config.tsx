@@ -35,65 +35,65 @@ export type AdminRouteItem = {
 };
 
 const Dashboard = lazy(() =>
-  import("@/app/pages/admin/dashboard").then((m) => ({ default: m.Dashboard })),
+  import("@/app/pages/dashboard").then((m) => ({ default: m.Dashboard })),
 );
 
 const JobList = lazy(() =>
-  import("@/app/pages/admin/jobs/list").then((m) => ({ default: m.JobList })),
+  import("@/app/pages/jobs/list").then((m) => ({ default: m.JobList })),
 );
 
 const JobEdit = lazy(() =>
-  import("@/app/pages/admin/jobs/edit").then((m) => ({ default: m.JobEdit })),
+  import("@/app/pages/jobs/edit").then((m) => ({ default: m.JobEdit })),
 );
 
 const JobDetail = lazy(() =>
-  import("@/app/pages/admin/jobs/details").then((m) => ({
+  import("@/app/pages/jobs/details").then((m) => ({
     default: m.JobDetail,
   })),
 );
 
 const ApplicationList = lazy(() =>
-  import("@/app/pages/admin/applications/list").then((m) => ({
+  import("@/app/pages/applications/list").then((m) => ({
     default: m.ApplicationList,
   })),
 );
 
 const ApplicationDetail = lazy(() =>
-  import("@/app/pages/admin/applications/details").then((m) => ({
+  import("@/app/pages/applications/details").then((m) => ({
     default: m.ApplicationDetail,
   })),
 );
 
 const ContactMessageList = lazy(() =>
-  import("@/app/pages/admin/contact/list").then((m) => ({
+  import("@/app/pages/contact/list").then((m) => ({
     default: m.ContactMessageList,
   })),
 );
 
 const Users = lazy(() =>
-  import("@/app/pages/admin/users").then((m) => ({ default: m.UserList })),
+  import("@/app/pages/users").then((m) => ({ default: m.UserList })),
 );
 
 const Subsidiaries = lazy(() =>
-  import("@/app/pages/admin/subsidiaries").then((m) => ({
+  import("@/app/pages/subsidiaries").then((m) => ({
     default: m.SubsidiaryList,
   })),
 );
 
 const Roles = lazy(() =>
-  import("@/app/pages/admin/roles").then((m) => ({
+  import("@/app/pages/roles").then((m) => ({
     default: m.Roles,
   })),
 );
 
 const Departments = lazy(() =>
-  import("@/app/pages/admin/departments").then((m) => ({
+  import("@/app/pages/departments").then((m) => ({
     default: m.Departments,
   })),
 );
 
 const Account = lazy(() =>
-  import("@/app/pages/admin/account").then((m) => ({
+  import("@/app/pages/account").then((m) => ({
     default: m.Account,
   })),
 );

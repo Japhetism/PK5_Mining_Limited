@@ -1,7 +1,7 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
 import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
 import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
-import { AdminRouteItem, adminRouteItems } from "../routes/admin-config";
+import { AdminRouteItem, adminRouteItems } from "../routes/route-config";
 import { UserRole } from "../constants/role";
 import { ZodError } from "zod";
 import { RolePermission } from "../interfaces/role";

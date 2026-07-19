@@ -8,8 +8,8 @@ export const msalConfig: Configuration = {
   auth: {
     clientId: CLIENT_ID,
     authority: CLIENT_AUTHORITY,
-    redirectUri: `${window.location.origin}/admin/sso`,
-    postLogoutRedirectUri: `${window.location.origin}/admin/login`,
+    redirectUri: `${window.location.origin}/sso`,
+    postLogoutRedirectUri: `${window.location.origin}/login`,
   },
   cache: {
     cacheLocation: BrowserCacheLocation.LocalStorage, 

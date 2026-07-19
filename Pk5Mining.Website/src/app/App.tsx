@@ -4,8 +4,6 @@ import { Suspense, useEffect } from "react";
 import { ScrollToTop } from "@/app/components/scrollToTop";
 import { AppRoutes } from "./routes";
 import { useTenant } from "@/tenants/useTenant";
-import { CookieBannerWithOptions } from "./components/cookie-banner-with-options";
-import { LegalModalNew } from "./components/legal-modal-new";
 
 function AppLoader() {
   const {
@@ -50,8 +48,6 @@ export function App() {
         <AppRoutes />
       </Suspense>
       <Toaster position="top-right" richColors closeButton expand />
-      <CookieBannerWithOptions />
-      <LegalModalNew />
     </BrowserRouter>
   );
 }

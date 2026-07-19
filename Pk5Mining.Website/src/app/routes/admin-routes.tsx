@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router-dom";
-import { adminRouteItems, type AdminRouteItem } from "./admin-config";
+import { adminRouteItems, type AdminRouteItem } from "./route-config";
 import { hasPermissions, hasRole } from "../utils/helper";
 import { Permission } from "../interfaces/permission";
 import { useAuth } from "../context/AuthContext";
@@ -8,7 +8,7 @@ import { UserRole } from "../constants/role";
 import { RolePermission } from "../interfaces/role";
 
 const Login = lazy(() =>
-  import("@/app/pages/admin/login").then((m) => ({ default: m.Login }))
+  import("@/app/pages/login").then((m) => ({ default: m.Login }))
 );
 
 const ProtectedRoute = lazy(() =>
@@ -18,19 +18,19 @@ const ProtectedRoute = lazy(() =>
 );
 
 const AdminLayout = lazy(() =>
-  import("@/app/pages/admin/layout").then((m) => ({ default: m.AdminLayout }))
+  import("@/app/pages/layout").then((m) => ({ default: m.AdminLayout }))
 );
 
 const SSO = lazy(() =>
-  import("@/app/pages/admin/sso").then((m) => ({ default: m.SSO })),
+  import("@/app/pages/sso").then((m) => ({ default: m.SSO })),
 );
 
 const Unauthorized = lazy(() =>
-  import("@/app/pages/admin/unauthorized").then((m) => ({ default: m.Unauthorized })),
+  import("@/app/pages/unauthorized").then((m) => ({ default: m.Unauthorized })),
 );
 
 const Error = lazy(() =>
-  import("@/app/pages/admin/error").then((m) => ({ default: m.Error })),
+  import("@/app/pages/error").then((m) => ({ default: m.Error })),
 );
 
 
@@ -85,17 +85,17 @@ function mapAdminRoutes(items: AdminRouteItem[]): RouteObject[] {
 }
 
 export const adminRoutes: RouteObject[] = [
-  { path: "/admin/login", element: <Login /> },
+  { path: "/", element: <Login /> },
   {
-    path: "/admin/unauthorized",
+    path: "/unauthorized",
     element: <Unauthorized />
   },
   {
-    path: "/admin/error",
+    path: "/error",
     element: <Error />
   },
   { 
-    path: "/admin/sso", 
+    path: "/sso", 
     element: <SSO /> 
   },
   {
