@@ -34,6 +34,11 @@ const Sustainability = lazy(() =>
     default: m.Sustainability,
   })),
 );
+const Investors = lazy(() =>
+  import("@/app/pages/client/investors").then((m) => ({
+    default: m.Investors,
+  })),
+);
 
 export const clientRoutes: RouteObject[] = [
   {
@@ -45,8 +50,9 @@ export const clientRoutes: RouteObject[] = [
       { path: "impact", element: <ImpactPage /> },
       { path: "sustainability", element: <Sustainability /> },
       { path: "careers", element: <Careers /> },
-      { path: "contact", element: <Contact /> },
       { path: "careers/job/:jobId", element: <JobDetails /> },
+      { path: "contact", element: <Contact /> },
+      { path:"investors", element: <Investors /> },
     ],
   },
 ];
