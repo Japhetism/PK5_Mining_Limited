@@ -47,10 +47,10 @@ export function Header() {
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About Us" },
-    { path: "/careers", label: "Careers" },
-    { path: "/contact", label: "Contact" },
     { path: "", label: "Responsibilities", children: responsibilityLinks },
     { path: "/investors", label: "Investors" },
+    { path: "/careers", label: "Careers" },
+    { path: "/contact", label: "Contact" },
   ];
 
   // const allNavLinks = [...navLinks];

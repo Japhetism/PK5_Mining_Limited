@@ -63,7 +63,7 @@ export function Investors() {
 
     setTimeout(() => {
       setError(
-        "Investor portal access is currently unavailable. Please contact Investor Relations or the system administrator for account activation and access details.",
+        "The login credentials provided are invalid. Please contact the Investor Relations team or email investment@pk5miningltd.com for support and assistance.",
       );
       setIsLoading(false);
     }, 1000);
@@ -87,7 +87,7 @@ export function Investors() {
   };
 
   return (
-    <div className="relative w-full overflow-x-hidden pt-20">
+    <div className="relative w-full pt-25">
       {/* ── Background ────────────────────────────────────────── */}
       <div className="absolute inset-0" style={{ zIndex: 0 }}>
         <ImageWithFallback
