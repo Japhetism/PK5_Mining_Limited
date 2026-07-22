@@ -40,17 +40,36 @@ export function ApplicationList() {
       header: "Candidate",
       render: (app) => (
         <div>
-          <div className="font-semibold text-gray-100">
+          <div
+            className="text-[18px] font-semibold"
+            style={{ color: colors.text }}
+          >
             {app.firstName} {app.lastName}
           </div>
-          <div className="text-xs text-gray-500">{app.email}</div>
+          <div className="text-[15px]" style={{ color: colors.text }}>
+            {app.email}
+          </div>
         </div>
       ),
     },
     {
       key: "job",
-      header: "Job Applied For",
-      render: (app) => app?.job?.title ?? "-",
+      header: "Job Role",
+      render: (app) => (
+        <div>
+          <div
+            className="text-[16px]"
+            style={{ color: colors.text }}
+          >
+            {app?.job?.title ?? "-"}
+          </div>
+          {app?.job?.id && (
+            <div className="text-[15px]" style={{ color: colors.text }}>
+              {app?.job?.id}
+            </div>
+          )}
+        </div>
+      ),
     },
     ...(isAgro
       ? []
@@ -70,12 +89,12 @@ export function ApplicationList() {
     },
     {
       key: "submitted",
-      header: "Submitted",
+      header: "Date Submitted",
       render: (app) => formatDateTime(app.dT_Created),
     },
     {
       key: "modified",
-      header: "Modified",
+      header: "Date Modified",
       render: (app) => formatDateTime(app.dT_Modified),
     },
     {
@@ -85,13 +104,16 @@ export function ApplicationList() {
       className: "text-right",
       render: (app) => (
         <Link
-          to={`/admin/applications/${app.id}`}
-          title="View application details"
+          to={`/admin/candidates/${app.id}`}
+          title="View candidate application details"
           onClick={() => {
             queryClient.setQueryData(["applications", String(app.id)], app);
           }}
         >
-          <button className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-700 text-xs text-gray-100 hover:border-[#c89b3c]">
+          <button
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[16px]"
+            style={{ backgroundColor: colors.accent, color: colors.card }}
+          >
             <Users className="w-3 h-3" />
             View
           </button>
@@ -105,9 +127,15 @@ export function ApplicationList() {
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold mb-1">Applications</h1>
-          <p className="text-sm text-gray-400">
-            Review incoming applications, update status, and download resumes.
+          <h1
+            className="text-[18px] font-bold mb-1"
+            style={{ color: colors.text }}
+          >
+            Candidates
+          </h1>
+          <p className="text-[15px]" style={{ color: colors.text }}>
+            Evaluate incoming candidate applications, manage status updates, and
+            retrieve resumes.
           </p>
         </div>
       </div>
@@ -121,10 +149,9 @@ export function ApplicationList() {
               value={filters.email}
               onChange={(e) => updateFilter("email", e.target.value)}
               placeholder="Search by email"
-              className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg px-4 py-3 text-sm text-gray-200"
+              className="w-full rounded-lg px-4 py-3 text-[16px]"
               style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
+                backgroundColor: colors.textInputBgColor,
                 color: colors.text,
               }}
             />

@@ -41,10 +41,10 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
         });
 
   return (
-    <div className={`overflow-x-auto ${className}`}>
+    <div className={`overflow-x-auto ${className}`} style={{ backgroundColor: colors.card }}>
       <table className="min-w-full text-sm">
         {showHeader && (
-          <thead className="text-gray-300" style={{ background: colors.bg }}>
+          <thead style={{ background: colors.tableLoaderColor, borderColor: colors.tableBorderColor }}>
             <tr>
               {Array.from({ length: cols }).map((_, i) => (
                 <th key={`h-${i}`} className="px-4 py-3 text-left font-medium">
@@ -63,7 +63,7 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
             <tr
               key={`r-${r}`}
               className="border-t border-gray-800 hover:bg-white/5"
-              style={{ background: colors.bg }}
+              style={{ background: colors.tableLoaderColor, borderColor: colors.tableBorderColor }}
             >
               {Array.from({ length: cols }).map((_, c) => (
                 <td key={`c-${r}-${c}`} className="px-4 py-3 align-top">

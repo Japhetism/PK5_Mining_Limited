@@ -7,7 +7,7 @@ import { getBestAdminRoute } from "@/app/utils/helper";
 export function SSO() {
   const { user, isLoading, isUnauthorized, isServerError } = useAuth();
   const {
-    colors: { bg },
+    colors,
     logo,
     name,
   } = useTenant();
@@ -38,7 +38,7 @@ export function SSO() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center p-6"
-      style={{ backgroundColor: bg }}
+      style={{ backgroundColor: colors.outletBgColor }}
     >
       <div className="flex flex-col items-center animate-pulse">
         <div className="mb-8">
@@ -51,11 +51,11 @@ export function SSO() {
         </div>
 
         <div className="flex flex-col items-center space-y-2">
-          <p className="text-[#c89b3c] text-sm font-semibold tracking-[0.2em] uppercase">
+          <p className="text-[16px] font-semibold tracking-[0.2em] uppercase" style={{ color: colors.text }}>
             Completing Secure Connection
           </p>
 
-          <span className="text-gray-500 text-xs font-medium">
+          <span className="text-[14px] font-medium" style={{ color: colors.text }}>
             Finalizing account synchronization...
           </span>
         </div>

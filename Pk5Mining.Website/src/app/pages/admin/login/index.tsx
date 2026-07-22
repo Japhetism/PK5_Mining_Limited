@@ -87,7 +87,7 @@ export function Login() {
           Email Address
         </p>
 
-        <LoginForm />
+        <LoginForm btnBgColor={data.btnBgColor} />
       </div>
     </div>
   );

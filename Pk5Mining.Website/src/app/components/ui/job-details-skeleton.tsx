@@ -60,7 +60,7 @@ export const JobDetailsSkeleton: React.FC<JobDetailsSkeletonProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: description */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="border border-gray-800 rounded-xl p-5" style={{ background: colors.bg }}>
+          <div className="rounded-xl p-5" style={{ background: colors.tableHeaderBgColor }}>
             <div className="space-y-3">
               <Skel className="h-4 w-[92%]" backgroundColor={colors.card} />
               <Skel className="h-4 w-[88%]" backgroundColor={colors.card} />
@@ -80,7 +80,7 @@ export const JobDetailsSkeleton: React.FC<JobDetailsSkeletonProps> = ({
 
         {/* Right: side card */}
         <div className="space-y-4">
-          <div className="border border-gray-800 rounded-xl p-4 text-sm" style={{ background: colors.bg }}>
+          <div className="rounded-xl p-4 text-sm" style={{ background: colors.tableHeaderBgColor }}>
             {/* Status label */}
             <Skel className="h-3 w-16 mb-2" backgroundColor={colors.card} />
             {/* Status pill */}

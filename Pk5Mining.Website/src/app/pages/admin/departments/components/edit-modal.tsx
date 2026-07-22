@@ -47,7 +47,7 @@ export function EditModal({
         <div>
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-200 truncate">
+              <p className="text-[18px] font-semibold truncate" style={{ color: colors.text }}>
                 {form.id ? "Update" : "Create"} Department
               </p>
             </div>
@@ -56,7 +56,8 @@ export function EditModal({
               <button
                 type="button"
                 onClick={() => onClose()}
-                className="p-2 rounded-md hover:bg-white/10 text-gray-300"
+                className="p-2 rounded-md text-[15px]"
+                style={{ color: colors.text }}
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -66,12 +67,11 @@ export function EditModal({
 
           <div className="relative w-full h-full">
             <form
-              // onSubmit={onSubmit}
               className="p-6 space-y-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                  <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
                     Name
                     <span className="ml-1 text-red-500">*</span>
                   </label>
@@ -93,12 +93,11 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 text-[16px] rounded-lg focus:outline-none transition-colors
                       ${fieldErrors.name ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
                     style={{
-                      backgroundColor: colors.card,
-                      borderColor: colors.border,
+                      backgroundColor: colors.textInputBgColor,
                       color: colors.text,
                     }}
                   />
@@ -109,7 +108,7 @@ export function EditModal({
                   )}
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-2">
+                  <label className="block text-[16px] font-semibold mb-2" style={{ color: colors.text }}>
                     Description
                   </label>
                   <motion.textarea
@@ -130,12 +129,11 @@ export function EditModal({
                         });
                       }
                     }}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none transition-colors
+                    className={`w-full px-4 py-3 rounded-lg text-[16px] focus:outline-none transition-colors
                       ${fieldErrors.description ? "border-red-500" : "border-gray-800"}
                       focus:border-[#c89b3c]`}
                     style={{
-                      backgroundColor: colors.card,
-                      borderColor: colors.border,
+                      backgroundColor: colors.textInputBgColor,
                       color: colors.text,
                     }}
                   />
@@ -154,7 +152,8 @@ export function EditModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 disabled:opacity-50"
+            className="px-6 py-2 rounded-lg border border-gray-700 text-[16px] disabled:opacity-50"
+            style={{ color: colors.text }}
           >
             Close
           </button>
@@ -165,7 +164,8 @@ export function EditModal({
             disabled={loading}
             whileHover={!loading ? { scale: 1.02 } : undefined}
             whileTap={!loading ? { scale: 0.98 } : undefined}
-            className="px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] disabled:opacity-70"
+            className="px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-70"
+            style={{ backgroundColor: colors.accent, color: colors.card }}
           >
             {loading ? "Processing..." : form.id ? "Update" : "Create"}
           </motion.button>

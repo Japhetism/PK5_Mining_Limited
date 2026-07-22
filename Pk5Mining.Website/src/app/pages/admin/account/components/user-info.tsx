@@ -13,15 +13,21 @@ export function UserInfo() {
     value?: string | number | null;
   }) => (
     <div className="py-4 border-b border-gray-800 last:border-none">
-      <p className="text-xs text-gray-400">{label}</p>
-      <p className="mt-1 text-sm text-white font-medium">{value || "-"}</p>
+      <p className="text-[16px]" style={{ color: colors.text }}>
+        {label}
+      </p>
+      <p className="mt-1 text-[16px] font-medium" style={{ color: colors.text }}>
+        {value || "-"}
+      </p>
     </div>
   );
 
   return (
-    <div className="rounded-2xl border border-gray-800 px-6" style={{ background: colors.card }}>
+    <div className="rounded-2xl px-6" style={{ background: colors.card }}>
       <div className="py-4 border-b border-gray-800">
-        <h2 className="text-white font-semibold">Profile Information</h2>
+        <h2 className="font-semibold text-[18px]" style={{ color: colors.text }}>
+          Profile Information
+        </h2>
       </div>
 
       <Item label="First Name" value={user?.firstName} />

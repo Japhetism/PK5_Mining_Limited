@@ -50,6 +50,7 @@ import InvestorPresentation from "../../assets/documents/PK5_Investor_Presentati
 
 export const minerals: IMineral[] = [
   {
+    index: 1,
     name: "Iron Ore",
     image:
       "https://images.unsplash.com/photo-1696999504253-c9e8f16315ad?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8SXJvbiUyME9yZXxlbnwwfHwwfHx8MA%3D%3D",
@@ -57,6 +58,7 @@ export const minerals: IMineral[] = [
     purity: "99.2%",
   },
   {
+    index: 2,
     name: "Tin Ore",
     image:
       "https://images.unsplash.com/photo-1686828282201-858515e59322?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaW5lcmFsJTIwcm9ja3MlMjBzdG9uZXN8ZW58MXx8fHwxNzY5MDc3NTE0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -64,6 +66,7 @@ export const minerals: IMineral[] = [
     purity: "99.85%",
   },
   {
+    index: 3,
     name: "Copper",
     image:
       "https://images.unsplash.com/photo-1764022276404-85682f38ae35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3BwZXIlMjBvcmUlMjBtaW5lcmFsfGVufDF8fHx8MTc2OTA3NjkyOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -128,14 +131,13 @@ export const locations: ILocation[] = [
       "2/4, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
     actualAddress:
       "2/4, Nza Street, Independence Layout Enugu, Enugu State, Nigeria",
-      type: "Enugu, Nigeria Office",
+    type: "Enugu, Nigeria Office",
   },
   {
     displayAddress: "No. 5B, Ikosi Road, Oregun, Ikeja, Lagos, Nigeria",
     actualAddress: "No. 5B, Ikosi Road, Oregun, Ikeja, Lagos, Nigeria",
     type: "Lagos, Nigeria Office",
   },
-
 ];
 
 export const telephone: string = "+2348081254905";
@@ -271,7 +273,7 @@ export const initiatives: IInitiative[] = [
   },
   {
     title: "Community Engagement & Development",
-description:
+    description:
       "We are actively involving local communities in decision-making processes and supporting initiatives that promote social and economic growth.",
     icon: Droplet,
   },
@@ -283,7 +285,8 @@ description:
   },
   {
     title: "Transparent Governance Structure",
-    description: "We maintain clear and accountable leadership practices that foster trust and ethical management within the organization.",
+    description:
+      "We maintain clear and accountable leadership practices that foster trust and ethical management within the organization.",
     icon: Leaf,
   },
 ];

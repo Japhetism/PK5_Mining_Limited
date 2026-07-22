@@ -12,6 +12,7 @@ export const LOGIN_CONTENT = {
     formBgImage: agrologinbg,
     bgAlt: "PK5 Agro Allied operations background",
     logoAlt: "PK5 Agro Allied logo",
+    btnBgColor: "#072C1E",
     headline: (
       <>
         Powering the Future of 
@@ -33,6 +34,7 @@ export const LOGIN_CONTENT = {
     formBgImage: miningFormBgImg,
     bgAlt: "PK5 Mining operations background",
     logoAlt: "PK5 Mining logo",
+    btnBgColor: "#1a1a1a",
     headline: (
       <>
         Powering the Future

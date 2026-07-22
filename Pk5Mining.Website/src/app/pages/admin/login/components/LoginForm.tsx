@@ -1,10 +1,12 @@
 import { MailIcon } from "lucide-react";
 import { ArrowRight } from "@/assets/svgs/arrowRight";
 import useLoginViewModel from "../viewmodel";
-import { useTenant } from "@/tenants/useTenant";
 
-export function LoginForm() {
-  const { colors } = useTenant();
+interface LoginFormProps {
+  btnBgColor: string;
+}
+
+export function LoginForm({ btnBgColor }: LoginFormProps) {
   const { email, error, setEmail, handleSSOSignin, handleSSOSigninByEmail } =
     useLoginViewModel();
 
@@ -67,7 +69,7 @@ export function LoginForm() {
       <button
         type="button"
         onClick={handleSSOSignin}
-        style={{ backgroundColor: colors.card }}
+        style={{ backgroundColor: btnBgColor }}
         className="h-[49.5px] relative rounded-[10.395px] shrink-0 w-full cursor-pointer hover:bg-[#111] active:scale-[0.98] transition-all"
       >
         <div className="relative flex items-center justify-center w-full h-full rounded-[10.395px] border border-white/80  overflow-hidden"

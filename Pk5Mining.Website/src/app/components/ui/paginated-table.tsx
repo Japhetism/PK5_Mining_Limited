@@ -93,12 +93,13 @@ export function PaginatedTable<T>({
               {/* Fields */}
               {dataColumns.map((col) => (
                 <div key={col.key} className="flex justify-between gap-4">
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs" style={{ color: colors.subtext }}>
                     {col.header}
                   </span>
 
                   <span
-                    className={`text-sm text-gray-200 text-right ${col.className ?? ""}`}
+                    className={`text-sm text-right ${col.className ?? ""}`}
+                    style={{ color: colors.text }}
                   >
                     {col.render(row)}
                   </span>
@@ -111,7 +112,7 @@ export function PaginatedTable<T>({
       </div>
 
       {/* DESKTOP TABLE */}
-      <div className="hidden md:block border rounded-xl overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+      <div className="hidden md:block border rounded-xl overflow-hidden" style={{ backgroundColor: colors.card }}>
         <div className="overflow-x-auto">
 
           {isLoading ? (
@@ -119,12 +120,13 @@ export function PaginatedTable<T>({
           ) : (
             <table className="min-w-full text-sm">
 
-              <thead className="text-gray-300" style={{ background: colors.bg }}>
+              <thead className="h-[48px]" style={{ background: colors.tableHeaderBgColor, borderColor: colors.tableBorderColor, color: colors.text }}>
                 <tr>
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`px-4 py-3 font-medium text-left ${col.headerClassName ?? ""}`}
+                      className={`px-4 py-4 font-medium text-left text-[18px] ${col.headerClassName ?? ""}`}
+                      style={{ color: colors.text }}
                     >
                       {col.header}
                     </th>
@@ -137,7 +139,7 @@ export function PaginatedTable<T>({
                   <tr>
                     <td
                       colSpan={columns.length}
-                      className="px-4 py-6 text-center text-sm"
+                      className="px-4 py-6 text-center text-[16px]"
                       style={{ color: colors.text }}
                     >
                       {emptyMessage}
@@ -147,13 +149,13 @@ export function PaginatedTable<T>({
                   data.map((row, i) => (
                     <tr
                       key={i}
-                      className="border-t border-gray-800 hover:bg-white/5"
+                      className="border-t hover:bg-black/5"
                     >
                       {columns.map((col) => (
                         <td
                           key={col.key}
-                          className={`px-4 py-3 align-top ${col.className ?? ""}`}
-                          style={{ color: colors.text }}
+                          className={`px-4 py-3 text-[16px] ${col.className ?? ""}`}
+                          style={{ color: colors.text, borderColor: colors.tableBorderColor }}
                         >
                           {col.render(row)}
                         </td>
@@ -170,30 +172,33 @@ export function PaginatedTable<T>({
 
       {/* PAGINATION (MOBILE + DESKTOP) */}
       {!isLoading && totalCount > 0 && (
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-3 border rounded-xl" style={{ background: colors.card, borderColor: colors.border }}>
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-4 border rounded-xl" style={{ background: colors.card, borderColor: colors.tableBorderColor }}>
 
-          <div className="text-xs" style={{ color: colors.text }}>
+          <div className="text-[14px]" style={{ color: colors.text }}>
             Showing {from}–{to} of {totalCount}
           </div>
 
           <div className="flex items-center gap-3">
 
             {/* Page Size */}
-            <select
-              value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value));
-                setPageNumber(1);
-              }}
-              className="rounded-lg px-3 py-2 text-sm text-gray-200"
-              style={{ backgroundColor: colors.card, borderColor: colors.border, color: colors.text }}
+            <div
+              className="rounded-full pr-3 px-3 py-1 border text-[14px]"
+              style={{ backgroundColor: colors.card, borderColor: colors.tableBorderColor, color: colors.text }}
             >
-              {pageSizeOptions.map((size) => (
-                <option key={size} value={size}>
-                  {size} / page
-                </option>
-              ))}
-            </select>
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setPageNumber(1);
+                }}
+              >
+                {pageSizeOptions.map((size) => (
+                  <option key={size} value={size}>
+                    {size} per page
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Previous */}
             <button
@@ -201,10 +206,9 @@ export function PaginatedTable<T>({
                 setPageNumber(Math.max(1, pageNumber - 1))
               }
               disabled={pageNumber === 1}
-              className="inline-flex items-center px-3 py-2 rounded-lg border hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ borderColor: colors.border, color: colors.text }}
+              className="inline-flex items-center hover:bg-black/5 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-8 h-8" style={{ color: colors.paginatiionIconColor }} />
             </button>
 
             {/* Next */}
@@ -213,10 +217,9 @@ export function PaginatedTable<T>({
                 setPageNumber(Math.min(totalPages, pageNumber + 1))
               }
               disabled={pageNumber === totalPages}
-              className="inline-flex items-center px-3 py-2 rounded-lg border hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ borderColor: colors.border, color: colors.text }}
+              className="inline-flex items-center hover:bg-black/5 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-8 h-8" style={{ color: colors.paginatiionIconColor }} />
             </button>
 
           </div>

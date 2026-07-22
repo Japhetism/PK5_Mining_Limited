@@ -85,18 +85,20 @@ export function Modal({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.15 }}
         className={`relative w-full ${widthMap[maxWidth]} ${heightMap[height]} rounded-xl border border-gray-800 shadow-xl overflow-hidden ${panelClassName}`}
-        style={{ background: colors.bg }}
+        style={{ background: colors.card }}
         onMouseDown={(e) => e.stopPropagation()}
       >
         {(title || subtitle || headerActions || showCloseButton) && (
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
             <div className="min-w-0">
               {title && (
-                <p className="text-sm font-semibold text-gray-200 truncate">
+                <p className="text-[16px] font-semibold truncate" style={{ color: colors.text }}>
                   {title}
                 </p>
               )}
-              {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+              {subtitle && <p className="text-[15px]" style={{ color: colors.text }}>
+                {subtitle}
+              </p>}
             </div>
 
             <div className="flex items-center gap-2">
@@ -108,6 +110,7 @@ export function Modal({
                   onClick={onClose}
                   className="p-2 rounded-md hover:bg-white/10 text-gray-300"
                   title="Close"
+                  style={{ color: colors.text }}
                 >
                   <X className="w-4 h-4" />
                 </button>

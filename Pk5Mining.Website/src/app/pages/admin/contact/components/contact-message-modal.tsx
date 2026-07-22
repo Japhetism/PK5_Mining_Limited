@@ -40,18 +40,19 @@ export function ContactViewModal({
       showCloseButton={false}
       panelClassName="bg-[#0a0a0a] border border-gray-800"
     >
-      <div className="flex flex-col max-h-[90vh] overflow-y-auto">
+      <div className="flex flex-col max-h-[90vh] overflow-y-auto" style={{ color: colors.text }}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+        <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <Mail className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold capitalize">
+            <Mail className="w-5 h-5" />
+            <h2 className="text-[18px] font-semibold capitalize">
               {contact?.subject}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-md hover:bg-white/10 text-gray-400 transition-colors"
+            className="p-2 rounded-md hover:bg-white/10 transition-colors"
+            style={{ color: colors.text }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -59,12 +60,12 @@ export function ContactViewModal({
 
         {/* Sender Info & Metadata */}
         <div
-          className="p-4 sm:p-5 space-y-4 border-b border-gray-800"
-          style={{ background: colors.bg }}
+          className="p-4 sm:p-5 space-y-4"
+          style={{ background: colors.outletBgColor }}
         >
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             {/* Left side metadata */}
-            <div className="flex flex-col gap-2 text-sm text-gray-400">
+            <div className="flex flex-col gap-2 text-[16px]" style={{ color: colors.text }}>
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4" />
                 <span className="capitalize">
@@ -76,7 +77,6 @@ export function ContactViewModal({
                   <Mail className="w-4 h-4" />
                   <a
                     href={`mailto:${contact.email}`}
-                    className="underline text-gray-200"
                   >
                     {contact.email}
                   </a>
@@ -103,7 +103,7 @@ export function ContactViewModal({
             </div>
 
             {/* Right side status */}
-            <div className="text-sm flex items-start">
+            <div className="text-[16px] flex items-start capitalize" style={{ color: colors.text }}>
               <span className="mr-2">Status:</span>{" "}
               <ContactStatusPill status={contact?.status ?? "new"} />
             </div>
@@ -111,18 +111,19 @@ export function ContactViewModal({
         </div>
 
         {/* Message Body */}
-        <div className="p-4 sm:p-5 flex-1 overflow-auto">
-          <div className="rounded-lg border border-gray-800 bg-black/20 p-4 text-sm text-gray-100 whitespace-pre-wrap break-words shadow-sm">
+        <div className="overflow-auto mt-5">
+          <div className="rounded-lg p-4 text-[16px] whitespace-pre-wrap break-words shadow-sm" style={{ background: colors.outletBgColor, color: colors.text }}>
             {contact?.messageBody}
           </div>
         </div>
 
         {/* Action Footer */}
-        <div className="flex justify-end gap-3 p-4 border-t border-gray-800 bg-black/20">
+        <div className="flex justify-end gap-3 p-4 border-t border-gray-800" style={{ background: colors.card }}>
           <button
             onClick={onClose}
             disabled={loading || !contact}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-xs text-gray-300 hover:bg-white/5 transition-colors disabled:opacity-50"
+            className="inline-flex border items-center gap-2 px-6 py-2 rounded-lg text-[16px] transition-colors disabled:opacity-50"
+            style={{ background: colors.card, color: colors.text, borderColor: colors.border }}
           >
             Close
           </button>
@@ -132,7 +133,8 @@ export function ContactViewModal({
               <button
                 onClick={() => onUpdateStatus("resolved")}
                 disabled={loading || !contact}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c89b3c] text-black text-xs font-semibold hover:bg-[#d4a84a] transition-transform active:scale-95 disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-6 py-2 rounded-lg text-[16px] font-semibold transition-transform active:scale-95 disabled:opacity-50"
+                style={{ background: colors.accent, color: colors.card }}
               >
                 {!loading && <CheckCircle2 size={14} />}
                 {loading ? "Processing..." : "Mark as Resolved"}

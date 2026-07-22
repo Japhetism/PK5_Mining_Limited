@@ -1,5 +1,7 @@
 import { ContactStatus } from "@/app/interfaces";
 
+export const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+
 export const AUTH_KEY = "auth_state";
 
 export const jobTypes = [
@@ -92,39 +94,45 @@ export const statusStyles: Record<
   { bg: string; text: string; dot: string }
 > = {
   new: {
-    bg: "bg-blue-500/10",
-    text: "text-blue-400",
-    dot: "bg-blue-400",
+    bg: "bg-[#DBEAFE]",
+    text: "text-[#1E3A8A]",
+    dot: "bg-[#2563EB]",
   },
+
   "in review": {
-    bg: "bg-amber-500/10",
-    text: "text-amber-400",
-    dot: "bg-amber-400",
+    bg: "bg-[#FEF3C7]",
+    text: "text-[#92400E]",
+    dot: "bg-[#D97706]",
   },
+
   shortlisted: {
-    bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-    dot: "bg-emerald-400",
+    bg: "bg-[#B9F6B5]",
+    text: "text-[#111827]",
+    dot: "bg-[#308A1E]",
   },
+
   "interview scheduled": {
-    bg: "bg-cyan-500/10",
-    text: "text-cyan-400",
-    dot: "bg-cyan-400",
+    bg: "bg-[#CFFAFE]",
+    text: "text-[#155E75]",
+    dot: "bg-[#0891B2]",
   },
+
   "offer sent": {
-    bg: "bg-indigo-500/10",
-    text: "text-indigo-400",
-    dot: "bg-indigo-400",
+    bg: "bg-[#E0E7FF]",
+    text: "text-[#3730A3]",
+    dot: "bg-[#4F46E5]",
   },
+
   hired: {
-    bg: "bg-purple-500/10",
-    text: "text-purple-400",
-    dot: "bg-purple-400",
+    bg: "bg-[#F3E8FF]",
+    text: "text-[#6B21A8]",
+    dot: "bg-[#9333EA]",
   },
+
   rejected: {
-    bg: "bg-red-500/10",
-    text: "text-red-400",
-    dot: "bg-red-400",
+    bg: "bg-[#F6C2B5]",
+    text: "text-[#111827]",
+    dot: "bg-[#BF3E17]",
   },
 };
 

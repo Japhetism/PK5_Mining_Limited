@@ -19,30 +19,30 @@ export function Unauthorized() {
   return (
     <div
       className="min-h-screen text-white flex items-center justify-center px-6"
-      style={{ backgroundColor: colors.bg }}
+      style={{ backgroundColor: colors.outletBgColor }}
     >
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="w-full max-w-xl border border-gray-800 rounded-xl p-8 md:p-10 shadow-2xl relative overflow-hidden"
+        className="w-full max-w-xl rounded-xl p-8 md:p-10 shadow-2xl relative overflow-hidden"
         style={{ backgroundColor: colors.card }}
       >
-        <div className="flex items-center gap-4 border-b border-gray-800 pb-6 mb-6">
-          <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center justify-center shrink-0">
-            <ShieldAlert className="w-6 h-6 text-amber-500" />
+        <div className="flex items-center gap-4 border-b border-black/5 pb-6 mb-6">
+          <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0">
+            <ShieldAlert className="w-6 h-6" style={{ color: colors.accent }} />
           </div>
           <div>
-            <span className="text-xs font-mono tracking-widest text-amber-400 uppercase font-bold">
+            <span className="text-[16px] font-mono tracking-widest uppercase font-bold" style={{ color: colors.accent }}>
               Auth Status: 401 Profile Missing
             </span>
-            <h1 className="text-2xl font-bold tracking-tight" style={{ color: colors.text }}>
+            <h1 className="text-[18px] font-bold tracking-tight" style={{ color: colors.text }}>
               Unprovisioned Account
             </h1>
           </div>
         </div>
 
-        <div className="space-y-4 text-sm text-gray-400 leading-relaxed mb-8">
+        <div className="space-y-4 text-[16px] leading-relaxed mb-8" style={{ color: colors.text }}>
           <p>
             Your Microsoft SSO authentication was successful, but your corporate account hasn't been granted access to this portal's database yet.
           </p>
@@ -51,32 +51,32 @@ export function Unauthorized() {
           </p>
         </div>
 
-        <div className="bg-black/20 border border-gray-800 rounded-xl p-5 mb-8 space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
+        <div className="rounded-xl p-5 mb-8 space-y-4" style={{ backgroundColor: colors.innerCard }}>
+          <h3 className="text-[16px] font-bold uppercase tracking-wider" style={{ color: colors.text }}>
             Required Actions
           </h3>
 
           <div className="flex gap-3 items-start">
-            <UserPlus className="w-4 h-4 text-[#c89b3c] mt-0.5 shrink-0" />
+            <UserPlus className="w-4 h-4 mt-0.5 shrink-0" style={{ color: colors.accent }} />
             <div>
-              <p className="text-sm font-semibold text-gray-200" style={{ color: colors.text }}>
+              <p className="text-[15px] font-semibold" style={{ color: colors.text }}>
                 Request Portal Provisioning
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="text-[14px] mt-0.5" style={{ color: colors.text }}>
                 Ask your manager or department head to submit an access request to add your corporate email to the portal whitelist.
               </p>
             </div>
           </div>
 
-          <div className="h-[1px] bg-gray-800 w-full" />
+          <div className="h-[1px] bg-black/5 w-full" />
 
           <div className="flex gap-3 items-start">
-            <Mail className="w-4 h-4 text-[#c89b3c] mt-0.5 shrink-0" />
+            <Mail className="w-4 h-4 mt-0.5 shrink-0" style={{ color: colors.accent }} />
             <div>
-              <p className="text-sm font-semibold text-gray-200" style={{ color: colors.text }}>
+              <p className="text-[15px] font-semibold" style={{ color: colors.text }}>
                 Contact App Administration
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="text-[14px] mt-0.5" style={{ color: colors.text }}>
                 If an administrator has already added you, the change might need a moment to propagate. For urgent issues, contact App Admin: 
               </p>
             </div>
@@ -88,7 +88,8 @@ export function Unauthorized() {
             type="button"
             whileHover={!isLoading ? { scale: 1.01 } : undefined}
             whileTap={!isLoading ? { scale: 0.99 } : undefined}
-            className="w-full px-6 py-3 bg-[#c89b3c] text-black font-bold rounded-lg hover:bg-[#d4a84a] transition-colors flex items-center justify-center gap-2"
+            className="w-full px-6 py-3 font-bold rounded-lg text-[16px] transition-colors flex items-center justify-center gap-2"
+            style={{ backgroundColor: colors.accent, color: colors.card }}
             onClick={logout}
             disabled={isLoading}
           >
