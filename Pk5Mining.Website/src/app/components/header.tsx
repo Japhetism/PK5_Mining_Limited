@@ -8,7 +8,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
 
@@ -28,7 +28,7 @@ export function Header() {
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setDropdownOpen(false);
+        setDropdownOpen(null);
       }
     };
 
@@ -38,17 +38,19 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dropdownOpen]);
 
-  const navLinks = [
-    { path: "/", label: "Home" },
-    { path: "/about", label: "About Us" },
-    { path: "/careers", label: "Careers" },
-    { path: "/contact", label: "Contact" },
-  ];
-
   const responsibilityLinks = [
     { path: "/operations", label: "Operations" },
     { path: "/sustainability", label: "Sustainability" },
     { path: "/impact", label: "Impact" },
+  ];
+
+  const navLinks = [
+    { path: "/", label: "Home" },
+    { path: "/about", label: "About Us" },
+    { path: "", label: "Responsibilities", children: responsibilityLinks },
+    { path: "/investors", label: "Investors" },
+    { path: "/careers", label: "Careers" },
+    { path: "/contact", label: "Contact" },
   ];
 
   // const allNavLinks = [...navLinks];
@@ -82,133 +84,151 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-10">
-          {navLinks.map((link) => (
-            <Link key={link.path} to={link.path} className="relative group">
-              <motion.span
-                className={`text-sm font-medium transition-colors ${
-                  location.pathname === link.path
-                    ? "text-[#D4AF37]"
-                    : "text-[#a0a0a0] group-hover:text-white"
-                }`}
-                whileHover={{ y: -2 }}
-                transition={{ duration: 0.2 }}
-              >
-                {link.label}
-              </motion.span>
-              {location.pathname === link.path && (
-                <motion.div
-                  layoutId="activeNav"
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#E5C158]"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            if (link.children?.length) {
+              const isActive = link.children.some(
+                (child) => location.pathname === child.path,
+              );
 
-          {/* Our Responsibility Dropdown */}
-          <div
-            ref={dropdownRef}
-            className="relative"
-            onMouseEnter={() => setDropdownOpen(true)}
-            onMouseLeave={() => setDropdownOpen(false)}
-          >
-            <button className="relative group flex items-center gap-1.5">
-              <motion.span
-                className={`text-sm font-medium transition-colors ${
-                  isResponsibilityActive
-                    ? "text-[#D4AF37]"
-                    : "text-[#a0a0a0] group-hover:text-white"
-                }`}
-                whileHover={{ y: -2 }}
-                transition={{ duration: 0.2 }}
-              >
-                Responsibilities
-              </motion.span>
-              <motion.div
-                animate={{ rotate: dropdownOpen ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ChevronDown
-                  size={16}
-                  className={`transition-colors ${
-                    isResponsibilityActive
+              return (
+                <div
+                  key={link.label}
+                  ref={dropdownRef}
+                  className="relative"
+                  onMouseEnter={() => setDropdownOpen(link.label)}
+                  onMouseLeave={() => setDropdownOpen(null)}
+                >
+                  <button className="relative group flex items-center gap-1.5">
+                    <motion.span
+                      className={`text-sm font-medium transition-colors ${
+                        isActive
+                          ? "text-[#D4AF37]"
+                          : "text-[#a0a0a0] group-hover:text-white"
+                      }`}
+                      whileHover={{ y: -2 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {link.label}
+                    </motion.span>
+
+                    <motion.div
+                      animate={{ rotate: dropdownOpen ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ChevronDown
+                        size={16}
+                        className={`transition-colors ${
+                          isActive
+                            ? "text-[#D4AF37]"
+                            : "text-[#a0a0a0] group-hover:text-white"
+                        }`}
+                      />
+                    </motion.div>
+
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNav"
+                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#E5C158]"
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                  </button>
+
+                  {/* Your existing dropdown unchanged */}
+                  <AnimatePresence>
+                    {dropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{
+                          duration: 0.2,
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                        }}
+                        className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-64"
+                      >
+                        <div
+                          className="rounded-xl overflow-hidden shadow-2xl border border-[#D4AF37]/20"
+                          style={{
+                            background: "rgba(10, 10, 10, 0.98)",
+                            backdropFilter: "blur(20px)",
+                          }}
+                        >
+                          <div className="h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent" />
+
+                          <div className="py-2">
+                            {link.children.map((child, index) => (
+                              <Link
+                                key={child.path}
+                                to={child.path}
+                                className="block"
+                                onClick={() => setDropdownOpen(null)}
+                              >
+                                <motion.div
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.05 }}
+                                  className={`px-5 py-3.5 transition-all duration-200 ${
+                                    location.pathname === child.path
+                                      ? "bg-[#D4AF37]/15 text-[#D4AF37] border-l-2 border-[#D4AF37]"
+                                      : "text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-white border-l-2 border-transparent"
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium">
+                                      {child.label}
+                                    </span>
+
+                                    {location.pathname === child.path && (
+                                      <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"
+                                      />
+                                    )}
+                                  </div>
+                                </motion.div>
+                              </Link>
+                            ))}
+                          </div>
+
+                          <div className="h-px bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
+
+            return (
+              <Link key={link.path} to={link.path} className="relative group">
+                <motion.span
+                  className={`text-sm font-medium transition-colors ${
+                    location.pathname === link.path
                       ? "text-[#D4AF37]"
                       : "text-[#a0a0a0] group-hover:text-white"
                   }`}
-                />
-              </motion.div>
-              {isResponsibilityActive && (
-                <motion.div
-                  layoutId="activeNav"
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#E5C158]"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </button>
-
-            {/* Dropdown Menu */}
-            <AnimatePresence>
-              {dropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-64"
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <div
-                    className="rounded-xl overflow-hidden shadow-2xl border border-[#D4AF37]/20"
-                    style={{
-                      background: "rgba(10, 10, 10, 0.98)",
-                      backdropFilter: "blur(20px)",
-                    }}
-                  >
-                    {/* Gold accent line at top */}
-                    <div className="h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent" />
+                  {link.label}
+                </motion.span>
 
-                    {/* Dropdown items */}
-                    <div className="py-2">
-                      {responsibilityLinks.map((link, index) => (
-                        <Link
-                          key={link.path}
-                          to={link.path}
-                          className="block"
-                          onClick={() => setDropdownOpen(false)}
-                        >
-                          <motion.div
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            className={`px-5 py-3.5 transition-all duration-200 ${
-                              location.pathname === link.path
-                                ? "bg-[#D4AF37]/15 text-[#D4AF37] border-l-2 border-[#D4AF37]"
-                                : "text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-white border-l-2 border-transparent"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-medium">
-                                {link.label}
-                              </span>
-                              {location.pathname === link.path && (
-                                <motion.div
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"
-                                />
-                              )}
-                            </div>
-                          </motion.div>
-                        </Link>
-                      ))}
-                    </div>
-
-                    {/* Bottom subtle glow */}
-                    <div className="h-px bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                {location.pathname === link.path && (
+                  <motion.div
+                    layoutId="activeNav"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#D4AF37] to-[#E5C158]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Mobile Menu Button */}

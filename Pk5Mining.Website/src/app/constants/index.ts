@@ -1,5 +1,7 @@
 import { ContactStatus } from "@/app/interfaces";
 
+export const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+
 export const AUTH_KEY = "auth_state";
 
 export const jobTypes = [
