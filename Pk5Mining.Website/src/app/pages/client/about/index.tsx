@@ -499,10 +499,7 @@ export function About() {
               PK5 Mining Leadership
             </h2>
             <p className="text-lg  md:text-2xl  text-[#a0a0a0] max-w-4xl mx-auto leading-relaxed">
-              Our executive leadership team brings world-class expertise in mining operations, sustainable resource
-              development, and technological innovation. With deep industry experience and unwavering commitment to
-              operational excellence, environmental responsibility, and long-term economic growth, our leaders position
-              PK5 Mining as Africa's premier mining and minerals development company.
+              Our executive leadership team brings world-class expertise in mining operations, sustainable resource development, and technological innovation. Their extensive industry experience and commitment to operational excellence, environmental responsibility, and sustainable value creation position PK5 Mining for long-term growth and success.
             </p>
           </AnimatedSection>
         </div>

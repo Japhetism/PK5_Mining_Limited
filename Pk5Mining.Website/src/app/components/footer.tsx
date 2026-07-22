@@ -152,7 +152,7 @@ export function Footer() {
             © 2026 PK5 Mining. A strategic mining brand of PK5 Holdings Inc.,
             USA.
             <br />
-            Africa-Focused | Operating in Tanzania | Expanding to Nigeria
+            {/* Africa-Focused | Operating in Tanzania | Expanding to Nigeria */}
           </p>
           <div className="flex gap-6 text-sm text-gray-500">
             <a

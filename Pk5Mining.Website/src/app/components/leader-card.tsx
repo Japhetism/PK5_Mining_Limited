@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Minus, ArrowUpRight, Linkedin } from "lucide-react";
 import { ExecutiveProfile } from '@/app/data/leadership';
+import React from "react";
 
 function LeaderCard({ leader }: { leader: ExecutiveProfile }) {
     const [open, setOpen] = useState(false);
@@ -107,9 +108,49 @@ function LeaderCard({ leader }: { leader: ExecutiveProfile }) {
                                     <span className="font-['DM_Mono'] text-[10px] uppercase tracking-[0.2em] text-[#C89B3C] block mb-3">
                                         About
                                     </span>
-                                    <p className="font-['Inter'] text-[18px] justify-center font-light leading-relaxed text-[#c8c0a8]">
-                                        {leader.shortBio}
-                                    </p>
+                                    <div>
+                                        {(() => {
+                                            const bio = leader.shortBio || "";
+
+                                            // Match sentences ending with punctuation, safely accounting for hidden/invisible characters at the end of the text
+                                            const sentences = bio.match(/[^.!?]+[.!?]+(?:\s|\u200b|$)/g) || [bio];
+
+                                            // 1. Determine the best visual split index (default to the middle of the text)
+                                            let splitIndex = Math.ceil(sentences.length / 2);
+
+                                            // 2. Scan sentences for natural editorial paragraph starters to split perfectly
+                                            for (let idx = 0; idx < sentences.length; idx++) {
+                                                const sentenceClean = sentences[idx].trim();
+                                                if (
+                                                    sentenceClean.startsWith("Currently") ||
+                                                    sentenceClean.startsWith("Over the years") ||
+                                                    sentenceClean.startsWith("Having contributed")
+                                                ) {
+                                                    splitIndex = idx;
+                                                    break;
+                                                }
+                                            }
+
+                                            // 3. Group sentences into exactly two paragraphs
+                                            const firstParagraph = sentences.slice(0, splitIndex).join("").trim();
+                                            const secondParagraph = sentences.slice(splitIndex).join("").trim();
+                                            const paragraphs = [firstParagraph, secondParagraph].filter(Boolean);
+
+                                            return paragraphs.map((para, index) => (
+                                                <React.Fragment key={index}>
+                                                    <p className="font-['Inter'] text-[16px] text-justify font-light leading-relaxed text-[#c8c0a8]">
+                                                        {para}
+                                                    </p>
+                                                    {/* Insert two line breaks only between the first and second paragraph */}
+                                                    {index < paragraphs.length - 1 && (
+                                                        <>
+                                                            <br />
+                                                        </>
+                                                    )}
+                                                </React.Fragment>
+                                            ));
+                                        })()}
+                                    </div>
                                 </div>
 
                                 {/* Achievements */}
