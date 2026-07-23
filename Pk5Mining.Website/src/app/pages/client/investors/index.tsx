@@ -365,7 +365,7 @@ export function Investors() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.55 }}
-                className="mt-4 max-w-[420px] text-xs text-[#555] text-center leading-relaxed px-2"
+                className="mt-4 max-w-[420px] text-xs text-[#888] text-center leading-relaxed px-2"
               >
                 <Lock className="w-3 h-3 inline mr-1 text-[#C89B3C]/40" />
                 Restricted to authorized investors. Sessions are monitored and
