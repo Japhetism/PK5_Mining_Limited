@@ -89,7 +89,7 @@ export function Investors() {
   return (
     <div className="relative w-full pt-25">
       {/* ── Background ────────────────────────────────────────── */}
-      <div className="fixed inset-0" style={{ zIndex: 0 }}>
+      <div className="absolute inset-0" style={{ zIndex: 0 }}>
         <ImageWithFallback
           src="https://images.unsplash.com/photo-1664578867628-dae621194f4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1920"
           alt="PK5 Mining operations"
