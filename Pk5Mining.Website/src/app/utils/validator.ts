@@ -1,9 +1,7 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import {
   ApplicationErrors,
-  CreateJobPayload,
   IApplicantBioData,
-  JobErrors,
 } from "../interfaces";
 import { countryToIso, normalizeLinkedInUrl } from "./helper";
 

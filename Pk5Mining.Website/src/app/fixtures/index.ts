@@ -40,7 +40,6 @@ import {
   LegalContent,
 } from "../interfaces";
 import CEOImg from "../../assets/images/CEO.png";
-import HOOImg from "../../assets/images/HOO.png";
 import HOPImg from "../../assets/images/HOP.png";
 import HITImg from "../../assets/images/HIT.png";
 import AnnualReport from "../../assets/documents/PK5_Annual_Report_2025.pdf";
