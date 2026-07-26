@@ -1,13 +1,10 @@
 
-import { agroSubjects, miningSubjects } from "@/app/constants";
 import miningLogo from "@/assets/images/logo.png";
 import agroLogo from "@/assets/images/agrologo2.png";
 
 const agroDomain = import.meta.env.VITE_AGRO_DOMAIN;
-const agroAppId = import.meta.env.VITE_APP_AGRO_ID ?? "";
 const miningAppId = import.meta.env.VITE_APP_ID ?? "";
 
-const agroSubsidiaryId = import.meta.env.VITE_AGRO_SUBSIDIARY_ID ?? "";
 const miningSubsidiaryId = import.meta.env.VITE_MINING_SUBSIDIARY_ID ?? "";
 
 const miningEmailDomain = import.meta.env.VITE_PK5_MINING_EMAIL_DOMAIN;
@@ -50,9 +47,8 @@ export const useTenant = () => {
       tableLoaderColor: "#E5E7EB",
       innerCard: "#E5E7EB",
     },
-    appId: isAgro ? agroAppId : miningAppId,
-    subsidiaryId: isAgro ? agroSubsidiaryId : miningSubsidiaryId,
-    contactMessageSubjects: isAgro ? agroSubjects : miningSubjects,
+    appId: miningAppId,
+    subsidiaryId: miningSubsidiaryId,
     emailDomain: isAgro ? agroEmailDomain : miningEmailDomain,
   };
 };

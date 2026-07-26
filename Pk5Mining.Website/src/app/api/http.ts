@@ -1,13 +1,12 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { getAxiosErrorMessage } from "../utils/axios-error";
-import { tokenStore } from "../auth/token";
-import { getAppId } from "../utils/helper";
 
 const hostname = window.location.hostname;
 
 const baseURL = "/api";
 const HEADER_NAME = import.meta.env.VITE_API_KEY_NAME;
 const API_VALUE = import.meta.env.VITE_API_KEY_VALUE;
+const appId = import.meta.env.VITE_APP_ID;
 
 declare module "axios" {
   export interface AxiosRequestConfig {
@@ -32,24 +31,10 @@ export function setAuthToken(token?: string) {
   else delete http.defaults.headers.common.Authorization;
 }
 
-const bootToken = tokenStore.get();
-if (bootToken) setAuthToken(bootToken);
-
 http.interceptors.request.use((config) => {
-  const token = tokenStore.get();
-
-  if (token) {
-    config.headers = config.headers ?? {};
-    (config.headers as any).Authorization = `Bearer ${token}`;
-  } else if (config.headers) {
-    delete (config.headers as any).Authorization;
-  }
-
   if (config.requiresApiKey && HEADER_NAME) {
     config.headers[HEADER_NAME] = API_VALUE;
   }
-
-  const appId = getAppId(hostname);
 
   if (appId) {
     config.headers["Application-Tenant"] = appId;
@@ -95,13 +80,6 @@ http.interceptors.response.use(
 
       return http(config);
     }
-
-    // if (axios.isAxiosError(err)) {
-    //   if (err.response?.status === 401) {
-    //     tokenStore.clear();
-    //     setAuthToken(undefined);
-    //   }
-    // }
 
     return Promise.reject(err);
   },

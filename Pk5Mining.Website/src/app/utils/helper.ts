@@ -1,24 +1,5 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
-import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
-import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
-import { AdminRouteItem, adminRouteItems } from "../routes/admin-config";
-import { UserRole } from "../constants/role";
 import { ZodError } from "zod";
-import { RolePermission } from "../interfaces/role";
-import {
-  Permission as BackendPermission,
-  BackendPermissionGroup,
-} from "../interfaces/permission";
-import { adminRoutes } from "../routes/admin-routes";
-
-const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
-const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
-
-const BRAND_MAPPING: Record<string, string> = {
-  pk5mining: "VITE_APP_ID",
-  pk5miningltd: "VITE_APP_ID",
-  pk5agroallied: "VITE_APP_AGRO_ID",
-};
 
 export function capitalizeFirstLetter(value: string): string {
   if (!value) return value;
@@ -125,35 +106,6 @@ export const formatDateTime = (s?: string | null, showTime: boolean = true) => {
     .replace(/\b(am|pm)\b/, (m) => m.toUpperCase());
 };
 
-export function mapRawByStage(rawByStage?: RawByStage): ByStage {
-  const normalized = Object.fromEntries(
-    Object.entries(rawByStage ?? {}).map(([k, v]) => [k.toLowerCase(), v]),
-  );
-
-  return statuses.reduce((acc, s) => {
-    acc[s.value] = normalized[s.backendKey.toLowerCase()] ?? 0;
-    return acc;
-  }, {} as ByStage);
-}
-
-const stageSet = new Set<StageValue>(statuses.map((s) => s.value));
-
-export function isStageValue(value: string): value is StageValue {
-  return stageSet.has(value as StageValue);
-}
-
-export function normalizeStage(input: string): string {
-  return input.trim().toLowerCase().replace(/\s+/g, "_");
-}
-
-export function getStageMeta(value?: string | undefined) {
-  if (!value) return undefined;
-
-  const normalized = value.toLowerCase();
-
-  return statuses.find((s) => s.value.toLowerCase() === normalized);
-}
-
 export const ddmmyyyyToApiDate = (value?: string | null) => {
   if (!value) return value;
 
@@ -162,55 +114,6 @@ export const ddmmyyyyToApiDate = (value?: string | null) => {
   if (!day || !month || !year) return value;
 
   return `${year}-${month}-${day}`;
-};
-
-export const hasRole = (
-  userRole?: string,
-  requiredRoles?: UserRole[],
-): boolean => {
-  if (!enforceRole || !requiredRoles) return true;
-  return requiredRoles.includes(userRole as UserRole);
-};
-
-export const hasPermissions = (
-  userPermissions: RolePermission[] = [],
-  requiredPermissions: RolePermission[] = [],
-  requireAll = false,
-) => {
-  if (!enforcePermission || !requiredPermissions.length) return true;
-
-  if (requireAll) {
-    return requiredPermissions.every((permission) =>
-      userPermissions.includes(permission),
-    );
-  }
-
-  return requiredPermissions.some((permission) =>
-    userPermissions.includes(permission),
-  );
-};
-
-export const getVisibleNav = (
-  items: AdminRouteItem[],
-  userPermissions: RolePermission[] = [],
-): NavItem[] => {
-  return items
-    .filter(
-      (item) =>
-        item.show &&
-        hasPermissions(
-          userPermissions,
-          item.permissions ?? [],
-          item.requireAllPermissions,
-        ) 
-    )
-    .map((item) => ({
-      to: `/admin/${item.path}`,
-      label: item.label,
-      icon: item.icon!,
-      show: item.show,
-      end: item.end,
-    }));
 };
 
 export const toTitleCase = (str: string) =>
@@ -261,65 +164,12 @@ export function toBackendDateTimeWithBoundary(
   return new Date(year, month - 1, day, hours, minutes, seconds).toISOString();
 }
 
-export const getWebsiteName = (appId: string): string => {
-  return (
-    websites.find(
-      (item: { label: string; value: string }) => item.value === appId,
-    )?.label ?? appId
-  );
-};
-
-export const getFilterSubjects = (appId: string | undefined) => {
-  const subjectMap: Record<string, typeof miningSubjects> = {
-    "com.pk5.mining": miningSubjects,
-    "com.pk5.agro.allied": agroSubjects,
-  };
-
-  const subjects = !appId
-    ? [...miningSubjects, ...agroSubjects]
-    : (subjectMap[appId] ?? []);
-
-  return Array.from(
-    new Map(subjects.map((item) => [item.value, item])).values(),
-  ).sort((a, b) => a.label.localeCompare(b.label));
-};
-
 export const limitWords = (text: string, maxWords: number) => {
   const words = text.trim().split(/\s+/);
 
   if (words.length <= maxWords) return text;
 
   return words.slice(0, maxWords).join(" ");
-};
-
-export const getGroupedPermissions = (
-  permissions: BackendPermission[],
-): BackendPermissionGroup[] => {
-  const groups: Record<string, BackendPermission[]> = {};
-
-  permissions.forEach((perm) => {
-    const groupKey = perm.name.split(".")[0];
-
-    if (!groups[groupKey]) {
-      groups[groupKey] = [];
-    }
-
-    groups[groupKey].push({
-      id: perm.id,
-      name: perm.name,
-    });
-  });
-
-  return Object.entries(groups).map(([key, perms]) => ({
-    key,
-
-    name: key
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" "),
-
-    permissions: perms,
-  }));
 };
 
 export const generateAppId = (name: string): string => {
@@ -361,15 +211,6 @@ export const shouldChangePassword = (email: string, hostname: string): boolean =
   return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
 }
 
-export const getAppId = (hostname: string): string => {
-  if (!hostname) return "";
-  
-  const hostBrand = hostname.split(".")[0].toLowerCase();
-  const envKey = BRAND_MAPPING[hostBrand];
-
-  return envKey ? (import.meta.env[envKey] ?? "") : "";
-};
-
 export const formatFileSize = (bytes?: number): string => {
   if (bytes === undefined || bytes === null || bytes < 0) return "Unknown size";
 
@@ -396,40 +237,3 @@ export const getRemoteFileSize = async (url: string): Promise<string> => {
     return "Unknown size";
   }
 };
-
-export function getBestAdminRoute(userPermissions: RolePermission[]) {
-  const accessibleRoutes = adminRouteItems
-    .filter((route) => route.path !== "account")
-    .filter((route) =>
-      hasPermissions(
-        userPermissions,
-        route.permissions || [],
-        route.requireAllPermissions
-      )
-    );
-
-  const priorityOrder = [
-    "dashboard",
-    "jobs",
-    "applications",
-    "contact-messages",
-    "users",
-    "roles",
-    "departments",
-    "subsidiaries",
-  ];
-
-  const getGroup = (path: string) => path.split("/")[0];
-
-  const sorted = [...accessibleRoutes].sort((a, b) => {
-    const aGroup = getGroup(a.path);
-    const bGroup = getGroup(b.path);
-
-    const aIndex = priorityOrder.indexOf(aGroup);
-    const bIndex = priorityOrder.indexOf(bGroup);
-
-    return aIndex - bIndex;
-  });
-
-  return sorted[0]?.path || "/unauthorized";
-}
