@@ -1,0 +1,167 @@
+import * as React from "react";
+import { format, parse, startOfDay, isValid } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { DayPicker, type Matcher } from "react-day-picker";
+import "react-day-picker/dist/style.css";
+import { useTenant } from "@/tenants/useTenant";
+
+const startYear = import.meta.env.VITE_START_DATE_YEAR as string;
+const endYear = import.meta.env.VITE_END_DATE_YEAR as string;
+
+type DatePickerProps = {
+  value?: string;
+  onChange: (value: string) => void;
+  error?: boolean;
+  placeholder?: string;
+  disablePastDates?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
+  fromYear?: number;
+  toYear?: number;
+  name?: string;
+  classes?: string;
+};
+
+export function DatePicker({
+  value,
+  onChange,
+  error = false,
+  placeholder = "DD/MM/YYYY",
+  disablePastDates = false,
+  minDate,
+  maxDate,
+  fromYear = Number(startYear),
+  toYear = Number(endYear),
+  name,
+  classes = "left-0",
+}: DatePickerProps) {
+  const { colors } = useTenant();
+  const [open, setOpen] = React.useState(false);
+  const [month, setMonth] = React.useState<Date>(new Date());
+
+  const selectedDate = React.useMemo(() => {
+    if (!value) return undefined;
+
+    const parsed = parse(value, "dd/MM/yyyy", new Date());
+    if (!isValid(parsed)) return undefined;
+
+    return startOfDay(parsed);
+  }, [value]);
+
+  const disabledDays = React.useMemo<Matcher[] | undefined>(() => {
+    const matchers: Matcher[] = [];
+    const today = startOfDay(new Date());
+
+    if (disablePastDates) {
+      matchers.push({ before: today });
+    } else if (minDate) {
+      matchers.push({ before: startOfDay(minDate) });
+    }
+
+    if (maxDate) {
+      matchers.push({ after: startOfDay(maxDate) });
+    }
+
+    return matchers.length ? matchers : undefined;
+  }, [disablePastDates, minDate, maxDate]);
+
+  React.useEffect(() => {
+    if (open) {
+      setMonth(selectedDate ?? new Date());
+    }
+  }, [open, selectedDate]);
+
+  const handleSelect = (date?: Date) => {
+    if (!date) return;
+
+    const normalized = startOfDay(date);
+    onChange(format(normalized, "dd/MM/yyyy"));
+    setMonth(normalized);
+    setOpen(false);
+  };
+
+  
+  return (
+    <div className="relative">
+      {name ? <input type="hidden" name={name} value={value ?? ""} /> : null}
+
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className={`flex w-full items-center justify-between rounded-lg text-[16px] px-4 py-3 text-left transition-colors focus:border-[#c89b3c] focus:outline-none`}
+        style={{ backgroundColor: colors.textInputBgColor, color: colors.text, borderColor: error ? "#f87171" : colors.border }}
+      >
+        <span className={value ? colors.text : "text-gray-500"}>
+          {value || placeholder}
+        </span>
+        <CalendarIcon className="h-4 w-4" />
+      </button>
+
+      {open && (
+        <>
+          <button
+            type="button"
+            className="fixed inset-0 z-40 cursor-default"
+            onClick={() => setOpen(false)}
+            aria-label="Close date picker"
+          />
+
+          <div
+            className={`absolute ${classes} top-[calc(100%+8px)] z-50 rounded-xl border p-3 shadow-2xl`}
+            style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+          >
+            <DayPicker
+              mode="single"
+              selected={selectedDate}
+              month={month}
+              onMonthChange={setMonth}
+              onSelect={handleSelect}
+              captionLayout="buttons"
+              fromYear={fromYear}
+              toYear={toYear}
+              disabled={disabledDays}
+              showOutsideDays
+              classNames={{
+                root: "text-sm text-black",
+                month: "space-y-3",
+                caption: "flex items-center justify-between mb-2",
+                caption_label: "text-sm font-semibold text-black",
+                nav: "flex items-center gap-1",
+                nav_button:
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-black hover:bg-white/10",
+                nav_button_previous:
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-black hover:bg-white/10",
+                nav_button_next:
+                  "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-black hover:bg-white/10",
+                table: "w-full border-collapse",
+                head_row: "",
+                head_cell:
+                  "h-9 w-9 text-xs font-medium text-black text-center",
+                row: "",
+                cell: "h-9 w-9 text-center",
+                day: "h-9 w-9 rounded-md text-sm text-black hover:bg-white/10",
+                day_today: "border border-black text-black",
+                day_outside: "text-black/50 opacity-50",
+                day_disabled: "text-black/50 opacity-50",
+                dropdown:
+                  "rounded-md border border-gray-700 bg-[#0f0f0f] px-2 py-1 text-sm text-black",
+              }}
+              modifiersStyles={{
+                selected: {
+                  backgroundColor: "#c89b3c",
+                  color: "#000000",
+                  fontWeight: 600,
+                  borderRadius: "0.375rem",
+                },
+                today: {
+                  border: "1px solid #c89b3c",
+                  borderRadius: "0.375rem",
+                },
+              }}
+            />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

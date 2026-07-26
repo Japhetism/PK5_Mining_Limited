@@ -1,0 +1,76 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+/* Dropdown container */
+.ql-snow .ql-picker-options {
+  background-color: #000 !important;
+  border: 1px solid #374151 !important;
+}
+
+/* Dropdown items */
+.ql-snow .ql-picker-item {
+  background-color: #000 !important;
+  color: #e5e7eb !important;
+}
+
+/* Hover state */
+.ql-snow .ql-picker-item:hover {
+  background-color: #1f2937 !important;
+}
+
+/* Selected item */
+.ql-snow .ql-picker-item.ql-selected {
+  background-color: #1f2937 !important;
+  color: white !important;
+}
+
+.ql-snow .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #c89b3c;
+}
+
+.ql-snow .ql-toolbar button.ql-active .ql-fill {
+  fill: #c89b3c;
+}
+
+.ql-toolbar,
+.ql-container {
+  border: none !important;
+}
+
+/* in your global CSS or a module */
+.scrollbar-black::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track, #FFFFFF); /* fallback to dark */
+}
+.scrollbar-black::-webkit-scrollbar {
+  width: 10px;
+}
+.scrollbar-black::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb, #C89B3C); /* fallback to gold */
+  border-radius: 4px;
+}
+
+/* First item: Flat on the left, pointed arrow on the right */
+.clip-chevron-first {
+  clip-path: polygon(
+    0% 0%, 
+    calc(100% - 20px) 0%, 
+    100% 50%, 
+    calc(100% - 20px) 100%, 
+    0% 100%
+  );
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+/* Middle & Last items: Indented on the left, pointed arrow on the right */
+.clip-chevron-middle {
+  clip-path: polygon(
+    0% 0%, 
+    calc(100% - 20px) 0%, 
+    100% 50%, 
+    calc(100% - 20px) 100%, 
+    0% 100%, 
+    18px 50%
+  );
+}
