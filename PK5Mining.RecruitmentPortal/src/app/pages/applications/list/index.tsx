@@ -24,13 +24,19 @@ export function ApplicationList() {
     totalCount,
     totalPages,
     jobTitles,
+    jobIds,
     candidateEmails,
+    candidateNames,
+    candidateIds,
     statuses,
     filters,
     filterStartDate,
     filterEndDate,
-    filterEmail,
+    filterCandidateEmail,
+    filterCandidateName,
+    filterCandidateId,
     filterJobTitle,
+    filterJobId,
     filterStatus,
     isLoading,
     isFilter,
@@ -39,8 +45,11 @@ export function ApplicationList() {
     setFilters,
     setFilterStartDate,
     setFilterEndDate,
-    setFilterEmail,
+    setFilterCandidateEmail,
+    setFilterCandidateName,
+    setFilterCandidateId,
     setFilterJobTitle,
+    setFilterJobId,
     setFilterStatus,
     setStatus,
     updateFilter,
@@ -163,134 +172,224 @@ export function ApplicationList() {
         className="space-y-3 mb-10 p-6 rounded-[12px]"
         style={{ backgroundColor: colors.card }}
       >
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-        <div className="min-w-0">
-          <label
-            className="block text-[16px] font-semibold mb-2"
-            style={{ color: colors.text }}
-          >
-            Start Date
-          </label>
-          <DatePicker
-            name="startDate"
-            value={
-              filterStartDate ? formatDateTime(filterStartDate, false) : ""
-            }
-            onChange={(value) =>
-              setFilterStartDate(toBackendDateTimeWithBoundary(value))
-            }
-            maxDate={filterEndDate ? new Date(filterEndDate) : new Date()}
-          />
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+          <div className="min-w-0">
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
+              Start Date
+            </label>
+            <DatePicker
+              name="startDate"
+              value={
+                filterStartDate ? formatDateTime(filterStartDate, false) : ""
+              }
+              onChange={(value) =>
+                setFilterStartDate(toBackendDateTimeWithBoundary(value))
+              }
+              maxDate={filterEndDate ? new Date(filterEndDate) : new Date()}
+            />
+          </div>
 
-        <div className="min-w-0">
-          <label
-            className="block text-[16px] font-semibold mb-2"
-            style={{ color: colors.text }}
-          >
-            End Date
-          </label>
-          <DatePicker
-            name="endDate"
-            value={filterEndDate ? formatDateTime(filterEndDate, false) : ""}
-            onChange={(value) =>
-              setFilterEndDate(toBackendDateTimeWithBoundary(value, "end"))
-            }
-            minDate={filterStartDate ? new Date(filterStartDate) : new Date()}
-            maxDate={new Date()}
-            classes="right-0"
-          />
-        </div>
+          <div className="min-w-0">
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
+              End Date
+            </label>
+            <DatePicker
+              name="endDate"
+              value={filterEndDate ? formatDateTime(filterEndDate, false) : ""}
+              onChange={(value) =>
+                setFilterEndDate(toBackendDateTimeWithBoundary(value, "end"))
+              }
+              minDate={filterStartDate ? new Date(filterStartDate) : new Date()}
+              maxDate={new Date()}
+              classes="right-0"
+            />
+          </div>
 
-        <div className="min-w-0">
-          <label
-            className="block text-[16px] font-semibold mb-2"
-            style={{ color: colors.text }}
-          >
-            Email Address
-          </label>
-          <SearchableSelect
-            name="titleId"
-            value={filterEmail ?? ""}
-            options={[
-              { value: "", label: "All Email Addresses" },
-              ...candidateEmails.map((email) => ({
-                value: email,
-                label: email,
-              })),
-            ]}
-            onChange={(e) => {
-              setFilterEmail(e.target.value);
-              setShouldUpdateDropdown(false);
-            }}
-            placeholder="Search by job title"
-            className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
-            styles={{
-              backgroundColor: colors.textInputBgColor,
-              color: colors.text,
-            }}
-          />
-        </div>
+          <div className="min-w-0">
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
+              Candidate Id
+            </label>
+            <SearchableSelect
+              name="candidateId"
+              value={filterCandidateId ?? ""}
+              options={[
+                { value: "", label: "All Candidate Id" },
+                ...candidateIds.map((id) => ({
+                  value: id,
+                  label: id,
+                })),
+              ]}
+              onChange={(e) => {
+                setFilterCandidateId(e.target.value);
+                setShouldUpdateDropdown(false);
+              }}
+              placeholder="Search by job title"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+              styles={{
+                backgroundColor: colors.textInputBgColor,
+                color: colors.text,
+              }}
+            />
+          </div>
 
-        <div className="min-w-0">
-          <label
-            className="block text-[16px] font-semibold mb-2"
-            style={{ color: colors.text }}
-          >
-            Job Title
-          </label>
-          <SearchableSelect
-            name="titleId"
-            value={filterJobTitle ?? ""}
-            options={[
-              { value: "", label: "All Jobs" },
-              ...jobTitles.map((jobTitle) => ({
-                value: jobTitle,
-                label: jobTitle,
-              })),
-            ]}
-            onChange={(e) => {
-              setFilterJobTitle(e.target.value);
-              setShouldUpdateDropdown(false);
-            }}
-            placeholder="Search by job title"
-            className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
-            styles={{
-              backgroundColor: colors.textInputBgColor,
-              color: colors.text,
-            }}
-          />
-        </div>
+          <div className="min-w-0">
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
+              Candidate Email Address
+            </label>
+            <SearchableSelect
+              name="candidateEmailAddress"
+              value={filterCandidateEmail ?? ""}
+              options={[
+                { value: "", label: "All Email Addresses" },
+                ...candidateEmails.map((email) => ({
+                  value: email,
+                  label: email,
+                })),
+              ]}
+              onChange={(e) => {
+                setFilterCandidateEmail(e.target.value);
+                setShouldUpdateDropdown(false);
+              }}
+              placeholder="Search by job title"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+              styles={{
+                backgroundColor: colors.textInputBgColor,
+                color: colors.text,
+              }}
+            />
+          </div>
 
-        <div className="min-w-0">
-          <label
-            className="block text-[16px] font-semibold mb-2"
-            style={{ color: colors.text }}
-          >
-            Status
-          </label>
-          <SearchableSelect
-            name="titleId"
-            value={filterStatus ?? ""}
-            options={[
-              { value: "", label: "All Statuses" },
-              ...statuses.map((status) => ({
-                value: status,
-                label: status,
-              })),
-            ]}
-            onChange={(e) => {
-              setFilterStatus(e.target.value);
-              setShouldUpdateDropdown(false);
-            }}
-            placeholder="Search by job title"
-            className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
-            styles={{
-              backgroundColor: colors.textInputBgColor,
-              color: colors.text,
-            }}
-          />
-        </div>
+          <div className="min-w-0">
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
+              Candidate Name
+            </label>
+            <SearchableSelect
+              name="candidateName"
+              value={filterCandidateName ?? ""}
+              options={[
+                { value: "", label: "All Candidate Names" },
+                ...candidateNames.map((name) => ({
+                  value: name,
+                  label: name,
+                })),
+              ]}
+              onChange={(e) => {
+                setFilterCandidateName(e.target.value);
+                setShouldUpdateDropdown(false);
+              }}
+              placeholder="Search by job title"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+              styles={{
+                backgroundColor: colors.textInputBgColor,
+                color: colors.text,
+              }}
+            />
+          </div>
+
+          <div className="min-w-0">
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
+              Job Id
+            </label>
+            <SearchableSelect
+              name="jobId"
+              value={filterJobId ?? ""}
+              options={[
+                { value: "", label: "All Job Ids" },
+                ...jobIds.map((jobId) => ({
+                  value: jobId,
+                  label: jobId,
+                })),
+              ]}
+              onChange={(e) => {
+                setFilterJobId(e.target.value);
+                setShouldUpdateDropdown(false);
+              }}
+              placeholder="Search by job title"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+              styles={{
+                backgroundColor: colors.textInputBgColor,
+                color: colors.text,
+              }}
+            />
+          </div>
+
+          <div className="min-w-0">
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
+              Job Title
+            </label>
+            <SearchableSelect
+              name="jobTitle"
+              value={filterJobTitle ?? ""}
+              options={[
+                { value: "", label: "All Jobs" },
+                ...jobTitles.map((jobTitle) => ({
+                  value: jobTitle,
+                  label: jobTitle,
+                })),
+              ]}
+              onChange={(e) => {
+                setFilterJobTitle(e.target.value);
+                setShouldUpdateDropdown(false);
+              }}
+              placeholder="Search by job title"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+              styles={{
+                backgroundColor: colors.textInputBgColor,
+                color: colors.text,
+              }}
+            />
+          </div>
+
+          <div className="min-w-0">
+            <label
+              className="block text-[16px] font-semibold mb-2"
+              style={{ color: colors.text }}
+            >
+              Status
+            </label>
+            <SearchableSelect
+              name="status"
+              value={filterStatus ?? ""}
+              options={[
+                { value: "", label: "All Statuses" },
+                ...statuses.map((status) => ({
+                  value: status,
+                  label: status,
+                })),
+              ]}
+              onChange={(e) => {
+                setFilterStatus(e.target.value);
+                setShouldUpdateDropdown(false);
+              }}
+              placeholder="Search by job title"
+              className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+              styles={{
+                backgroundColor: colors.textInputBgColor,
+                color: colors.text,
+              }}
+            />
+          </div>
         </div>
         <div className="flex flex-end">
           <button

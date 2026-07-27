@@ -213,7 +213,10 @@ export type ApplicationsQuery = {
   startDate?: string;
   endDate?: string;
   status?: string;
+  candidateId?: number | string;
   candidateEmail?: string;
+  candidateName?: string;
+  jobId?: number | string;
   jobTitle?: string;
 }
 
