@@ -134,6 +134,8 @@ function useApplicationsListViewModel() {
   const statuses = dropdownOptions.statuses;
   const jobTitles = dropdownOptions.jobTitles;
 
+  console.log("got here.....")
+
   return {
     queryClient,
     apps,
