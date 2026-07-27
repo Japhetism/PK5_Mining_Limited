@@ -14,6 +14,7 @@ import { ApplicationStatusPill } from "@/app/components/ui/application-status-pi
 import useApplicationsListViewModel from "./viewmodel";
 import { useTenant } from "@/tenants/useTenant";
 import { DatePicker } from "@/app/components/ui/date-picker";
+import { SearchableSelect } from "@/app/components/searchable-select";
 
 export function ApplicationList() {
   const { isAgro, colors } = useTenant();
@@ -22,9 +23,15 @@ export function ApplicationList() {
     apps,
     totalCount,
     totalPages,
+    jobTitles,
+    candidateEmails,
+    statuses,
     filters,
     filterStartDate,
     filterEndDate,
+    filterEmail,
+    filterJobTitle,
+    filterStatus,
     isLoading,
     isFilter,
     pageNumber,
@@ -32,10 +39,15 @@ export function ApplicationList() {
     setFilters,
     setFilterStartDate,
     setFilterEndDate,
+    setFilterEmail,
+    setFilterJobTitle,
+    setFilterStatus,
     setStatus,
     updateFilter,
     onChangePage,
     onChangePageSize,
+    setShouldUpdateDropdown,
+    handleResetFilters,
   } = useApplicationsListViewModel();
 
   const columns: PaginatedTableColumn<JobApplicationDto>[] = [
@@ -146,6 +158,11 @@ export function ApplicationList() {
         </div>
       </div>
 
+      {/* Filters */}
+      <div
+        className="space-y-3 mb-10 p-6 rounded-[12px]"
+        style={{ backgroundColor: colors.card }}
+      >
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
         <div className="min-w-0">
           <label
@@ -186,24 +203,103 @@ export function ApplicationList() {
         </div>
 
         <div className="min-w-0">
-           <label
-              className="block text-[16px] font-semibold mb-2"
-              style={{ color: colors.text }}
-            >
-              Email Address
-            </label>
-           <input
-              name="email"
-              type="email"
-              value={filters.email}
-              onChange={(e) => updateFilter("email", e.target.value)}
-              placeholder="Search by email"
-              className="w-full rounded-lg px-4 py-3 text-[16px]"
-              style={{
-                backgroundColor: colors.textInputBgColor,
-                color: colors.text,
-              }}
-            />
+          <label
+            className="block text-[16px] font-semibold mb-2"
+            style={{ color: colors.text }}
+          >
+            Email Address
+          </label>
+          <SearchableSelect
+            name="titleId"
+            value={filterEmail ?? ""}
+            options={[
+              { value: "", label: "All Email Addresses" },
+              ...candidateEmails.map((email) => ({
+                value: email,
+                label: email,
+              })),
+            ]}
+            onChange={(e) => {
+              setFilterEmail(e.target.value);
+              setShouldUpdateDropdown(false);
+            }}
+            placeholder="Search by job title"
+            className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+            styles={{
+              backgroundColor: colors.textInputBgColor,
+              color: colors.text,
+            }}
+          />
+        </div>
+
+        <div className="min-w-0">
+          <label
+            className="block text-[16px] font-semibold mb-2"
+            style={{ color: colors.text }}
+          >
+            Job Title
+          </label>
+          <SearchableSelect
+            name="titleId"
+            value={filterJobTitle ?? ""}
+            options={[
+              { value: "", label: "All Jobs" },
+              ...jobTitles.map((jobTitle) => ({
+                value: jobTitle,
+                label: jobTitle,
+              })),
+            ]}
+            onChange={(e) => {
+              setFilterJobTitle(e.target.value);
+              setShouldUpdateDropdown(false);
+            }}
+            placeholder="Search by job title"
+            className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+            styles={{
+              backgroundColor: colors.textInputBgColor,
+              color: colors.text,
+            }}
+          />
+        </div>
+
+        <div className="min-w-0">
+          <label
+            className="block text-[16px] font-semibold mb-2"
+            style={{ color: colors.text }}
+          >
+            Status
+          </label>
+          <SearchableSelect
+            name="titleId"
+            value={filterStatus ?? ""}
+            options={[
+              { value: "", label: "All Statuses" },
+              ...statuses.map((status) => ({
+                value: status,
+                label: status,
+              })),
+            ]}
+            onChange={(e) => {
+              setFilterStatus(e.target.value);
+              setShouldUpdateDropdown(false);
+            }}
+            placeholder="Search by job title"
+            className="w-full rounded-lg px-4 py-3 text-[16px] outline-none focus:border-[#c89b3c]"
+            styles={{
+              backgroundColor: colors.textInputBgColor,
+              color: colors.text,
+            }}
+          />
+        </div>
+        </div>
+        <div className="flex flex-end">
+          <button
+            onClick={handleResetFilters}
+            className="text-[16px] hover:underline ml-auto"
+            style={{ color: colors.text }}
+          >
+            Clear all
+          </button>
         </div>
       </div>
 

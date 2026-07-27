@@ -213,10 +213,18 @@ export type ApplicationsQuery = {
   startDate?: string;
   endDate?: string;
   status?: string;
+  candidateEmail?: string;
+  jobTitle?: string;
 }
 
 export type ApplicationResponsePayload = {
-  data: JobApplicationDto[];
+  jobApplications: JobApplicationDto[];
+  candidateIds: Array<string>;
+  candidateNames: Array<string>;
+  candidateEmails: Array<string>;
+  jobIds: Array<string>;
+  jobTitles: Array<string>;
+  statuses: Array<string>;
 } & PaginationInfo;
 
 export type StatusFilter = "all" | "open" | "closed";

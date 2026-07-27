@@ -9,17 +9,21 @@ import {
   ApplicationStatusFilter,
   JobApplicationDto,
 } from "@/app/interfaces";
-import { cleanParams, getLastMonthToDateRange, toNumber } from "@/app/utils/helper";
+import { cleanParams, getLastMonthToDateRange, sortAlphabetically, toNumber } from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 
 function useApplicationsListViewModel() {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { startDate, endDate } = getLastMonthToDateRange();
+
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("");
   const [filterStartDate, setFilterStartDate] = useState<string>(startDate);
   const [filterEndDate, setFilterEndDate] = useState<string>(endDate);
+  const [filterEmail, setFilterEmail] = useState<string>("");
+  const [filterJobTitle, setFilterJobTitle] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>("");
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -32,6 +36,16 @@ function useApplicationsListViewModel() {
     email: searchParams.get("email") ?? "",
   });
 
+  const [shouldUpdateDropdown, setShouldUpdateDropdown] =
+    useState<boolean>(true);
+
+  const [dropdownOptions, setDropdownOptions] = useState({
+    candidateNames: [] as string[],
+    candidateEmails: [] as string[],
+    jobTitles: [] as string[],
+    statuses: [] as string[],
+  });
+
   const debouncedFilters = useDebouncedValue(filters, 400);
 
   useEffect(() => {
@@ -42,15 +56,16 @@ function useApplicationsListViewModel() {
     const raw: ApplicationsQuery = {
       pageNumber,
       pageSize,
-      email: debouncedFilters.email,
       startDate: filterStartDate,
       endDate: filterEndDate,
-      status: status
+      candidateEmail: filterEmail,
+      jobTitle: filterJobTitle,
+      status: filterStatus,
     };
 
     // clean out empty strings
     return cleanParams(raw) as ApplicationsQuery;
-  }, [pageNumber, pageSize, filterStartDate, filterEndDate, debouncedFilters]);
+  }, [pageNumber, pageSize, filterStartDate, filterEndDate, filterStatus, filterEmail, filterJobTitle, debouncedFilters]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
@@ -61,10 +76,23 @@ function useApplicationsListViewModel() {
       queryParams.endDate ?? "",
       queryParams.startDate ?? "",
       queryParams.status ?? "",
+      queryParams.candidateEmail ?? "",
+      queryParams.jobTitle ?? "",
     ],
     queryFn: () => getApplications(queryParams),
     staleTime: 30_000,
   });
+
+  useEffect(() => {
+    if (!data || !shouldUpdateDropdown) return;
+
+    setDropdownOptions({
+      candidateNames: sortAlphabetically(data.candidateNames ?? []),
+      candidateEmails: sortAlphabetically(data.candidateEmails ?? []),
+      jobTitles: sortAlphabetically(data.jobTitles ?? []),
+      statuses: sortAlphabetically(data.statuses ?? []),
+    });
+  }, [shouldUpdateDropdown, data]);
 
   useEffect(() => {
     if (error) {
@@ -88,9 +116,23 @@ function useApplicationsListViewModel() {
     setPageNumber(1);
   };
 
-  const apps: JobApplicationDto[] = data?.data ?? [];
+  const handleResetFilters = () => {
+    setFilterEmail("");
+    setFilterJobTitle("");
+    setFilterStatus("");
+    setFilterStartDate(startDate);
+    setFilterEndDate(endDate);
+    setShouldUpdateDropdown(true);
+  }
+
+  const apps: JobApplicationDto[] = data?.jobApplications ?? [];
   const totalCount: number = data?.totalCount ?? 0;
   const totalPages: number = data?.totalPages ?? 0;
+
+  // dropdown options
+  const candidateEmails = dropdownOptions.candidateEmails;
+  const statuses = dropdownOptions.statuses;
+  const jobTitles = dropdownOptions.jobTitles;
 
   return {
     queryClient,
@@ -104,17 +146,28 @@ function useApplicationsListViewModel() {
     filterEndDate,
     isFilter,
     filters,
+    filterEmail,
+    filterStatus,
+    filterJobTitle,
     pageNumber,
     pageSize,
+    candidateEmails,
+    statuses,
+    jobTitles,
     updateFilter,
     setSearch,
     setStatus,
     setFilterStartDate,
     setFilterEndDate,
     setIsFilter,
+    setFilterEmail,
+    setFilterStatus,
+    setFilterJobTitle,
     setFilters,
     onChangePage,
     onChangePageSize,
+    setShouldUpdateDropdown,
+    handleResetFilters,
   };
 }
 
