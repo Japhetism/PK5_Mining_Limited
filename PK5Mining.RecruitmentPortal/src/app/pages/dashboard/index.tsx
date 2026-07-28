@@ -44,12 +44,12 @@ export function Dashboard() {
           subtitle={`${closedJobs} closed`}
           onClickSuffix={() =>
             navigate("/admin/jobs", {
-              state: { defaultFilter: "open" },
+              state: { defaultFilter: "Open" },
             })
           }
           onClickSubtitle={() =>
             navigate("/admin/jobs", {
-              state: { defaultFilter: "closed" },
+              state: { defaultFilter: "Close" },
             })
           }
         />
@@ -158,7 +158,7 @@ export function Dashboard() {
                   className="flex flex-col items-start font-normal text-[16px] cursor-pointer"
                   onClick={() =>
                     navigate("/admin/candidates", {
-                      state: { defaultFilter: s.label },
+                      state: { defaultFilter: s.value },
                     })
                   }
                 >
