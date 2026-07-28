@@ -9,7 +9,12 @@ import {
   ApplicationStatusFilter,
   JobApplicationDto,
 } from "@/app/interfaces";
-import { cleanParams, getLastMonthToDateRange, sortAlphabetically, toNumber } from "@/app/utils/helper";
+import {
+  cleanParams,
+  getLastMonthToDateRange,
+  sortAlphabetically,
+  toNumber,
+} from "@/app/utils/helper";
 import { toastUtil } from "@/app/utils/toast";
 
 function useApplicationsListViewModel() {
@@ -21,9 +26,12 @@ function useApplicationsListViewModel() {
   const [status, setStatus] = useState<string>("");
   const [filterStartDate, setFilterStartDate] = useState<string>(startDate);
   const [filterEndDate, setFilterEndDate] = useState<string>(endDate);
-  const [filterEmail, setFilterEmail] = useState<string>("");
   const [filterJobTitle, setFilterJobTitle] = useState<string>("");
   const [filterStatus, setFilterStatus] = useState<string>("");
+  const [filterJobId, setFilterJobId] = useState<string>("");
+  const [filterCandidateEmail, setFilterCandidateEmail] = useState<string>("");
+  const [filterCandidateId, setFilterCandidateId] = useState<string>("");
+  const [filterCandidateName, setFilterCandidateName] = useState<string>("");
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState(() =>
     toNumber(searchParams.get("pageNumber"), 1),
@@ -42,7 +50,9 @@ function useApplicationsListViewModel() {
   const [dropdownOptions, setDropdownOptions] = useState({
     candidateNames: [] as string[],
     candidateEmails: [] as string[],
+    candidateIds: [] as string[],
     jobTitles: [] as string[],
+    jobIds: [] as string[],
     statuses: [] as string[],
   });
 
@@ -58,14 +68,29 @@ function useApplicationsListViewModel() {
       pageSize,
       startDate: filterStartDate,
       endDate: filterEndDate,
-      candidateEmail: filterEmail,
+      candidateEmail: filterCandidateEmail,
+      candidateId: filterCandidateId ? Number(filterCandidateId) : "",
+      candidateName: filterCandidateName,
+      jobId: filterJobId ? Number(filterJobId) : "",
       jobTitle: filterJobTitle,
       status: filterStatus,
     };
 
     // clean out empty strings
     return cleanParams(raw) as ApplicationsQuery;
-  }, [pageNumber, pageSize, filterStartDate, filterEndDate, filterStatus, filterEmail, filterJobTitle, debouncedFilters]);
+  }, [
+    pageNumber,
+    pageSize,
+    filterStartDate,
+    filterEndDate,
+    filterStatus,
+    filterCandidateEmail,
+    filterCandidateName,
+    filterCandidateId,
+    filterJobTitle,
+    filterJobId,
+    debouncedFilters,
+  ]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
@@ -77,7 +102,10 @@ function useApplicationsListViewModel() {
       queryParams.startDate ?? "",
       queryParams.status ?? "",
       queryParams.candidateEmail ?? "",
+      queryParams.candidateName ?? "",
+      queryParams.candidateId ?? "",
       queryParams.jobTitle ?? "",
+      queryParams.jobId ?? ""
     ],
     queryFn: () => getApplications(queryParams),
     staleTime: 30_000,
@@ -89,7 +117,9 @@ function useApplicationsListViewModel() {
     setDropdownOptions({
       candidateNames: sortAlphabetically(data.candidateNames ?? []),
       candidateEmails: sortAlphabetically(data.candidateEmails ?? []),
+      candidateIds: data.candidateIds,
       jobTitles: sortAlphabetically(data.jobTitles ?? []),
+      jobIds: data.jobIds,
       statuses: sortAlphabetically(data.statuses ?? []),
     });
   }, [shouldUpdateDropdown, data]);
@@ -117,13 +147,16 @@ function useApplicationsListViewModel() {
   };
 
   const handleResetFilters = () => {
-    setFilterEmail("");
+    setFilterCandidateEmail("");
+    setFilterCandidateName("");
+    setFilterCandidateId("");
     setFilterJobTitle("");
+    setFilterJobId("");
     setFilterStatus("");
     setFilterStartDate(startDate);
     setFilterEndDate(endDate);
     setShouldUpdateDropdown(true);
-  }
+  };
 
   const apps: JobApplicationDto[] = data?.jobApplications ?? [];
   const totalCount: number = data?.totalCount ?? 0;
@@ -133,8 +166,9 @@ function useApplicationsListViewModel() {
   const candidateEmails = dropdownOptions.candidateEmails;
   const statuses = dropdownOptions.statuses;
   const jobTitles = dropdownOptions.jobTitles;
-
-  console.log("got here.....")
+  const candidateNames = dropdownOptions.candidateNames;
+  const candidateIds = dropdownOptions.candidateIds;
+  const jobIds = dropdownOptions.jobIds;
 
   return {
     queryClient,
@@ -148,23 +182,32 @@ function useApplicationsListViewModel() {
     filterEndDate,
     isFilter,
     filters,
-    filterEmail,
+    filterCandidateEmail,
+    filterCandidateName,
+    filterCandidateId,
     filterStatus,
     filterJobTitle,
+    filterJobId,
     pageNumber,
     pageSize,
     candidateEmails,
+    candidateNames,
+    candidateIds,
     statuses,
     jobTitles,
+    jobIds,
     updateFilter,
     setSearch,
     setStatus,
     setFilterStartDate,
     setFilterEndDate,
     setIsFilter,
-    setFilterEmail,
+    setFilterCandidateEmail,
+    setFilterCandidateName,
+    setFilterCandidateId,
     setFilterStatus,
     setFilterJobTitle,
+    setFilterJobId,
     setFilters,
     onChangePage,
     onChangePageSize,
