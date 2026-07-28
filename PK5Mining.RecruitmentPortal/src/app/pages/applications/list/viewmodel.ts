@@ -11,6 +11,7 @@ import {
 } from "@/app/interfaces";
 import {
   cleanParams,
+  getDateRangeWithTimes,
   getLastMonthToDateRange,
   sortAlphabetically,
   toNumber,
@@ -69,8 +70,8 @@ function useApplicationsListViewModel() {
     const raw: ApplicationsQuery = {
       pageNumber,
       pageSize,
-      startDate: filterStartDate,
-      endDate: filterEndDate,
+      startDate: getDateRangeWithTimes(filterStartDate, "start"),
+      endDate: getDateRangeWithTimes(filterEndDate, "end"),
       candidateEmail: filterCandidateEmail,
       candidateId: filterCandidateId ? Number(filterCandidateId) : "",
       candidateName: filterCandidateName,
@@ -108,7 +109,7 @@ function useApplicationsListViewModel() {
       queryParams.candidateName ?? "",
       queryParams.candidateId ?? "",
       queryParams.jobTitle ?? "",
-      queryParams.jobId ?? ""
+      queryParams.jobId ?? "",
     ],
     queryFn: () => getApplications(queryParams),
     staleTime: 30_000,

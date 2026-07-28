@@ -11,6 +11,7 @@ import {
 } from "@/app/interfaces";
 import {
   cleanParams,
+  getDateRangeWithTimes,
   getLastMonthToDateRange,
   sortAlphabetically,
   toNumber,
@@ -88,8 +89,8 @@ function useJobListViewModel() {
       jobType: filterJobType,
       department: debouncedFilters.department,
       location: debouncedFilters.location,
-      startDate: filterStartDate,
-      endDate: filterEndDate,
+      startDate: getDateRangeWithTimes(filterStartDate, "start"),
+      endDate: getDateRangeWithTimes(filterEndDate, "end"),
       title: filterJobTitle,
     };
 
