@@ -18,7 +18,8 @@ function useJobDetailsViewModel() {
   const { isAgro } = useTenant();
 
   const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
-    const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
+  const MINING_BASE_URL = import.meta.env.VITE_MINING_APP_JOB_BASE_URL;
+  const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
 
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(9);
@@ -100,13 +101,14 @@ function useJobDetailsViewModel() {
 
     const targetUrl = SHOULD_USE_AGRO_URL
       ? `${AGRO_BASE_URL}/${jobId}/apply`
-      : `/careers/job/${jobId}`;
+      : `${MINING_BASE_URL}/${jobId}`;
 
     window.open(targetUrl, "_blank", "noopener,noreferrer");
   };
 
   const job = jobData ?? undefined;
-  const applications: JobApplicationDto[] = jobApplications?.data ?? [];
+  const applications: JobApplicationDto[] =
+    jobApplications?.jobApplications ?? [];
   const totalCount = jobApplications?.totalCount ?? 0;
   const totalPages: number =
     jobApplications?.totalPages ??
