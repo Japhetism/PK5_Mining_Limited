@@ -1,5 +1,11 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
-import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
+import {
+  ByStage,
+  DateType,
+  NavItem,
+  RawByStage,
+  StageValue,
+} from "../interfaces";
 import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
 import { AdminRouteItem, adminRouteItems } from "../routes/route-config";
 import { UserRole } from "../constants/role";
@@ -464,4 +470,23 @@ export const sortAlphabetically = (arr: string[]): string[] => {
   return [...arr]
     .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }))
     .map(capitalizeWords);
+};
+
+export const getDateRangeWithTimes = (
+  inputDate: Date | string,
+  type: DateType,
+): string => {
+  const date = new Date(inputDate);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  if (type === "start") {
+    date.setHours(0, 0, 0, 0);
+  } else {
+    date.setHours(23, 59, 59, 999);
+  }
+
+  return date.toISOString();
 };

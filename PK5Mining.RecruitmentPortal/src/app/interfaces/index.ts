@@ -368,3 +368,11 @@ export type AdvanceFilter = {
   startDate?: string;
   endDate?: string;
 }
+
+
+export type DateType = "start" | "end";
+
+export interface DateRange {
+  startDate?: Date;
+  endDate?: Date;
+}

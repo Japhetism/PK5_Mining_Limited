@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApplications } from "@/app/api/applications";
 import { useDebouncedValue } from "@/app/hooks/useDebouncedValue";
@@ -11,6 +11,7 @@ import {
 } from "@/app/interfaces";
 import {
   cleanParams,
+  getDateRangeWithTimes,
   getLastMonthToDateRange,
   sortAlphabetically,
   toNumber,
@@ -19,15 +20,18 @@ import { toastUtil } from "@/app/utils/toast";
 
 function useApplicationsListViewModel() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const { startDate, endDate } = getLastMonthToDateRange();
+
+  const defaultFilter = location.state?.defaultFilter ?? "";
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("");
   const [filterStartDate, setFilterStartDate] = useState<string>(startDate);
   const [filterEndDate, setFilterEndDate] = useState<string>(endDate);
   const [filterJobTitle, setFilterJobTitle] = useState<string>("");
-  const [filterStatus, setFilterStatus] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>(defaultFilter);
   const [filterJobId, setFilterJobId] = useState<string>("");
   const [filterCandidateEmail, setFilterCandidateEmail] = useState<string>("");
   const [filterCandidateId, setFilterCandidateId] = useState<string>("");
@@ -66,8 +70,8 @@ function useApplicationsListViewModel() {
     const raw: ApplicationsQuery = {
       pageNumber,
       pageSize,
-      startDate: filterStartDate,
-      endDate: filterEndDate,
+      startDate: getDateRangeWithTimes(filterStartDate, "start"),
+      endDate: getDateRangeWithTimes(filterEndDate, "end"),
       candidateEmail: filterCandidateEmail,
       candidateId: filterCandidateId ? Number(filterCandidateId) : "",
       candidateName: filterCandidateName,
@@ -105,7 +109,7 @@ function useApplicationsListViewModel() {
       queryParams.candidateName ?? "",
       queryParams.candidateId ?? "",
       queryParams.jobTitle ?? "",
-      queryParams.jobId ?? ""
+      queryParams.jobId ?? "",
     ],
     queryFn: () => getApplications(queryParams),
     staleTime: 30_000,

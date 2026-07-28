@@ -117,6 +117,31 @@ class AuthService {
       return null;
     }
   }
+
+  public async getGraphToken(): Promise<string | null> {
+    const account = this.getAccount();
+    if (!account) return null;
+
+    try {
+      const response = await this.msalInstance.acquireTokenSilent({
+        scopes: ["https://graph.microsoft.com/User.Read"],
+        account: account,
+      });
+      return response.accessToken;
+    } catch (error) {
+      console.warn("⚠️ MSAL: Silent graph token acquisition failed, attempting popup/redirect", error);
+      try {
+        const response = await this.msalInstance.acquireTokenPopup({
+          scopes: ["https://graph.microsoft.com/User.Read"],
+          account: account,
+        });
+        return response.accessToken;
+      } catch (popupError) {
+        console.error("❌ MSAL: Failed to acquire Graph token", popupError);
+        return null;
+      }
+    }
+  }
 }
 
 export const authService = AuthService.getInstance();

@@ -11,6 +11,7 @@ import {
 } from "@/app/interfaces";
 import {
   cleanParams,
+  getDateRangeWithTimes,
   getLastMonthToDateRange,
   sortAlphabetically,
   toNumber,
@@ -29,10 +30,12 @@ function useJobListViewModel() {
   const AGRO_BASE_URL = import.meta.env.VITE_AGRO_APP_JOB_BASE_URL;
   const SHOULD_USE_AGRO_URL = !!(isAgro && AGRO_BASE_URL);
 
-  const defaultFilter = location.state?.defaultFilter ?? "all";
+  const defaultFilter = location.state?.defaultFilter ?? "";
+
+  console.log("default filter from job ", defaultFilter)
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filterStatus, setFilterStatus] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>(defaultFilter);
   const [filterJobType, setFilterJobType] = useState<string>("");
   const [filterDepartment, setFilterDepartment] = useState<string>("");
   const [filterLocation, setFilterLocation] = useState<string>("");
@@ -86,8 +89,8 @@ function useJobListViewModel() {
       jobType: filterJobType,
       department: debouncedFilters.department,
       location: debouncedFilters.location,
-      startDate: filterStartDate,
-      endDate: filterEndDate,
+      startDate: getDateRangeWithTimes(filterStartDate, "start"),
+      endDate: getDateRangeWithTimes(filterEndDate, "end"),
       title: filterJobTitle,
     };
 
