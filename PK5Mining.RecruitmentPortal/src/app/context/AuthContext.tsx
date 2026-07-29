@@ -99,14 +99,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
         const msToken = await authService.getToken();
-        const graphToken = await authService.getGraphToken();
-
-        if (graphToken) {
-          // for testing
-          const microsoftGraphResponse = await microsoftGraph(graphToken);
-          console.log("from auth context microsoft graph ", microsoftGraphResponse)
-        }
-        
         if (msToken) {
           setAuthToken(msToken);
           tokenStore.set(msToken);
