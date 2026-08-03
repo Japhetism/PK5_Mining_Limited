@@ -103,6 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setAuthToken(msToken);
           tokenStore.set(msToken);
           const backendResponseData = await microsoftLogin();
+          console.log("Backend response data:", backendResponseData);
           if (backendResponseData) {
             const finalToken = backendResponseData.token || msToken;
             const permissionNames = backendResponseData.user.role?.permissions?.map(
