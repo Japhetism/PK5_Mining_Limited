@@ -1,18 +1,36 @@
-import { motion } from 'motion/react';
-import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook, Instagram } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { email, locations, minerals, socialLinks, telephone } from '../fixtures';
-import { ILocation, IMineral, ISocialLink } from '../interfaces';
-import Logo from '../../assets/images/logo.png';
+import { useMemo, useState } from "react";
+import { motion } from "motion/react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Twitter,
+  Facebook,
+  Instagram,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+  email,
+  locations,
+  minerals,
+  socialLinks,
+  telephone,
+} from "../fixtures";
+import { ILocation, IMineral, ISocialLink } from "../interfaces";
+import Logo from "../../assets/images/logo.png";
+import { useLegalModalState } from "../hooks/useLegalModalState";
 
 const footerLinks = [
-  { name: 'About Us', path: '/about' },
-  { name: 'Sustainability', path: '/sustainability' },
-  { name: 'Careers', path: '/careers' },
-  { name: 'Contact', path: '/contact' },
+  { name: "About Us", path: "/about" },
+  { name: "Sustainability", path: "/sustainability" },
+  { name: "Careers", path: "/careers" },
+  { name: "Contact", path: "/contact" },
 ];
 
 export function Footer() {
+  const { openModal } = useLegalModalState();
+
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -26,10 +44,16 @@ export function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src={Logo} alt="PK5 Mining Logo" loading="lazy" className="w-30 h-auto object-contain" />
+              <img
+                src={Logo}
+                alt="PK5 Mining Logo"
+                loading="lazy"
+                className="w-30 h-auto object-contain"
+              />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              Powering industry through responsible mining of strategic minerals and natural resources.
+              Powering industry through responsible mining of strategic minerals
+              and natural resources.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social: ISocialLink, index: number) => (
@@ -38,7 +62,7 @@ export function Footer() {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, color: '#c89b3c' }}
+                  whileHover={{ scale: 1.1, color: "#c89b3c" }}
                   className="text-gray-400 transition-colors"
                 >
                   <social.icon size={20} key={index} />
@@ -81,7 +105,10 @@ export function Footer() {
             <h3 className="font-bold mb-4 text-lg">Contact Us</h3>
             <ul className="space-y-4">
               {locations.map((location: ILocation) => (
-                <li key={location.displayAddress} className="flex items-start gap-3 text-gray-400 text-sm">
+                <li
+                  key={location.displayAddress}
+                  className="flex items-start gap-3 text-gray-400 text-sm"
+                >
                   <MapPin size={18} className="mt-1 shrink-0 text-[#c89b3c]" />
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.actualAddress)}`}
@@ -89,7 +116,12 @@ export function Footer() {
                     rel="noopener noreferrer"
                     className="hover:text-[#c89b3c] transition-colors"
                   >
-                    {location.type && `${location.type}: `}{location.displayAddress}
+                    {location.type && (
+                      <span className="font-bold text-white">
+                        {location.type}:
+                      </span>
+                    )}{" "}
+                    {location.displayAddress}
                   </a>
                 </li>
               ))}
@@ -117,12 +149,30 @@ export function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">
-            © 2026 PK5 Mining. A strategic mining brand of PK5 Holdings Inc., USA.<br/>Africa-Focused | Operating in Tanzania | Expanding to Nigeria
+            © 2026 PK5 Mining. A strategic mining brand of PK5 Holdings Inc.,
+            USA.
+            <br />
+            {/* Africa-Focused | Operating in Tanzania | Expanding to Nigeria */}
           </p>
           <div className="flex gap-6 text-sm text-gray-500">
-            <a href="#" className="hover:text-[#c89b3c] transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-[#c89b3c] transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-[#c89b3c] transition-colors">Cookie Policy</a>
+            <a
+              onClick={() => openModal("privacy")}
+              className="hover:text-[#c89b3c] transition-colors cursor-pointer"
+            >
+              Privacy Policy
+            </a>
+            <a
+              onClick={() => openModal("terms")}
+              className="hover:text-[#c89b3c] transition-colors cursor-pointer"
+            >
+              Terms of Service
+            </a>
+            <a
+              onClick={() => openModal("cookies")}
+              className="hover:text-[#c89b3c] transition-colors cursor-pointer"
+            >
+              Cookie Policy
+            </a>
           </div>
         </div>
       </div>

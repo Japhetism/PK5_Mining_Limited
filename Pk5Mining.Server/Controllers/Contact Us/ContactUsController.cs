@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pk5Mining.Server.Middleware;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Job_Application;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Repositories;
 using Pk5Mining.Server.Repositories.Contact_Us;
+using Pk5Mining.Server.Services.Permission_Handler;
 
 namespace Pk5Mining.Server.Controllers.Contact_Us
 {
@@ -18,6 +20,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
         {
             _repo = repo;
         }
+        [RequireApiKey]
         [HttpPost("contact-us")]
         public async Task<IActionResult> Post([FromBody] ContactUsDTO dto)
         {
@@ -34,6 +37,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             }
             return Ok(ApiResponse.SuccessMessage(contact, "Your message has been sent successfully."));
         }
+        [RequireApiKey]
         [HttpPost("agro-contact-us")]
         public async Task<IActionResult> PostAgro([FromBody] ContactUsDTO dto)
         {
@@ -50,25 +54,28 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             }
             return Ok(ApiResponse.SuccessMessage(contact, "Your message has been sent successfully."));
         }
-        [HttpGet("{id:long}")]
         [Authorize]
-        public async Task<IActionResult> Get(long id)
+        [HasPermission("contact-message.view")]
+        [HttpGet("{id:long}")]
+        public async Task<IActionResult> Get(long id, string appId)
         {
-            var (contact, error) = await _repo.GetById(id);
+            var (contact, error) = await _repo.GetById(id, appId);
             if (error != null)
             {
                 return NotFound(ApiResponse.Failure(null, error));
             }
             return Ok(ApiResponse.SuccessMessage(contact, "Data Retrieved"));
         }
-        [HttpGet]
+
         [Authorize]
-        public async Task<IActionResult> GetAll()
+        [HttpGet]
+        public async Task<IActionResult> GetAll(string appId)
         {
-            var contacts = await _repo.GetAll();
+            var contacts = await _repo.GetAll(appId);
             return Ok(ApiResponse.SuccessMessage(contacts, "Data Retrieved"));
         }
         [Authorize]
+        [HasPermission("contact-message.view")]
         [HttpGet("filter")]
         public async Task<IActionResult> Get(
              [FromQuery] int pageNumber = 1,
@@ -76,6 +83,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
              [FromQuery] string? email = null,
              [FromQuery] string? subject = null,
              [FromQuery] string? name = null,
+             [FromQuery] string? phoneNumber = null,
              [FromQuery] string? status = null,
              [FromQuery] string? appId = null,
              [FromQuery] DateTime? startDate = null,
@@ -90,6 +98,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
                 email,
                 subject,
                 name,
+                phoneNumber,
                 status,
                 appId,
                 startDate,
@@ -106,6 +115,7 @@ namespace Pk5Mining.Server.Controllers.Contact_Us
             return Ok(ApiResponse.SuccessMessage(response, "Contact requests retrieved successfully."));
         }
         [Authorize]
+        [HasPermission("contact-message.update")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] ContactUsUpdateDTO value)
         {

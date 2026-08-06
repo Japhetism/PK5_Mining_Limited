@@ -2,8 +2,8 @@
 {
     public interface IAgroMailService
     {
-        bool SendHTMLMail(MailData htmlMailData);
-        bool SendMail(MailData mailData);
-        bool SendMailWithAttachment(MailDataWithAttachment mailData);
+        Task<bool> SendHTMLMailAsync(MailData htmlMailData);
+        Task<bool> SendMailWithAttachmentAsync(MailDataWithAttachment mailData);
+
     }
 }

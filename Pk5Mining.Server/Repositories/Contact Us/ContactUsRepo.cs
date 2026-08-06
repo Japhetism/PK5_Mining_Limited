@@ -16,14 +16,16 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
         private readonly IMailService _mailService;
         private readonly IAgroMailService _agroMailService;
         private readonly IEmailTemplateService _templateService;
+        private readonly IBackgroundTaskQueue _taskQueue;
 
-        public ContactUsRepo(Pk5MiningDBContext dbContext, IMapper mapper, Services.Email.IMailService mailService, IAgroMailService agroMailService, IEmailTemplateService templateService)
+        public ContactUsRepo(Pk5MiningDBContext dbContext, IMapper mapper, Services.Email.IMailService mailService, IAgroMailService agroMailService, IEmailTemplateService templateService, IBackgroundTaskQueue taskQueue)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _mailService = mailService;
             _agroMailService = agroMailService;
             _templateService = templateService;
+            _taskQueue = taskQueue;
         }
         public async Task<(IContactUs?, string?, bool)> CreateAsync(IContactUsDTO item)
         {
@@ -42,41 +44,69 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 if (result <= 0)
                     return (null, "Failed to save contact request", true);
 
-                var replacements = new Dictionary<string, string>
-            {
-                { "FirstName", item.FirstName },
-                { "LastName", item.LastName },
-                { "Email", item.Email },
-                { "PhoneNumber", item.PhoneNumber ?? "N/A" },
-                { "Company", item.Company ?? "N/A" },
-                { "Subject", item.Subject ?? "N/A" },
-                { "MessageBody", item.MessageBody }
-            };
-
-                // Admin Email
-                var adminBody = await _templateService.RenderTemplateAsync("AdminPk5Contact.txt", replacements);
-
-                _mailService.SendHTMLMail(new MailData
+                _taskQueue.QueueBackgroundWorkItem(async token =>
                 {
-                    EmailToId = "dev-test-emails@pk5miningltd.com",
-                    EmailToName = "Admin",
-                    EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
-                    EmailBody = adminBody
-                });
-
-                // Client Email
-                var clientBody = await _templateService.RenderTemplateAsync("Pk5Contact.txt",
-                    new Dictionary<string, string>
+                    try
                     {
-                    { "FirstName", item.FirstName }
-                    });
+                        var replacements = new Dictionary<string, string>
+                        {
+                            { "FirstName", item.FirstName },
+                            { "LastName", item.LastName },
+                            { "Email", item.Email },
+                            { "PhoneNumber", item.PhoneNumber ?? "N/A" },
+                            { "Company", item.Company ?? "N/A" },
+                            { "Subject", item.Subject ?? "N/A" },
+                            { "MessageBody", item.MessageBody }
+                        };
 
-                _mailService.SendHTMLMail(new MailData
-                {
-                    EmailToId = item.Email,
-                    EmailToName = $"{item.FirstName} {item.LastName}",
-                    EmailSubject = "Thank You For Reaching Out",
-                    EmailBody = clientBody
+                        // Admin Email
+                        var adminBody = await _templateService.RenderTemplateAsync(
+                            "AdminPk5Contact.txt",
+                            replacements);
+
+                        var adminMail = new MailData
+                        {
+                            EmailToId = "dev-test-emails@pk5miningltd.com",
+                            EmailToName = "Admin",
+                            EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
+                            EmailBody = adminBody
+                        };
+
+                        // Client Email
+                        var clientBody = await _templateService.RenderTemplateAsync(
+                            "Pk5Contact.txt",
+                            new Dictionary<string, string>
+                            {
+                                { "FirstName", item.FirstName }
+                            });
+
+                        var clientMail = new MailData
+                        {
+                            EmailToId = item.Email,
+                            EmailToName = $"{item.FirstName} {item.LastName}",
+                            EmailSubject = "Thank You For Reaching Out",
+                            EmailBody = clientBody
+                        };
+
+                        bool[] results = await Task.WhenAll(
+                            _mailService.SendHTMLMailAsync(adminMail),
+                            _mailService.SendHTMLMailAsync(clientMail)
+                        );
+
+                        if (!results[0])
+                        {
+                            Console.WriteLine("Admin contact email failed.");
+                        }
+
+                        if (!results[1])
+                        {
+                            Console.WriteLine("Client contact email failed.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
                 });
 
                 return (contactUs, null, false);
@@ -104,37 +134,69 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 if (result <= 0)
                     return (null, "Failed to save contact request", true);
 
-                var replacements = new Dictionary<string, string>
+                _taskQueue.QueueBackgroundWorkItem(async token =>
                 {
-                    { "FirstName", item.FirstName },
-                    { "LastName", item.LastName },
-                    { "Email", item.Email },
-                    { "PhoneNumber", item.PhoneNumber ?? "N/A" },
-                    { "Company", item.Company ?? "N/A" },
-                    { "Subject", item.Subject ?? "N/A" },
-                    { "MessageBody", item.MessageBody }
-                };
-                var adminBody = await _templateService.RenderTemplateAsync("AdminAgroContact.txt", replacements);
-
-                _agroMailService.SendHTMLMail(new MailData
-                {
-                    EmailToId = "dev-test-emails@pk5miningltd.com",
-                    EmailToName = "Admin",
-                    EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
-                    EmailBody = adminBody
-                });
-                var clientBody = await _templateService.RenderTemplateAsync("AgroContact.txt",
-                    new Dictionary<string, string>
+                    try
                     {
-                        { "FirstName", item.FirstName }
-                    });
+                        var replacements = new Dictionary<string, string>
+                        {
+                            { "FirstName", item.FirstName },
+                            { "LastName", item.LastName },
+                            { "Email", item.Email },
+                            { "PhoneNumber", item.PhoneNumber ?? "N/A" },
+                            { "Company", item.Company ?? "N/A" },
+                            { "Subject", item.Subject ?? "N/A" },
+                            { "MessageBody", item.MessageBody }
+                        };
 
-                _agroMailService.SendHTMLMail(new MailData
-                {
-                    EmailToId = item.Email,
-                    EmailToName = $"{item.FirstName} {item.LastName}",
-                    EmailSubject = "Thank You For Reaching Out",
-                    EmailBody = clientBody
+                        // Admin Email
+                        var adminBody = await _templateService.RenderTemplateAsync(
+                            "AdminAgroContact.txt",
+                            replacements);
+
+                        var adminMail = new MailData
+                        {
+                            EmailToId = "dev-test-emails@pk5miningltd.com",
+                            EmailToName = "Admin",
+                            EmailSubject = $"New Contact Us Submission: {item.Subject ?? "No Subject"}",
+                            EmailBody = adminBody
+                        };
+
+                        // Client Email
+                        var clientBody = await _templateService.RenderTemplateAsync(
+                            "AgroContact.txt",
+                            new Dictionary<string, string>
+                            {
+                                  { "FirstName", item.FirstName }
+                            });
+
+                        var clientMail = new MailData
+                        {
+                            EmailToId = item.Email,
+                            EmailToName = $"{item.FirstName} {item.LastName}",
+                            EmailSubject = "Thank You For Reaching Out",
+                            EmailBody = clientBody
+                        };
+
+                        bool[] results = await Task.WhenAll(
+                            _agroMailService.SendHTMLMailAsync(adminMail),
+                            _agroMailService.SendHTMLMailAsync(clientMail)
+                        );
+
+                        if (!results[0])
+                        {
+                            Console.WriteLine("Agro admin contact email failed.");
+                        }
+
+                        if (!results[1])
+                        {
+                            Console.WriteLine("Agro client contact email failed.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
                 });
 
                 return (contactUs, null, false);
@@ -145,18 +207,18 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
                 return (null, ex.Message, true);
             }
         }
-        public async Task<(IContactUs?, string?)> GetById(long Id)
+        public async Task<(IContactUs?, string?)> GetById(long Id, string appId)
         {
-            var contactUs = await _dbContext.ContactUs.FindAsync(Id);
+            var contactUs = await _dbContext.ContactUs.FirstOrDefaultAsync(c => c.Id == Id && c.AppId == appId);
             if (contactUs == null)
             {
                 return (null, "Contact request not found");
             }
             return (contactUs, null);
         }
-        public async Task<IEnumerable<IContactUs>> GetAll()
+        public async Task<IEnumerable<IContactUs>> GetAll(string appId)
         {
-            return await _dbContext.ContactUs.ToListAsync();
+            return await _dbContext.ContactUs.Where(c => c.AppId == appId).ToListAsync();
         }
         public async Task<(IEnumerable<IContactUs> Contacts, int TotalCount)> GetFilteredContacts(
              int pageNumber,
@@ -164,6 +226,7 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
              string? email,
              string? subject,
              string? name,
+             string? phoneNumber,
              string? status,
              string? appId,
              DateTime? startDate,
@@ -184,9 +247,13 @@ namespace Pk5Mining.Server.Repositories.Contact_Us
             {
                 query = query.Where(c => c.FirstName.StartsWith(name) || c.LastName.StartsWith(name));
             }
+            if (!string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                query = query.Where(c => c.PhoneNumber!.StartsWith(phoneNumber));
+            }
             if (!string.IsNullOrWhiteSpace(status))
             {
-                query = query.Where(c => c.Email.StartsWith(status));
+                query = query.Where(c => c.Status!.StartsWith(status));
             }
             if (!string.IsNullOrWhiteSpace(appId))
             {

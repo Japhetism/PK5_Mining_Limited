@@ -1,9 +1,7 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import {
   ApplicationErrors,
-  CreateJobPayload,
   IApplicantBioData,
-  JobErrors,
 } from "../interfaces";
 import { countryToIso, normalizeLinkedInUrl } from "./helper";
 
@@ -61,47 +59,10 @@ export const isValidPhoneForCountry = (phone: string, country: string) => {
   return !!parsed && parsed.isValid();
 };
 
-export const validateJob = (data: CreateJobPayload): JobErrors => {
-  const errors: JobErrors = {};
-
-  if (!data.title.trim()) {
-    errors.title = "Title is required.";
-  }
-
-  if (!data.department.trim()) {
-    errors.department = "Department is required.";
-  }
-
-  if (!data.location.trim()) {
-    errors.location = "Location is required.";
-  }
-
-  if (!data.experience.trim()) {
-    errors.experience = "Experience is required.";
-  }
-
-  if (!data.jobType) {
-    errors.jobType = "Job type is required.";
-  }
-
-  if (!data.workArrangement) {
-    errors.workArrangement = "Work arrangement is required.";
-  }
-
-  if (!data.briefDescription.trim()) {
-    errors.briefDescription = "Brief description is required.";
-  }
-
-  if (!data.description.trim()) {
-    errors.description = "Description is required.";
-  }
-
-  return errors;
-};
-
 export const validateApplication = (
   data: IApplicantBioData,
   resumeFile: File | null,
+  hasAgreedToTerms: boolean,
 ): ApplicationErrors => {
   const errors: ApplicationErrors = {};
 
@@ -146,6 +107,10 @@ export const validateApplication = (
   if (data.linkedinUrl && !isValidLinkedIn(data.linkedinUrl)) {
     errors.linkedinUrl =
       "Please provide a valid LinkedIn profile URL (linkedin.com).";
+  }
+
+  if (!hasAgreedToTerms) {
+    errors.agreedToTerms = true;
   }
 
   return errors;

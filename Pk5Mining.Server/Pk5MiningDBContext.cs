@@ -1,8 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Contact_Us;
+using Pk5Mining.Server.Models.Departments;
 using Pk5Mining.Server.Models.Job;
 using Pk5Mining.Server.Models.Job_Application;
+using Pk5Mining.Server.Models.Permissions;
+using Pk5Mining.Server.Models.Roles;
+using Pk5Mining.Server.Models.Subsidiaries;
+using System.Reflection.Emit;
 
 namespace Pk5Mining.Server
 {
@@ -24,7 +29,10 @@ namespace Pk5Mining.Server
         public virtual DbSet<Jobs> Jobs { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<ContactUs> ContactUs { get; set; }
-
+        public virtual DbSet<Subsidiary> Subsidiaries { get; set; }
+        public virtual DbSet<Permission> Permissions { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
 
         #endregion
 
@@ -87,6 +95,18 @@ namespace Pk5Mining.Server
                 entity.ToTable("Users", schema: "pk5");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasOne(e => e.UserRole)
+                            .WithMany()
+                            .HasForeignKey(e => e.RoleId)
+                            .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(e => e.Subsidiary)
+                .WithMany()
+                .HasForeignKey(e => e.SubsidiaryId)
+                .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(e => e.Department)
+                .WithMany()
+                .HasForeignKey(e => e.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull);
             });
             modelBuilder.Entity<ContactUs>(entity =>
             {
@@ -94,6 +114,43 @@ namespace Pk5Mining.Server
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
+            modelBuilder.Entity<Subsidiary>(entity =>
+            {
+                entity.ToTable("Subsidiaries", schema: "pk5");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
+            modelBuilder.Entity<Permission>(entity =>
+            {
+                entity.ToTable("Permissions", schema: "pk5");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever();
+            });
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.ToTable("Roles", schema: "pk5");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.HasOne(e => e.Subsidiary)
+                        .WithMany()
+                        .HasForeignKey(e => e.SubsidiaryId)
+                        .OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(e => e.Permissions)
+                      .WithMany(p => p.UserRoles)
+                      .UsingEntity(j => j.ToTable("RolePermissions", "pk5"));
+            });
+                modelBuilder.Entity<Department>(entity =>
+                {
+                    entity.ToTable("Departments", schema: "pk5");
+                    entity.HasKey(e => e.Id);
+                    entity.Property(e => e.Id).ValueGeneratedNever();
+    
+                    entity.HasOne(d => d.Subsidiary)
+                        .WithMany()
+                        .HasForeignKey(d => d.SubsidiaryId)
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
             OnModelCreatingPartial(modelBuilder);
         }
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

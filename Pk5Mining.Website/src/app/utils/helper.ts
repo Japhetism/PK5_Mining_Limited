@@ -1,14 +1,5 @@
 import { CountryCode } from "node_modules/libphonenumber-js/types";
-import { ByStage, NavItem, RawByStage, StageValue } from "../interfaces";
-import { agroSubjects, miningSubjects, statuses, websites } from "../constants";
-import { Permission } from "../constants/permissions";
-import { adminRouteItems } from "../routes/admin-config";
-import { UserRole } from "../constants/role";
-import { UserErrors } from "../interfaces/user";
 import { ZodError } from "zod";
-
-const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
-const enforceRole = import.meta.env.VITE_ENFORCE_ROLE == "true";
 
 export function capitalizeFirstLetter(value: string): string {
   if (!value) return value;
@@ -115,35 +106,6 @@ export const formatDateTime = (s?: string | null, showTime: boolean = true) => {
     .replace(/\b(am|pm)\b/, (m) => m.toUpperCase());
 };
 
-export function mapRawByStage(rawByStage?: RawByStage): ByStage {
-  const normalized = Object.fromEntries(
-    Object.entries(rawByStage ?? {}).map(([k, v]) => [k.toLowerCase(), v]),
-  );
-
-  return statuses.reduce((acc, s) => {
-    acc[s.value] = normalized[s.backendKey.toLowerCase()] ?? 0;
-    return acc;
-  }, {} as ByStage);
-}
-
-const stageSet = new Set<StageValue>(statuses.map((s) => s.value));
-
-export function isStageValue(value: string): value is StageValue {
-  return stageSet.has(value as StageValue);
-}
-
-export function normalizeStage(input: string): string {
-  return input.trim().toLowerCase().replace(/\s+/g, "_");
-}
-
-export function getStageMeta(value?: string | undefined) {
-  if (!value) return undefined;
-
-  const normalized = value.toLowerCase();
-
-  return statuses.find((s) => s.value.toLowerCase() === normalized);
-}
-
 export const ddmmyyyyToApiDate = (value?: string | null) => {
   if (!value) return value;
 
@@ -152,53 +114,6 @@ export const ddmmyyyyToApiDate = (value?: string | null) => {
   if (!day || !month || !year) return value;
 
   return `${year}-${month}-${day}`;
-};
-
-export const hasRole = (
-  userRole?: UserRole,
-  requiredRoles?: UserRole[],
-): boolean => {
-  if (!enforceRole || !requiredRoles) return true;
-  return requiredRoles.includes(userRole as UserRole);
-};
-
-export const hasPermissions = (
-  userPermissions: Permission[] = [],
-  requiredPermissions: Permission[] = [],
-  requireAll = false,
-) => {
-  if (!enforcePermission || !requiredPermissions.length) return true;
-
-  if (requireAll) {
-    return requiredPermissions.every((permission) =>
-      userPermissions.includes(permission),
-    );
-  }
-
-  return requiredPermissions.some((permission) =>
-    userPermissions.includes(permission),
-  );
-};
-
-export const getVisibleNav = (userPermissions: Permission[], userRole?: UserRole): NavItem[] => {
-  return adminRouteItems
-    .filter(
-      (item) =>
-        item.show &&
-        hasPermissions(
-          userPermissions,
-          item.permissions ?? [],
-          item.requireAllPermissions,
-        )
-        && hasRole(userRole, item.roles)
-    )
-    .map((item) => ({
-      to: `/admin/${item.path}`,
-      label: item.label,
-      icon: item.icon!,
-      show: item.show,
-      end: item.end,
-    }));
 };
 
 export const toTitleCase = (str: string) =>
@@ -249,33 +164,76 @@ export function toBackendDateTimeWithBoundary(
   return new Date(year, month - 1, day, hours, minutes, seconds).toISOString();
 }
 
-export const getWebsiteName = (appId: string): string => {
-  return (
-    websites.find(
-      (item: { label: string; value: string }) => item.value === appId,
-    )?.label ?? appId
-  );
-};
-
-export const getFilterSubjects = (appId: string | undefined) => {
-  const subjectMap: Record<string, typeof miningSubjects> = {
-    "com.pk5.mining": miningSubjects,
-    "com.pk5.agro": agroSubjects,
-  };
-
-  const subjects = !appId
-    ? [...miningSubjects, ...agroSubjects]
-    : (subjectMap[appId] ?? []);
-
-  return Array.from(
-    new Map(subjects.map((item) => [item.value, item])).values(),
-  ).sort((a, b) => a.label.localeCompare(b.label));
-};
-
 export const limitWords = (text: string, maxWords: number) => {
   const words = text.trim().split(/\s+/);
 
   if (words.length <= maxWords) return text;
 
   return words.slice(0, maxWords).join(" ");
+};
+
+export const generateAppId = (name: string): string => {
+  if (!name) return "";
+
+  return (
+    "com." +
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim()
+      .split(" ")
+      .join(".")
+  );
+};
+
+export const isEmailAuthorized = (username: string, emailDomain: string): boolean => {
+  const parts = username.trim().toLowerCase().split("@");
+
+  if (parts.length !== 2) {
+    return false; // invalid email
+  }
+
+  const domain = parts[1];
+
+  return domain === emailDomain.trim().toLowerCase();
+}
+
+export const shouldChangePassword = (email: string, hostname: string): boolean => {
+  if (!email) return false;
+
+  if (!hostname) return false;
+
+  const emailDomain = email.split("@")[1]?.toLowerCase();
+
+   const hostBrand = hostname.split(".")[0].toLowerCase();
+  
+  return emailDomain.includes(hostBrand) || hostBrand.includes(emailDomain.split('.')[0]);
+}
+
+export const formatFileSize = (bytes?: number): string => {
+  if (bytes === undefined || bytes === null || bytes < 0) return "Unknown size";
+
+  const units = ["B", "KB", "MB", "GB", "TB"] as const;
+
+  let size = bytes;
+  let unitIndex = 0;
+
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex++;
+  }
+
+  return `${size.toFixed(unitIndex === 0 ? 0 : 2)} ${units[unitIndex]}`;
+};
+
+export const getRemoteFileSize = async (url: string): Promise<string> => {
+  try {
+    const res = await fetch(url, { method: "HEAD" });
+    const contentLength = res.headers.get("content-length");
+
+    return formatFileSize(contentLength ? Number(contentLength) : undefined);
+  } catch {
+    return "Unknown size";
+  }
 };

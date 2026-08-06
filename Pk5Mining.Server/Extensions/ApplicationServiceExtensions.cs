@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Pk5Mining.Server.Configuration.Mapper;
 using Pk5Mining.Server.Models.Contact_Us;
 using Pk5Mining.Server.Models.Job;
@@ -7,14 +10,20 @@ using Pk5Mining.Server.Repositories;
 using Pk5Mining.Server.Repositories.Admin;
 using Pk5Mining.Server.Repositories.Contact_Us;
 using Pk5Mining.Server.Repositories.Dashboard;
+using Pk5Mining.Server.Repositories.Departments;
 using Pk5Mining.Server.Repositories.Job;
 using Pk5Mining.Server.Repositories.Job.Job_Specific_Repo;
 using Pk5Mining.Server.Repositories.Job_Application;
 using Pk5Mining.Server.Repositories.Job_Application.JobApplication_Specific_Repo;
+using Pk5Mining.Server.Repositories.Permissions;
+using Pk5Mining.Server.Repositories.Roles;
+using Pk5Mining.Server.Repositories.Subsidiaries;
 using Pk5Mining.Server.Services;
 using Pk5Mining.Server.Services.Cloud_Service;
 using Pk5Mining.Server.Services.Email;
 using Pk5Mining.Server.Services.Email.Agro_Mail;
+using Pk5Mining.Server.Services.Permission_Handler;
+using System;
 using System.IO;
 
 namespace Pk5Mining.Server.Extensions
@@ -24,7 +33,18 @@ namespace Pk5Mining.Server.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddAutoMapper(typeof(MapperProfiles));
-            services.AddDbContext<Pk5MiningDBContext>();
+            services.AddDbContext<Pk5MiningDBContext>(options =>
+            {
+                options.UseSqlServer(
+                    config.GetConnectionString("DevPk5MiningDB"),
+                    sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(10),
+                            errorNumbersToAdd: null);
+                    });
+            });
 
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
             services.AddScoped<IFileAccessor, FileAccessor>();
@@ -37,9 +57,22 @@ namespace Pk5Mining.Server.Extensions
             services.AddScoped<IDashboardRepo , DashboardRepo>();
             services.AddScoped<IJobApplicationSpecificRepo, JobApplicationSpecificRepo>();
             services.AddScoped<IUserRepo,  UserRepo>();
+            services.AddScoped<ISubsidiaryRepo, SubsidiaryRepo>();
+            services.AddScoped<IPermissionRepo, PermissionRepo>();
+            services.AddScoped<IUserRoleRepo, UserRoleRepo>();
+            services.AddScoped<IDepartmentRepo, DepartmentRepo>();
+
+
             services.AddScoped<ITokenService , TokenService>();
             services.AddTransient<IMailService  , MailService>();
             services.AddTransient<IAgroMailService, AgroMailService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+            services.AddHostedService<QueuedHostedService>();
+            services.AddAuthorization();
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 
             services.AddCors(options =>
@@ -51,6 +84,7 @@ namespace Pk5Mining.Server.Extensions
                             "http://localhost:5174", "https://localhost:5174",
                             "http://localhost:5175", "https://localhost:5175",
                             "https://pk5miningltd.com", "https://pk5miningltd-test.vercel.app",
+                            "https://www.pk5miningltd.com",
                             "https://pk-5-agro.vercel.app")
                         .AllowAnyHeader()
                         .AllowAnyMethod();

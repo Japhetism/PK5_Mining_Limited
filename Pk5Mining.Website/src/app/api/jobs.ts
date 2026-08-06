@@ -1,22 +1,21 @@
-import {
-  ApiResponse,
-  CreateJobPayload,
-  JobDto,
-  JobResponsePayload,
-  JobsQuery,
-  UpdateJobPayload,
-} from "../interfaces";
 import { http } from "./http";
+import { ApiResponse, JobDto } from "../interfaces";
 import { getAxiosErrorMessage } from "../utils/axios-error";
 
 const displayJobs = import.meta.env.VITE_DISPLAY_JOBS_PRODUCTION === "true";
+const code = import.meta.env.VITE_APP_ID ?? "";
 
 export async function getActiveJobs() {
   try {
     if (!displayJobs) {
       return [];
     }
-    const { data } = await http.get<ApiResponse<JobDto[]>>("/Job");
+    const { data } = await http.get<ApiResponse<JobDto[]>>("/Job", {
+      requiresApiKey: true,
+      params: {
+        code,
+      },
+    });
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
@@ -27,52 +26,17 @@ export async function getActiveJobs() {
     return data.responseData;
   } catch (err) {
     throw new Error(getAxiosErrorMessage(err, "Failed to fetch jobs"));
-  }
-}
-
-export async function getJobs(params: JobsQuery) {
-  try {
-    const { data } = await http.get<ApiResponse<JobResponsePayload>>(
-      "/Job/filter",
-      { params },
-    );
-
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(data.responseMessage, "Failed to fetch jobs"),
-      );
-    }
-
-    return data.responseData;
-  } catch (err) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to fetch jobs"));
-  }
-}
-
-export async function getJobsForDropdown() {
-  try {
-    const { data } = await http.get<ApiResponse<JobDto[]>>("/Job/light");
-
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(
-          data.responseMessage,
-          "Failed to fetch jobs for dropdown",
-        ),
-      );
-    }
-
-    return data.responseData;
-  } catch (err) {
-    throw new Error(
-      getAxiosErrorMessage(err, "Failed to fetch jobs for dropdown"),
-    );
   }
 }
 
 export async function getJobById(id: string) {
   try {
-    const { data } = await http.get<ApiResponse<JobDto>>(`/Job/${id}`);
+    const { data } = await http.get<ApiResponse<JobDto>>(`/Job/${id}`, {
+      requiresApiKey: true,
+      params: {
+        code: code,
+      },
+    });
 
     if (data.responseStatus !== "SUCCESS") {
       throw new Error(
@@ -86,53 +50,5 @@ export async function getJobById(id: string) {
     return data.responseData;
   } catch (err) {
     throw new Error(getAxiosErrorMessage(err, "Failed to fetch job details"));
-  }
-}
-
-export async function createJob(payload: CreateJobPayload) {
-  try {
-    const createPayload = {
-      ...payload,
-      dT_Modified: new Date().toISOString(),
-    };
-
-    const { data } = await http.post<ApiResponse<JobDto>>(
-      "/Job",
-      createPayload,
-    );
-
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(data.responseMessage, "Failed to add job"),
-      );
-    }
-
-    return data.responseData;
-  } catch (err) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to add job"));
-  }
-}
-
-export async function updateJob(id: number, payload: UpdateJobPayload) {
-  try {
-    // to be remove
-    const createPayload = {
-      ...payload,
-      status: payload.isActive ? "Open" : "Close",
-    };
-    const { data } = await http.put<ApiResponse<JobDto>>(
-      `/Job/${id}`,
-      createPayload,
-    );
-
-    if (data.responseStatus !== "SUCCESS") {
-      throw new Error(
-        getAxiosErrorMessage(data.responseMessage, "Failed to update job"),
-      );
-    }
-
-    return data.responseData;
-  } catch (err) {
-    throw new Error(getAxiosErrorMessage(err, "Failed to update job"));
   }
 }

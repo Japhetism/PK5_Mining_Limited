@@ -4,6 +4,7 @@ using Pk5Mining.Server.Models.Admin;
 using Pk5Mining.Server.Models.Response;
 using Pk5Mining.Server.Models.User;
 using Pk5Mining.Server.Repositories.Admin;
+using Pk5Mining.Server.Services.Permission_Handler;
 
 namespace Pk5Mining.Server.Controllers.Admin
 {
@@ -19,6 +20,7 @@ namespace Pk5Mining.Server.Controllers.Admin
         }
 
         [Authorize]
+        [HasPermission("user.create")]
         [HttpPost("create")]
         public async Task<ActionResult> Post([FromBody] UserDTO dto)
         {
@@ -29,18 +31,8 @@ namespace Pk5Mining.Server.Controllers.Admin
             }
             return Ok(ApiResponse.SuccessMessage(admin, "Account created successfully"));
         }
-        /*[Authorize]*/
-        [HttpPut("update-password/{id}")]
-        public async Task<ActionResult> UpdatePassword(long id, [FromBody] SetPassword newPassword)
-        {
-            var (admin, error, isException) = await _repo.UpdatePasswordAsync(id, newPassword);
-            if (isException)
-            {
-                return BadRequest(ApiResponse.Failure(null, error ?? "An error occurred while updating the password."));
-            }
-            return Ok(ApiResponse.SuccessMessage(admin, "Password updated successfully"));
-        }
-        /*[Authorize]*/
+        [Authorize]
+        [HasPermission("user.view")]
         [HttpGet("filter")]
         public async Task<IActionResult> Get( [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? email = null, [FromQuery] string? userName = null,
              [FromQuery] string? name = null,
@@ -65,9 +57,10 @@ namespace Pk5Mining.Server.Controllers.Admin
             };
             return Ok(ApiResponse.SuccessMessage(response, "Users retrieved successfully."));
         }
-        /*[Authorize]*/
+        [Authorize]
+        [HasPermission("user.view")]
         [HttpGet("{id}")]
-        public async Task<ActionResult> Ge(long id)
+        public async Task<ActionResult> Get(long id)
         {
             var (admin, error, isException) = await _repo.GetByIdAsync(id);
             if (isException)
@@ -81,6 +74,7 @@ namespace Pk5Mining.Server.Controllers.Admin
             return Ok(ApiResponse.SuccessMessage(admin, "User retrieved successfully"));
         }
         [Authorize]
+        [HasPermission("user.update")]
         [HttpPut("update-user")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto dto)
         {
