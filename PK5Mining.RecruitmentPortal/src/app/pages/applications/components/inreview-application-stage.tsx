@@ -62,11 +62,6 @@ export function InreviewApplicationStage({
 
   const showDeadlineSection = assessmentType === "Online";
 
-  const isSubmitDisabled =
-    !acknowledged ||
-    !action ||
-    (action === "Reject" && !rejectionReason.trim());
-
   const handleReject = () => {
     const payload = {
       currentStatus: "In Review",
@@ -79,21 +74,79 @@ export function InreviewApplicationStage({
   };
 
   const handleProceed = () => {
-    handleProceedWithApplication({
+    const basePayload = {
       currentStatus: "In Review",
       employeeId: user?.id ?? "",
       nextProcess,
-      interviewType,
-      assessmentType,
-      onlineAssessmentLink,
-      scheduledDate,
-      scheduledTime,
-      deadlineDate,
-      deadlineTime,
-      venueAddress,
-      panelists,
-    });
+    };
+
+    let payload = {};
+
+    if (nextProcess === "Assessment") {
+      payload = {
+        ...basePayload,
+        assessmentType,
+
+        ...(assessmentType === "Online" && {
+          onlineAssessmentLink,
+          deadlineDate,
+          deadlineTime,
+        }),
+
+        ...(assessmentType === "In-person" && {
+          scheduledDate,
+          scheduledTime,
+          venueAddress,
+        }),
+      };
+    }
+
+    if (nextProcess === "Interview") {
+      payload = {
+        ...basePayload,
+        interviewType,
+        panelists: panelists.filter((p) => p.trim()),
+
+        scheduledDate,
+        scheduledTime,
+
+        ...(interviewType === "Onsite" && {
+          venueAddress,
+        }),
+      };
+    }
+
+    console.log("Proceed Payload:", payload);
+    handleProceedWithApplication(payload);
   };
+
+  const isAssessmentValid =
+    nextProcess === "Assessment" &&
+    ((assessmentType === "Online" &&
+      onlineAssessmentLink.trim() &&
+      deadlineDate &&
+      deadlineTime) ||
+      (assessmentType === "In-person" &&
+        scheduledDate &&
+        scheduledTime &&
+        venueAddress.trim()));
+
+  const isInterviewValid =
+    nextProcess === "Interview" &&
+    interviewType &&
+    scheduledDate &&
+    scheduledTime &&
+    panelists.some((p) => p.trim()) &&
+    (interviewType === "Virtual" ||
+      (interviewType === "Onsite" && venueAddress.trim()));
+
+  const isProceedValid = nextProcess && (isAssessmentValid || isInterviewValid);
+
+  const isSubmitDisabled =
+    !acknowledged ||
+    !action ||
+    (action === "Reject" && !rejectionReason.trim()) ||
+    (action === "Proceed" && !isProceedValid);
 
   return (
     <>
