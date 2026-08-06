@@ -4,6 +4,8 @@ import { Check, Plus, Trash2 } from "lucide-react";
 import { useTenant } from "@/tenants/useTenant";
 import { useAuth } from "@/app/context/AuthContext";
 import { RejectApplicationPayload } from "@/app/interfaces";
+import { DatePicker } from "@/app/components/ui/date-picker";
+import { formatDateTime } from "@/app/utils/helper";
 
 interface InreviewApplicationStageProps {
   onClose: () => void;
@@ -396,11 +398,15 @@ export function InreviewApplicationStage({
                           >
                             Deadline Date
                           </label>
-                          <input
-                            type="date"
-                            value={deadlineDate}
-                            onChange={(e) => setDeadlineDate(e.target.value)}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                          <DatePicker
+                            name="deadlineDate"
+                            value={
+                              deadlineDate
+                                ? formatDateTime(deadlineDate, false)
+                                : ""
+                            }
+                            onChange={(value) => setDeadlineDate(value)}
+                            minDate={new Date()}
                           />
                         </div>
 
