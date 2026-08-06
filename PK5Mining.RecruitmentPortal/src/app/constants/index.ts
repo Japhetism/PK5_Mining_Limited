@@ -142,6 +142,10 @@ export const workflowStages = [
     id: "interview",
     label: "Interview Scheduled",
   },
+  {
+    id: "interview_completed",
+    label: "Interview Completed",
+  },
   { id: "offer", label: "Offer Sent" },
   { id: "rejected", label: "Rejected" },
   { id: "hired", label: "Hired" },

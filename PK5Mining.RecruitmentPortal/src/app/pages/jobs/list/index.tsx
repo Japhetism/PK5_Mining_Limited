@@ -383,7 +383,7 @@ export function JobList() {
               name="locationId"
               value={filters.location ?? ""}
               options={[
-                { value: "", label: "All Departments" },
+                { value: "", label: "All Locations" },
                 ...locations.map((loc) => ({
                   value: loc,
                   label: loc,

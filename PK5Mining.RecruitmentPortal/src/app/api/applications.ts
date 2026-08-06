@@ -4,6 +4,7 @@ import {
   ApplicationsByJobIdQuery,
   ApplicationsQuery,
   JobApplicationDto,
+  RejectApplicationPayload,
 } from "../interfaces";
 import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
@@ -134,6 +135,31 @@ export async function getJobApplicationsByJobId(
   } catch (err) {
     throw new Error(
       getAxiosErrorMessage(err, "Failed to get job applications by job id"),
+    );
+  }
+}
+
+export async function rejectApplication(payload: RejectApplicationPayload) {
+  try {
+    const { id } = payload;
+    const { data } = await http.put<ApiResponse<JobApplicationDto>>(
+      `/JobApplication/${id}/reject`,
+      payload,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to reject job application",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to reject job application"),
     );
   }
 }

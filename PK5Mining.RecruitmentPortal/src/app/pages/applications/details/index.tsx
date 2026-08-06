@@ -8,6 +8,7 @@ import { useTenant } from "@/tenants/useTenant";
 import useApplicationDetailsViewModel from "./viewmodel";
 import { useAuth } from "@/app/context/AuthContext";
 import { PERMISSIONS } from "@/app/constants/permissions";
+import { UpdateApplicationStage } from "../components/update-application-stage";
 
 const enforcePermission = import.meta.env.VITE_ENFORCE_PERMISSION == "true";
 
@@ -29,6 +30,8 @@ export function ApplicationDetail() {
     setIsViewerOpen,
     handleUpdateStatus,
     setSelectedStatus,
+    handleRejectApplication,
+    handleInReviewApplication,
   } = useApplicationDetailsViewModel();
 
   if (isLoading) return <ApplicationDetailsSkeleton />;
@@ -323,7 +326,7 @@ export function ApplicationDetail() {
         lastName={app?.lastName ?? ""}
       />
 
-      <ConfirmModal
+      {/* <ConfirmModal
         open={!!selectedStatus}
         onClose={() => setSelectedStatus(null)}
         onConfirm={handleUpdateStatus}
@@ -332,6 +335,16 @@ export function ApplicationDetail() {
         confirmText="Yes, update"
         cancelText="No"
         loading={updating}
+      /> */}
+
+      <UpdateApplicationStage
+        open={!!selectedStatus}
+        selectedStatus={selectedStatus}
+        setSelectedStatus={setSelectedStatus}
+        onClose={() => setSelectedStatus(null)}
+        handleUpdateStatus={handleUpdateStatus}
+        handleRejectApplication={handleRejectApplication}
+        handleInReviewApplication={handleInReviewApplication}
       />
     </div>
   );

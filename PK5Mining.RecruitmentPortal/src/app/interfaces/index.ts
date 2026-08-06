@@ -376,3 +376,10 @@ export interface DateRange {
   startDate?: Date;
   endDate?: Date;
 }
+
+export interface RejectApplicationPayload {
+  id: number;
+  currentStatus: string;
+  rejectionReason: string;
+  employeeId: string;
+}
