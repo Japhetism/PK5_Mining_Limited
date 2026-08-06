@@ -9,6 +9,7 @@ interface ShortlistedApplicationStageProps {
   onClose: () => void;
   handleSchedule: () => void;
   handleReschedule: (payload: {
+    currentStatus: string,
     rescheduledDateTime: string;
     reason: string;
   }) => void;
@@ -47,6 +48,7 @@ export function ShortlistedApplicationStage({
 
       case "Reschedule":
         handleReschedule({
+          currentStatus: "Shortlisted",
           rescheduledDateTime,
           reason: rescheduleReason.trim(),
         });

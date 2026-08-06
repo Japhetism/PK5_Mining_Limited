@@ -80,7 +80,8 @@ export function InreviewApplicationStage({
 
   const handleProceed = () => {
     handleProceedWithApplication({
-      action,
+      currentStatus: "In Review",
+      employeeId: user?.id ?? "",
       nextProcess,
       interviewType,
       assessmentType,
@@ -91,7 +92,6 @@ export function InreviewApplicationStage({
       deadlineTime,
       venueAddress,
       panelists,
-      rejectionReason,
     });
   };
 
