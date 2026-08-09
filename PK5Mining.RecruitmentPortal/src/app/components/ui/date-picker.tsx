@@ -2,6 +2,13 @@ import * as React from "react";
 import { format, parse, startOfDay, isValid } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { DayPicker, type Matcher } from "react-day-picker";
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
+} from "@floating-ui/react";
 import "react-day-picker/dist/style.css";
 import { useTenant } from "@/tenants/useTenant";
 
@@ -35,8 +42,19 @@ export function DatePicker({
   name,
   classes = "left-0",
 }: DatePickerProps) {
-  const { colors } = useTenant();
   const [open, setOpen] = React.useState(false);
+  const { refs, floatingStyles } = useFloating({
+    open,
+    onOpenChange: setOpen,
+    placement: "bottom-start",
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      offset(8),
+      flip(), // flips to top if no room below
+      shift({ padding: 8 }), // keeps inside viewport
+    ],
+  });
+  const { colors } = useTenant();
   const [month, setMonth] = React.useState<Date>(new Date());
 
   const selectedDate = React.useMemo(() => {
@@ -80,16 +98,20 @@ export function DatePicker({
     setOpen(false);
   };
 
-  
   return (
     <div className="relative">
       {name ? <input type="hidden" name={name} value={value ?? ""} /> : null}
 
       <button
+        ref={refs.setReference}
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         className={`flex w-full items-center justify-between rounded-lg text-[16px] px-4 py-3 text-left transition-colors focus:border-[#c89b3c] focus:outline-none`}
-        style={{ backgroundColor: colors.textInputBgColor, color: colors.text, borderColor: error ? "#f87171" : colors.border }}
+        style={{
+          backgroundColor: colors.textInputBgColor,
+          color: colors.text,
+          borderColor: error ? "#f87171" : colors.border,
+        }}
       >
         <span className={value ? colors.text : "text-gray-500"}>
           {value || placeholder}
@@ -106,9 +128,18 @@ export function DatePicker({
             aria-label="Close date picker"
           />
 
-          <div
+          {/* <div
             className={`absolute ${classes} top-[calc(100%+8px)] z-50 rounded-xl border p-3 shadow-2xl`}
             style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+          > */}
+          <div
+            ref={refs.setFloating}
+            style={{
+              ...floatingStyles,
+              backgroundColor: colors.textInputBgColor,
+              color: colors.text,
+            }}
+            className="z-50 rounded-xl border p-3 shadow-2xl"
           >
             <DayPicker
               mode="single"
@@ -135,8 +166,7 @@ export function DatePicker({
                   "h-8 w-8 rounded-md border border-gray-700 bg-transparent text-black hover:bg-white/10",
                 table: "w-full border-collapse",
                 head_row: "",
-                head_cell:
-                  "h-9 w-9 text-xs font-medium text-black text-center",
+                head_cell: "h-9 w-9 text-xs font-medium text-black text-center",
                 row: "",
                 cell: "h-9 w-9 text-center",
                 day: "h-9 w-9 rounded-md text-sm text-black hover:bg-white/10",
