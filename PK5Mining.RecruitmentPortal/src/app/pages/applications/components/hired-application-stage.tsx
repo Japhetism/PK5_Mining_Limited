@@ -17,7 +17,6 @@ interface HiredFormPayload {
 }
 
 interface HiredApplicationStageProps {
-  onClose: () => void;
   handleSubmit: (payload: HiredFormPayload) => void;
 
   jobTitle: string;
@@ -27,7 +26,6 @@ interface HiredApplicationStageProps {
 }
 
 export function HiredApplicationStage({
-  onClose,
   handleSubmit,
   jobTitle,
   department,
@@ -85,24 +83,10 @@ export function HiredApplicationStage({
 
   return (
     <>
-      <div
-        className="max-h-[65vh] overflow-y-auto scrollbar-black pr-2"
-        style={
-          {
-            "--scrollbar-track": colors.bg,
-          } as React.CSSProperties
-        }
-      >
-        <form className="p-6 space-y-8">
+      <div>
+        <form className="py-6 space-y-8">
           {/* Job & Company Details */}
           <section className="space-y-4">
-            <h3
-              className="text-lg font-semibold"
-              style={{ color: colors.text }}
-            >
-              Job and Company Details
-            </h3>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label
@@ -380,7 +364,6 @@ export function HiredApplicationStage({
       <div className="flex justify-end gap-3">
         <button
           type="button"
-          onClick={onClose}
           className="px-6 py-2 rounded-lg border border-gray-700"
           style={{ color: colors.text }}
         >

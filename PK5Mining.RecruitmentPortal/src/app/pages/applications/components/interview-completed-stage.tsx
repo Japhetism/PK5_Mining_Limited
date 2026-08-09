@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Check, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
+import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
 
 interface SendOfferPayload {
@@ -11,12 +12,10 @@ interface SendOfferPayload {
 }
 
 interface InterviewCompletedApplicationStageProps {
-  onClose: () => void;
   handleSendOffer: (payload: SendOfferPayload) => void;
 }
 
 export function InterviewCompletedApplicationStage({
-  onClose,
   handleSendOffer,
 }: InterviewCompletedApplicationStageProps) {
   const { colors } = useTenant();
@@ -52,66 +51,13 @@ export function InterviewCompletedApplicationStage({
 
   return (
     <>
-      <div
-        className="max-h-[60vh] overflow-y-auto scrollbar-black pr-2"
-        style={
-          {
-            "--scrollbar-track": colors.bg,
-          } as React.CSSProperties
-        }
-      >
-        <form className="p-6 space-y-6">
+      <div>
+        <form className="py-6 space-y-6">
           {/* Acknowledgement */}
-          <div className="space-y-2">
-            <label
-              className="block text-[16px] font-semibold"
-              style={{ color: colors.text }}
-            >
-              Acknowledgement
-              <span className="ml-1 text-red-500">*</span>
-            </label>
-
-            <label className="flex items-center gap-3 cursor-pointer group">
-              <input
-                type="checkbox"
-                className="sr-only"
-                checked={acknowledged}
-                onChange={(e) => {
-                  const checked = e.target.checked;
-
-                  setAcknowledged(checked);
-
-                  if (!checked) {
-                    setAssessmentResult(null);
-                    setOfferMethod("");
-                    setOfferLetterFile(null);
-                    setOfferLetterLink("");
-                  }
-                }}
-              />
-
-              <div
-                className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  acknowledged
-                    ? "bg-[#c89b3c] border-[#c89b3c]"
-                    : "border-gray-700 group-hover:border-gray-500"
-                }`}
-              >
-                {acknowledged && (
-                  <Check className="w-3 h-3 text-black stroke-[4px]" />
-                )}
-              </div>
-
-              <span
-                className="text-[14px]"
-                style={{
-                  color: colors.text,
-                }}
-              >
-                I confirm that the candidate's submission has been reviewed.
-              </span>
-            </label>
-          </div>
+          <StatusConfirmation
+            isConfirmed={acknowledged}
+            setIsConfirmed={setAcknowledged}
+          />
 
           {/* Assessment Result Upload */}
           <div>
@@ -271,7 +217,6 @@ export function InterviewCompletedApplicationStage({
       <div className="flex justify-end gap-3">
         <button
           type="button"
-          onClick={onClose}
           className="px-6 py-2 rounded-lg border border-gray-700 text-[16px]"
           style={{
             color: colors.text,

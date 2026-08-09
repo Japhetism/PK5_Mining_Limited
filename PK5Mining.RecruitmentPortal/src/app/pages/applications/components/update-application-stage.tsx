@@ -1,5 +1,3 @@
-import { X } from "lucide-react";
-import { Modal } from "@/app/components/ui/modal";
 import { useTenant } from "@/tenants/useTenant";
 import { NewApplicationStage } from "./new-appication-stage";
 import { RejectApplicationPayload } from "@/app/interfaces";
@@ -11,10 +9,7 @@ import { OfferSentApplicationStage } from "./offer-sent-application-stage";
 import { HiredApplicationStage } from "./hired-application-stage";
 
 interface UpdateApplicationStageProps {
-  open: boolean;
-  onClose: () => void;
-  selectedStatus: string | null;
-  setSelectedStatus: (status: string | null) => void;
+  candidateStatus: string;
   handleUpdateStatus: () => void;
   handleInReviewApplication: () => void;
   handleRejectApplication: (
@@ -23,10 +18,7 @@ interface UpdateApplicationStageProps {
 }
 
 export function UpdateApplicationStage({
-  open,
-  onClose,
-  selectedStatus,
-  setSelectedStatus,
+  candidateStatus,
   handleUpdateStatus,
   handleInReviewApplication,
   handleRejectApplication,
@@ -34,12 +26,10 @@ export function UpdateApplicationStage({
   const { colors } = useTenant();
 
   const renderStage = () => {
-    switch (selectedStatus) {
+    switch (candidateStatus) {
       case "New":
         return (
           <NewApplicationStage
-            onClose={onClose}
-            setSelectedStatus={setSelectedStatus}
             handleUpdateStatus={handleUpdateStatus}
             handleRejectApplication={handleRejectApplication}
           />
@@ -48,7 +38,6 @@ export function UpdateApplicationStage({
       case "In Review":
         return (
           <InreviewApplicationStage
-            onClose={onClose}
             handleProceedWithApplication={() => handleInReviewApplication()}
             handleRejectApplication={handleRejectApplication}
           />
@@ -57,7 +46,6 @@ export function UpdateApplicationStage({
       case "Shortlisted":
         return (
           <ShortlistedApplicationStage
-            onClose={onClose}
             handleSchedule={() => {}}
             handleReschedule={() => {}}
             handleRejectApplication={handleRejectApplication}
@@ -67,7 +55,6 @@ export function UpdateApplicationStage({
       case "Interview Scheduled":
         return (
           <InterviewScheduledApplicationStage
-            onClose={onClose}
             isAssessmentSchedule={false}
             corporateOfficeAddress="Corporate Office Address"
             handleProceedWithApplication={() => {}}
@@ -77,16 +64,12 @@ export function UpdateApplicationStage({
 
       case "Interview Completed":
         return (
-          <InterviewCompletedApplicationStage
-            onClose={onClose}
-            handleSendOffer={() => {}}
-          />
+          <InterviewCompletedApplicationStage handleSendOffer={() => {}} />
         );
 
       case "Offer Sent":
         return (
           <OfferSentApplicationStage
-            onClose={onClose}
             handleProceedWithApplication={() => {}}
             handleRejectApplication={handleRejectApplication}
           />
@@ -95,7 +78,6 @@ export function UpdateApplicationStage({
       case "Hired":
         return (
           <HiredApplicationStage
-            onClose={onClose}
             jobTitle=""
             department=""
             startDate=""
@@ -105,40 +87,13 @@ export function UpdateApplicationStage({
         );
 
       default:
-        return null;
+        return (
+          <div className="text-gray-500 text-sm py-4">
+            No decision is required for this current status.
+          </div>
+        );
     }
   };
 
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      maxWidth="lg"
-      height="md"
-      showCloseButton={false}
-      panelClassName="h-auto"
-    >
-      <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
-          <p
-            className="text-[18px] font-semibold truncate"
-            style={{ color: colors.text }}
-          >
-            Update Application Stage
-          </p>
-
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-2 rounded-md text-[15px]"
-            style={{ color: colors.text }}
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {renderStage()}
-      </div>
-    </Modal>
-  );
+  return <div>{renderStage()}</div>;
 }
