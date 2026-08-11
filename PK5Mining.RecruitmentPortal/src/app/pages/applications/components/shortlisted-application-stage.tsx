@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
 import { useAuth } from "@/app/context/AuthContext";
-import { RejectApplicationPayload } from "@/app/interfaces";
 
 interface ShortlistedApplicationStageProps {
   handleSchedule: () => void;
@@ -12,15 +11,11 @@ interface ShortlistedApplicationStageProps {
     rescheduledDateTime: string;
     reason: string;
   }) => void;
-  handleRejectApplication: (
-    payload: Omit<RejectApplicationPayload, "id">,
-  ) => void;
 }
 
 export function ShortlistedApplicationStage({
   handleSchedule,
   handleReschedule,
-  handleRejectApplication,
 }: ShortlistedApplicationStageProps) {
   const { colors } = useTenant();
   const { user } = useAuth();
@@ -53,11 +48,7 @@ export function ShortlistedApplicationStage({
         break;
 
       case "Reject":
-        handleRejectApplication({
-          currentStatus: "Shortlisted",
-          rejectionReason: rejectionReason.trim(),
-          employeeId: user?.id ?? "",
-        });
+        
         break;
 
       default:

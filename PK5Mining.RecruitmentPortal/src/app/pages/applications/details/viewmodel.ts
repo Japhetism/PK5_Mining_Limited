@@ -7,7 +7,7 @@ import {
   updateJobApplicationStatus,
 } from "@/app/api/applications";
 import { toastUtil } from "@/app/utils/toast";
-import { ApiError, RejectApplicationPayload } from "@/app/interfaces";
+import { ApiError, NewApplicationStagePayload } from "@/app/interfaces";
 import { getRemoteFileSize } from "@/app/utils/helper";
 import { statusStyles } from "@/app/constants";
 
@@ -65,36 +65,6 @@ function useApplicationDetailsViewModel() {
     },
   });
 
-  // mock reject application mutation
-  const rejectMutation = useMutation({
-    mutationFn: (payload: RejectApplicationPayload) => {
-      if (!applicationId) {
-        toastUtil.error("Invalid application ID");
-        throw new Error("Invalid application ID");
-      }
-      return rejectApplication(payload);
-    },
-    onSuccess: () => {
-      setUpdating(false);
-      setEditStatus(false);
-      setConfirmOpen(false);
-      setSelectedStatus(null);
-      queryClient.invalidateQueries({
-        queryKey: ["applications", applicationId],
-      });
-      toastUtil.success("Application rejected successfully");
-    },
-    onError: (err) => {
-      setUpdating(false);
-      const message =
-        (err as ApiError)?.message ??
-        (err instanceof Error
-          ? err.message
-          : "An error occurred while rejecting application. Please try again.");
-      toastUtil.error(message);
-    },
-  });
-
   // Close modal on ESC
   useEffect(() => {
     if (!isViewerOpen) return;
@@ -117,24 +87,7 @@ function useApplicationDetailsViewModel() {
     updateMutation.mutate(selectedStatus);
   };
 
-  const handleRejectApplication = (
-    payload: Omit<RejectApplicationPayload, "id">,
-  ) => {
-    if (!applicationId) {
-      toastUtil.error("Application is not valid");
-      return;
-    }
-
-    const rejectPayload: RejectApplicationPayload = {
-      id: parseInt(applicationId, 10),
-      currentStatus: data?.status ?? "",
-      rejectionReason: payload.rejectionReason,
-      employeeId: payload.employeeId,
-    };
-
-    setUpdating(true);
-    rejectMutation.mutate(rejectPayload);
-  };
+  const handleNewApplicationStage = (payload: Omit<NewApplicationStagePayload, "applicationId">) => {}
 
   const handleInReviewApplication = () => {}
 
@@ -231,7 +184,7 @@ function useApplicationDetailsViewModel() {
     timelineEvents,
     initials,
     statusStyle,
-    handleRejectApplication,
+    handleNewApplicationStage,
     handleInReviewApplication,
   };
 }
