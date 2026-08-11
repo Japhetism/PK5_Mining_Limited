@@ -10,16 +10,12 @@ interface InterviewScheduledApplicationStageProps {
   isAssessmentSchedule?: boolean;
   corporateOfficeAddress?: string;
   handleProceedWithApplication: (payload: any) => void;
-  handleRejectApplication: (
-    payload: Omit<RejectApplicationPayload, "id">,
-  ) => void;
 }
 
 export function InterviewScheduledApplicationStage({
   isAssessmentSchedule = false,
   corporateOfficeAddress = "Corporate Office Address",
   handleProceedWithApplication,
-  handleRejectApplication,
 }: InterviewScheduledApplicationStageProps) {
   const { colors } = useTenant();
   const { user } = useAuth();
@@ -71,12 +67,6 @@ export function InterviewScheduledApplicationStage({
 
   const onSubmit = () => {
     if (action === "Reject") {
-      handleRejectApplication({
-        currentStatus: "Interview Scheduled",
-        rejectionReason: rejectionReason.trim(),
-        employeeId: user?.id ?? "",
-      });
-
       return;
     }
 

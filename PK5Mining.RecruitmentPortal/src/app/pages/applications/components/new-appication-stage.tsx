@@ -2,25 +2,24 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
-import { useAuth } from "@/app/context/AuthContext";
-import { RejectApplicationPayload } from "@/app/interfaces";
+import {
+  NewApplicationStagePayload,
+  ApplicationStageButton,
+} from "@/app/interfaces";
 
 interface NewApplicationStageProps {
-  handleUpdateStatus: () => void;
-  handleRejectApplication: (
-    payload: Omit<RejectApplicationPayload, "id">
+  handleNewApplicationStage: (
+    payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => void;
 }
 
 export function NewApplicationStage({
-  handleUpdateStatus,
-  handleRejectApplication,
+  handleNewApplicationStage,
 }: NewApplicationStageProps) {
   const { colors } = useTenant();
-  const { user } = useAuth();
 
   const [acknowledged, setAcknowledged] = useState(false);
-  const [action, setAction] = useState("");
+  const [action, setAction] = useState<ApplicationStageButton>("Proceed");
   const [rejectionReason, setRejectionReason] = useState("");
 
   const isSubmitDisabled =
@@ -28,19 +27,13 @@ export function NewApplicationStage({
     !action ||
     (action === "Reject" && !rejectionReason.trim());
 
-  const handleProceed = () => {
-    handleUpdateStatus();
-  };
-
-  const handleReject = () => {
-    const payload = {
-      currentStatus: "new",
+  const onSubmit = () => {
+    const payload: Omit<NewApplicationStagePayload, "applicationId"> = {
       rejectionReason: rejectionReason.trim(),
-      employeeId: user?.id ?? "",
+      action: action,
     };
 
-    console.log("Rejecting application with payload:", payload);
-    handleRejectApplication(payload);
+    handleNewApplicationStage(payload);
   };
 
   return (
@@ -133,7 +126,7 @@ export function NewApplicationStage({
             color: colors.card,
             backgroundColor: colors.accent,
           }}
-          onClick={action === "Reject" ? handleReject : handleProceed}
+          onClick={onSubmit}
         >
           {action === "Reject" ? "Reject" : "Proceed"}
         </motion.button>

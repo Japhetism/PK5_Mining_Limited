@@ -377,9 +377,10 @@ export interface DateRange {
   endDate?: Date;
 }
 
-export interface RejectApplicationPayload {
-  id: number;
-  currentStatus: string;
-  rejectionReason: string;
-  employeeId: string;
+export type ApplicationStageButton = "Proceed" | "Reject";
+
+export interface NewApplicationStagePayload {
+  applicationId: number;
+  action: ApplicationStageButton;
+  rejectionReason?: string;
 }
