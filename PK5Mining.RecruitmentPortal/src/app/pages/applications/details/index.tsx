@@ -40,7 +40,7 @@ export function ApplicationDetail() {
     setIsViewerOpen,
     handleUpdateStatus,
     setSelectedStatus,
-    handleRejectApplication,
+    handleNewApplicationStage,
     handleInReviewApplication,
   } = useApplicationDetailsViewModel();
 
@@ -265,8 +265,7 @@ export function ApplicationDetail() {
               </h2>
               <UpdateApplicationStage
                 candidateStatus={app?.status ?? ""}
-                handleUpdateStatus={handleUpdateStatus}
-                handleRejectApplication={handleRejectApplication}
+                handleNewApplicationStage={handleNewApplicationStage}
                 handleInReviewApplication={handleInReviewApplication}
               />
             </div>

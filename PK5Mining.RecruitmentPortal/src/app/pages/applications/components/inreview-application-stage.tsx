@@ -5,19 +5,14 @@ import { DatePicker } from "@/app/components/ui/date-picker";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
 import { useAuth } from "@/app/context/AuthContext";
-import { RejectApplicationPayload } from "@/app/interfaces";
 import { formatDateTime } from "@/app/utils/helper";
 
 interface InreviewApplicationStageProps {
   handleProceedWithApplication: (payload: any) => void;
-  handleRejectApplication: (
-    payload: Omit<RejectApplicationPayload, "id">,
-  ) => void;
 }
 
 export function InreviewApplicationStage({
   handleProceedWithApplication,
-  handleRejectApplication,
 }: InreviewApplicationStageProps) {
   const { colors } = useTenant();
   const { user } = useAuth();

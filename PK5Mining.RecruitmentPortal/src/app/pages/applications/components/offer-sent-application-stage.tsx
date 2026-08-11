@@ -13,14 +13,10 @@ interface OfferStagePayload {
 
 interface OfferSentApplicationStageProps {
   handleProceedWithApplication: () => void;
-  handleRejectApplication: (
-    payload: Omit<RejectApplicationPayload, "id">,
-  ) => void;
 }
 
 export function OfferSentApplicationStage({
   handleProceedWithApplication,
-  handleRejectApplication,
 }: OfferSentApplicationStageProps) {
   const { colors } = useTenant();
   const { user } = useAuth();
@@ -61,12 +57,6 @@ export function OfferSentApplicationStage({
       handleProceedWithApplication();
       return;
     }
-
-    handleRejectApplication({
-      currentStatus: "Offer Sent",
-      rejectionReason: rejectionReason.trim(),
-      employeeId: user?.id ?? "",
-    });
   };
 
   return (

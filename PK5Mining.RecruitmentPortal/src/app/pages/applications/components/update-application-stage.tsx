@@ -1,6 +1,6 @@
 import { useTenant } from "@/tenants/useTenant";
 import { NewApplicationStage } from "./new-appication-stage";
-import { RejectApplicationPayload } from "@/app/interfaces";
+import { NewApplicationStagePayload } from "@/app/interfaces";
 import { InreviewApplicationStage } from "./inreview-application-stage";
 import { ShortlistedApplicationStage } from "./shortlisted-application-stage";
 import { InterviewScheduledApplicationStage } from "./interview-scheduled-application-stage";
@@ -10,18 +10,16 @@ import { HiredApplicationStage } from "./hired-application-stage";
 
 interface UpdateApplicationStageProps {
   candidateStatus: string;
-  handleUpdateStatus: () => void;
-  handleInReviewApplication: () => void;
-  handleRejectApplication: (
-    payload: Omit<RejectApplicationPayload, "id">,
+  handleNewApplicationStage: (
+    payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => void;
+  handleInReviewApplication: () => void;
 }
 
 export function UpdateApplicationStage({
   candidateStatus,
-  handleUpdateStatus,
   handleInReviewApplication,
-  handleRejectApplication,
+  handleNewApplicationStage,
 }: UpdateApplicationStageProps) {
   const { colors } = useTenant();
 
@@ -30,8 +28,7 @@ export function UpdateApplicationStage({
       case "New":
         return (
           <NewApplicationStage
-            handleUpdateStatus={handleUpdateStatus}
-            handleRejectApplication={handleRejectApplication}
+            handleNewApplicationStage={handleNewApplicationStage}
           />
         );
 
@@ -39,7 +36,6 @@ export function UpdateApplicationStage({
         return (
           <InreviewApplicationStage
             handleProceedWithApplication={() => handleInReviewApplication()}
-            handleRejectApplication={handleRejectApplication}
           />
         );
 
@@ -48,7 +44,6 @@ export function UpdateApplicationStage({
           <ShortlistedApplicationStage
             handleSchedule={() => {}}
             handleReschedule={() => {}}
-            handleRejectApplication={handleRejectApplication}
           />
         );
 
@@ -58,7 +53,6 @@ export function UpdateApplicationStage({
             isAssessmentSchedule={false}
             corporateOfficeAddress="Corporate Office Address"
             handleProceedWithApplication={() => {}}
-            handleRejectApplication={handleRejectApplication}
           />
         );
 
@@ -69,10 +63,7 @@ export function UpdateApplicationStage({
 
       case "Offer Sent":
         return (
-          <OfferSentApplicationStage
-            handleProceedWithApplication={() => {}}
-            handleRejectApplication={handleRejectApplication}
-          />
+          <OfferSentApplicationStage handleProceedWithApplication={() => {}} />
         );
 
       case "Hired":
