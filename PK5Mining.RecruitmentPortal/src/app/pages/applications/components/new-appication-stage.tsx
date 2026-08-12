@@ -6,8 +6,24 @@ import {
   NewApplicationStagePayload,
   ApplicationStageButton,
 } from "@/app/interfaces";
+import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 
 const MAX_REJECTION_REASON = 500;
+
+const confirmModalContent = {
+  Reject: {
+    title: "Reject Application?",
+    description:
+      "This action will reject the candidate's application and log the reason to the timeline.",
+    btnBgColor: "#EF4444",
+  },
+  Proceed: {
+    title: "Move to In Review?",
+    description:
+      "You're about to move this application to the In Review stage.",
+    btnBgColor: "",
+  },
+} as const;
 
 interface NewApplicationStageProps {
   handleNewApplicationStage: (
@@ -23,6 +39,7 @@ export function NewApplicationStage({
   const [acknowledged, setAcknowledged] = useState(false);
   const [action, setAction] = useState<ApplicationStageButton | string>("");
   const [rejectionReason, setRejectionReason] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
   const isSubmitDisabled =
     !acknowledged ||
@@ -45,6 +62,11 @@ export function NewApplicationStage({
     setAction("");
     setAcknowledged(false);
   };
+
+  const content =
+    action in confirmModalContent
+      ? confirmModalContent[action as keyof typeof confirmModalContent]
+      : undefined;
 
   return (
     <>
@@ -141,13 +163,29 @@ export function NewApplicationStage({
           className="w-full px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
             color: colors.card,
-            backgroundColor: action === "Reject" ? "#EF4444" : colors.accent,
+            backgroundColor:
+              action === "Reject" ? content?.btnBgColor : colors.accent,
           }}
-          onClick={onSubmit}
+          onClick={() => setConfirmOpen(true)}
         >
-          {action === "Reject" ? "Reject" : "Proceed"}
+          {action || "Proceed"}
         </motion.button>
       </div>
+
+      {/* Confirmation Modal */}
+      {content && (
+        <ConfirmModal
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={onSubmit}
+          title={content.title}
+          description={content.description}
+          confirmText={`Yes, ${action}`}
+          cancelText="Cancel"
+          confirmBtnColor={content.btnBgColor}
+          loading={false}
+        />
+      )}
     </>
   );
 }
