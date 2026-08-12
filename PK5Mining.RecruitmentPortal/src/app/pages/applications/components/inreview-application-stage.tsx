@@ -525,7 +525,7 @@ export function InreviewApplicationStage({
           onConfirm={onSubmit}
           title={content.title}
           description={content.description}
-          confirmText={`Yes, ${action}`}
+          confirmText="Yes, Shortlist"
           cancelText="Cancel"
           confirmBtnColor={content.btnBgColor}
           loading={loading}

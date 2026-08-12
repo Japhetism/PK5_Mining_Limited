@@ -65,7 +65,7 @@ class AuthService {
         loginHint: email,
         extraQueryParameters: {
           ...(loginRequest as any).extraQueryParameters,
-          domain_hint: "pk5miningltd.com",
+          // domain_hint: "pk5miningltd.com",
         },
       };
 
