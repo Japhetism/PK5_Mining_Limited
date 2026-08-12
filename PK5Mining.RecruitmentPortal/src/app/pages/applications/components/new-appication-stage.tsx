@@ -7,6 +7,8 @@ import {
   ApplicationStageButton,
 } from "@/app/interfaces";
 
+const MAX_REJECTION_REASON = 500;
+
 interface NewApplicationStageProps {
   handleNewApplicationStage: (
     payload: Omit<NewApplicationStagePayload, "applicationId">,
@@ -19,7 +21,7 @@ export function NewApplicationStage({
   const { colors } = useTenant();
 
   const [acknowledged, setAcknowledged] = useState(false);
-  const [action, setAction] = useState<ApplicationStageButton>("Proceed");
+  const [action, setAction] = useState<ApplicationStageButton | string>("");
   const [rejectionReason, setRejectionReason] = useState("");
 
   const isSubmitDisabled =
@@ -28,12 +30,20 @@ export function NewApplicationStage({
     (action === "Reject" && !rejectionReason.trim());
 
   const onSubmit = () => {
-    const payload: Omit<NewApplicationStagePayload, "applicationId"> = {
-      rejectionReason: rejectionReason.trim(),
-      action: action,
-    };
+    if (action) {
+      const payload: Omit<NewApplicationStagePayload, "applicationId"> = {
+        rejectionReason: rejectionReason.trim(),
+        action: action as ApplicationStageButton,
+      };
 
-    handleNewApplicationStage(payload);
+      handleNewApplicationStage(payload);
+    }
+  };
+
+  const handleCancel = () => {
+    setRejectionReason("");
+    setAction("");
+    setAcknowledged(false);
   };
 
   return (
@@ -49,10 +59,7 @@ export function NewApplicationStage({
 
           {/* Action */}
           <div>
-            <label
-              className="block text-[16px] font-semibold mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
               Action
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -61,7 +68,7 @@ export function NewApplicationStage({
               value={action}
               disabled={!acknowledged}
               onChange={(e) => {
-                setAction(e.target.value);
+                setAction(e.target.value as ApplicationStageButton);
 
                 if (e.target.value !== "Reject") {
                   setRejectionReason("");
@@ -73,45 +80,55 @@ export function NewApplicationStage({
                 color: colors.text,
               }}
             >
-              <option value="">Select Action</option>
-              <option value="Proceed">Proceed</option>
-              <option value="Reject">Reject</option>
+              <option value="">Select an action...</option>
+              <option value="Proceed">Proceed to Review</option>
+              <option value="Reject">Reject Application</option>
             </select>
           </div>
 
           {/* Reason For Rejection */}
           {action === "Reject" && (
             <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Reason for Rejection
                 <span className="ml-1 text-red-500">*</span>
               </label>
 
-              <textarea
-                rows={4}
-                value={rejectionReason}
-                onChange={(e) => setRejectionReason(e.target.value)}
-                placeholder="Enter reason for rejection..."
-                className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c] resize-none"
-                style={{
-                  backgroundColor: colors.textInputBgColor,
-                  color: colors.text,
-                }}
-              />
+              <div>
+                <textarea
+                  rows={4}
+                  value={rejectionReason}
+                  onChange={(e) => {
+                    if (e.target.value.length <= MAX_REJECTION_REASON)
+                      setRejectionReason(e.target.value);
+                  }}
+                  placeholder="Please provide the reason for rejecting this candidate..."
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c] resize-none"
+                  style={{
+                    backgroundColor: colors.textInputBgColor,
+                    color: colors.text,
+                  }}
+                />
+                <div className="flex justify-between mt-[5px]">
+                  <span
+                    className={`text-[12px] tabular-nums ml-auto ${rejectionReason.length > MAX_REJECTION_REASON * 0.9 ? "text-[#EF4444]" : "text-[#9CA3AF]"}`}
+                  >
+                    {rejectionReason.length}/{MAX_REJECTION_REASON}
+                  </span>
+                </div>
+              </div>
             </div>
           )}
         </form>
       </div>
 
       {/* Footer */}
-      <div className="flex justify-end gap-3">
+      <div className="flex space-between gap-3">
         <button
           type="button"
-          className="px-6 py-2 rounded-lg border border-gray-700 text-[16px]"
+          className="w-full px-6 py-2 rounded-lg border border-gray-700 text-[16px]"
           style={{ color: colors.text }}
+          onClick={handleCancel}
         >
           Cancel
         </button>
@@ -121,10 +138,10 @@ export function NewApplicationStage({
           disabled={isSubmitDisabled}
           whileHover={!isSubmitDisabled ? { scale: 1.02 } : undefined}
           whileTap={!isSubmitDisabled ? { scale: 0.98 } : undefined}
-          className="px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
             color: colors.card,
-            backgroundColor: colors.accent,
+            backgroundColor: action === "Reject" ? "#EF4444" : colors.accent,
           }}
           onClick={onSubmit}
         >
