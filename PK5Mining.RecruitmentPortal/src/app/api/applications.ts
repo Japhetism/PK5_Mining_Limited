@@ -4,7 +4,8 @@ import {
   ApplicationsByJobIdQuery,
   ApplicationsQuery,
   JobApplicationDto,
-  RejectApplicationPayload,
+  // RejectApplicationPayload,
+  NewApplicationStagePayload,
 } from "../interfaces";
 import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
@@ -139,11 +140,35 @@ export async function getJobApplicationsByJobId(
   }
 }
 
-export async function rejectApplication(payload: RejectApplicationPayload) {
+// export async function rejectApplication(payload: RejectApplicationPayload) {
+//   try {
+//     const { id } = payload;
+//     const { data } = await http.put<ApiResponse<JobApplicationDto>>(
+//       `/JobApplication/${id}/reject`,
+//       payload,
+//     );
+
+//     if (data.responseStatus !== "SUCCESS") {
+//       throw new Error(
+//         getAxiosErrorMessage(
+//           data.responseMessage,
+//           "Failed to reject job application",
+//         ),
+//       );
+//     }
+
+//     return data.responseData;
+//   } catch (err) {
+//     throw new Error(
+//       getAxiosErrorMessage(err, "Failed to reject job application"),
+//     );
+//   }
+// }
+
+export async function processNewApplication(payload: NewApplicationStagePayload) {
   try {
-    const { id } = payload;
-    const { data } = await http.put<ApiResponse<JobApplicationDto>>(
-      `/JobApplication/${id}/reject`,
+    const { data } = await http.post<ApiResponse<JobApplicationDto>>(
+      `/JobApplicationStatus/applications/process-new`,
       payload,
     );
 
@@ -151,7 +176,7 @@ export async function rejectApplication(payload: RejectApplicationPayload) {
       throw new Error(
         getAxiosErrorMessage(
           data.responseMessage,
-          "Failed to reject job application",
+          "Failed to proceed job application",
         ),
       );
     }
@@ -159,7 +184,8 @@ export async function rejectApplication(payload: RejectApplicationPayload) {
     return data.responseData;
   } catch (err) {
     throw new Error(
-      getAxiosErrorMessage(err, "Failed to reject job application"),
+      getAxiosErrorMessage(err, "Failed to proceed New job application"),
     );
   }
 }
+
