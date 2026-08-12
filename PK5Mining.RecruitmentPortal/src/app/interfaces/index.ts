@@ -221,7 +221,8 @@ export type ApplicationsQuery = {
 }
 
 export type ApplicationResponsePayload = {
-  jobApplications: JobApplicationDto[];
+  data?: JobApplicationDto[];
+  jobApplications?: JobApplicationDto[];
   candidateIds: Array<string>;
   candidateNames: Array<string>;
   candidateEmails: Array<string>;
