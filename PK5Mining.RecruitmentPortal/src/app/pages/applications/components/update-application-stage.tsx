@@ -35,7 +35,8 @@ export function UpdateApplicationStage({
       case "in review":
         return (
           <InreviewApplicationStage
-            handleProceedWithApplication={() => handleInReviewApplication()}
+            loading={loading}
+            handleInReviewApplicationStage={() => handleInReviewApplication()}
           />
         );
 
