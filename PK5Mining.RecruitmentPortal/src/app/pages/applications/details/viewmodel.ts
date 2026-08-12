@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getApplicationById,
-  rejectApplication,
+  processNewApplication,
   updateJobApplicationStatus,
 } from "@/app/api/applications";
 import { toastUtil } from "@/app/utils/toast";
@@ -87,9 +87,28 @@ function useApplicationDetailsViewModel() {
     updateMutation.mutate(selectedStatus);
   };
 
-  const handleNewApplicationStage = (payload: Omit<NewApplicationStagePayload, "applicationId">) => {}
+  const handleNewApplicationStage = (payload: Omit<NewApplicationStagePayload, "applicationId">) => {
+    processNewApplication({
+      applicationId: parseInt(applicationId as string, 10),
+      ...payload,
+    })
+      .then(() => {
+        toastUtil.success("Application stage updated successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["applications", applicationId],
+        });
+      })
+      .catch((err) => {
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating application stage. Please try again.");
+        toastUtil.error(message);
+      });
+  }
 
-  const handleInReviewApplication = () => {}
+  const handleInReviewApplication = () => { }
 
   useEffect(() => {
     if (error) {
