@@ -1,24 +1,47 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Plus, Trash2 } from "lucide-react";
 import { DatePicker } from "@/app/components/ui/date-picker";
+import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
 import { useAuth } from "@/app/context/AuthContext";
 import { formatDateTime } from "@/app/utils/helper";
+import { ApplicationStageButton } from "@/app/interfaces";
+
+const MAX_REJECTION_REASON = 500;
+
+const confirmModalContent = {
+  Reject: {
+    title: "Reject Application?",
+    description:
+      "This action will reject the candidate's application and log the reason to the timeline.",
+    btnBgColor: "#EF4444",
+  },
+  Proceed: {
+    title: "Shortlist Candidate?",
+    description:
+      "This will shortlist the candidate and record the scheduled activity in the timeline.",
+    btnBgColor: "",
+  },
+} as const;
 
 interface InreviewApplicationStageProps {
-  handleProceedWithApplication: (payload: any) => void;
+  loading: boolean;
+  handleInReviewApplicationStage: (payload: any) => void;
 }
 
 export function InreviewApplicationStage({
-  handleProceedWithApplication,
+  loading,
+  handleInReviewApplicationStage,
 }: InreviewApplicationStageProps) {
   const { colors } = useTenant();
   const { user } = useAuth();
 
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [input, setInput] = useState<string>("");
+
   const [acknowledged, setAcknowledged] = useState(false);
-  const [action, setAction] = useState("");
+  const [action, setAction] = useState<ApplicationStageButton | string>("");
 
   const [nextProcess, setNextProcess] = useState("");
   const [interviewType, setInterviewType] = useState("");
@@ -36,10 +59,11 @@ export function InreviewApplicationStage({
 
   const [rejectionReason, setRejectionReason] = useState("");
 
-  const [panelists, setPanelists] = useState<string[]>([""]);
+  const [panelists, setPanelists] = useState<string[]>([]);
 
   const addPanelist = () => {
-    setPanelists((prev) => [...prev, ""]);
+    setPanelists((prev) => [...prev, input]);
+    setInput("");
   };
 
   const removePanelist = (index: number) => {
@@ -58,18 +82,13 @@ export function InreviewApplicationStage({
 
   const showDeadlineSection = assessmentType === "Online";
 
-  const handleReject = () => {
-    const payload = {
+  const onSubmit = () => {
+    const rejectPayload = {
       currentStatus: "In Review",
       rejectionReason: rejectionReason.trim(),
       employeeId: user?.id ?? "",
     };
 
-    console.log("Rejecting application with payload:", payload);
-    handleRejectApplication(payload);
-  };
-
-  const handleProceed = () => {
     const basePayload = {
       currentStatus: "In Review",
       employeeId: user?.id ?? "",
@@ -112,8 +131,13 @@ export function InreviewApplicationStage({
       };
     }
 
-    console.log("Proceed Payload:", payload);
-    handleProceedWithApplication(payload);
+    handleInReviewApplicationStage(payload);
+  };
+
+  const handleCancel = () => {
+    setRejectionReason("");
+    setAction("");
+    setAcknowledged(false);
   };
 
   const isAssessmentValid =
@@ -144,6 +168,11 @@ export function InreviewApplicationStage({
     (action === "Reject" && !rejectionReason.trim()) ||
     (action === "Proceed" && !isProceedValid);
 
+  const content =
+    action in confirmModalContent
+      ? confirmModalContent[action as keyof typeof confirmModalContent]
+      : undefined;
+
   return (
     <>
       <div>
@@ -156,10 +185,7 @@ export function InreviewApplicationStage({
 
           {/* Action */}
           <div>
-            <label
-              className="block text-[16px] font-semibold mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
               Action
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -187,10 +213,7 @@ export function InreviewApplicationStage({
             <>
               {/* Next Process */}
               <div>
-                <label
-                  className="block text-[16px] font-semibold mb-2"
-                  style={{ color: colors.text }}
-                >
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Next Process
                 </label>
 
@@ -213,10 +236,7 @@ export function InreviewApplicationStage({
               {nextProcess === "Interview" && (
                 <>
                   <div>
-                    <label
-                      className="block text-[16px] font-semibold mb-2"
-                      style={{ color: colors.text }}
-                    >
+                    <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                       Interview Type
                     </label>
 
@@ -237,51 +257,73 @@ export function InreviewApplicationStage({
 
                   {/* Interviewers */}
                   <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <label
-                        className="text-[16px] font-semibold"
-                        style={{ color: colors.text }}
-                      >
-                        Interviewers List
-                      </label>
+                    <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                      Interviewers / Panelists
+                    </label>
 
+                    <div className="flex gap-[8px] mb-[8px]">
+                      <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            addPanelist();
+                          }
+                        }}
+                        placeholder="Type name and press Enter or Add"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                        style={{
+                          backgroundColor: colors.textInputBgColor,
+                          color: colors.text,
+                        }}
+                      />
                       <button
                         type="button"
                         onClick={addPanelist}
-                        className="flex items-center gap-2 text-[#c89b3c]"
+                        className="px-[14px] py-[10px] rounded-[10px] bg-[#C89B3C] text-white font-['Inter',sans-serif] font-semibold text-[13px] hover:bg-[#D8AC47] transition-colors cursor-pointer shrink-0"
                       >
-                        <Plus size={16} />
-                        Add Panelist
+                        + Add
                       </button>
                     </div>
-
-                    <div className="space-y-3">
-                      {panelists.map((panelist, index) => (
-                        <div key={index} className="flex items-center gap-3">
-                          <input
-                            value={panelist}
-                            onChange={(e) =>
-                              updatePanelist(index, e.target.value)
-                            }
-                            placeholder="Enter interviewer"
-                            className="flex-1 px-4 py-3 rounded-lg border border-gray-800"
-                            style={{
-                              backgroundColor: colors.textInputBgColor,
-                              color: colors.text,
-                            }}
-                          />
-
-                          {panelists.length > 1 && (
+                    {panelists.length > 0 ? (
+                      <div className="flex flex-wrap gap-[8px] mt-[6px]">
+                        {panelists.map((p, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center gap-[6px] bg-[#FDF6E7] border border-[#E8D4A0] rounded-full px-[12px] py-[5px]"
+                          >
+                            <span className="font-['Inter',sans-serif] text-[13px] text-[#92650A] font-medium">
+                              {p}
+                            </span>
                             <button
                               type="button"
-                              onClick={() => removePanelist(index)}
+                              onClick={() => removePanelist(i)}
+                              className="text-[#9CA3AF] hover:text-[#EF4444] transition-colors cursor-pointer ml-[2px]"
                             >
-                              <Trash2 size={18} className="text-red-500" />
+                              <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 12 12"
+                                fill="none"
+                              >
+                                <path
+                                  d="M2 2l8 8M10 2l-8 8"
+                                  stroke="currentColor"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                />
+                              </svg>
                             </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="font-['Inter',sans-serif] text-[12px] text-[#9CA3AF] mt-[4px]">
+                        No panelists added yet.
+                      </p>
+                    )}
                   </div>
                 </>
               )}
@@ -290,10 +332,7 @@ export function InreviewApplicationStage({
               {nextProcess === "Assessment" && (
                 <>
                   <div>
-                    <label
-                      className="block text-[16px] font-semibold mb-2"
-                      style={{ color: colors.text }}
-                    >
+                    <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                       Assessment Type
                     </label>
 
@@ -315,10 +354,7 @@ export function InreviewApplicationStage({
                   {assessmentType === "Online" && (
                     <>
                       <div>
-                        <label
-                          className="block text-[16px] font-semibold mb-2"
-                          style={{ color: colors.text }}
-                        >
+                        <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                           Online Assessment Link
                         </label>
 
@@ -337,10 +373,7 @@ export function InreviewApplicationStage({
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label
-                            className="mb-2 block"
-                            style={{ color: colors.text }}
-                          >
+                          <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                             Deadline Date
                           </label>
                           <DatePicker
@@ -356,10 +389,7 @@ export function InreviewApplicationStage({
                         </div>
 
                         <div>
-                          <label
-                            className="mb-2 block"
-                            style={{ color: colors.text }}
-                          >
+                          <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                             Deadline Time
                           </label>
                           <input
@@ -379,10 +409,7 @@ export function InreviewApplicationStage({
               {showScheduledSection && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label
-                      className="block mb-2"
-                      style={{ color: colors.text }}
-                    >
+                    <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                       Scheduled Date
                     </label>
 
@@ -395,10 +422,7 @@ export function InreviewApplicationStage({
                   </div>
 
                   <div>
-                    <label
-                      className="block mb-2"
-                      style={{ color: colors.text }}
-                    >
+                    <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                       Scheduled Time
                     </label>
 
@@ -415,10 +439,7 @@ export function InreviewApplicationStage({
               {/* Venue */}
               {showVenue && (
                 <div>
-                  <label
-                    className="block text-[16px] font-semibold mb-2"
-                    style={{ color: colors.text }}
-                  >
+                  <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                     Venue Address
                   </label>
 
@@ -439,17 +460,17 @@ export function InreviewApplicationStage({
           {/* Reject */}
           {action === "Reject" && (
             <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Reason for Rejection
               </label>
 
               <textarea
                 rows={4}
                 value={rejectionReason}
-                onChange={(e) => setRejectionReason(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value.length <= MAX_REJECTION_REASON)
+                    setRejectionReason(e.target.value);
+                }}
                 placeholder="Enter reason for rejection..."
                 className="w-full px-4 py-3 rounded-lg border border-gray-800 resize-none"
                 style={{
@@ -457,16 +478,24 @@ export function InreviewApplicationStage({
                   color: colors.text,
                 }}
               />
+              <div className="flex justify-between mt-[5px]">
+                <span
+                  className={`text-[12px] tabular-nums ml-auto ${rejectionReason.length > MAX_REJECTION_REASON * 0.9 ? "text-[#EF4444]" : "text-[#9CA3AF]"}`}
+                >
+                  {rejectionReason.length}/{MAX_REJECTION_REASON}
+                </span>
+              </div>
             </div>
           )}
         </form>
       </div>
 
-      <div className="flex justify-end gap-3">
+      <div className="flex space-between gap-3">
         <button
           type="button"
-          className="px-6 py-2 rounded-lg border border-gray-700"
+          className="w-full px-6 py-2 rounded-lg border border-gray-700 text-[16px]"
           style={{ color: colors.text }}
+          onClick={handleCancel}
         >
           Cancel
         </button>
@@ -476,16 +505,32 @@ export function InreviewApplicationStage({
           disabled={isSubmitDisabled}
           whileHover={!isSubmitDisabled ? { scale: 1.02 } : undefined}
           whileTap={!isSubmitDisabled ? { scale: 0.98 } : undefined}
-          onClick={action === "Reject" ? handleReject : handleProceed}
-          className="px-6 py-2 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => setConfirmOpen(true)}
+          className="w-full px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
             color: colors.card,
-            backgroundColor: colors.accent,
+            backgroundColor:
+              action === "Reject" ? content?.btnBgColor : colors.accent,
           }}
         >
-          {action === "Reject" ? "Reject" : "Proceed"}
+          {action || "Proceed"}
         </motion.button>
       </div>
+
+      {/* Confirmation Modal */}
+      {content && (
+        <ConfirmModal
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={onSubmit}
+          title={content.title}
+          description={content.description}
+          confirmText="Yes, Shortlist"
+          cancelText="Cancel"
+          confirmBtnColor={content.btnBgColor}
+          loading={loading}
+        />
+      )}
     </>
   );
 }

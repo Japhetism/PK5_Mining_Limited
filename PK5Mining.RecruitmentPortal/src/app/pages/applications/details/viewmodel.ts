@@ -7,9 +7,9 @@ import {
   updateJobApplicationStatus,
 } from "@/app/api/applications";
 import { toastUtil } from "@/app/utils/toast";
-import { ApiError, NewApplicationStagePayload } from "@/app/interfaces";
-import { getRemoteFileSize } from "@/app/utils/helper";
-import { statusStyles } from "@/app/constants";
+import { ApiError, NewApplicationStagePayload, StageValue } from "@/app/interfaces";
+import { getRemoteFileSize, isStageValue, normalizeStage } from "@/app/utils/helper";
+import { statuses, statusStyles } from "@/app/constants";
 
 function useApplicationDetailsViewModel() {
   const queryClient = useQueryClient();
@@ -87,18 +87,23 @@ function useApplicationDetailsViewModel() {
     updateMutation.mutate(selectedStatus);
   };
 
-  const handleNewApplicationStage = (payload: Omit<NewApplicationStagePayload, "applicationId">) => {
+  const handleNewApplicationStage = (
+    payload: Omit<NewApplicationStagePayload, "applicationId">
+  ) => {
+    setUpdating(true);
     processNewApplication({
       applicationId: parseInt(applicationId as string, 10),
       ...payload,
     })
       .then(() => {
+        setUpdating(false);
         toastUtil.success("Application stage updated successfully");
         queryClient.invalidateQueries({
           queryKey: ["applications", applicationId],
         });
       })
       .catch((err) => {
+        setUpdating(false);
         const message =
           (err as ApiError)?.message ??
           (err instanceof Error
@@ -106,9 +111,9 @@ function useApplicationDetailsViewModel() {
             : "An error occurred while updating application stage. Please try again.");
         toastUtil.error(message);
       });
-  }
+  };
 
-  const handleInReviewApplication = () => { }
+  const handleInReviewApplication = () => {};
 
   useEffect(() => {
     if (error) {
@@ -173,12 +178,16 @@ function useApplicationDetailsViewModel() {
     });
   }
 
-  const initials =
-    `${app?.firstName?.[0] ?? ""}${app?.lastName?.[0] ?? ""}`.toUpperCase();
+  const initials = `${app?.firstName?.[0] ?? ""}${
+    app?.lastName?.[0] ?? ""
+  }`.toUpperCase();
 
-  const statusStyle =
-    statusStyles[app?.status?.toLowerCase() as keyof typeof statusStyles] ??
-    statusStyles.new;
+  const normalized = normalizeStage(app?.status ?? "");
+
+  const stage: StageValue | null = isStageValue(normalized) ? normalized : null;
+
+  const appStatus =
+    statuses.find((s) => s.value === stage)?.label ?? stage;
 
   return {
     app,
@@ -202,7 +211,7 @@ function useApplicationDetailsViewModel() {
     size,
     timelineEvents,
     initials,
-    statusStyle,
+    appStatus,
     handleNewApplicationStage,
     handleInReviewApplication,
   };

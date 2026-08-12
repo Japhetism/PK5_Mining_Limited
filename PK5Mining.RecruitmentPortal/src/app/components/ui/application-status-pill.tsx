@@ -11,14 +11,16 @@ export function ApplicationStatusPill({ status }: StatusProps) {
 
   const stage: StageValue | null = isStageValue(normalized) ? normalized : null;
 
+  const appStatus = statuses.find((s) => s.value === stage)?.label ?? stage;
+
   const statusStyle =
-      statusStyles[status?.toLowerCase() as keyof typeof statusStyles] ??
-      statusStyles.new;
+    statusStyles[appStatus?.toLowerCase() as keyof typeof statusStyles] ??
+    statusStyles.new;
 
   const meta = stage
     ? {
-        label: statuses.find((s) => s.value === stage)?.label ?? stage,
-        className: `${statusStyle.bg} ${statusStyle.text}`
+        label: appStatus,
+        className: `${statusStyle.bg} ${statusStyle.text}`,
       }
     : {
         label: status,

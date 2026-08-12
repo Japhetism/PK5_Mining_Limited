@@ -1,14 +1,14 @@
-import { useTenant } from "@/tenants/useTenant";
 import { NewApplicationStage } from "./new-appication-stage";
-import { NewApplicationStagePayload } from "@/app/interfaces";
 import { InreviewApplicationStage } from "./inreview-application-stage";
 import { ShortlistedApplicationStage } from "./shortlisted-application-stage";
 import { InterviewScheduledApplicationStage } from "./interview-scheduled-application-stage";
 import { InterviewCompletedApplicationStage } from "./interview-completed-stage";
 import { OfferSentApplicationStage } from "./offer-sent-application-stage";
 import { HiredApplicationStage } from "./hired-application-stage";
+import { NewApplicationStagePayload } from "@/app/interfaces";
 
 interface UpdateApplicationStageProps {
+  loading: boolean;
   candidateStatus: string;
   handleNewApplicationStage: (
     payload: Omit<NewApplicationStagePayload, "applicationId">,
@@ -17,29 +17,30 @@ interface UpdateApplicationStageProps {
 }
 
 export function UpdateApplicationStage({
+  loading,
   candidateStatus,
   handleInReviewApplication,
   handleNewApplicationStage,
 }: UpdateApplicationStageProps) {
-  const { colors } = useTenant();
-
   const renderStage = () => {
-    switch (candidateStatus) {
-      case "New":
+    switch (candidateStatus?.toLowerCase()) {
+      case "new":
         return (
           <NewApplicationStage
+            loading={loading}
             handleNewApplicationStage={handleNewApplicationStage}
           />
         );
 
-      case "In Review":
+      case "in review":
         return (
           <InreviewApplicationStage
-            handleProceedWithApplication={() => handleInReviewApplication()}
+            loading={loading}
+            handleInReviewApplicationStage={() => handleInReviewApplication()}
           />
         );
 
-      case "Shortlisted":
+      case "shortlisted":
         return (
           <ShortlistedApplicationStage
             handleSchedule={() => {}}
@@ -47,7 +48,7 @@ export function UpdateApplicationStage({
           />
         );
 
-      case "Interview Scheduled":
+      case "interview scheduled":
         return (
           <InterviewScheduledApplicationStage
             isAssessmentSchedule={false}
@@ -56,17 +57,17 @@ export function UpdateApplicationStage({
           />
         );
 
-      case "Interview Completed":
+      case "interview completed":
         return (
           <InterviewCompletedApplicationStage handleSendOffer={() => {}} />
         );
 
-      case "Offer Sent":
+      case "offer sent":
         return (
           <OfferSentApplicationStage handleProceedWithApplication={() => {}} />
         );
 
-      case "Hired":
+      case "hired":
         return (
           <HiredApplicationStage
             jobTitle=""
