@@ -14,6 +14,7 @@ interface UpdateApplicationStageProps {
     payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => void;
   handleInReviewApplication: () => void;
+  handleShortlistedApplicationStage: () => void;
 }
 
 export function UpdateApplicationStage({
@@ -21,6 +22,7 @@ export function UpdateApplicationStage({
   candidateStatus,
   handleInReviewApplication,
   handleNewApplicationStage,
+  handleShortlistedApplicationStage,
 }: UpdateApplicationStageProps) {
   const renderStage = () => {
     switch (candidateStatus?.toLowerCase()) {
@@ -36,15 +38,17 @@ export function UpdateApplicationStage({
         return (
           <InreviewApplicationStage
             loading={loading}
-            handleInReviewApplicationStage={() => handleInReviewApplication()}
+            handleInReviewApplicationStage={handleInReviewApplication}
           />
         );
 
       case "shortlisted":
         return (
           <ShortlistedApplicationStage
-            handleSchedule={() => {}}
-            handleReschedule={() => {}}
+            loading={loading}
+            handleShortlistedApplicationStage={
+              handleShortlistedApplicationStage
+            }
           />
         );
 

@@ -377,7 +377,7 @@ export interface DateRange {
   endDate?: Date;
 }
 
-export type ApplicationStageButton = "Proceed" | "Reject";
+export type ApplicationStageButton = "Proceed" | "Reject" | "Schedule" | "Reschdule";
 
 export interface NewApplicationStagePayload {
   applicationId: number;

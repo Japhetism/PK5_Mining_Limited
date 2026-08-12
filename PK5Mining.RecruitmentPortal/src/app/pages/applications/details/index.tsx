@@ -42,7 +42,8 @@ export function ApplicationDetail() {
     handleUpdateStatus,
     setSelectedStatus,
     handleNewApplicationStage,
-    handleInReviewApplication,
+    handleInReviewApplicationStage,
+    handleShortlistedApplicationStage,
   } = useApplicationDetailsViewModel();
 
   const [activeTab, setActiveTab] = useState<"all" | "pending" | "processed">(
@@ -256,7 +257,10 @@ export function ApplicationDetail() {
                 candidateStatus={appStatus ?? ""}
                 loading={updating}
                 handleNewApplicationStage={handleNewApplicationStage}
-                handleInReviewApplication={handleInReviewApplication}
+                handleInReviewApplication={handleInReviewApplicationStage}
+                handleShortlistedApplicationStage={
+                  handleShortlistedApplicationStage
+                }
               />
             </div>
           </div>
