@@ -21,6 +21,7 @@ import { useTenant } from "@/tenants/useTenant";
 import { PERMISSIONS } from "@/app/constants/permissions";
 import { downloadFile } from "@/app/utils/helper";
 import useApplicationDetailsViewModel from "./viewmodel";
+import { ApplicationStatusPill } from "@/app/components/ui/application-status-pill";
 
 export function ApplicationDetail() {
   const { user } = useAuth();
@@ -36,7 +37,7 @@ export function ApplicationDetail() {
     size,
     timelineEvents,
     initials,
-    statusStyle,
+    appStatus,
     setIsViewerOpen,
     handleUpdateStatus,
     setSelectedStatus,
@@ -60,7 +61,7 @@ export function ApplicationDetail() {
     permissions.some((p) => p.name === required),
   );
 
-  const isHired = app?.status?.toLowerCase() === "hired";
+  const isHired = appStatus?.toLowerCase() === "hired";
 
   if (isLoading) return <ApplicationDetailsSkeleton />;
 
@@ -128,19 +129,7 @@ export function ApplicationDetail() {
                   {app?.firstName} {app?.lastName}
                 </h1>
                 {/* Live Status Badge */}
-                <div
-                  className={`flex items-center space-x-2 px-4 py-1.5 rounded-full ${statusStyle.bg}`}
-                >
-                  <span
-                    className={`w-2.5 h-2.5 rounded-full animate-pulse ${statusStyle.dot}`}
-                  ></span>
-
-                  <span
-                    className={`text-xs font-medium tracking-wide ${statusStyle.text}`}
-                  >
-                    {app?.status}
-                  </span>
-                </div>
+                <ApplicationStatusPill status={appStatus ?? ""} />
               </div>
               <p className="text-sm text-gray-500">Candidate</p>
             </div>
@@ -264,7 +253,7 @@ export function ApplicationDetail() {
                 {isHired ? "Job and Company Details" : "Candidate Decision"}
               </h2>
               <UpdateApplicationStage
-                candidateStatus={app?.status ?? ""}
+                candidateStatus={appStatus ?? ""}
                 loading={updating}
                 handleNewApplicationStage={handleNewApplicationStage}
                 handleInReviewApplication={handleInReviewApplication}

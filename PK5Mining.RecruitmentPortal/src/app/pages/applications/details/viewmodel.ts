@@ -7,9 +7,9 @@ import {
   updateJobApplicationStatus,
 } from "@/app/api/applications";
 import { toastUtil } from "@/app/utils/toast";
-import { ApiError, NewApplicationStagePayload } from "@/app/interfaces";
-import { getRemoteFileSize } from "@/app/utils/helper";
-import { statusStyles } from "@/app/constants";
+import { ApiError, NewApplicationStagePayload, StageValue } from "@/app/interfaces";
+import { getRemoteFileSize, isStageValue, normalizeStage } from "@/app/utils/helper";
+import { statuses, statusStyles } from "@/app/constants";
 
 function useApplicationDetailsViewModel() {
   const queryClient = useQueryClient();
@@ -88,7 +88,7 @@ function useApplicationDetailsViewModel() {
   };
 
   const handleNewApplicationStage = (
-    payload: Omit<NewApplicationStagePayload, "applicationId">,
+    payload: Omit<NewApplicationStagePayload, "applicationId">
   ) => {
     setUpdating(true);
     processNewApplication({
@@ -178,12 +178,16 @@ function useApplicationDetailsViewModel() {
     });
   }
 
-  const initials =
-    `${app?.firstName?.[0] ?? ""}${app?.lastName?.[0] ?? ""}`.toUpperCase();
+  const initials = `${app?.firstName?.[0] ?? ""}${
+    app?.lastName?.[0] ?? ""
+  }`.toUpperCase();
 
-  const statusStyle =
-    statusStyles[app?.status?.toLowerCase() as keyof typeof statusStyles] ??
-    statusStyles.new;
+  const normalized = normalizeStage(app?.status ?? "");
+
+  const stage: StageValue | null = isStageValue(normalized) ? normalized : null;
+
+  const appStatus =
+    statuses.find((s) => s.value === stage)?.label ?? stage;
 
   return {
     app,
@@ -207,7 +211,7 @@ function useApplicationDetailsViewModel() {
     size,
     timelineEvents,
     initials,
-    statusStyle,
+    appStatus,
     handleNewApplicationStage,
     handleInReviewApplication,
   };
