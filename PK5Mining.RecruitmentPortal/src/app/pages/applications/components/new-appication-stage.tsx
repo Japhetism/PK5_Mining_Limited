@@ -26,12 +26,14 @@ const confirmModalContent = {
 } as const;
 
 interface NewApplicationStageProps {
+  loading: boolean;
   handleNewApplicationStage: (
     payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => void;
 }
 
 export function NewApplicationStage({
+  loading,
   handleNewApplicationStage,
 }: NewApplicationStageProps) {
   const { colors } = useTenant();
@@ -183,7 +185,7 @@ export function NewApplicationStage({
           confirmText={`Yes, ${action}`}
           cancelText="Cancel"
           confirmBtnColor={content.btnBgColor}
-          loading={false}
+          loading={loading}
         />
       )}
     </>

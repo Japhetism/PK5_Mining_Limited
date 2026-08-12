@@ -9,6 +9,7 @@ import { OfferSentApplicationStage } from "./offer-sent-application-stage";
 import { HiredApplicationStage } from "./hired-application-stage";
 
 interface UpdateApplicationStageProps {
+  loading: boolean;
   candidateStatus: string;
   handleNewApplicationStage: (
     payload: Omit<NewApplicationStagePayload, "applicationId">,
@@ -17,6 +18,7 @@ interface UpdateApplicationStageProps {
 }
 
 export function UpdateApplicationStage({
+  loading,
   candidateStatus,
   handleInReviewApplication,
   handleNewApplicationStage,
@@ -28,6 +30,7 @@ export function UpdateApplicationStage({
       case "New":
         return (
           <NewApplicationStage
+            loading={loading}
             handleNewApplicationStage={handleNewApplicationStage}
           />
         );

@@ -265,6 +265,7 @@ export function ApplicationDetail() {
               </h2>
               <UpdateApplicationStage
                 candidateStatus={app?.status ?? ""}
+                loading={updating}
                 handleNewApplicationStage={handleNewApplicationStage}
                 handleInReviewApplication={handleInReviewApplication}
               />
