@@ -74,11 +74,13 @@ export function Dashboard() {
               : 0
           }
           suffix="% closed"
+          hideCursor
         />
         <StatCard
           icon={BarChart3}
           label="Avg. apps / role"
           value={totalJobs ? Math.round(totalApps / totalJobs) : 0}
+          hideCursor
         />
       </div>
 
@@ -180,6 +182,7 @@ type StatProps = {
   value: number;
   subtitle?: string;
   suffix?: string;
+  hideCursor?: boolean;
   onClickSuffix?: () => void;
   onClickSubtitle?: () => void;
 };
@@ -192,6 +195,7 @@ function StatCard({
   suffix,
   onClickSuffix,
   onClickSubtitle,
+  hideCursor,
 }: StatProps) {
   const { colors } = useTenant();
   return (
@@ -213,7 +217,7 @@ function StatCard({
       <div className="min-w-0 flex flex-col gap-3">
         <button
           onClick={() => onClickSuffix && onClickSuffix()}
-          className="flex flex-col items-start cursor-pointer"
+          className={`flex flex-col items-start ${hideCursor ? "" : "cursor-pointer"}`}
         >
           <p className="text-[16px]" style={{ color: colors.subtext }}>
             {label}
@@ -231,7 +235,7 @@ function StatCard({
         {subtitle && (
           <button
             onClick={() => onClickSubtitle && onClickSubtitle()}
-            className="flex flex-col items-start cursor-pointer"
+            className={`flex flex-col items-start ${hideCursor ? "" : "cursor-pointer"}`}
           >
             <p
               className="text-[15px] truncate"
