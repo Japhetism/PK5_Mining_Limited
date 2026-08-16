@@ -139,6 +139,10 @@ export function ShortlistedApplicationStage({
                   value={rescheduledTime}
                   onChange={(e) => setRescheduledTime(e.target.value)}
                   className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{
+                    backgroundColor: colors.textInputBgColor,
+                    color: colors.text,
+                  }}
                 />
               </div>
             </div>

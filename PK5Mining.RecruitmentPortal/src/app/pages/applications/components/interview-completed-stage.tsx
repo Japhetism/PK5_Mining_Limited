@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { Upload } from "lucide-react";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
+import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 
 interface SendOfferPayload {
   assessmentResult: File;
@@ -12,15 +13,18 @@ interface SendOfferPayload {
 }
 
 interface InterviewCompletedApplicationStageProps {
+  loading: boolean;
   handleSendOffer: (payload: SendOfferPayload) => void;
 }
 
 export function InterviewCompletedApplicationStage({
+  loading,
   handleSendOffer,
 }: InterviewCompletedApplicationStageProps) {
   const { colors } = useTenant();
 
   const [acknowledged, setAcknowledged] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
   const [assessmentResult, setAssessmentResult] = useState<File | null>(null);
 
@@ -37,7 +41,7 @@ export function InterviewCompletedApplicationStage({
   const isSubmitDisabled =
     !acknowledged || !assessmentResult || !hasOfferLetter;
 
-  const handleProceed = () => {
+  const onSubmit = () => {
     if (!assessmentResult) return;
 
     handleSendOffer({
@@ -57,6 +61,7 @@ export function InterviewCompletedApplicationStage({
           <StatusConfirmation
             isConfirmed={acknowledged}
             setIsConfirmed={setAcknowledged}
+            title="I confirm that all interview stages are complete and this candidate is approved for an offer."
           />
 
           {/* Assessment Result Upload */}
@@ -242,7 +247,7 @@ export function InterviewCompletedApplicationStage({
                 }
               : undefined
           }
-          onClick={handleProceed}
+          onClick={() => setConfirmOpen(true)}
           className="px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
             color: colors.card,
@@ -252,6 +257,20 @@ export function InterviewCompletedApplicationStage({
           Send Offer
         </motion.button>
       </div>
+
+      {/* Confirmation Modal */}
+      {confirmOpen && (
+        <ConfirmModal
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={onSubmit}
+          title="Send Offer?"
+          description="Are you sure you want to send this offer to the candidate? This will update the candidate status to Offer Sent."
+          confirmText="Yes, Send Offer"
+          cancelText="Cancel"
+          loading={loading}
+        />
+      )}
     </>
   );
 }

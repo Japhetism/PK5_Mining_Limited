@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import { useTenant } from "@/tenants/useTenant";
 import { StatusConfirmation } from "./status-confirmation";
 import { useAuth } from "@/app/context/AuthContext";
-import { RejectApplicationPayload } from "@/app/interfaces";
 
 interface OfferStagePayload {
   action: "Proceed" | "Reject";

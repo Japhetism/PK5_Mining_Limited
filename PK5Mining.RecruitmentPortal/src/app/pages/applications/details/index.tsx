@@ -258,7 +258,8 @@ export function ApplicationDetail() {
                 {isHired ? "Job and Company Details" : "Candidate Decision"}
               </h2>
               <UpdateApplicationStage
-                candidateStatus={appStatus ?? ""}
+                // candidateStatus={appStatus ?? ""}
+                candidateStatus="Interview Scheduled"
                 loading={updating}
                 handleNewApplicationStage={handleNewApplicationStage}
                 handleInReviewApplication={handleInReviewApplicationStage}
