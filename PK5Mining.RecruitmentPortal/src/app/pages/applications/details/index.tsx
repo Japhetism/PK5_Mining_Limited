@@ -42,7 +42,8 @@ export function ApplicationDetail() {
     handleUpdateStatus,
     setSelectedStatus,
     handleNewApplicationStage,
-    handleInReviewApplication,
+    handleInReviewApplicationStage,
+    handleShortlistedApplicationStage,
   } = useApplicationDetailsViewModel();
 
   const [activeTab, setActiveTab] = useState<"all" | "pending" | "processed">(
@@ -61,7 +62,16 @@ export function ApplicationDetail() {
     permissions.some((p) => p.name === required),
   );
 
-  const isHired = appStatus?.toLowerCase() === "hired";
+  const status = appStatus?.toLowerCase();
+
+  const header =
+    status === "interview completed"
+      ? "Send Offer Letter"
+      : status === "hired"
+        ? "New Hire Preboarding Information"
+        : status === "offer sent"
+          ? "Offer Decision"
+          : "Candidate Decision";
 
   if (isLoading) return <ApplicationDetailsSkeleton />;
 
@@ -137,31 +147,33 @@ export function ApplicationDetail() {
         </div>
 
         {/* Candidate Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-[34%_34%_27%] gap-6 pt-6 items-center">
           {/* Column 1: Contact Info */}
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-              <Mail className="w-4 h-4 text-gray-400 mt-1" />
-              <div>
-                <p className="text-xs text-gray-400">Email</p>
-                <p className="text-sm font-medium text-gray-900">
+              <Mail className="w-4 h-4 shrink-0 text-gray-400 mt-1" />
+              <div className="grid grid-cols-[140px_1fr] min-w-0 flex-1">
+                <p className="text-sm text-gray-400">Email</p>
+                <p className="text-sm font-medium text-gray-900 break-all">
                   {app?.email}
                 </p>
               </div>
             </div>
+
             <div className="flex items-start gap-3">
               <Phone className="w-4 h-4 text-gray-400 mt-1" />
-              <div>
-                <p className="text-xs text-gray-400">Phone Number</p>
+              <div className="grid grid-cols-[140px_1fr]">
+                <p className="text-sm text-gray-400">Phone Number</p>
                 <p className="text-sm font-medium text-gray-900">
                   {app?.phoneNumber}
                 </p>
               </div>
             </div>
+
             <div className="flex items-start gap-3">
               <Globe className="w-4 h-4 text-gray-400 mt-1" />
-              <div>
-                <p className="text-xs text-gray-400">Country</p>
+              <div className="grid grid-cols-[140px_1fr]">
+                <p className="text-sm text-gray-400">Country</p>
                 <p className="text-sm font-medium text-gray-900">
                   {app?.country}
                 </p>
@@ -173,27 +185,29 @@ export function ApplicationDetail() {
           <div className="space-y-4 md:border-x md:border-gray-100 md:px-6">
             <div className="flex items-start gap-3">
               <Briefcase className="w-4 h-4 text-gray-400 mt-1" />
-              <div>
-                <p className="text-xs text-gray-400">Role Applied</p>
+              <div className="grid grid-cols-[140px_1fr]">
+                <p className="text-sm text-gray-400">Role Applied</p>
                 <p className="text-sm font-medium text-gray-900">
                   {app?.job?.title || app?.jobs?.title}
                 </p>
               </div>
             </div>
+
             <div className="flex items-start gap-3">
               <Calendar className="w-4 h-4 text-gray-400 mt-1" />
-              <div>
-                <p className="text-xs text-gray-400">Date Submitted</p>
+              <div className="grid grid-cols-[140px_1fr]">
+                <p className="text-sm text-gray-400">Date Submitted</p>
                 <p className="text-sm font-medium text-gray-900">
                   {app?.dT_Created &&
                     new Date(app?.dT_Created).toLocaleString("en-GB")}
                 </p>
               </div>
             </div>
+
             <div className="flex items-start gap-3">
               <Clock className="w-4 h-4 text-gray-400 mt-1" />
-              <div>
-                <p className="text-xs text-gray-400">Last Updated</p>
+              <div className="grid grid-cols-[140px_1fr]">
+                <p className="text-sm text-gray-400">Last Updated</p>
                 <p className="text-sm font-medium text-gray-900">
                   {app?.dT_Modified &&
                     new Date(app?.dT_Modified).toLocaleString("en-GB")}
@@ -249,14 +263,20 @@ export function ApplicationDetail() {
         {canUpdateApplication && (
           <div className="bg-white rounded-2xl border border-gray-200 shadow-xs p-6">
             <div>
-              <h2 className="text-lg font-bold text-gray-900">
-                {isHired ? "Job and Company Details" : "Candidate Decision"}
-              </h2>
+              <h2 className="text-lg font-bold text-gray-900">{header}</h2>
+              {appStatus === "hired" && (
+                <p className="text-[13px] text-[#6B7280] leading-relaxed">
+                  Complete this form to initiate onboarding for Precious Udomitizer.
+                </p>
+              )}
               <UpdateApplicationStage
                 candidateStatus={appStatus ?? ""}
                 loading={updating}
                 handleNewApplicationStage={handleNewApplicationStage}
-                handleInReviewApplication={handleInReviewApplication}
+                handleInReviewApplication={handleInReviewApplicationStage}
+                handleShortlistedApplicationStage={
+                  handleShortlistedApplicationStage
+                }
               />
             </div>
           </div>

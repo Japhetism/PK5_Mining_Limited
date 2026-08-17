@@ -14,6 +14,7 @@ interface UpdateApplicationStageProps {
     payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => void;
   handleInReviewApplication: () => void;
+  handleShortlistedApplicationStage: () => void;
 }
 
 export function UpdateApplicationStage({
@@ -21,6 +22,7 @@ export function UpdateApplicationStage({
   candidateStatus,
   handleInReviewApplication,
   handleNewApplicationStage,
+  handleShortlistedApplicationStage,
 }: UpdateApplicationStageProps) {
   const renderStage = () => {
     switch (candidateStatus?.toLowerCase()) {
@@ -36,21 +38,24 @@ export function UpdateApplicationStage({
         return (
           <InreviewApplicationStage
             loading={loading}
-            handleInReviewApplicationStage={() => handleInReviewApplication()}
+            handleInReviewApplicationStage={handleInReviewApplication}
           />
         );
 
       case "shortlisted":
         return (
           <ShortlistedApplicationStage
-            handleSchedule={() => {}}
-            handleReschedule={() => {}}
+            loading={loading}
+            handleShortlistedApplicationStage={
+              handleShortlistedApplicationStage
+            }
           />
         );
 
       case "interview scheduled":
         return (
           <InterviewScheduledApplicationStage
+            loading={loading}
             isAssessmentSchedule={false}
             corporateOfficeAddress="Corporate Office Address"
             handleProceedWithApplication={() => {}}
@@ -59,17 +64,24 @@ export function UpdateApplicationStage({
 
       case "interview completed":
         return (
-          <InterviewCompletedApplicationStage handleSendOffer={() => {}} />
+          <InterviewCompletedApplicationStage
+            loading={loading}
+            handleSendOffer={() => {}}
+          />
         );
 
       case "offer sent":
         return (
-          <OfferSentApplicationStage handleProceedWithApplication={() => {}} />
+          <OfferSentApplicationStage
+            loading={loading}
+            handleProceedWithApplication={() => {}}
+          />
         );
 
       case "hired":
         return (
           <HiredApplicationStage
+            loading={loading}
             jobTitle=""
             department=""
             startDate=""

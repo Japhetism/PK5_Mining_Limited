@@ -113,7 +113,9 @@ function useApplicationDetailsViewModel() {
       });
   };
 
-  const handleInReviewApplication = () => {};
+  const handleInReviewApplicationStage = () => {};
+
+  const handleShortlistedApplicationStage = () => {};
 
   useEffect(() => {
     if (error) {
@@ -213,7 +215,8 @@ function useApplicationDetailsViewModel() {
     initials,
     appStatus,
     handleNewApplicationStage,
-    handleInReviewApplication,
+    handleInReviewApplicationStage,
+    handleShortlistedApplicationStage,
   };
 }
 

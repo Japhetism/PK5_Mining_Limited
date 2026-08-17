@@ -108,7 +108,7 @@ function useJobDetailsViewModel() {
 
   const job = jobData ?? undefined;
   const applications: JobApplicationDto[] =
-    jobApplications?.jobApplications ?? [];
+    jobApplications?.data ?? [];
   const totalCount = jobApplications?.totalCount ?? 0;
   const totalPages: number =
     jobApplications?.totalPages ??

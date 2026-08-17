@@ -3,16 +3,32 @@ import { motion } from "motion/react";
 import { Plus, Trash2 } from "lucide-react";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
-import { RejectApplicationPayload } from "@/app/interfaces";
 import { useAuth } from "@/app/context/AuthContext";
+import { ConfirmModal } from "@/app/components/ui/confirm-modal";
+
+const confirmModalContent = {
+  Reject: {
+    title: "Reject Candidate?",
+    description: "This will reject the candidate and close this application.",
+    btnBgColor: "#EF4444",
+  },
+  Proceed: {
+    title: "Confirm Decision?",
+    description:
+      "This will schedule the next activity and keep the candidate in progress.",
+    btnBgColor: "",
+  },
+} as const;
 
 interface InterviewScheduledApplicationStageProps {
+  loading?: boolean;
   isAssessmentSchedule?: boolean;
   corporateOfficeAddress?: string;
   handleProceedWithApplication: (payload: any) => void;
 }
 
 export function InterviewScheduledApplicationStage({
+  loading,
   isAssessmentSchedule = false,
   corporateOfficeAddress = "Corporate Office Address",
   handleProceedWithApplication,
@@ -21,6 +37,7 @@ export function InterviewScheduledApplicationStage({
   const { user } = useAuth();
 
   const [acknowledged, setAcknowledged] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [assessmentResult, setAssessmentResult] = useState("");
   const [reviews, setReviews] = useState("");
   const [action, setAction] = useState("");
@@ -83,12 +100,30 @@ export function InterviewScheduledApplicationStage({
     });
   };
 
+  const handleCancel = () => {
+    setReviews("");
+    setAssessmentResult("");
+    setAction("");
+    setNextProcess("");
+    setInterviewType("");
+    setAssessmentType("");
+    setOnlineAssessmentLink("");
+    setVenueAddress("");
+    setPanelists([]);
+  };
+
+  const content =
+    action in confirmModalContent
+      ? confirmModalContent[action as keyof typeof confirmModalContent]
+      : undefined;
+
   return (
     <>
       <div>
         <form className="py-6 space-y-6">
           {/* Acknowledgement */}
           <StatusConfirmation
+            title="I confirm that I have reviewed this candidate's submission."
             isConfirmed={acknowledged}
             setIsConfirmed={setAcknowledged}
           />
@@ -96,10 +131,7 @@ export function InterviewScheduledApplicationStage({
           {/* Assessment Result */}
           {isAssessmentSchedule && (
             <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Assessment Result
               </label>
 
@@ -119,10 +151,7 @@ export function InterviewScheduledApplicationStage({
 
           {/* Reviews */}
           <div>
-            <label
-              className="block text-[16px] font-semibold mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
               Reviews
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -143,10 +172,7 @@ export function InterviewScheduledApplicationStage({
 
           {/* Action */}
           <div>
-            <label
-              className="block text-[16px] font-semibold mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
               Action
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -170,10 +196,7 @@ export function InterviewScheduledApplicationStage({
           {/* Next Process */}
           {action === "Proceed" && (
             <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Next Process
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -198,10 +221,7 @@ export function InterviewScheduledApplicationStage({
           {/* Assessment Type */}
           {nextProcess === "Assessment" && (
             <div>
-              <label
-                className="block mb-2 text-[16px] font-semibold"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Assessment Type
               </label>
 
@@ -224,10 +244,7 @@ export function InterviewScheduledApplicationStage({
           {/* Online Assessment Link */}
           {assessmentType === "Online" && (
             <div>
-              <label
-                className="block mb-2 text-[16px] font-semibold"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Online Assessment Link
               </label>
 
@@ -247,10 +264,7 @@ export function InterviewScheduledApplicationStage({
           {/* Interview Type */}
           {nextProcess === "Interview" && (
             <div>
-              <label
-                className="block mb-2 text-[16px] font-semibold"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Interview Type
               </label>
 
@@ -273,10 +287,7 @@ export function InterviewScheduledApplicationStage({
           {/* Panelists */}
           {interviewType === "Onsite" && (
             <div>
-              <label
-                className="block mb-2 text-[16px] font-semibold"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Interviewers List
               </label>
 
@@ -318,10 +329,7 @@ export function InterviewScheduledApplicationStage({
           {/* Venue Address */}
           {requiresVenue && (
             <div>
-              <label
-                className="block mb-2 text-[16px] font-semibold"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Venue Address
               </label>
 
@@ -341,10 +349,7 @@ export function InterviewScheduledApplicationStage({
           {/* Rejection Reason */}
           {action === "Reject" && (
             <div>
-              <label
-                className="block mb-2 text-[16px] font-semibold"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Reason for Rejection
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -368,8 +373,9 @@ export function InterviewScheduledApplicationStage({
       <div className="flex justify-end gap-3">
         <button
           type="button"
-          className="px-6 py-2 rounded-lg border border-gray-700"
+          className="w-full px-6 py-2 rounded-lg border border-gray-700 text-[16px]"
           style={{ color: colors.text }}
+          onClick={handleCancel}
         >
           Cancel
         </button>
@@ -379,16 +385,36 @@ export function InterviewScheduledApplicationStage({
           disabled={isSubmitDisabled}
           whileHover={!isSubmitDisabled ? { scale: 1.02 } : undefined}
           whileTap={!isSubmitDisabled ? { scale: 0.98 } : undefined}
-          onClick={onSubmit}
-          className="px-6 py-2 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
             color: colors.card,
-            backgroundColor: colors.accent,
+            backgroundColor:
+              action === "Reject" ? content?.btnBgColor : colors.accent,
           }}
+          onClick={() => setConfirmOpen(true)}
         >
           {action === "Reject" ? "Reject" : "Proceed"}
         </motion.button>
       </div>
+
+      {/* Confirmation Modal */}
+      {content && (
+        <ConfirmModal
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={onSubmit}
+          title={content.title}
+          description={
+            nextProcess?.toLowerCase() === "interview completed"
+              ? "This will move the candidate to the Interview Completed stage where you can issue an offer letter."
+              : content.description
+          }
+          confirmText={`Yes, ${action}`}
+          cancelText="Cancel"
+          confirmBtnColor={content.btnBgColor}
+          loading={loading}
+        />
+      )}
     </>
   );
 }

@@ -2,27 +2,48 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
-import { useAuth } from "@/app/context/AuthContext";
+import { DatePicker } from "@/app/components/ui/date-picker";
+import { ConfirmModal } from "@/app/components/ui/confirm-modal";
+import { ApplicationStageButton } from "@/app/interfaces";
+import { formatDateTime } from "@/app/utils/helper";
+
+const MAX_REJECTION_REASON = 500;
+
+const confirmModalContent = {
+  Reject: {
+    title: "Reject Application?",
+    description:
+      "This action will reject the candidate's application and log the reason to the timeline.",
+    btnBgColor: "#EF4444",
+  },
+  Schedule: {
+    title: "Schedule Candidate?",
+    description: "Are you sure you want to schedule this candidate?",
+    btnBgColor: "",
+  },
+  Reschedule: {
+    title: "Reschedule Candidate?",
+    description: "Are you sure you want to reschedule this candidate?",
+    btnBgColor: "",
+  },
+} as const;
 
 interface ShortlistedApplicationStageProps {
-  handleSchedule: () => void;
-  handleReschedule: (payload: {
-    currentStatus: string;
-    rescheduledDateTime: string;
-    reason: string;
-  }) => void;
+  loading: boolean;
+  handleShortlistedApplicationStage: (payload: any) => void;
 }
 
 export function ShortlistedApplicationStage({
-  handleSchedule,
-  handleReschedule,
+  loading,
+  handleShortlistedApplicationStage,
 }: ShortlistedApplicationStageProps) {
   const { colors } = useTenant();
-  const { user } = useAuth();
 
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [acknowledged, setAcknowledged] = useState(false);
-  const [action, setAction] = useState("");
-  const [rescheduledDateTime, setRescheduledDateTime] = useState("");
+  const [action, setAction] = useState<ApplicationStageButton | string>("");
+  const [rescheduledDate, setRescheduledDate] = useState("");
+  const [rescheduledTime, setRescheduledTime] = useState("");
   const [rescheduleReason, setRescheduleReason] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
 
@@ -30,44 +51,21 @@ export function ShortlistedApplicationStage({
     !acknowledged ||
     !action ||
     (action === "Reschedule" &&
-      (!rescheduledDateTime || !rescheduleReason.trim())) ||
+      (!rescheduledDate || !rescheduledTime || !rescheduleReason.trim())) ||
     (action === "Reject" && !rejectionReason.trim());
 
-  const handleProceed = () => {
-    switch (action) {
-      case "Schedule":
-        handleSchedule();
-        break;
+  const onSubmit = () => {};
 
-      case "Reschedule":
-        handleReschedule({
-          currentStatus: "Shortlisted",
-          rescheduledDateTime,
-          reason: rescheduleReason.trim(),
-        });
-        break;
-
-      case "Reject":
-        
-        break;
-
-      default:
-        break;
-    }
+  const handleCancel = () => {
+    setRejectionReason("");
+    setAction("");
+    setAcknowledged(false);
   };
 
-  const getButtonLabel = () => {
-    switch (action) {
-      case "Schedule":
-        return "Schedule";
-      case "Reschedule":
-        return "Reschedule";
-      case "Reject":
-        return "Reject";
-      default:
-        return "Proceed";
-    }
-  };
+  const content =
+    action in confirmModalContent
+      ? confirmModalContent[action as keyof typeof confirmModalContent]
+      : undefined;
 
   return (
     <>
@@ -81,10 +79,7 @@ export function ShortlistedApplicationStage({
 
           {/* Action */}
           <div>
-            <label
-              className="block text-[16px] font-semibold mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
               Action
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -96,7 +91,8 @@ export function ShortlistedApplicationStage({
                 const value = e.target.value;
 
                 setAction(value);
-                setRescheduledDateTime("");
+                setRescheduledDate("");
+                setRescheduledTime("");
                 setRescheduleReason("");
                 setRejectionReason("");
               }}
@@ -115,35 +111,47 @@ export function ShortlistedApplicationStage({
 
           {/* Rescheduled Date & Time */}
           {action === "Reschedule" && (
-            <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{ color: colors.text }}
-              >
-                Rescheduled Date & Time
-                <span className="ml-1 text-red-500">*</span>
-              </label>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Rescheduled Date
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
 
-              <input
-                type="datetime-local"
-                value={rescheduledDateTime}
-                onChange={(e) => setRescheduledDateTime(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c]"
-                style={{
-                  backgroundColor: colors.textInputBgColor,
-                  color: colors.text,
-                }}
-              />
+                <DatePicker
+                  name="rescheduleDate"
+                  value={
+                    rescheduledDate
+                      ? formatDateTime(rescheduledDate, false)
+                      : ""
+                  }
+                  onChange={(value) => setRescheduledDate(value)}
+                  minDate={new Date()}
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Rescheduled Time
+                </label>
+                <input
+                  type="time"
+                  value={rescheduledTime}
+                  onChange={(e) => setRescheduledTime(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{
+                    backgroundColor: colors.textInputBgColor,
+                    color: colors.text,
+                  }}
+                />
+              </div>
             </div>
           )}
 
           {/* Reason for Reschedule */}
           {action === "Reschedule" && (
             <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Reason for Reschedule
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -165,10 +173,7 @@ export function ShortlistedApplicationStage({
           {/* Reason for Rejection */}
           {action === "Reject" && (
             <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Reason for Rejection
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -176,25 +181,36 @@ export function ShortlistedApplicationStage({
               <textarea
                 rows={4}
                 value={rejectionReason}
-                onChange={(e) => setRejectionReason(e.target.value)}
-                placeholder="Enter reason for rejection..."
+                onChange={(e) => {
+                  if (e.target.value.length <= MAX_REJECTION_REASON)
+                    setRejectionReason(e.target.value);
+                }}
+                placeholder="Please provide the reason for rejecting this candidate..."
                 className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c] resize-none"
                 style={{
                   backgroundColor: colors.textInputBgColor,
                   color: colors.text,
                 }}
               />
+              <div className="flex justify-between mt-[5px]">
+                <span
+                  className={`text-[12px] tabular-nums ml-auto ${rejectionReason.length > MAX_REJECTION_REASON * 0.9 ? "text-[#EF4444]" : "text-[#9CA3AF]"}`}
+                >
+                  {rejectionReason.length}/{MAX_REJECTION_REASON}
+                </span>
+              </div>
             </div>
           )}
         </form>
       </div>
 
       {/* Footer */}
-      <div className="flex justify-end gap-3">
+      <div className="flex space-between gap-3">
         <button
           type="button"
-          className="px-6 py-2 rounded-lg border border-gray-700 text-[16px]"
+          className="w-full px-6 py-2 rounded-lg border border-gray-700 text-[16px]"
           style={{ color: colors.text }}
+          onClick={handleCancel}
         >
           Cancel
         </button>
@@ -204,16 +220,32 @@ export function ShortlistedApplicationStage({
           disabled={isSubmitDisabled}
           whileHover={!isSubmitDisabled ? { scale: 1.02 } : undefined}
           whileTap={!isSubmitDisabled ? { scale: 0.98 } : undefined}
-          className="px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-2 rounded-lg text-[16px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
             color: colors.card,
-            backgroundColor: colors.accent,
+            backgroundColor:
+              action === "Reject" ? content?.btnBgColor : colors.accent,
           }}
-          onClick={handleProceed}
+          onClick={() => setConfirmOpen(true)}
         >
-          {getButtonLabel()}
+          {action || "Proceed"}
         </motion.button>
       </div>
+
+      {/* Confirmation Modal */}
+      {content && (
+        <ConfirmModal
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={onSubmit}
+          title={content.title}
+          description={content.description}
+          confirmText={`Yes, ${action}`}
+          cancelText="Cancel"
+          confirmBtnColor={content.btnBgColor}
+          loading={loading}
+        />
+      )}
     </>
   );
 }
