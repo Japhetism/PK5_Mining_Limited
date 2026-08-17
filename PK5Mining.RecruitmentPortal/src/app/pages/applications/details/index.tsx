@@ -62,7 +62,16 @@ export function ApplicationDetail() {
     permissions.some((p) => p.name === required),
   );
 
-  const isHired = appStatus?.toLowerCase() === "hired";
+  const status = appStatus?.toLowerCase();
+
+  const header =
+    status === "interview completed"
+      ? "Send Offer Letter"
+      : status === "hired"
+        ? "New Hire Preboarding Information"
+        : status === "offer sent"
+          ? "Offer Decision"
+          : "Candidate Decision";
 
   if (isLoading) return <ApplicationDetailsSkeleton />;
 
@@ -254,12 +263,14 @@ export function ApplicationDetail() {
         {canUpdateApplication && (
           <div className="bg-white rounded-2xl border border-gray-200 shadow-xs p-6">
             <div>
-              <h2 className="text-lg font-bold text-gray-900">
-                {isHired ? "Job and Company Details" : "Candidate Decision"}
-              </h2>
+              <h2 className="text-lg font-bold text-gray-900">{header}</h2>
+              {appStatus === "hired" && (
+                <p className="text-[13px] text-[#6B7280] leading-relaxed">
+                  Complete this form to initiate onboarding for Precious Udomitizer.
+                </p>
+              )}
               <UpdateApplicationStage
-                // candidateStatus={appStatus ?? ""}
-                candidateStatus="Interview Scheduled"
+                candidateStatus={appStatus ?? ""}
                 loading={updating}
                 handleNewApplicationStage={handleNewApplicationStage}
                 handleInReviewApplication={handleInReviewApplicationStage}

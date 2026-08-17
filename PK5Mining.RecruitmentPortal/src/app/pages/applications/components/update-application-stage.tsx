@@ -55,6 +55,7 @@ export function UpdateApplicationStage({
       case "interview scheduled":
         return (
           <InterviewScheduledApplicationStage
+            loading={loading}
             isAssessmentSchedule={false}
             corporateOfficeAddress="Corporate Office Address"
             handleProceedWithApplication={() => {}}
@@ -63,17 +64,24 @@ export function UpdateApplicationStage({
 
       case "interview completed":
         return (
-          <InterviewCompletedApplicationStage handleSendOffer={() => {}} />
+          <InterviewCompletedApplicationStage
+            loading={loading}
+            handleSendOffer={() => {}}
+          />
         );
 
       case "offer sent":
         return (
-          <OfferSentApplicationStage handleProceedWithApplication={() => {}} />
+          <OfferSentApplicationStage
+            loading={loading}
+            handleProceedWithApplication={() => {}}
+          />
         );
 
       case "hired":
         return (
           <HiredApplicationStage
+            loading={loading}
             jobTitle=""
             department=""
             startDate=""

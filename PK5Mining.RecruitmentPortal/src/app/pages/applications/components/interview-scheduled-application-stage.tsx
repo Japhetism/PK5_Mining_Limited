@@ -393,7 +393,7 @@ export function InterviewScheduledApplicationStage({
           }}
           onClick={() => setConfirmOpen(true)}
         >
-          {action === "Reject" ? "Reject" : "Confirm"}
+          {action === "Reject" ? "Reject" : "Proceed"}
         </motion.button>
       </div>
 
@@ -404,7 +404,11 @@ export function InterviewScheduledApplicationStage({
           onClose={() => setConfirmOpen(false)}
           onConfirm={onSubmit}
           title={content.title}
-          description={content.description}
+          description={
+            nextProcess?.toLowerCase() === "interview completed"
+              ? "This will move the candidate to the Interview Completed stage where you can issue an offer letter."
+              : content.description
+          }
           confirmText={`Yes, ${action}`}
           cancelText="Cancel"
           confirmBtnColor={content.btnBgColor}

@@ -4,6 +4,7 @@ import { Upload } from "lucide-react";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
+import { SummaryCard } from "./summary-card";
 
 interface SendOfferPayload {
   assessmentResult: File;
@@ -57,6 +58,27 @@ export function InterviewCompletedApplicationStage({
     <>
       <div>
         <form className="py-6 space-y-6">
+          {/* Summary */}
+          <SummaryCard
+            title="Interview Details"
+            rows={[
+              { label: "Interview Date", value: "22 Apr 2026" },
+              { label: "Interview Time", value: "10:00 AM" },
+              { label: "Interview Type", value: "Virtual" },
+              {
+                label: "Interviewers / Panelists",
+                value: "Sarah M., James K.",
+              },
+              {
+                label: "Venue / Meeting Link",
+                value: "https://meet.pk5.io/room-a",
+              },
+              {
+                label: "Reviews",
+                value: "Strong Hire — Excellent performance across all rounds.",
+              },
+            ]}
+          />
           {/* Acknowledgement */}
           <StatusConfirmation
             isConfirmed={acknowledged}
@@ -66,10 +88,7 @@ export function InterviewCompletedApplicationStage({
 
           {/* Assessment Result Upload */}
           <div>
-            <label
-              className="block text-[16px] font-semibold mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
               Assessment Result
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -113,10 +132,7 @@ export function InterviewCompletedApplicationStage({
 
           {/* Offer Letter Method */}
           <div>
-            <label
-              className="block text-[16px] font-semibold mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
               Offer Letter Method
               <span className="ml-1 text-red-500">*</span>
             </label>
@@ -146,12 +162,7 @@ export function InterviewCompletedApplicationStage({
           {/* Offer Letter Upload */}
           {offerMethod === "Upload" && (
             <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{
-                  color: colors.text,
-                }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Offer Letter
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -192,12 +203,7 @@ export function InterviewCompletedApplicationStage({
           {/* Offer Letter Link */}
           {offerMethod === "Link" && (
             <div>
-              <label
-                className="block text-[16px] font-semibold mb-2"
-                style={{
-                  color: colors.text,
-                }}
-              >
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Offer Letter Link
                 <span className="ml-1 text-red-500">*</span>
               </label>
