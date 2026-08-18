@@ -7,29 +7,23 @@ type StatusProps = {
 };
 
 export function ApplicationStatusPill({ status }: StatusProps) {
-  const normalized = normalizeStage(status);
+  const normalizedStatus = normalizeStage(status);
 
-  console.log("normalize ", normalized);
-
-  const stage: StageValue | null = isStageValue(normalized) ? normalized : null;
-
-  console.log("stage is ", stage)
-
-  const appStatus = statuses.find((s) => s.value === stage)?.label ?? stage;
-
-  console.log("app status is ", appStatus)
+  const appStatus: any =
+    statuses.find((s) => s.value === normalizedStatus)?.label ??
+    normalizedStatus;
 
   const statusStyle =
-    statusStyles[appStatus?.toLowerCase() as keyof typeof statusStyles] ??
+    statusStyles[normalizedStatus as keyof typeof statusStyles] ??
     statusStyles.new;
 
-  const meta = stage
+  const meta = statusStyle
     ? {
         label: appStatus,
         className: `${statusStyle.bg} ${statusStyle.text}`,
       }
     : {
-        label: status,
+        label: normalizedStatus,
         className: "bg-gray-600/10 text-gray-400",
       };
 

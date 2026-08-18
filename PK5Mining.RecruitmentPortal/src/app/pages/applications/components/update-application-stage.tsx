@@ -48,7 +48,7 @@ export function UpdateApplicationStage({
           />
         );
 
-      case "in review":
+      case "inreview":
         return (
           <InreviewApplicationStage
             loading={loading}
@@ -56,7 +56,7 @@ export function UpdateApplicationStage({
           />
         );
 
-      case "shortlisted":
+      case "interviewshortlisted":
         return (
           <ShortlistedApplicationStage
             loading={loading}
@@ -66,7 +66,7 @@ export function UpdateApplicationStage({
           />
         );
 
-      case "interview scheduled":
+      case "interviewscheduled":
         return (
           <InterviewScheduledApplicationStage
             loading={loading}
@@ -74,7 +74,7 @@ export function UpdateApplicationStage({
           />
         );
 
-      case "interview completed":
+      case "interviewcompleted":
         return (
           <InterviewCompletedApplicationStage
             loading={loading}
