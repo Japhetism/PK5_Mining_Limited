@@ -5,7 +5,7 @@ import { InterviewScheduledApplicationStage } from "./interview-scheduled-applic
 import { InterviewCompletedApplicationStage } from "./interview-completed-stage";
 import { OfferSentApplicationStage } from "./offer-sent-application-stage";
 import { HiredApplicationStage } from "./hired-application-stage";
-import { InReviewApplicationStagePayload, NewApplicationStagePayload } from "@/app/interfaces";
+import { InReviewApplicationStagePayload, NewApplicationStagePayload, ShortlistedApplicationStagePayload } from "@/app/interfaces";
 
 interface UpdateApplicationStageProps {
   loading: boolean;
@@ -16,7 +16,9 @@ interface UpdateApplicationStageProps {
   handleInReviewApplication: (
     payload: Omit<InReviewApplicationStagePayload, "applicationId">,
   ) => void;
-  handleShortlistedApplicationStage: () => void;
+  handleShortlistedApplicationStage: (
+    payload: Omit<ShortlistedApplicationStagePayload, "applicationId">
+  ) => void;
 }
 
 export function UpdateApplicationStage({
@@ -26,6 +28,7 @@ export function UpdateApplicationStage({
   handleNewApplicationStage,
   handleShortlistedApplicationStage,
 }: UpdateApplicationStageProps) {
+  console.log("candidate status ", candidateStatus)
   const renderStage = () => {
     switch (candidateStatus?.toLowerCase()) {
       case "new":

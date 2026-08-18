@@ -48,6 +48,7 @@ export const statuses = [
   { value: "inreview", label: "In Review", backendKey: "In_Review" },
   { value: "shortlisted", label: "Shortlisted", backendKey: "Shortlisted" },
   { value: "interviewshortlisted", label: "Shortlisted", backendKey: "InterviewShortlisted" },
+  { value: "interviewscheduled", label: "Interview Scheduled", backendkey: "InterviewScheduled" },
   {
     value: "interview_scheduled",
     label: "Interview Scheduled",
@@ -148,6 +149,7 @@ export const workflowStages = [
   { id: "in_review", label: "In Review" },
   { id: "shortlisted", label: "Shortlisted" },
   { id: "interviewshortlisted", label: "Shortlisted" },
+  { id: "interviewscheduled", label: "Interview Scheduled" },
   {
     id: "interview",
     label: "Interview Scheduled",
