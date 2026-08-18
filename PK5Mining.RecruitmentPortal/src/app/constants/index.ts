@@ -49,7 +49,7 @@ export const statuses = [
   { value: "shortlisted", label: "Shortlisted", backendKey: "Shortlisted" },
   {
     value: "interviewshortlisted",
-    label: "Shortlisted",
+    label: "Interview Shortlisted",
     backendKey: "InterviewShortlisted",
   },
   {
@@ -72,9 +72,30 @@ export const statuses = [
     label: "Interview Scheduled",
     backendKey: "Interview_Scheduled",
   },
-  { value: "offer_sent", label: "Offer Sent", backendKey: "Offer_Sent" },
+  { value: "offersent", label: "Offer Sent", backendKey: "OfferSent" },
   { value: "rejected", label: "Rejected", backendKey: "Rejected" },
-  { value: "newrejected", label: "Rejected", backendKey: "Rejected" },
+  { value: "newrejected", label: "Rejected (New)", backendKey: "NewRejected" },
+  {
+    value: "interviewrejected",
+    label: "Rejected (Interview)",
+    backendKey: "InterviewRejected",
+  },
+  {
+    value: "inreviewrejected",
+    label: "Rejected (In Review)",
+    backendKey: "InreviewRejected",
+  },
+  {
+    value: "shortlistrejected",
+    label: "Rejected (Shortlisted)",
+    backendKey: "ShortlistRejected",
+  },
+
+  {
+    value: "scheduledrejected",
+    label: "Rejected (Interview)",
+    backendKey: "ScheduledRejected",
+  },
   { value: "hired", label: "Hired", backendKey: "Hired" },
 ] as const;
 
@@ -119,46 +140,82 @@ export const statusStyles: Record<
     dot: "bg-[#2563EB]",
   },
 
-  "in review": {
+  inreview: {
     bg: "bg-[#FEF3C7]",
     text: "text-[#92400E]",
     dot: "bg-[#D97706]",
   },
 
   shortlisted: {
-    bg: "bg-[#B9F6B5]",
-    text: "text-[#111827]",
-    dot: "bg-[#308A1E]",
+    bg: "bg-[#F3E8FF]",
+    text: "text-[#6B21A8]",
+    dot: "bg-[#9333EA]",
   },
 
-  "interview shortlisted": {
-    bg: "bg-[#B9F6B5]",
-    text: "text-[#111827]",
-    dot: "bg-[#308A1E]",
+  interviewshortlisted: {
+    bg: "bg-[#F3E8FF]",
+    text: "text-[#6B21A8]",
+    dot: "bg-[#9333EA]",
   },
 
-  "interview scheduled": {
+  interviewscheduled: {
     bg: "bg-[#CFFAFE]",
     text: "text-[#155E75]",
     dot: "bg-[#0891B2]",
   },
 
-  "interview completed": {
-    bg: "bg-[#DCFCE7]",
-    text: "text-[#166534]",
-    dot: "bg-[#16A34A]",
+  interviewcompleted: {
+    bg: "bg-[#ECFCCB]",
+    text: "text-[#4D7C0F]",
+    dot: "bg-[#84CC16]",
   },
 
-  "offer sent": {
+  offersent: {
     bg: "bg-[#E0E7FF]",
     text: "text-[#3730A3]",
     dot: "bg-[#4F46E5]",
   },
 
+  hired: {
+    bg: "bg-[#DCFCE7]",
+    text: "text-[#166534]",
+    dot: "bg-[#16A34A]",
+  },
+
   rejected: {
-    bg: "bg-[#F6C2B5]",
-    text: "text-[#111827]",
-    dot: "bg-[#BF3E17]",
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#991B1B]",
+    dot: "bg-[#DC2626]",
+  },
+
+  newrejected: {
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#991B1B]",
+    dot: "bg-[#DC2626]",
+  },
+
+  interviewrejected: {
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#991B1B]",
+    dot: "bg-[#DC2626]",
+  },
+
+  inreviewrejected: {
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#991B1B]",
+    dot: "bg-[#DC2626]",
+  },
+
+  shortlistrejected: {
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#991B1B]",
+    dot: "bg-[#DC2626]",
+  },
+
+  scheduledrejected: {
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#991B1B]",
+    dot: "bg-[#DC2626]",
   },
 };
 
@@ -178,5 +235,6 @@ export const workflowStages = [
   },
   { id: "offer", label: "Offer Sent" },
   { id: "rejected", label: "Rejected" },
+  { id: "newrejected", label: "Rejected (New)" },
   { id: "hired", label: "Hired" },
 ];

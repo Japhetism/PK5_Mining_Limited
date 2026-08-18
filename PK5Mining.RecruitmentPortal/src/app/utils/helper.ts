@@ -149,7 +149,7 @@ export function isStageValue(value: string): value is StageValue {
 }
 
 export function normalizeStage(input: string): string {
-  return input.trim().toLowerCase().replace(/\s+/g, "_");
+  return input.trim().toLowerCase().replace(/\s+/g, "");
 }
 
 export function getStageMeta(value?: string | undefined) {
@@ -492,11 +492,11 @@ export const getDateRangeWithTimes = (
 };
 
 export const parseDecisionDateTime = (
-  deadlineDate: string,
-  deadlineTime: string,
+  date: string,
+  time: string,
 ): string => {
-  const [day, month, year] = deadlineDate.split("/");
-  const [hours, minutes] = deadlineTime.split(":");
+  const [day, month, year] = date.split("/");
+  const [hours, minutes] = time.split(":");
 
   return new Date(
     Number(year),
@@ -504,5 +504,5 @@ export const parseDecisionDateTime = (
     Number(day),
     Number(hours),
     Number(minutes),
-  ).toISOString();
+  )?.toISOString();
 };

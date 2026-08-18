@@ -8,7 +8,7 @@ import {
   ApplicationStageButton,
   ShortlistedApplicationStagePayload,
 } from "@/app/interfaces";
-import { formatDateTime } from "@/app/utils/helper";
+import { formatDateTime, parseDecisionDateTime } from "@/app/utils/helper";
 
 const MAX_REJECTION_REASON = 500;
 
@@ -55,21 +55,19 @@ export function ShortlistedApplicationStage({
 
   const onSubmit = () => {
     if (action) {
-      const [day, month, year] = tentativeInterviewDate.split("/");
-
-      const interviewDate = new Date(
-        Number(year),
-        Number(month) - 1, // months are 0-based
-        Number(day),
-        Number(tentativeInterviewTime.split(":")[0]),
-        Number(tentativeInterviewTime.split(":")[1]),
-      );
-
       const payload: Omit<ShortlistedApplicationStagePayload, "applicationId"> =
         {
-          rejectionReason: rejectionReason.trim(),
           action: action as ApplicationStageButton,
-          tentativeInterviewDate: interviewDate.toISOString(),
+          ...(rejectionReason != null &&
+            rejectionReason !== "" && {
+              rejectionReason: rejectionReason.trim(),
+            }),
+          ...(tentativeInterviewDate && {
+            tentativeInterviewDate: parseDecisionDateTime(
+              tentativeInterviewDate,
+              tentativeInterviewTime,
+            ),
+          }),
         };
       handleShortlistedApplicationStage(payload);
     }

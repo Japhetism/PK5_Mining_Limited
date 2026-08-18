@@ -299,11 +299,7 @@ function useApplicationDetailsViewModel() {
   const initials = `${app?.firstName?.[0] ?? ""}${app?.lastName?.[0] ?? ""
     }`.toUpperCase();
 
-  const normalized = normalizeStage(app?.status ?? "");
-
-  const stage: StageValue | null = isStageValue(normalized) ? normalized : null;
-
-  const appStatus = statuses.find((s) => s.value === stage)?.label ?? stage;
+  const appStatus = app?.status ?? "";
 
   return {
     app,
