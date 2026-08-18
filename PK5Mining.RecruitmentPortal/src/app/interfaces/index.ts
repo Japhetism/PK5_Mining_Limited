@@ -401,7 +401,7 @@ export interface ShortlistedApplicationStagePayload {
 
 export interface ScheduledApplicationStagePayload {
   applicationId: number;
-  action: ApplicationStageButton;
+  action: string;
   assessmentType?: string;
   onlineAssessmentLink?: string;
   scheduledDate?: string;

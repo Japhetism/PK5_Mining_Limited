@@ -490,3 +490,19 @@ export const getDateRangeWithTimes = (
 
   return date.toISOString();
 };
+
+export const parseDecisionDateTime = (
+  deadlineDate: string,
+  deadlineTime: string,
+): string => {
+  const [day, month, year] = deadlineDate.split("/");
+  const [hours, minutes] = deadlineTime.split(":");
+
+  return new Date(
+    Number(year),
+    Number(month) - 1, // JavaScript months are 0-based
+    Number(day),
+    Number(hours),
+    Number(minutes),
+  ).toISOString();
+};

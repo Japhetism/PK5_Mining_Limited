@@ -5,6 +5,12 @@ import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
 import { useAuth } from "@/app/context/AuthContext";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
+import { DatePicker } from "@/app/components/ui/date-picker";
+import {
+  ApplicationStageButton,
+  ScheduledApplicationStagePayload,
+} from "@/app/interfaces";
+import { formatDateTime, parseDecisionDateTime } from "@/app/utils/helper";
 
 const confirmModalContent = {
   Reject: {
@@ -22,16 +28,14 @@ const confirmModalContent = {
 
 interface InterviewScheduledApplicationStageProps {
   loading?: boolean;
-  isAssessmentSchedule?: boolean;
-  corporateOfficeAddress?: string;
-  handleProceedWithApplication: (payload: any) => void;
+  handleScheduledApplicationStage: (
+    payload: Omit<ScheduledApplicationStagePayload, "applicationId">,
+  ) => void;
 }
 
 export function InterviewScheduledApplicationStage({
   loading,
-  isAssessmentSchedule = false,
-  corporateOfficeAddress = "Corporate Office Address",
-  handleProceedWithApplication,
+  handleScheduledApplicationStage,
 }: InterviewScheduledApplicationStageProps) {
   const { colors } = useTenant();
   const { user } = useAuth();
@@ -39,8 +43,13 @@ export function InterviewScheduledApplicationStage({
   const [acknowledged, setAcknowledged] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [assessmentResult, setAssessmentResult] = useState("");
-  const [reviews, setReviews] = useState("");
   const [action, setAction] = useState("");
+
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [scheduledTime, setScheduledTime] = useState("");
+
+  const [deadlineDate, setDeadlineDate] = useState("");
+  const [deadlineTime, setDeadlineTime] = useState("");
 
   const [nextProcess, setNextProcess] = useState("");
   const [interviewType, setInterviewType] = useState("");
@@ -48,7 +57,7 @@ export function InterviewScheduledApplicationStage({
 
   const [onlineAssessmentLink, setOnlineAssessmentLink] = useState("");
 
-  const [venueAddress, setVenueAddress] = useState(corporateOfficeAddress);
+  const [venueAddress, setVenueAddress] = useState("");
 
   const [rejectionReason, setRejectionReason] = useState("");
 
@@ -72,7 +81,6 @@ export function InterviewScheduledApplicationStage({
 
   const isSubmitDisabled =
     !acknowledged ||
-    !reviews.trim() ||
     !action ||
     (action === "Proceed" && !nextProcess) ||
     (nextProcess === "Assessment" && !assessmentType) ||
@@ -83,25 +91,33 @@ export function InterviewScheduledApplicationStage({
     (action === "Reject" && !rejectionReason.trim());
 
   const onSubmit = () => {
-    if (action === "Reject") {
-      return;
-    }
+    if (action) {
+      const payload: Omit<ScheduledApplicationStagePayload, "applicationId"> = {
+        rejectionReason: rejectionReason.trim(),
+        action: action === "Reject" ? action : nextProcess,
 
-    handleProceedWithApplication({
-      assessmentResult,
-      reviews,
-      action,
-      nextProcess,
-      interviewType,
-      assessmentType,
-      onlineAssessmentLink,
-      venueAddress,
-      panelists,
-    });
+        ...(assessmentType != null &&
+          assessmentType !== "" && { assessmentType }),
+        ...(onlineAssessmentLink != null &&
+          onlineAssessmentLink !== "" && { onlineAssessmentLink }),
+        ...(scheduledDate && {
+          scheduledDate: parseDecisionDateTime(scheduledDate, scheduledTime),
+        }),
+        ...(scheduledTime != null && scheduledTime !== "" && { scheduledTime }),
+        ...(deadlineDate && {
+          deadlineDate: parseDecisionDateTime(deadlineDate, deadlineTime),
+        }),
+        ...(deadlineTime != null && deadlineTime !== "" && { deadlineTime }),
+        ...(venueAddress != null && venueAddress !== "" && { venueAddress }),
+        ...(interviewType != null && interviewType !== "" && { interviewType }),
+        ...(panelists?.length > 0 && { panelists }),
+      };
+
+      handleScheduledApplicationStage(payload);
+    }
   };
 
   const handleCancel = () => {
-    setReviews("");
     setAssessmentResult("");
     setAction("");
     setNextProcess("");
@@ -117,6 +133,9 @@ export function InterviewScheduledApplicationStage({
       ? confirmModalContent[action as keyof typeof confirmModalContent]
       : undefined;
 
+  const showScheduledSection =
+    nextProcess === "Interview" || assessmentType === "In-person";
+
   return (
     <>
       <div>
@@ -127,48 +146,6 @@ export function InterviewScheduledApplicationStage({
             isConfirmed={acknowledged}
             setIsConfirmed={setAcknowledged}
           />
-
-          {/* Assessment Result */}
-          {isAssessmentSchedule && (
-            <div>
-              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-                Assessment Result
-              </label>
-
-              <input
-                type="text"
-                value={assessmentResult}
-                onChange={(e) => setAssessmentResult(e.target.value)}
-                placeholder="Enter candidate score"
-                className="w-full px-4 py-3 rounded-lg border border-gray-800"
-                style={{
-                  backgroundColor: colors.textInputBgColor,
-                  color: colors.text,
-                }}
-              />
-            </div>
-          )}
-
-          {/* Reviews */}
-          <div>
-            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-              Reviews
-              <span className="ml-1 text-red-500">*</span>
-            </label>
-
-            <textarea
-              rows={4}
-              value={reviews}
-              disabled={!acknowledged}
-              onChange={(e) => setReviews(e.target.value)}
-              placeholder="Enter reviews from reviewers / panelists"
-              className="w-full px-4 py-3 rounded-lg border border-gray-800 resize-none disabled:opacity-50"
-              style={{
-                backgroundColor: colors.textInputBgColor,
-                color: colors.text,
-              }}
-            />
-          </div>
 
           {/* Action */}
           <div>
@@ -213,52 +190,83 @@ export function InterviewScheduledApplicationStage({
                 <option value="">Select Next Process</option>
                 <option value="Assessment">Assessment</option>
                 <option value="Interview">Interview</option>
-                <option value="Interview Completed">Interview Completed</option>
               </select>
             </div>
           )}
 
           {/* Assessment Type */}
           {nextProcess === "Assessment" && (
-            <div>
-              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-                Assessment Type
-              </label>
+            <>
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Assessment Type
+                </label>
 
-              <select
-                value={assessmentType}
-                onChange={(e) => setAssessmentType(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-800"
-                style={{
-                  backgroundColor: colors.textInputBgColor,
-                  color: colors.text,
-                }}
-              >
-                <option value="">Select Assessment Type</option>
-                <option value="Online">Online</option>
-                <option value="In-person">In-person</option>
-              </select>
-            </div>
-          )}
+                <select
+                  value={assessmentType}
+                  onChange={(e) => setAssessmentType(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{
+                    backgroundColor: colors.textInputBgColor,
+                    color: colors.text,
+                  }}
+                >
+                  <option value="">Select Assessment Type</option>
+                  <option value="Online">Online</option>
+                  <option value="In-person">In-person</option>
+                </select>
+              </div>
 
-          {/* Online Assessment Link */}
-          {assessmentType === "Online" && (
-            <div>
-              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-                Online Assessment Link
-              </label>
+              {assessmentType === "Online" && (
+                <>
+                  <div>
+                    <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                      Online Assessment Link
+                    </label>
 
-              <input
-                type="text"
-                value={onlineAssessmentLink}
-                onChange={(e) => setOnlineAssessmentLink(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-800"
-                style={{
-                  backgroundColor: colors.textInputBgColor,
-                  color: colors.text,
-                }}
-              />
-            </div>
+                    <input
+                      value={onlineAssessmentLink}
+                      onChange={(e) => setOnlineAssessmentLink(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                      style={{
+                        backgroundColor: colors.textInputBgColor,
+                        color: colors.text,
+                      }}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                        Deadline Date
+                      </label>
+                      <DatePicker
+                        name="deadlineDate"
+                        value={
+                          deadlineDate
+                            ? formatDateTime(deadlineDate, false)
+                            : ""
+                        }
+                        onChange={(value) => setDeadlineDate(value)}
+                        minDate={new Date()}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                        Deadline Time
+                      </label>
+                      <input
+                        type="time"
+                        value={deadlineTime}
+                        onChange={(e) => setDeadlineTime(e.target.value)}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
           )}
 
           {/* Interview Type */}
@@ -281,6 +289,37 @@ export function InterviewScheduledApplicationStage({
                 <option value="Virtual">Virtual</option>
                 <option value="Onsite">Onsite</option>
               </select>
+            </div>
+          )}
+
+          {/* Scheduled Date/Time */}
+          {showScheduledSection && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Scheduled Date
+                </label>
+
+                <input
+                  type="date"
+                  value={scheduledDate}
+                  onChange={(e) => setScheduledDate(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Scheduled Time
+                </label>
+
+                <input
+                  type="time"
+                  value={scheduledTime}
+                  onChange={(e) => setScheduledTime(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                />
+              </div>
             </div>
           )}
 

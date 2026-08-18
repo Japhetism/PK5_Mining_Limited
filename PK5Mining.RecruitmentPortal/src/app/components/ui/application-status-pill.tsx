@@ -9,9 +9,15 @@ type StatusProps = {
 export function ApplicationStatusPill({ status }: StatusProps) {
   const normalized = normalizeStage(status);
 
+  console.log("normalize ", normalized);
+
   const stage: StageValue | null = isStageValue(normalized) ? normalized : null;
 
+  console.log("stage is ", stage)
+
   const appStatus = statuses.find((s) => s.value === stage)?.label ?? stage;
+
+  console.log("app status is ", appStatus)
 
   const statusStyle =
     statusStyles[appStatus?.toLowerCase() as keyof typeof statusStyles] ??
