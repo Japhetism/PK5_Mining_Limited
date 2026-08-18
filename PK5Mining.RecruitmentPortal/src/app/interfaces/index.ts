@@ -385,3 +385,44 @@ export interface NewApplicationStagePayload {
   action: ApplicationStageButton;
   rejectionReason?: string;
 }
+
+export interface InReviewApplicationStagePayload {
+  applicationId: number;
+  action: ApplicationStageButton;
+  rejectionReason?: string;
+}
+
+export interface ShortlistedApplicationStagePayload {
+  applicationId: number;
+  action: ApplicationStageButton;
+  rejectionReason?: string;
+  tentativeInterviewDate?: string;
+}
+
+export interface ScheduledApplicationStagePayload {
+  applicationId: number;
+  action: ApplicationStageButton;
+  assessmentType?: string;
+  onlineAssessmentLink?: string;
+  scheduledDate?: string;
+  scheduledTime?: string;
+  deadlineDate?: string,
+  deadlineTime?: string;
+  venueAddress?: string;
+  interviewType?: string;
+  panelists?: Array<string>;
+  rejectionReason?: string;
+}
+
+export interface InterviewCompletedApplicationStagePayload {
+  applicationId: number;
+  action: ApplicationStageButton;
+  rejectionReason?: string;
+  departmentName?: string;
+  startDate?: string;
+  employmentType?: string;
+  salary?: number;
+  jobLocation?: string;
+  acceptanceDeadline?: string;
+  offerLetterLink?: string;
+}

@@ -3,9 +3,13 @@ import {
   ApplicationResponsePayload,
   ApplicationsByJobIdQuery,
   ApplicationsQuery,
+  InReviewApplicationStagePayload,
+  InterviewCompletedApplicationStagePayload,
   JobApplicationDto,
   // RejectApplicationPayload,
   NewApplicationStagePayload,
+  ScheduledApplicationStagePayload,
+  ShortlistedApplicationStagePayload,
 } from "../interfaces";
 import { http } from "./http";
 import { getAxiosErrorMessage } from "../utils/axios-error";
@@ -185,6 +189,102 @@ export async function processNewApplication(payload: NewApplicationStagePayload)
   } catch (err) {
     throw new Error(
       getAxiosErrorMessage(err, "Failed to proceed New job application"),
+    );
+  }
+}
+
+export async function processInReviewApplication(payload: InReviewApplicationStagePayload) {
+  try {
+    const { data } = await http.post<ApiResponse<JobApplicationDto>>(
+      `/JobApplicationStatus/process-in-review`,
+      payload,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to proceed job application",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to proceed in review job application"),
+    );
+  }
+}
+
+export async function processShortlistedApplication(payload: ShortlistedApplicationStagePayload) {
+  try {
+    const { data } = await http.post<ApiResponse<JobApplicationDto>>(
+      `/JobApplicationStatus/process-shortlisted`,
+      payload,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to proceed job application",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to proceed shortlisted job application"),
+    );
+  }
+}
+
+export async function processScheduledApplication(payload: ScheduledApplicationStagePayload) {
+  try {
+    const { data } = await http.post<ApiResponse<JobApplicationDto>>(
+      `/JobApplicationStatus/process-scheduled`,
+      payload,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to proceed job application",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to proceed scheduled job application"),
+    );
+  }
+}
+
+export async function processInterviewCompletedApplication(payload: InterviewCompletedApplicationStagePayload) {
+  try {
+    const { data } = await http.post<ApiResponse<JobApplicationDto>>(
+      `/JobApplicationStatus/process-interview-completed`,
+      payload,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to proceed job application",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to proceed interview completed job application"),
     );
   }
 }
