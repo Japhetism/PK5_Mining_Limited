@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { act, useState } from "react";
 import { motion } from "motion/react";
 import { Upload } from "lucide-react";
 import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { SummaryCard } from "./summary-card";
+import { InterviewCompletedApplicationStagePayload } from "@/app/interfaces";
 
 interface SendOfferPayload {
   assessmentResult: File;
@@ -15,7 +16,7 @@ interface SendOfferPayload {
 
 interface InterviewCompletedApplicationStageProps {
   loading: boolean;
-  handleSendOffer: (payload: SendOfferPayload) => void;
+  handleSendOffer: (payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId">) => void;
 }
 
 export function InterviewCompletedApplicationStage({
@@ -34,6 +35,7 @@ export function InterviewCompletedApplicationStage({
   const [offerLetterFile, setOfferLetterFile] = useState<File | null>(null);
 
   const [offerLetterLink, setOfferLetterLink] = useState("");
+  const [action, setAction] = useState("");
 
   const hasOfferLetter =
     (offerMethod === "Upload" && offerLetterFile) ||
@@ -43,15 +45,23 @@ export function InterviewCompletedApplicationStage({
     !acknowledged || !assessmentResult || !hasOfferLetter;
 
   const onSubmit = () => {
-    if (!assessmentResult) return;
+    // if (!assessmentResult) return;
 
-    handleSendOffer({
-      assessmentResult,
-      offerMethod: offerMethod as "Upload" | "Link",
-      offerLetterFile,
-      offerLetterLink:
-        offerMethod === "Link" ? offerLetterLink.trim() : undefined,
-    });
+    // handleSendOffer({
+    //   assessmentResult,
+    //   offerMethod: offerMethod as "Upload" | "Link",
+    //   offerLetterFile,
+    //   offerLetterLink:
+    //     offerMethod === "Link" ? offerLetterLink.trim() : undefined,
+    // });
+    if(action){
+      const payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId"> = {
+        action: action as "Proceed" | "Reject" | "Schedule" | "Reschdule",
+        rejectionReason: action === "Reject" ? "Candidate did not meet the requirements." : undefined,
+      };
+      handleSendOffer(payload);
+
+    }
   };
 
   return (

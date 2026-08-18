@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getApplicationById,
   processInReviewApplication,
+  processInterviewCompletedApplication,
   processNewApplication,
   processScheduledApplication,
   processShortlistedApplication,
@@ -13,6 +14,7 @@ import { toastUtil } from "@/app/utils/toast";
 import {
   ApiError,
   InReviewApplicationStagePayload,
+  InterviewCompletedApplicationStagePayload,
   NewApplicationStagePayload,
   ScheduledApplicationStagePayload,
   ShortlistedApplicationStagePayload,
@@ -205,6 +207,32 @@ function useApplicationDetailsViewModel() {
       });
   };
 
+  const handleInterviewCompletedApplicationStage = (
+    payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId">,
+  ) => {
+    setUpdating(true);
+    processInterviewCompletedApplication({
+      applicationId: parseInt(applicationId as string, 10),
+      ...payload,
+    })
+      .then(() => {
+        setUpdating(false);
+        toastUtil.success("Application stage updated successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["applications", applicationId],
+        });
+      })
+      .catch((err) => {
+        setUpdating(false);
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating application stage. Please try again.");
+        toastUtil.error(message);
+      });
+  };
+
   useEffect(() => {
     if (error) {
       const message =
@@ -268,9 +296,8 @@ function useApplicationDetailsViewModel() {
     });
   }
 
-  const initials = `${app?.firstName?.[0] ?? ""}${
-    app?.lastName?.[0] ?? ""
-  }`.toUpperCase();
+  const initials = `${app?.firstName?.[0] ?? ""}${app?.lastName?.[0] ?? ""
+    }`.toUpperCase();
 
   const normalized = normalizeStage(app?.status ?? "");
 
@@ -305,6 +332,7 @@ function useApplicationDetailsViewModel() {
     handleInReviewApplicationStage,
     handleShortlistedApplicationStage,
     handleScheduledInterviewApplicationStage,
+    handleInterviewCompletedApplicationStage,
   };
 }
 
