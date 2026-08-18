@@ -5,6 +5,7 @@ import {
   getApplicationById,
   processInReviewApplication,
   processNewApplication,
+  processScheduledApplication,
   processShortlistedApplication,
   updateJobApplicationStatus,
 } from "@/app/api/applications";
@@ -13,6 +14,7 @@ import {
   ApiError,
   InReviewApplicationStagePayload,
   NewApplicationStagePayload,
+  ScheduledApplicationStagePayload,
   ShortlistedApplicationStagePayload,
   StageValue,
 } from "@/app/interfaces";
@@ -177,6 +179,32 @@ function useApplicationDetailsViewModel() {
       });
   };
 
+  const handleScheduledInterviewApplicationStage = (
+    payload: Omit<ScheduledApplicationStagePayload, "applicationId">,
+  ) => {
+    setUpdating(true);
+    processScheduledApplication({
+      applicationId: parseInt(applicationId as string, 10),
+      ...payload,
+    })
+      .then(() => {
+        setUpdating(false);
+        toastUtil.success("Application stage updated successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["applications", applicationId],
+        });
+      })
+      .catch((err) => {
+        setUpdating(false);
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating application stage. Please try again.");
+        toastUtil.error(message);
+      });
+  };
+
   useEffect(() => {
     if (error) {
       const message =
@@ -276,6 +304,7 @@ function useApplicationDetailsViewModel() {
     handleNewApplicationStage,
     handleInReviewApplicationStage,
     handleShortlistedApplicationStage,
+    handleScheduledInterviewApplicationStage,
   };
 }
 

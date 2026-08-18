@@ -47,8 +47,26 @@ export const statuses = [
   { value: "in_review", label: "In Review", backendKey: "In_Review" },
   { value: "inreview", label: "In Review", backendKey: "In_Review" },
   { value: "shortlisted", label: "Shortlisted", backendKey: "Shortlisted" },
-  { value: "interviewshortlisted", label: "Shortlisted", backendKey: "InterviewShortlisted" },
-  { value: "interviewscheduled", label: "Interview Scheduled", backendkey: "InterviewScheduled" },
+  {
+    value: "interviewshortlisted",
+    label: "Shortlisted",
+    backendKey: "InterviewShortlisted",
+  },
+  {
+    value: "interviewscheduled",
+    label: "Interview Scheduled",
+    backendKey: "InterviewScheduled",
+  },
+  {
+    value: "interviewcompleted",
+    label: "Interview Completed",
+    backendKey: "InterviewCompleted",
+  },
+  {
+    value: "interview_completed",
+    label: "Interview Completed",
+    backendKey: "InterviewCompleted",
+  },
   {
     value: "interview_scheduled",
     label: "Interview Scheduled",
@@ -125,16 +143,16 @@ export const statusStyles: Record<
     dot: "bg-[#0891B2]",
   },
 
+  "interview completed": {
+    bg: "bg-[#DCFCE7]",
+    text: "text-[#166534]",
+    dot: "bg-[#16A34A]",
+  },
+
   "offer sent": {
     bg: "bg-[#E0E7FF]",
     text: "text-[#3730A3]",
     dot: "bg-[#4F46E5]",
-  },
-
-  hired: {
-    bg: "bg-[#F3E8FF]",
-    text: "text-[#6B21A8]",
-    dot: "bg-[#9333EA]",
   },
 
   rejected: {
@@ -155,7 +173,7 @@ export const workflowStages = [
     label: "Interview Scheduled",
   },
   {
-    id: "interview_completed",
+    id: "interviewcompleted",
     label: "Interview Completed",
   },
   { id: "offer", label: "Offer Sent" },
