@@ -3,12 +3,24 @@ import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getApplicationById,
+  processInReviewApplication,
   processNewApplication,
+  processShortlistedApplication,
   updateJobApplicationStatus,
 } from "@/app/api/applications";
 import { toastUtil } from "@/app/utils/toast";
-import { ApiError, NewApplicationStagePayload, StageValue } from "@/app/interfaces";
-import { getRemoteFileSize, isStageValue, normalizeStage } from "@/app/utils/helper";
+import {
+  ApiError,
+  InReviewApplicationStagePayload,
+  NewApplicationStagePayload,
+  ShortlistedApplicationStagePayload,
+  StageValue,
+} from "@/app/interfaces";
+import {
+  getRemoteFileSize,
+  isStageValue,
+  normalizeStage,
+} from "@/app/utils/helper";
 import { statuses, statusStyles } from "@/app/constants";
 
 function useApplicationDetailsViewModel() {
@@ -88,7 +100,7 @@ function useApplicationDetailsViewModel() {
   };
 
   const handleNewApplicationStage = (
-    payload: Omit<NewApplicationStagePayload, "applicationId">
+    payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => {
     setUpdating(true);
     processNewApplication({
@@ -113,9 +125,57 @@ function useApplicationDetailsViewModel() {
       });
   };
 
-  const handleInReviewApplicationStage = () => {};
+  const handleInReviewApplicationStage = (
+    payload: Omit<InReviewApplicationStagePayload, "applicationId">,
+  ) => {
+    setUpdating(true);
+    processInReviewApplication({
+      applicationId: parseInt(applicationId as string, 10),
+      ...payload,
+    })
+      .then(() => {
+        setUpdating(false);
+        toastUtil.success("Application stage updated successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["applications", applicationId],
+        });
+      })
+      .catch((err) => {
+        setUpdating(false);
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating application stage. Please try again.");
+        toastUtil.error(message);
+      });
+  };
 
-  const handleShortlistedApplicationStage = () => {};
+  const handleShortlistedApplicationStage = (
+    payload: Omit<ShortlistedApplicationStagePayload, "applicationId">,
+  ) => {
+    setUpdating(true);
+    processShortlistedApplication({
+      applicationId: parseInt(applicationId as string, 10),
+      ...payload,
+    })
+      .then(() => {
+        setUpdating(false);
+        toastUtil.success("Application stage updated successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["applications", applicationId],
+        });
+      })
+      .catch((err) => {
+        setUpdating(false);
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating application stage. Please try again.");
+        toastUtil.error(message);
+      });
+  };
 
   useEffect(() => {
     if (error) {
@@ -188,8 +248,7 @@ function useApplicationDetailsViewModel() {
 
   const stage: StageValue | null = isStageValue(normalized) ? normalized : null;
 
-  const appStatus =
-    statuses.find((s) => s.value === stage)?.label ?? stage;
+  const appStatus = statuses.find((s) => s.value === stage)?.label ?? stage;
 
   return {
     app,

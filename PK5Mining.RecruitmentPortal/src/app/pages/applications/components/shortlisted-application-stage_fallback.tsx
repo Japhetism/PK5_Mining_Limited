@@ -4,10 +4,7 @@ import { StatusConfirmation } from "./status-confirmation";
 import { useTenant } from "@/tenants/useTenant";
 import { DatePicker } from "@/app/components/ui/date-picker";
 import { ConfirmModal } from "@/app/components/ui/confirm-modal";
-import {
-  ApplicationStageButton,
-  ShortlistedApplicationStagePayload,
-} from "@/app/interfaces";
+import { ApplicationStageButton } from "@/app/interfaces";
 import { formatDateTime } from "@/app/utils/helper";
 
 const MAX_REJECTION_REASON = 500;
@@ -19,18 +16,21 @@ const confirmModalContent = {
       "This action will reject the candidate's application and log the reason to the timeline.",
     btnBgColor: "#EF4444",
   },
-  Proceed: {
+  Schedule: {
     title: "Schedule Candidate?",
     description: "Are you sure you want to schedule this candidate?",
+    btnBgColor: "",
+  },
+  Reschedule: {
+    title: "Reschedule Candidate?",
+    description: "Are you sure you want to reschedule this candidate?",
     btnBgColor: "",
   },
 } as const;
 
 interface ShortlistedApplicationStageProps {
   loading: boolean;
-  handleShortlistedApplicationStage: (
-    payload: Omit<ShortlistedApplicationStagePayload, "applicationId">,
-  ) => void;
+  handleShortlistedApplicationStage: (payload: any) => void;
 }
 
 export function ShortlistedApplicationStage({
@@ -42,44 +42,23 @@ export function ShortlistedApplicationStage({
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [acknowledged, setAcknowledged] = useState(false);
   const [action, setAction] = useState<ApplicationStageButton | string>("");
-  const [tentativeInterviewDate, setTentativeInterviewDate] = useState("");
-  const [tentativeInterviewTime, setTentativeInterviewTime] = useState("");
+  const [rescheduledDate, setRescheduledDate] = useState("");
+  const [rescheduledTime, setRescheduledTime] = useState("");
+  const [rescheduleReason, setRescheduleReason] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
 
   const isSubmitDisabled =
     !acknowledged ||
     !action ||
-    (action === "Proceed" &&
-      (!tentativeInterviewDate || !tentativeInterviewTime)) ||
+    (action === "Reschedule" &&
+      (!rescheduledDate || !rescheduledTime || !rescheduleReason.trim())) ||
     (action === "Reject" && !rejectionReason.trim());
 
-  const onSubmit = () => {
-    if (action) {
-      const [day, month, year] = tentativeInterviewDate.split("/");
-
-      const interviewDate = new Date(
-        Number(year),
-        Number(month) - 1, // months are 0-based
-        Number(day),
-        Number(tentativeInterviewTime.split(":")[0]),
-        Number(tentativeInterviewTime.split(":")[1]),
-      );
-
-      const payload: Omit<ShortlistedApplicationStagePayload, "applicationId"> =
-        {
-          rejectionReason: rejectionReason.trim(),
-          action: action as ApplicationStageButton,
-          tentativeInterviewDate: interviewDate.toISOString(),
-        };
-      handleShortlistedApplicationStage(payload);
-    }
-  };
+  const onSubmit = () => {};
 
   const handleCancel = () => {
     setRejectionReason("");
     setAction("");
-    setTentativeInterviewDate("");
-    setTentativeInterviewTime("");
     setAcknowledged(false);
   };
 
@@ -112,8 +91,9 @@ export function ShortlistedApplicationStage({
                 const value = e.target.value;
 
                 setAction(value);
-                setTentativeInterviewDate("");
-                setTentativeInterviewTime("");
+                setRescheduledDate("");
+                setRescheduledTime("");
+                setRescheduleReason("");
                 setRejectionReason("");
               }}
               className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -123,41 +103,41 @@ export function ShortlistedApplicationStage({
               }}
             >
               <option value="">Select Action</option>
-              <option value="Proceed">Proceed</option>
+              <option value="Schedule">Schedule</option>
+              <option value="Reschedule">Reschedule</option>
               <option value="Reject">Reject</option>
             </select>
           </div>
 
           {/* Rescheduled Date & Time */}
-          {action === "Proceed" && (
+          {action === "Reschedule" && (
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-                  Interview Date (Tentative)
+                  Rescheduled Date
                   <span className="ml-1 text-red-500">*</span>
                 </label>
 
                 <DatePicker
-                  name="tentativeInterviewDate"
+                  name="rescheduleDate"
                   value={
-                    tentativeInterviewDate
-                      ? formatDateTime(tentativeInterviewDate, false)
+                    rescheduledDate
+                      ? formatDateTime(rescheduledDate, false)
                       : ""
                   }
-                  onChange={(value) => setTentativeInterviewDate(value)}
+                  onChange={(value) => setRescheduledDate(value)}
                   minDate={new Date()}
                 />
               </div>
 
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-                  Interview Time (Tentative)
+                  Rescheduled Time
                 </label>
                 <input
-                  name="tentativeInterviewTime"
                   type="time"
-                  value={tentativeInterviewTime}
-                  onChange={(e) => setTentativeInterviewTime(e.target.value)}
+                  value={rescheduledTime}
+                  onChange={(e) => setRescheduledTime(e.target.value)}
                   className="w-full px-4 py-3 rounded-lg border border-gray-800"
                   style={{
                     backgroundColor: colors.textInputBgColor,
@@ -165,6 +145,28 @@ export function ShortlistedApplicationStage({
                   }}
                 />
               </div>
+            </div>
+          )}
+
+          {/* Reason for Reschedule */}
+          {action === "Reschedule" && (
+            <div>
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                Reason for Reschedule
+                <span className="ml-1 text-red-500">*</span>
+              </label>
+
+              <textarea
+                rows={4}
+                value={rescheduleReason}
+                onChange={(e) => setRescheduleReason(e.target.value)}
+                placeholder="Enter reason for rescheduling..."
+                className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c] resize-none"
+                style={{
+                  backgroundColor: colors.textInputBgColor,
+                  color: colors.text,
+                }}
+              />
             </div>
           )}
 

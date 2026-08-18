@@ -47,6 +47,8 @@ export const statuses = [
   { value: "in_review", label: "In Review", backendKey: "In_Review" },
   { value: "inreview", label: "In Review", backendKey: "In_Review" },
   { value: "shortlisted", label: "Shortlisted", backendKey: "Shortlisted" },
+  { value: "interviewshortlisted", label: "Shortlisted", backendKey: "InterviewShortlisted" },
+  { value: "interviewscheduled", label: "Interview Scheduled", backendkey: "InterviewScheduled" },
   {
     value: "interview_scheduled",
     label: "Interview Scheduled",
@@ -111,6 +113,12 @@ export const statusStyles: Record<
     dot: "bg-[#308A1E]",
   },
 
+  "interview shortlisted": {
+    bg: "bg-[#B9F6B5]",
+    text: "text-[#111827]",
+    dot: "bg-[#308A1E]",
+  },
+
   "interview scheduled": {
     bg: "bg-[#CFFAFE]",
     text: "text-[#155E75]",
@@ -140,6 +148,8 @@ export const workflowStages = [
   { id: "new", label: "New" },
   { id: "in_review", label: "In Review" },
   { id: "shortlisted", label: "Shortlisted" },
+  { id: "interviewshortlisted", label: "Shortlisted" },
+  { id: "interviewscheduled", label: "Interview Scheduled" },
   {
     id: "interview",
     label: "Interview Scheduled",
