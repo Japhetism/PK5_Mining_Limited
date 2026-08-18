@@ -35,32 +35,143 @@ export function InterviewCompletedApplicationStage({
   const [offerLetterFile, setOfferLetterFile] = useState<File | null>(null);
 
   const [offerLetterLink, setOfferLetterLink] = useState("");
-  const [action, setAction] = useState("");
+  const [action, setAction] = useState<"Proceed" | "Reject" | "">("");
+
+  // New offer fields per spec (5.1)
+  const [departmentName, setDepartmentName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [employmentType, setEmploymentType] = useState("");
+  const [salary, setSalary] = useState<number | "">("");
+  const [jobLocation, setJobLocation] = useState("");
+  const [acceptanceDeadline, setAcceptanceDeadline] = useState("");
+  const [rejectionReason, setRejectionReason] = useState("");
+
+  // Inline field errors
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const hasOfferLetter =
     (offerMethod === "Upload" && offerLetterFile) ||
     (offerMethod === "Link" && offerLetterLink.trim());
 
-  const isSubmitDisabled =
-    !acknowledged || !assessmentResult || !hasOfferLetter;
+  // Field validation helpers
+  const validateField = (name: string, value: any) => {
+    let message = "";
+
+    switch (name) {
+      case "departmentName":
+        if (!String(value || "").trim()) message = "Department name is required";
+        break;
+      case "startDate":
+        if (!value) message = "Start date is required";
+        break;
+      case "employmentType":
+        if (!value) message = "Employment type is required";
+        break;
+      case "salary":
+        if (value === "" || value === null || value === undefined) message = "Salary is required";
+        else if (Number(value) <= 0 || Number.isNaN(Number(value))) message = "Enter a valid salary";
+        break;
+      case "jobLocation":
+        if (!String(value || "").trim()) message = "Job location is required";
+        break;
+      case "acceptanceDeadline":
+        if (!value) message = "Acceptance deadline is required";
+        break;
+      case "rejectionReason":
+        if (!String(value || "").trim()) message = "Rejection reason is required";
+        break;
+      case "acknowledged":
+        if (!value) message = "You must confirm before proceeding";
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: message }));
+
+    return message === "";
+  };
+
+  const validateAll = () => {
+    const toValidate: Array<[string, any]> = [];
+
+    if (action === "Proceed") {
+      toValidate.push(["departmentName", departmentName]);
+      toValidate.push(["startDate", startDate]);
+      toValidate.push(["employmentType", employmentType]);
+      toValidate.push(["salary", salary]);
+      toValidate.push(["jobLocation", jobLocation]);
+      toValidate.push(["acceptanceDeadline", acceptanceDeadline]);
+      toValidate.push(["acknowledged", acknowledged]);
+    } else if (action === "Reject") {
+      toValidate.push(["rejectionReason", rejectionReason]);
+      toValidate.push(["acknowledged", acknowledged]);
+    } else {
+      toValidate.push(["acknowledged", acknowledged]);
+    }
+
+    const results = toValidate.map(([name, val]) => validateField(name, val));
+    return results.every((r) => r === true);
+  };
+
+  // Validation rules per spec (5 / 5.1) - used for disabling submit
+  const isSubmitDisabled = (() => {
+    if (action === "Proceed") {
+      return (
+        !acknowledged ||
+        !departmentName.trim() ||
+        !startDate ||
+        !employmentType ||
+        salary === "" ||
+        salary === null ||
+        salary === undefined ||
+        !jobLocation.trim() ||
+        !acceptanceDeadline
+      );
+    }
+
+    if (action === "Reject") {
+      return !acknowledged || !rejectionReason.trim();
+    }
+
+    // If no action selected, disable submit
+    return !acknowledged || action === "";
+  })();
 
   const onSubmit = () => {
-    // if (!assessmentResult) return;
+    // run a last validation pass
+    const ok = validateAll();
+    if (!ok) {
+      // prevent confirm and show inline errors
+      setConfirmOpen(false);
+      return;
+    }
 
-    // handleSendOffer({
-    //   assessmentResult,
-    //   offerMethod: offerMethod as "Upload" | "Link",
-    //   offerLetterFile,
-    //   offerLetterLink:
-    //     offerMethod === "Link" ? offerLetterLink.trim() : undefined,
-    // });
-    if(action){
+    if (!action) return;
+
+    if (action === "Proceed") {
       const payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId"> = {
-        action: action as "Proceed" | "Reject" | "Schedule" | "Reschdule",
-        rejectionReason: action === "Reject" ? "Candidate did not meet the requirements." : undefined,
+        action: "Proceed",
+        departmentName: departmentName.trim(),
+        startDate,
+        employmentType,
+        salary: typeof salary === "number" ? salary : Number(salary),
+        jobLocation: jobLocation.trim(),
+        acceptanceDeadline,
+        // include offerLetterLink if provided
+        offerLetterLink: offerMethod === "Link" && offerLetterLink.trim() ? offerLetterLink.trim() : undefined,
       };
-      handleSendOffer(payload);
 
+      handleSendOffer(payload);
+    }
+
+    if (action === "Reject") {
+      const payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId"> = {
+        action: "Reject",
+        rejectionReason: rejectionReason.trim(),
+      };
+
+      handleSendOffer(payload);
     }
   };
 
@@ -89,6 +200,7 @@ export function InterviewCompletedApplicationStage({
               },
             ]}
           />
+
           {/* Acknowledgement */}
           <StatusConfirmation
             isConfirmed={acknowledged}
@@ -96,66 +208,21 @@ export function InterviewCompletedApplicationStage({
             title="I confirm that all interview stages are complete and this candidate is approved for an offer."
           />
 
-          {/* Assessment Result Upload */}
+          {/* Action */}
           <div>
             <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-              Assessment Result
-              <span className="ml-1 text-red-500">*</span>
-            </label>
-
-            <label
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-gray-700 ${
-                acknowledged
-                  ? "cursor-pointer"
-                  : "cursor-not-allowed opacity-50"
-              }`}
-              style={{
-                backgroundColor: colors.textInputBgColor,
-              }}
-            >
-              <Upload size={18} />
-
-              <span
-                className="text-sm"
-                style={{
-                  color: colors.text,
-                }}
-              >
-                {assessmentResult
-                  ? assessmentResult.name
-                  : "Upload Assessment Result"}
-              </span>
-
-              <input
-                type="file"
-                disabled={!acknowledged}
-                className="hidden"
-                accept=".pdf,.doc,.docx,.xlsx,.xls,.csv"
-                onChange={(e) => {
-                  const file = e.target.files?.[0] ?? null;
-
-                  setAssessmentResult(file);
-                }}
-              />
-            </label>
-          </div>
-
-          {/* Offer Letter Method */}
-          <div>
-            <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-              Offer Letter Method
+              Action
               <span className="ml-1 text-red-500">*</span>
             </label>
 
             <select
-              value={offerMethod}
+              value={action}
               disabled={!acknowledged}
               onChange={(e) => {
-                const value = e.target.value as "" | "Upload" | "Link";
-
-                setOfferMethod(value);
-                setOfferLetterFile(null);
-                setOfferLetterLink("");
+                const val = e.target.value as "Proceed" | "Reject" | "";
+                setAction(val);
+                // clear previous errors when switching action
+                setErrors({});
               }}
               className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c] disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
@@ -163,72 +230,216 @@ export function InterviewCompletedApplicationStage({
                 color: colors.text,
               }}
             >
-              <option value="">Select Method</option>
-              <option value="Upload">Upload Offer Letter</option>
-              <option value="Link">Offer Letter Link</option>
+              <option value="">Select Action</option>
+              <option value="Proceed">Proceed (Send Offer)</option>
+              <option value="Reject">Reject</option>
             </select>
           </div>
 
-          {/* Offer Letter Upload */}
-          {offerMethod === "Upload" && (
-            <div>
-              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-                Offer Letter
-                <span className="ml-1 text-red-500">*</span>
-              </label>
-
-              <label
-                className="flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-gray-700 cursor-pointer"
-                style={{
-                  backgroundColor: colors.textInputBgColor,
-                }}
-              >
-                <Upload size={18} />
-
-                <span
-                  className="text-sm"
-                  style={{
-                    color: colors.text,
-                  }}
-                >
-                  {offerLetterFile
-                    ? offerLetterFile.name
-                    : "Upload Offer Letter"}
-                </span>
+          {/* Offer fields (required when Proceed) */}
+          {action === "Proceed" && (
+            <>
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Department Name
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
 
                 <input
-                  type="file"
-                  className="hidden"
-                  accept=".pdf,.doc,.docx"
+                  type="text"
+                  value={departmentName}
                   onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-
-                    setOfferLetterFile(file);
+                    setDepartmentName(e.target.value);
+                    setErrors((p) => ({ ...p, departmentName: "" }));
                   }}
+                  onBlur={() => validateField("departmentName", departmentName)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
                 />
-              </label>
-            </div>
+                {errors.departmentName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.departmentName}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Start Date
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
+
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    setErrors((p) => ({ ...p, startDate: "" }));
+                  }}
+                  onBlur={() => validateField("startDate", startDate)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+                />
+                {errors.startDate && (
+                  <p className="text-red-500 text-sm mt-1">{errors.startDate}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Employment Type
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
+
+                <select
+                  value={employmentType}
+                  onChange={(e) => {
+                    setEmploymentType(e.target.value);
+                    setErrors((p) => ({ ...p, employmentType: "" }));
+                  }}
+                  onBlur={() => validateField("employmentType", employmentType)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+                >
+                  <option value="">Select Employment Type</option>
+                  <option value="Full-Time">Full-Time</option>
+                  <option value="Part-Time">Part-Time</option>
+                  <option value="Contract">Contract</option>
+                </select>
+                {errors.employmentType && (
+                  <p className="text-red-500 text-sm mt-1">{errors.employmentType}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Salary
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
+
+                <input
+                  type="number"
+                  value={salary as any}
+                  onChange={(e) => {
+                    setSalary(e.target.value === "" ? "" : Number(e.target.value));
+                    setErrors((p) => ({ ...p, salary: "" }));
+                  }}
+                  onBlur={() => validateField("salary", salary)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+                />
+                {errors.salary && (
+                  <p className="text-red-500 text-sm mt-1">{errors.salary}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Job Location
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
+
+                <input
+                  type="text"
+                  value={jobLocation}
+                  onChange={(e) => {
+                    setJobLocation(e.target.value);
+                    setErrors((p) => ({ ...p, jobLocation: "" }));
+                  }}
+                  onBlur={() => validateField("jobLocation", jobLocation)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+                />
+                {errors.jobLocation && (
+                  <p className="text-red-500 text-sm mt-1">{errors.jobLocation}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Acceptance Deadline
+                  <span className="ml-1 text-red-500">*</span>
+                </label>
+
+                <input
+                  type="date"
+                  value={acceptanceDeadline}
+                  onChange={(e) => {
+                    setAcceptanceDeadline(e.target.value);
+                    setErrors((p) => ({ ...p, acceptanceDeadline: "" }));
+                  }}
+                  onBlur={() => validateField("acceptanceDeadline", acceptanceDeadline)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+                />
+                {errors.acceptanceDeadline && (
+                  <p className="text-red-500 text-sm mt-1">{errors.acceptanceDeadline}</p>
+                )}
+              </div>
+
+              {/* Keep optional offer file/link fields */}
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Offer Letter Method (optional)
+                </label>
+
+                <select
+                  value={offerMethod}
+                  onChange={(e) => {
+                    const value = e.target.value as "" | "Upload" | "Link";
+                    setOfferMethod(value);
+                    setOfferLetterFile(null);
+                    setOfferLetterLink("");
+                  }}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c]"
+                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+                >
+                  <option value="">No offer letter</option>
+                  <option value="Upload">Upload Offer Letter</option>
+                  <option value="Link">Offer Letter Link</option>
+                </select>
+              </div>
+
+              {offerMethod === "Upload" && (
+                <div>
+                  <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                    Offer Letter
+                  </label>
+
+                  <label className="flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-gray-700 cursor-pointer" style={{ backgroundColor: colors.textInputBgColor }}>
+                    <Upload size={18} />
+                    <span className="text-sm" style={{ color: colors.text }}>{offerLetterFile ? offerLetterFile.name : "Upload Offer Letter"}</span>
+                    <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={(e) => setOfferLetterFile(e.target.files?.[0] ?? null)} />
+                  </label>
+                </div>
+              )}
+
+              {offerMethod === "Link" && (
+                <div>
+                  <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">Offer Letter Link</label>
+                  <input type="url" value={offerLetterLink} onChange={(e) => setOfferLetterLink(e.target.value)} placeholder="https://example.com/offer-letter" className="w-full px-4 py-3 rounded-lg border border-gray-800" style={{ backgroundColor: colors.textInputBgColor, color: colors.text }} />
+                </div>
+              )}
+            </>
           )}
 
-          {/* Offer Letter Link */}
-          {offerMethod === "Link" && (
+          {/* Rejection Reason (when Reject) */}
+          {action === "Reject" && (
             <div>
-              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
-                Offer Letter Link
-                <span className="ml-1 text-red-500">*</span>
-              </label>
-
-              <input
-                type="url"
-                value={offerLetterLink}
-                onChange={(e) => setOfferLetterLink(e.target.value)}
-                placeholder="https://example.com/offer-letter"
-                className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c]"
-                style={{
-                  backgroundColor: colors.textInputBgColor,
-                  color: colors.text,
+              <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">Reason for Rejection <span className="ml-1 text-red-500">*</span></label>
+              <textarea
+                rows={4}
+                value={rejectionReason}
+                onChange={(e) => {
+                  setRejectionReason(e.target.value);
+                  setErrors((p) => ({ ...p, rejectionReason: "" }));
                 }}
+                onBlur={() => validateField("rejectionReason", rejectionReason)}
+                placeholder="Enter reason for rejection..."
+                className="w-full px-4 py-3 rounded-lg border border-gray-800 resize-none"
+                style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
               />
+              {errors.rejectionReason && (
+                <p className="text-red-500 text-sm mt-1">{errors.rejectionReason}</p>
+              )}
             </div>
           )}
         </form>
@@ -252,15 +463,15 @@ export function InterviewCompletedApplicationStage({
           whileHover={
             !isSubmitDisabled
               ? {
-                  scale: 1.02,
-                }
+                scale: 1.02,
+              }
               : undefined
           }
           whileTap={
             !isSubmitDisabled
               ? {
-                  scale: 0.98,
-                }
+                scale: 0.98,
+              }
               : undefined
           }
           onClick={() => setConfirmOpen(true)}
@@ -270,7 +481,7 @@ export function InterviewCompletedApplicationStage({
             backgroundColor: colors.accent,
           }}
         >
-          Send Offer
+          {action === "Reject" ? "Reject" : action === "Proceed" ? "Proceed" : "Send Offer"}
         </motion.button>
       </div>
 
@@ -280,9 +491,13 @@ export function InterviewCompletedApplicationStage({
           open={confirmOpen}
           onClose={() => setConfirmOpen(false)}
           onConfirm={onSubmit}
-          title="Send Offer?"
-          description="Are you sure you want to send this offer to the candidate? This will update the candidate status to Offer Sent."
-          confirmText="Yes, Send Offer"
+          title={action === "Reject" ? "Reject Candidate?" : "Send Offer?"}
+          description={
+            action === "Reject"
+              ? "Are you sure you want to reject this candidate? This will update the candidate status to InterviewRejected."
+              : "Are you sure you want to send this offer to the candidate? This will update the candidate status to Offer Sent."
+          }
+          confirmText={action === "Reject" ? "Yes, Reject" : "Yes, Send Offer"}
           cancelText="Cancel"
           loading={loading}
         />
