@@ -37,7 +37,7 @@ export function InterviewCompletedApplicationStage({
   const [offerLetterLink, setOfferLetterLink] = useState("");
   const [action, setAction] = useState<"Proceed" | "Reject" | "">("");
 
-  // New offer fields per spec (5.1)
+  // New offer fields
   const [departmentName, setDepartmentName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [employmentType, setEmploymentType] = useState("");
@@ -114,7 +114,7 @@ export function InterviewCompletedApplicationStage({
     return results.every((r) => r === true);
   };
 
-  // Validation rules per spec (5 / 5.1) - used for disabling submit
+  // Validation rules for fields - used for disabling submit
   const isSubmitDisabled = (() => {
     if (action === "Proceed") {
       return (
