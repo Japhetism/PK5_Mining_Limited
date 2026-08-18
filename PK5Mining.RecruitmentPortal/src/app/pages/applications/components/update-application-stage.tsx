@@ -87,15 +87,15 @@ export function UpdateApplicationStage({
           />
         );
 
-      case "offer sent":
-        return (
-          <OfferSentApplicationStage
-            loading={loading}
-            handleProceedWithApplication={() => {}}
-          />
-        );
+      // case "offersent":
+      //   return (
+      //     <OfferSentApplicationStage
+      //       loading={loading}
+      //       handleProceedWithApplication={() => {}}
+      //     />
+      //   );
 
-      case "hired":
+      case "offersent":
         return (
           <HiredApplicationStage
             loading={loading}

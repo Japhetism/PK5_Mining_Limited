@@ -78,7 +78,6 @@ export function InterviewScheduledApplicationStage({
   const requiresVenue =
     (nextProcess === "Assessment" && assessmentType === "In-person") ||
     (nextProcess === "Interview" && interviewType === "Onsite");
-
   const isSubmitDisabled =
     !acknowledged ||
     !action ||
@@ -87,11 +86,13 @@ export function InterviewScheduledApplicationStage({
     (assessmentType === "Online" && !onlineAssessmentLink.trim()) ||
     (requiresVenue && !venueAddress.trim()) ||
     (nextProcess === "Interview" && !interviewType) ||
+    (nextProcess === "Interview" && !panelists.length) ||
     (interviewType === "Onsite" && panelists.length === 0) ||
     (action === "Reject" && !rejectionReason.trim());
 
   const onSubmit = () => {
     if (action) {
+      console.log("interview schedule time ", scheduledTime);
       const payload: Omit<ScheduledApplicationStagePayload, "applicationId"> = {
         rejectionReason: rejectionReason.trim(),
         action: action === "Reject" ? action : nextProcess,
@@ -300,11 +301,13 @@ export function InterviewScheduledApplicationStage({
                   Scheduled Date
                 </label>
 
-                <input
-                  type="date"
-                  value={scheduledDate}
-                  onChange={(e) => setScheduledDate(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                <DatePicker
+                  name="deadlineDate"
+                  value={
+                    scheduledDate ? formatDateTime(scheduledDate, false) : ""
+                  }
+                  onChange={(value) => setScheduledDate(value)}
+                  minDate={new Date()}
                 />
               </div>
 
@@ -317,14 +320,14 @@ export function InterviewScheduledApplicationStage({
                   type="time"
                   value={scheduledTime}
                   onChange={(e) => setScheduledTime(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                   className="w-full px-4 py-3 rounded-lg border border-gray-800"
                 />
               </div>
             </div>
           )}
 
           {/* Panelists */}
-          {interviewType === "Onsite" && (
+          {nextProcess === "Interview" && (
             <div>
               <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Interviewers List
