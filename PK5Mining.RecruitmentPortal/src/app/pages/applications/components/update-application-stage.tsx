@@ -5,7 +5,7 @@ import { InterviewScheduledApplicationStage } from "./interview-scheduled-applic
 import { InterviewCompletedApplicationStage } from "./interview-completed-stage";
 import { OfferSentApplicationStage } from "./offer-sent-application-stage";
 import { HiredApplicationStage } from "./hired-application-stage";
-import { NewApplicationStagePayload } from "@/app/interfaces";
+import { InReviewApplicationStagePayload, NewApplicationStagePayload } from "@/app/interfaces";
 
 interface UpdateApplicationStageProps {
   loading: boolean;
@@ -13,7 +13,9 @@ interface UpdateApplicationStageProps {
   handleNewApplicationStage: (
     payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => void;
-  handleInReviewApplication: () => void;
+  handleInReviewApplication: (
+    payload: Omit<InReviewApplicationStagePayload, "applicationId">,
+  ) => void;
   handleShortlistedApplicationStage: () => void;
 }
 
