@@ -437,3 +437,33 @@ export interface OfferSentApplicationStagePayload {
   managerName?: string;
   contactPerson?: string;
 }
+
+export type EmployeeOnboardingDetailsPayload = {
+  applicationId: number;
+  personalInfo: {
+    fullLegalName: string;
+    preferredName: string;
+    homeAddress: string;
+    phoneNumber: string;
+    emailAddress: string;
+    dateOfBirth: string; // ISO datetime
+  };
+  emergencyContactInfo: {
+    fullName: string;
+    relationship: string;
+    phoneNumber: string;
+  };
+  identificationInfo: {
+    governmentIdType: string;
+    governmentIdNumber: string;
+    governmentIdExpiryDate: string; // ISO datetime
+    governmentIdDocument: string;
+  };
+  placeholderInfo: {
+    reportingTime: string;
+    startDate: string; // YYYY-MM-DD
+    contactPerson: string;
+    contactPhone: string;
+    contactEmail: string;
+  };
+};

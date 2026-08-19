@@ -7,6 +7,7 @@ import {
   processInterviewCompletedApplication,
   processNewApplication,
   processOfferSentApplication,
+  processOnboardingApplication,
   processScheduledApplication,
   processShortlistedApplication,
   updateJobApplicationStatus,
@@ -14,6 +15,7 @@ import {
 import { toastUtil } from "@/app/utils/toast";
 import {
   ApiError,
+  EmployeeOnboardingDetailsPayload,
   InReviewApplicationStagePayload,
   InterviewCompletedApplicationStagePayload,
   NewApplicationStagePayload,
@@ -261,6 +263,32 @@ function useApplicationDetailsViewModel() {
       });
   };
 
+  const handleOnboardingApplicationStage = (
+    payload: Omit<EmployeeOnboardingDetailsPayload, "applicationId">
+  ) => {
+    setUpdating(true);
+    processOnboardingApplication({
+      applicationId: parseInt(applicationId as string, 10),
+      ...payload,
+    })
+      .then(() => {
+        setUpdating(false);
+        toastUtil.success("Application stage updated successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["applications", applicationId],
+        });
+      })
+      .catch((err) => {
+        setUpdating(false);
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating application stage. Please try again.");
+        toastUtil.error(message);
+      });
+  };
+
   useEffect(() => {
     if (error) {
       const message =
@@ -359,6 +387,7 @@ function useApplicationDetailsViewModel() {
     handleScheduledInterviewApplicationStage,
     handleInterviewCompletedApplicationStage,
     handleOfferSentApplicationStage,
+    handleOnboardingApplicationStage,
   };
 }
 

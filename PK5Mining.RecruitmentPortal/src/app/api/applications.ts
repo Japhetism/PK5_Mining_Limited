@@ -3,6 +3,7 @@ import {
   ApplicationResponsePayload,
   ApplicationsByJobIdQuery,
   ApplicationsQuery,
+  EmployeeOnboardingDetailsPayload,
   InReviewApplicationStagePayload,
   InterviewCompletedApplicationStagePayload,
   JobApplicationDto,
@@ -310,6 +311,30 @@ export async function processOfferSentApplication(payload: OfferSentApplicationS
   } catch (err) {
     throw new Error(
       getAxiosErrorMessage(err, "Failed to proceed offer sent job application"),
+    );
+  }
+}
+
+export async function processOnboardingApplication(payload: EmployeeOnboardingDetailsPayload) {
+  try {
+    const { data } = await http.post<ApiResponse<JobApplicationDto>>(
+      `/JobApplicationStatus/process-onboarding`,
+      payload,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to proceed job application",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to proceed onboarding job application"),
     );
   }
 }

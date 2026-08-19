@@ -47,6 +47,7 @@ export function ApplicationDetail() {
     handleScheduledInterviewApplicationStage,
     handleInterviewCompletedApplicationStage,
     handleOfferSentApplicationStage,
+    handleOnboardingApplicationStage,
   } = useApplicationDetailsViewModel();
 
   const [activeTab, setActiveTab] = useState<"all" | "pending" | "processed">(
@@ -285,6 +286,7 @@ export function ApplicationDetail() {
                 }
                 handleScheduledApplicationStage={handleScheduledInterviewApplicationStage}
                 handleOfferSentApplicationStage={handleOfferSentApplicationStage}
+                handleOnboardingApplicationStage={handleOnboardingApplicationStage}
               />
             </div>
           </div>
