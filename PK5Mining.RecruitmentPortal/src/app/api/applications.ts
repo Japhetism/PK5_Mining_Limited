@@ -3,11 +3,13 @@ import {
   ApplicationResponsePayload,
   ApplicationsByJobIdQuery,
   ApplicationsQuery,
+  EmployeeOnboardingDetailsPayload,
   InReviewApplicationStagePayload,
   InterviewCompletedApplicationStagePayload,
   JobApplicationDto,
   // RejectApplicationPayload,
   NewApplicationStagePayload,
+  OfferSentApplicationStagePayload,
   ScheduledApplicationStagePayload,
   ShortlistedApplicationStagePayload,
 } from "../interfaces";
@@ -285,6 +287,54 @@ export async function processInterviewCompletedApplication(payload: InterviewCom
   } catch (err) {
     throw new Error(
       getAxiosErrorMessage(err, "Failed to proceed interview completed job application"),
+    );
+  }
+}
+
+export async function processOfferSentApplication(payload: OfferSentApplicationStagePayload) {
+  try {
+    const { data } = await http.post<ApiResponse<JobApplicationDto>>(
+      `/JobApplicationStatus/process-offersent`,
+      payload,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to proceed job application",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to proceed offer sent job application"),
+    );
+  }
+}
+
+export async function processOnboardingApplication(payload: EmployeeOnboardingDetailsPayload) {
+  try {
+    const { data } = await http.post<ApiResponse<JobApplicationDto>>(
+      `/JobApplicationStatus/process-onboarding`,
+      payload,
+    );
+
+    if (data.responseStatus !== "SUCCESS") {
+      throw new Error(
+        getAxiosErrorMessage(
+          data.responseMessage,
+          "Failed to proceed job application",
+        ),
+      );
+    }
+
+    return data.responseData;
+  } catch (err) {
+    throw new Error(
+      getAxiosErrorMessage(err, "Failed to proceed onboarding job application"),
     );
   }
 }

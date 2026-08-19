@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { useTenant } from "@/tenants/useTenant";
+import { EmployeeOnboardingDetailsPayload } from "@/app/interfaces";
 
 interface HiredFormPayload {
   fullLegalName: string;
@@ -12,26 +13,24 @@ interface HiredFormPayload {
   emergencyContactName: string;
   relationship: string;
   emergencyContactPhoneNumber: string;
-  governmentIdNumber: string;
   governmentIdType: string;
+  governmentIdNumber: string;
+  governmentIdExpiryDate: string;
+  governmentIdDocument: string;
 }
 
 interface HiredApplicationStageProps {
   loading: boolean;
-  jobTitle: string;
-  department: string;
-  startDate: string;
-  managerName: string;
-  handleSubmit: (payload: HiredFormPayload) => void;
+  startDate?: string;
+  handleOnboardingApplicationStage: (
+    payload: Omit<EmployeeOnboardingDetailsPayload, "applicationId">,
+  ) => void;
 }
 
 export function HiredApplicationStage({
   loading,
-  jobTitle,
-  department,
-  startDate,
-  managerName,
-  handleSubmit,
+  startDate = "2026-03-01", // fallback if not supplied via props
+  handleOnboardingApplicationStage,
 }: HiredApplicationStageProps) {
   const { colors } = useTenant();
 
@@ -45,18 +44,21 @@ export function HiredApplicationStage({
     emergencyContactName: "",
     relationship: "",
     emergencyContactPhoneNumber: "",
-    governmentIdNumber: "",
     governmentIdType: "",
+    governmentIdNumber: "",
+    governmentIdExpiryDate: "",
+    governmentIdDocument: "",
   });
 
   const updateField = (field: keyof HiredFormPayload, value: string) => {
     setFormData((prev) => ({
       ...prev,
-      value,
+      [field]: value,
     }));
   };
 
   const isSubmitDisabled =
+    loading ||
     !formData.fullLegalName.trim() ||
     !formData.preferredName.trim() ||
     !formData.homeAddress.trim() ||
@@ -66,11 +68,41 @@ export function HiredApplicationStage({
     !formData.emergencyContactName.trim() ||
     !formData.relationship.trim() ||
     !formData.emergencyContactPhoneNumber.trim() ||
+    !formData.governmentIdType ||
     !formData.governmentIdNumber.trim() ||
-    !formData.governmentIdType;
+    !formData.governmentIdExpiryDate
 
   const submitForm = () => {
-    handleSubmit(formData);
+    const formattedPayload: Omit<EmployeeOnboardingDetailsPayload, "applicationId"> = {
+      personalInfo: {
+        fullLegalName: formData.fullLegalName,
+        preferredName: formData.preferredName,
+        homeAddress: formData.homeAddress,
+        phoneNumber: formData.phoneNumber,
+        emailAddress: formData.emailAddress,
+        dateOfBirth: new Date(formData.dateOfBirth).toISOString(),
+      },
+      emergencyContactInfo: {
+        fullName: formData.emergencyContactName,
+        relationship: formData.relationship,
+        phoneNumber: formData.emergencyContactPhoneNumber,
+      },
+      identificationInfo: {
+        governmentIdType: formData.governmentIdType,
+        governmentIdNumber: formData.governmentIdNumber,
+        governmentIdExpiryDate: new Date(formData.governmentIdExpiryDate).toISOString(),
+        governmentIdDocument: formData.governmentIdDocument,
+      },
+      placeholderInfo: {
+        reportingTime: "08:00 AM",
+        startDate: startDate,
+        contactPerson: "Operations Manager",
+        contactPhone: formData.phoneNumber,
+        contactEmail: formData.emailAddress,
+      },
+    };
+
+    handleOnboardingApplicationStage(formattedPayload);
   };
 
   const inputStyles = {
@@ -110,11 +142,10 @@ export function HiredApplicationStage({
               <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Start Date
               </label>
-
               <input
                 disabled
                 value={startDate}
-                className="w-full px-4 py-3 rounded-lg border border-gray-700 opacity-70"
+                className="w-full px-4 py-3 rounded-lg border border-gray-700 opacity-70 cursor-not-allowed"
                 style={inputStyles}
               />
             </div>
@@ -126,7 +157,7 @@ export function HiredApplicationStage({
               Personal and Contact Details
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <InputField
                 label="Full Legal Name"
                 value={formData.fullLegalName}
@@ -160,7 +191,6 @@ export function HiredApplicationStage({
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Date of Birth
                 </label>
-
                 <input
                   type="date"
                   value={formData.dateOfBirth}
@@ -175,7 +205,6 @@ export function HiredApplicationStage({
               <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                 Home Address
               </label>
-
               <textarea
                 rows={3}
                 value={formData.homeAddress}
@@ -192,7 +221,7 @@ export function HiredApplicationStage({
               Emergency Contact Information
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <InputField
                 label="Emergency Contact Name"
                 value={formData.emergencyContactName}
@@ -224,12 +253,11 @@ export function HiredApplicationStage({
               Means of Identification
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Government ID Type
                 </label>
-
                 <select
                   value={formData.governmentIdType}
                   onChange={(e) =>
@@ -252,13 +280,37 @@ export function HiredApplicationStage({
                 onChange={(value) => updateField("governmentIdNumber", value)}
                 colors={colors}
               />
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Government ID Expiry Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.governmentIdExpiryDate}
+                  onChange={(e) =>
+                    updateField("governmentIdExpiryDate", e.target.value)
+                  }
+                  className="w-full px-4 py-3 rounded-lg border border-gray-700"
+                  style={inputStyles}
+                />
+              </div>
+
+              <InputField
+                label="Government ID Document Reference / URL"
+                value={formData.governmentIdDocument}
+                onChange={(value) =>
+                  updateField("governmentIdDocument", value)
+                }
+                colors={colors}
+              />
             </div>
           </section>
         </form>
       </div>
 
       {/* Footer */}
-      <div className="flex justify-end gap-3">
+      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
         <button
           type="button"
           className="px-6 py-2 rounded-lg border border-gray-700"
@@ -279,7 +331,7 @@ export function HiredApplicationStage({
             backgroundColor: colors.accent,
           }}
         >
-          Submit
+          {loading ? "Submitting..." : "Submit"}
         </motion.button>
       </div>
     </>
@@ -306,7 +358,6 @@ function InputField({
       <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
         {label}
       </label>
-
       <input
         type={type}
         value={value}

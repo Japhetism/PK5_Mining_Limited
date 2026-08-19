@@ -96,6 +96,17 @@ export const statuses = [
     label: "Rejected (Interview)",
     backendKey: "ScheduledRejected",
   },
+
+  {
+    value: "declinedoffer",
+    label: "Declined (Offer)",
+    backendKey: "DeclinedOffer",
+  },
+  {
+    value: "withdrawnoffer",
+    label: "Withdrawn (Offer)",
+    backendKey: "WithdrawnOffer",
+  },
   { value: "hired", label: "Hired", backendKey: "Hired" },
 ] as const;
 
@@ -213,6 +224,18 @@ export const statusStyles: Record<
   },
 
   scheduledrejected: {
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#991B1B]",
+    dot: "bg-[#DC2626]",
+  },
+
+  declinedoffer: {
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#991B1B]",
+    dot: "bg-[#DC2626]",
+  },
+
+  withdrawnoffer: {
     bg: "bg-[#FEE2E2]",
     text: "text-[#991B1B]",
     dot: "bg-[#DC2626]",

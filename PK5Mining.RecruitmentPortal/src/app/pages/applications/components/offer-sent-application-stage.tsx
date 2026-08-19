@@ -4,14 +4,17 @@ import { ConfirmModal } from "@/app/components/ui/confirm-modal";
 import { useTenant } from "@/tenants/useTenant";
 import { StatusConfirmation } from "./status-confirmation";
 import { useAuth } from "@/app/context/AuthContext";
+import { DatePicker } from "@/app/components/ui/date-picker";
+import { formatDateTime, parseDecisionDateTime } from "@/app/utils/helper";
+import { OfferSentApplicationStagePayload } from "@/app/interfaces";
 
 const confirmModalContent = {
   Reject: {
-    Declined: {
+    "Declined Offer": {
       title: "Decline Offer?",
       description: "This will record the offer as declined by the candidate.",
     },
-    Withdrawn: {
+    "Withdrawn Offer": {
       title: "Withdraw Offer?",
       description: "This will record the offer as withdrawn by the company",
     },
@@ -33,12 +36,14 @@ interface OfferStagePayload {
 
 interface OfferSentApplicationStageProps {
   loading: boolean;
-  handleProceedWithApplication: () => void;
+  handleOfferSentApplicationStage: (
+    payload: Omit<OfferSentApplicationStagePayload, "applicationId">,
+  ) => void;
 }
 
 export function OfferSentApplicationStage({
   loading,
-  handleProceedWithApplication,
+  handleOfferSentApplicationStage,
 }: OfferSentApplicationStageProps) {
   const { colors } = useTenant();
   const { user } = useAuth();
@@ -48,8 +53,13 @@ export function OfferSentApplicationStage({
 
   const [action, setAction] = useState<"" | "Proceed" | "Reject">("");
 
+  const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [managerName, setManagerName] = useState<string>("");
+  const [contactPerson, setContactPerson] = useState<string>("");
+
   const [rejectionDecision, setRejectionDecision] = useState<
-    "" | "Declined" | "Withdrawn"
+    "" | "Declined Offer" | "Withdrawn Offer"
   >("");
 
   const [rejectionReason, setRejectionReason] = useState("");
@@ -57,6 +67,11 @@ export function OfferSentApplicationStage({
   const isSubmitDisabled =
     !acknowledged ||
     !action ||
+    (action === "Proceed" &&
+      (!startDate ||
+        !startTime ||
+        !managerName.trim() ||
+        !contactPerson.trim())) ||
     (action === "Reject" && (!rejectionDecision || !rejectionReason.trim()));
 
   const getButtonLabel = () => {
@@ -64,11 +79,11 @@ export function OfferSentApplicationStage({
       return "Hired";
     }
 
-    if (action === "Reject" && rejectionDecision === "Declined") {
+    if (action === "Reject" && rejectionDecision === "Declined Offer") {
       return "Decline Offer";
     }
 
-    if (action === "Reject" && rejectionDecision === "Withdrawn") {
+    if (action === "Reject" && rejectionDecision === "Withdrawn Offer") {
       return "Withdraw Offer";
     }
 
@@ -76,9 +91,26 @@ export function OfferSentApplicationStage({
   };
 
   const onSubmit = () => {
-    if (action === "Proceed") {
-      handleProceedWithApplication();
-      return;
+    if (action) {
+      const payload: Omit<OfferSentApplicationStagePayload, "applicationId"> = {
+        action: action,
+        ...(managerName != null && managerName !== "" && { managerName }),
+        ...(contactPerson != null && contactPerson !== "" && { contactPerson }),
+        ...(startDate && {
+          startDate: parseDecisionDateTime(startDate),
+        }),
+        ...(startTime != null && startTime !== "" && { startTime }),
+        ...(rejectionReason != null &&
+          rejectionReason !== "" && {
+            rejectionReason: rejectionReason.trim(),
+          }),
+        ...(rejectionDecision != null &&
+          rejectionDecision !== "" && {
+            rejectionDecision,
+          }),
+      };
+
+      handleOfferSentApplicationStage(payload);
     }
   };
 
@@ -87,6 +119,10 @@ export function OfferSentApplicationStage({
     setRejectionDecision("");
     setAction("");
     setAcknowledged(false);
+    setManagerName("");
+    setContactPerson("");
+    setStartDate("");
+    setStartTime("");
   };
 
   const content =
@@ -140,6 +176,70 @@ export function OfferSentApplicationStage({
             </select>
           </div>
 
+          {action === "Proceed" && (
+            <>
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Manager's Name
+                </label>
+
+                <input
+                  value={managerName}
+                  onChange={(e) => setManagerName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{
+                    backgroundColor: colors.textInputBgColor,
+                    color: colors.text,
+                  }}
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                  Contact Person
+                </label>
+
+                <input
+                  value={contactPerson}
+                  onChange={(e) => setContactPerson(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  style={{
+                    backgroundColor: colors.textInputBgColor,
+                    color: colors.text,
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                    Start Date
+                  </label>
+
+                  <DatePicker
+                    name="startDate"
+                    value={startDate ? formatDateTime(startDate, false) : ""}
+                    onChange={(value) => setStartDate(value)}
+                    minDate={new Date()}
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
+                    Start Time
+                  </label>
+
+                  <input
+                    name="startTime"
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-800"
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
           {/* Rejection Decision */}
           {action === "Reject" && (
             <div>
@@ -152,7 +252,7 @@ export function OfferSentApplicationStage({
                 value={rejectionDecision}
                 onChange={(e) =>
                   setRejectionDecision(
-                    e.target.value as "" | "Declined" | "Withdrawn",
+                    e.target.value as "" | "Declined Offer" | "Withdrawn Offer",
                   )
                 }
                 className="w-full px-4 py-3 rounded-lg border border-gray-800 focus:outline-none focus:border-[#c89b3c]"
@@ -162,8 +262,8 @@ export function OfferSentApplicationStage({
                 }}
               >
                 <option value="">Select Decision</option>
-                <option value="Declined">Declined Offer</option>
-                <option value="Withdrawn">Withdrawn Offer</option>
+                <option value="Declined Offer">Declined Offer</option>
+                <option value="Withdrawn Offer">Withdrawn Offer</option>
               </select>
             </div>
           )}
