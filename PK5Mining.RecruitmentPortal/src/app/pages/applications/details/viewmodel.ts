@@ -6,6 +6,7 @@ import {
   processInReviewApplication,
   processInterviewCompletedApplication,
   processNewApplication,
+  processOfferSentApplication,
   processScheduledApplication,
   processShortlistedApplication,
   updateJobApplicationStatus,
@@ -16,6 +17,7 @@ import {
   InReviewApplicationStagePayload,
   InterviewCompletedApplicationStagePayload,
   NewApplicationStagePayload,
+  OfferSentApplicationStagePayload,
   ScheduledApplicationStagePayload,
   ShortlistedApplicationStagePayload,
   StageValue,
@@ -104,7 +106,7 @@ function useApplicationDetailsViewModel() {
   };
 
   const handleNewApplicationStage = (
-    payload: Omit<NewApplicationStagePayload, "applicationId">,
+    payload: Omit<NewApplicationStagePayload, "applicationId">
   ) => {
     setUpdating(true);
     processNewApplication({
@@ -130,7 +132,7 @@ function useApplicationDetailsViewModel() {
   };
 
   const handleInReviewApplicationStage = (
-    payload: Omit<InReviewApplicationStagePayload, "applicationId">,
+    payload: Omit<InReviewApplicationStagePayload, "applicationId">
   ) => {
     setUpdating(true);
     processInReviewApplication({
@@ -156,7 +158,7 @@ function useApplicationDetailsViewModel() {
   };
 
   const handleShortlistedApplicationStage = (
-    payload: Omit<ShortlistedApplicationStagePayload, "applicationId">,
+    payload: Omit<ShortlistedApplicationStagePayload, "applicationId">
   ) => {
     setUpdating(true);
     processShortlistedApplication({
@@ -182,7 +184,7 @@ function useApplicationDetailsViewModel() {
   };
 
   const handleScheduledInterviewApplicationStage = (
-    payload: Omit<ScheduledApplicationStagePayload, "applicationId">,
+    payload: Omit<ScheduledApplicationStagePayload, "applicationId">
   ) => {
     setUpdating(true);
     processScheduledApplication({
@@ -208,10 +210,36 @@ function useApplicationDetailsViewModel() {
   };
 
   const handleInterviewCompletedApplicationStage = (
-    payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId">,
+    payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId">
   ) => {
     setUpdating(true);
     processInterviewCompletedApplication({
+      applicationId: parseInt(applicationId as string, 10),
+      ...payload,
+    })
+      .then(() => {
+        setUpdating(false);
+        toastUtil.success("Application stage updated successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["applications", applicationId],
+        });
+      })
+      .catch((err) => {
+        setUpdating(false);
+        const message =
+          (err as ApiError)?.message ??
+          (err instanceof Error
+            ? err.message
+            : "An error occurred while updating application stage. Please try again.");
+        toastUtil.error(message);
+      });
+  };
+
+  const handleOfferSentApplicationStage = (
+    payload: Omit<OfferSentApplicationStagePayload, "applicationId">
+  ) => {
+    setUpdating(true);
+    processOfferSentApplication({
       applicationId: parseInt(applicationId as string, 10),
       ...payload,
     })
@@ -296,8 +324,9 @@ function useApplicationDetailsViewModel() {
     });
   }
 
-  const initials = `${app?.firstName?.[0] ?? ""}${app?.lastName?.[0] ?? ""
-    }`.toUpperCase();
+  const initials = `${app?.firstName?.[0] ?? ""}${
+    app?.lastName?.[0] ?? ""
+  }`.toUpperCase();
 
   const appStatus = app?.status ?? "";
 
@@ -329,6 +358,7 @@ function useApplicationDetailsViewModel() {
     handleShortlistedApplicationStage,
     handleScheduledInterviewApplicationStage,
     handleInterviewCompletedApplicationStage,
+    handleOfferSentApplicationStage,
   };
 }
 

@@ -491,18 +491,20 @@ export const getDateRangeWithTimes = (
   return date.toISOString();
 };
 
-export const parseDecisionDateTime = (
-  date: string,
-  time: string,
-): string => {
-  const [day, month, year] = date.split("/");
-  const [hours, minutes] = time.split(":");
+export const parseDecisionDateTime = (date: string, time?: string): string => {
+  const [day, month, year] = date.split("/").map(Number);
+
+  if (!time) {
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+
+  const [hours, minutes] = time.split(":").map(Number);
 
   return new Date(
-    Number(year),
-    Number(month) - 1, // JavaScript months are 0-based
-    Number(day),
-    Number(hours),
-    Number(minutes),
-  )?.toISOString();
+    year,
+    month - 1, // JavaScript months are 0-based
+    day,
+    hours,
+    minutes,
+  ).toISOString();
 };

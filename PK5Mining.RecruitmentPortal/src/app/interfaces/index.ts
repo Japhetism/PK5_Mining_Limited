@@ -426,3 +426,14 @@ export interface InterviewCompletedApplicationStagePayload {
   acceptanceDeadline?: string;
   offerLetterLink?: string;
 }
+
+export interface OfferSentApplicationStagePayload {
+  applicationId: number;
+  action: ApplicationStageButton;
+  rejectionDecision?: string;
+  rejectionReason?: string;
+  startDate?: string;
+  startTime?: string;
+  managerName?: string;
+  contactPerson?: string;
+}

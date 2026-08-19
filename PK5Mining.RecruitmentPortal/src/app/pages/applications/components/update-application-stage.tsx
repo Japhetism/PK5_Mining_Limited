@@ -9,6 +9,7 @@ import {
   InReviewApplicationStagePayload,
   InterviewCompletedApplicationStagePayload,
   NewApplicationStagePayload,
+  OfferSentApplicationStagePayload,
   ScheduledApplicationStagePayload,
   ShortlistedApplicationStagePayload,
 } from "@/app/interfaces";
@@ -31,6 +32,9 @@ interface UpdateApplicationStageProps {
   handleInterviewCompletedApplicationStage: (
     payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId">,
   ) => void;
+  handleOfferSentApplicationStage: (
+    payload: Omit<OfferSentApplicationStagePayload, "applicationId">,
+  ) => void;
 }
 
 export function UpdateApplicationStage({
@@ -41,6 +45,7 @@ export function UpdateApplicationStage({
   handleShortlistedApplicationStage,
   handleScheduledApplicationStage,
   handleInterviewCompletedApplicationStage,
+  handleOfferSentApplicationStage,
 }: UpdateApplicationStageProps) {
   console.log("candidate status ", candidateStatus);
   const renderStage = () => {
@@ -87,15 +92,15 @@ export function UpdateApplicationStage({
           />
         );
 
-      // case "offersent":
-      //   return (
-      //     <OfferSentApplicationStage
-      //       loading={loading}
-      //       handleProceedWithApplication={() => {}}
-      //     />
-      //   );
-
       case "offersent":
+        return (
+          <OfferSentApplicationStage
+            loading={loading}
+            handleOfferSentApplicationStage={handleOfferSentApplicationStage}
+          />
+        );
+
+      case "hired":
         return (
           <HiredApplicationStage
             loading={loading}
