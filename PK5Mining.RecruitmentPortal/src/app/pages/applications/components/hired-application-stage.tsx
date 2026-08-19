@@ -22,6 +22,7 @@ interface HiredFormPayload {
 interface HiredApplicationStageProps {
   loading: boolean;
   startDate?: string;
+  employeeId?: number | string | null | undefined;
   handleOnboardingApplicationStage: (
     payload: Omit<EmployeeOnboardingDetailsPayload, "applicationId">,
   ) => void;
@@ -30,6 +31,7 @@ interface HiredApplicationStageProps {
 export function HiredApplicationStage({
   loading,
   startDate = "2026-03-01", // fallback if not supplied via props
+  employeeId,
   handleOnboardingApplicationStage,
 }: HiredApplicationStageProps) {
   const { colors } = useTenant();
@@ -92,6 +94,7 @@ export function HiredApplicationStage({
 
   const submitForm = () => {
     const formattedPayload: Omit<EmployeeOnboardingDetailsPayload, "applicationId"> = {
+      employeeId: Number(employeeId),
       personalInfo: {
         fullLegalName: formData.fullLegalName,
         preferredName: formData.preferredName,

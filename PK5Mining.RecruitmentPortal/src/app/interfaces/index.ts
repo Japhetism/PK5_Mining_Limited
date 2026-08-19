@@ -86,6 +86,7 @@ export type JobDto = {
 export interface JobApplicationDto {
   id: number;
   jobId: number;
+  employeeId?: number | string | null;
   firstName: string;
   lastName: string;
   email: string;
@@ -429,8 +430,8 @@ export interface InterviewCompletedApplicationStagePayload {
 
 export interface OfferSentApplicationStagePayload {
   applicationId: number;
-  action: ApplicationStageButton;
-  rejectionDecision?: string;
+  action: "Proceed" | "Reject";
+  rejectionDecision?: "Declined" | "Withdrawn";
   rejectionReason?: string;
   startDate?: string;
   startTime?: string;
@@ -438,32 +439,43 @@ export interface OfferSentApplicationStagePayload {
   contactPerson?: string;
 }
 
+export interface OnboardingPersonalInfoPayload {
+  fullLegalName: string;
+  preferredName: string;
+  homeAddress: string;
+  phoneNumber: string;
+  emailAddress: string;
+  dateOfBirth: string;
+}
+
+export interface OnboardingEmergencyContactInfoPayload {
+  fullName: string;
+  relationship: string;
+  phoneNumber: string;
+}
+
+export interface OnboardingIdentificationInfoPayload {
+  governmentIdType: string;
+  governmentIdNumber: string;
+  governmentIdExpiryDate: string;
+  governmentIdDocument: string;
+}
+
+export interface OnboardingPlaceholderInfoPayload {
+  reportingTime: string;
+  startDate: string;
+  contactPerson: string;
+  contactPhone: string;
+  contactEmail: string;
+}
+
 export type EmployeeOnboardingDetailsPayload = {
   applicationId: number;
-  personalInfo: {
-    fullLegalName: string;
-    preferredName: string;
-    homeAddress: string;
-    phoneNumber: string;
-    emailAddress: string;
-    dateOfBirth: string; // YYYY-MM-DD
-  };
-  emergencyContactInfo: {
-    fullName: string;
-    relationship: string;
-    phoneNumber: string;
-  };
-  identificationInfo: {
-    governmentIdType: string;
-    governmentIdNumber: string;
-    governmentIdExpiryDate: string; // YYYY-MM-DD
-    governmentIdDocument: string;
-  };
-  placeholderInfo: {
-    reportingTime: string;
-    startDate: string; // YYYY-MM-DD
-    contactPerson: string;
-    contactPhone: string;
-    contactEmail: string;
-  };
+  employeeId: number;
+  personalInfo: OnboardingPersonalInfoPayload;
+  emergencyContactInfo: OnboardingEmergencyContactInfoPayload;
+  identificationInfo: OnboardingIdentificationInfoPayload;
+  placeholderInfo: OnboardingPlaceholderInfoPayload;
 };
+
+export type OnboardingApplicationStagePayload = EmployeeOnboardingDetailsPayload;

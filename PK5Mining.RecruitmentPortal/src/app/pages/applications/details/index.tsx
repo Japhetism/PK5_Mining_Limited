@@ -283,6 +283,7 @@ export function ApplicationDetail() {
                 jobDepartment={jobDepartment}
                 jobLocation={jobLocation}
                 jobEmploymentType={jobEmploymentType}
+                employeeId={app?.employeeId ?? null}
                 handleNewApplicationStage={handleNewApplicationStage}
                 handleInReviewApplication={handleInReviewApplicationStage}
                 handleShortlistedApplicationStage={

@@ -42,6 +42,7 @@ interface UpdateApplicationStageProps {
   handleOnboardingApplicationStage: (
     payload: Omit<EmployeeOnboardingDetailsPayload, "applicationId">,
   ) => void;
+  employeeId?: number | string | null | undefined;
 }
 
 export function UpdateApplicationStage({
@@ -50,6 +51,7 @@ export function UpdateApplicationStage({
   jobDepartment,
   jobLocation,
   jobEmploymentType,
+  employeeId,
   handleInReviewApplication,
   handleNewApplicationStage,
   handleShortlistedApplicationStage,
@@ -118,6 +120,7 @@ export function UpdateApplicationStage({
         return (
           <HiredApplicationStage
             loading={loading}
+            employeeId={employeeId}
             handleOnboardingApplicationStage={handleOnboardingApplicationStage}
           />
         );
