@@ -57,6 +57,24 @@ export function HiredApplicationStage({
     }));
   };
 
+  const formatDateOnly = (value: string) => {
+    if (!value) return "";
+    const date = new Date(`${value}T00:00:00`);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatTimeOnly = (value: string) => {
+    if (!value) return "00:00:00";
+
+    const [hours, minutes] = value.split(":");
+    if (!hours || !minutes) return "00:00:00";
+
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:00`;
+  };
+
   const isSubmitDisabled =
     loading ||
     !formData.fullLegalName.trim() ||
@@ -70,7 +88,7 @@ export function HiredApplicationStage({
     !formData.emergencyContactPhoneNumber.trim() ||
     !formData.governmentIdType ||
     !formData.governmentIdNumber.trim() ||
-    !formData.governmentIdExpiryDate
+    !formData.governmentIdExpiryDate;
 
   const submitForm = () => {
     const formattedPayload: Omit<EmployeeOnboardingDetailsPayload, "applicationId"> = {
@@ -80,7 +98,7 @@ export function HiredApplicationStage({
         homeAddress: formData.homeAddress,
         phoneNumber: formData.phoneNumber,
         emailAddress: formData.emailAddress,
-        dateOfBirth: new Date(formData.dateOfBirth).toISOString(),
+        dateOfBirth: formatDateOnly(formData.dateOfBirth),
       },
       emergencyContactInfo: {
         fullName: formData.emergencyContactName,
@@ -90,12 +108,12 @@ export function HiredApplicationStage({
       identificationInfo: {
         governmentIdType: formData.governmentIdType,
         governmentIdNumber: formData.governmentIdNumber,
-        governmentIdExpiryDate: new Date(formData.governmentIdExpiryDate).toISOString(),
+        governmentIdExpiryDate: formatDateOnly(formData.governmentIdExpiryDate),
         governmentIdDocument: formData.governmentIdDocument,
       },
       placeholderInfo: {
-        reportingTime: "08:00 AM",
-        startDate: startDate,
+        reportingTime: formatTimeOnly("08:00"),
+        startDate: formatDateOnly(startDate),
         contactPerson: "Operations Manager",
         contactPhone: formData.phoneNumber,
         contactEmail: formData.emailAddress,

@@ -446,7 +446,7 @@ export type EmployeeOnboardingDetailsPayload = {
     homeAddress: string;
     phoneNumber: string;
     emailAddress: string;
-    dateOfBirth: string; // ISO datetime
+    dateOfBirth: string; // YYYY-MM-DD
   };
   emergencyContactInfo: {
     fullName: string;
@@ -456,7 +456,7 @@ export type EmployeeOnboardingDetailsPayload = {
   identificationInfo: {
     governmentIdType: string;
     governmentIdNumber: string;
-    governmentIdExpiryDate: string; // ISO datetime
+    governmentIdExpiryDate: string; // YYYY-MM-DD
     governmentIdDocument: string;
   };
   placeholderInfo: {

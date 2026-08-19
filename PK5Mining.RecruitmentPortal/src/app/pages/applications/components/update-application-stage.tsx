@@ -18,6 +18,9 @@ import {
 interface UpdateApplicationStageProps {
   loading: boolean;
   candidateStatus: string;
+  jobDepartment?: string;
+  jobLocation?: string;
+  jobEmploymentType?: string;
   handleNewApplicationStage: (
     payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => void;
@@ -44,6 +47,9 @@ interface UpdateApplicationStageProps {
 export function UpdateApplicationStage({
   loading,
   candidateStatus,
+  jobDepartment,
+  jobLocation,
+  jobEmploymentType,
   handleInReviewApplication,
   handleNewApplicationStage,
   handleShortlistedApplicationStage,
@@ -93,6 +99,9 @@ export function UpdateApplicationStage({
         return (
           <InterviewCompletedApplicationStage
             loading={loading}
+            jobDepartment={jobDepartment}
+            jobLocation={jobLocation}
+            employmentType={jobEmploymentType}
             handleSendOffer={handleInterviewCompletedApplicationStage}
           />
         );
