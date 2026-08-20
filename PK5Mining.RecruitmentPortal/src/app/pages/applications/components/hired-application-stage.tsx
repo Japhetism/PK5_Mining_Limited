@@ -267,6 +267,7 @@ export function HiredApplicationStage({
                   updateField("emergencyContactPhoneNumber", value)
                 }
                 colors={colors}
+                type="tel"
               />
             </div>
           </section>
