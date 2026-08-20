@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useTenant } from "@/tenants/useTenant";
 import { EmployeeOnboardingDetailsPayload } from "@/app/interfaces";
+import { parseDecisionDateTime } from "@/app/utils/helper";
 
 interface HiredFormPayload {
   fullLegalName: string;
@@ -83,7 +84,7 @@ export function HiredApplicationStage({
         homeAddress: formData.homeAddress,
         phoneNumber: formData.phoneNumber,
         emailAddress: formData.emailAddress,
-        dateOfBirth: new Date(formData.dateOfBirth).toISOString(),
+        dateOfBirth: parseDecisionDateTime(formData.dateOfBirth),
       },
       emergencyContactInfo: {
         fullName: formData.emergencyContactName,
@@ -93,9 +94,9 @@ export function HiredApplicationStage({
       identificationInfo: {
         governmentIdType: formData.governmentIdType,
         governmentIdNumber: formData.governmentIdNumber,
-        governmentIdExpiryDate: new Date(
+        governmentIdExpiryDate: parseDecisionDateTime(
           formData.governmentIdExpiryDate,
-        ).toISOString(),
+        ),
         governmentIdDocument: formData.governmentIdDocument,
       },
       placeholderInfo: {
