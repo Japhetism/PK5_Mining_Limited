@@ -90,6 +90,15 @@ export function OfferSentApplicationStage({
     return "Proceed";
   };
 
+  const formatApiTime = (value?: string) => {
+    if (!value) return value;
+
+    const [hours, minutes] = value.split(":");
+    if (!hours || !minutes) return value;
+
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:00`;
+  };
+
   const onSubmit = () => {
     if (action) {
       const payload: Omit<OfferSentApplicationStagePayload, "applicationId"> = {
@@ -99,7 +108,9 @@ export function OfferSentApplicationStage({
         ...(startDate && {
           startDate: parseDecisionDateTime(startDate),
         }),
-        ...(startTime != null && startTime !== "" && { startTime }),
+        ...(startTime != null && startTime !== "" && {
+          startTime: formatApiTime(startTime),
+        }),
         ...(rejectionReason != null &&
           rejectionReason !== "" && {
             rejectionReason: rejectionReason.trim(),

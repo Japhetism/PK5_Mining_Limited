@@ -1,4 +1,4 @@
-import { act, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Upload } from "lucide-react";
 import { StatusConfirmation } from "./status-confirmation";
@@ -16,11 +16,17 @@ interface SendOfferPayload {
 
 interface InterviewCompletedApplicationStageProps {
   loading: boolean;
+  jobDepartment?: string;
+  jobLocation?: string;
+  employmentType?: string;
   handleSendOffer: (payload: Omit<InterviewCompletedApplicationStagePayload, "applicationId">) => void;
 }
 
 export function InterviewCompletedApplicationStage({
   loading,
+  jobDepartment = "",
+  jobLocation = "",
+  employmentType = "",
   handleSendOffer,
 }: InterviewCompletedApplicationStageProps) {
   const { colors } = useTenant();
@@ -37,14 +43,19 @@ export function InterviewCompletedApplicationStage({
   const [offerLetterLink, setOfferLetterLink] = useState("");
   const [action, setAction] = useState<"Proceed" | "Reject" | "">("");
 
-  // New offer fields
-  const [departmentName, setDepartmentName] = useState("");
+  const [departmentName, setDepartmentName] = useState(jobDepartment);
   const [startDate, setStartDate] = useState("");
-  const [employmentType, setEmploymentType] = useState("");
+  const [employmentTypeValue, setEmploymentTypeValue] = useState(employmentType);
   const [salary, setSalary] = useState<number | "">("");
-  const [jobLocation, setJobLocation] = useState("");
+  const [jobLocationValue, setJobLocationValue] = useState(jobLocation);
   const [acceptanceDeadline, setAcceptanceDeadline] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
+
+  useEffect(() => {
+    setDepartmentName(jobDepartment ?? "");
+    setEmploymentTypeValue(employmentType ?? "");
+    setJobLocationValue(jobLocation ?? "");
+  }, [jobDepartment, employmentType, jobLocation]);
 
   // Inline field errors
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -96,11 +107,8 @@ export function InterviewCompletedApplicationStage({
     const toValidate: Array<[string, any]> = [];
 
     if (action === "Proceed") {
-      toValidate.push(["departmentName", departmentName]);
       toValidate.push(["startDate", startDate]);
-      toValidate.push(["employmentType", employmentType]);
       toValidate.push(["salary", salary]);
-      toValidate.push(["jobLocation", jobLocation]);
       toValidate.push(["acceptanceDeadline", acceptanceDeadline]);
       toValidate.push(["acknowledged", acknowledged]);
     } else if (action === "Reject") {
@@ -119,13 +127,10 @@ export function InterviewCompletedApplicationStage({
     if (action === "Proceed") {
       return (
         !acknowledged ||
-        !departmentName.trim() ||
         !startDate ||
-        !employmentType ||
         salary === "" ||
         salary === null ||
         salary === undefined ||
-        !jobLocation.trim() ||
         !acceptanceDeadline
       );
     }
@@ -154,9 +159,9 @@ export function InterviewCompletedApplicationStage({
         action: "Proceed",
         departmentName: departmentName.trim(),
         startDate,
-        employmentType,
+        employmentType: employmentTypeValue,
         salary: typeof salary === "number" ? salary : Number(salary),
-        jobLocation: jobLocation.trim(),
+        jobLocation: jobLocationValue.trim(),
         acceptanceDeadline,
         // include offerLetterLink if provided
         offerLetterLink: offerMethod === "Link" && offerLetterLink.trim() ? offerLetterLink.trim() : undefined,
@@ -239,6 +244,7 @@ export function InterviewCompletedApplicationStage({
           {/* Offer fields (required when Proceed) */}
           {action === "Proceed" && (
             <>
+              {/*
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Department Name
@@ -248,18 +254,15 @@ export function InterviewCompletedApplicationStage({
                 <input
                   type="text"
                   value={departmentName}
-                  onChange={(e) => {
-                    setDepartmentName(e.target.value);
-                    setErrors((p) => ({ ...p, departmentName: "" }));
-                  }}
-                  onBlur={() => validateField("departmentName", departmentName)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
-                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+                  readOnly
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800 bg-gray-100 cursor-not-allowed"
+                  style={{ color: colors.text }}
                 />
                 {errors.departmentName && (
                   <p className="text-red-500 text-sm mt-1">{errors.departmentName}</p>
                 )}
               </div>
+              */}
 
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
@@ -283,31 +286,25 @@ export function InterviewCompletedApplicationStage({
                 )}
               </div>
 
+              {/*
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Employment Type
                   <span className="ml-1 text-red-500">*</span>
                 </label>
 
-                <select
-                  value={employmentType}
-                  onChange={(e) => {
-                    setEmploymentType(e.target.value);
-                    setErrors((p) => ({ ...p, employmentType: "" }));
-                  }}
-                  onBlur={() => validateField("employmentType", employmentType)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
-                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
-                >
-                  <option value="">Select Employment Type</option>
-                  <option value="Full-Time">Full-Time</option>
-                  <option value="Part-Time">Part-Time</option>
-                  <option value="Contract">Contract</option>
-                </select>
+                <input
+                  type="text"
+                  value={employmentTypeValue}
+                  readOnly
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800 bg-gray-100 cursor-not-allowed"
+                  style={{ color: colors.text }}
+                />
                 {errors.employmentType && (
                   <p className="text-red-500 text-sm mt-1">{errors.employmentType}</p>
                 )}
               </div>
+              */}
 
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
@@ -331,6 +328,7 @@ export function InterviewCompletedApplicationStage({
                 )}
               </div>
 
+              {/*
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Job Location
@@ -339,19 +337,16 @@ export function InterviewCompletedApplicationStage({
 
                 <input
                   type="text"
-                  value={jobLocation}
-                  onChange={(e) => {
-                    setJobLocation(e.target.value);
-                    setErrors((p) => ({ ...p, jobLocation: "" }));
-                  }}
-                  onBlur={() => validateField("jobLocation", jobLocation)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-800"
-                  style={{ backgroundColor: colors.textInputBgColor, color: colors.text }}
+                  value={jobLocationValue}
+                  readOnly
+                  className="w-full px-4 py-3 rounded-lg border border-gray-800 bg-gray-100 cursor-not-allowed"
+                  style={{ color: colors.text }}
                 />
                 {errors.jobLocation && (
                   <p className="text-red-500 text-sm mt-1">{errors.jobLocation}</p>
                 )}
               </div>
+              */}
 
               <div>
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
