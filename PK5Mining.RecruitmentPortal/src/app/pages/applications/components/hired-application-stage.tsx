@@ -70,10 +70,13 @@ export function HiredApplicationStage({
     !formData.emergencyContactPhoneNumber.trim() ||
     !formData.governmentIdType ||
     !formData.governmentIdNumber.trim() ||
-    !formData.governmentIdExpiryDate
+    !formData.governmentIdExpiryDate;
 
   const submitForm = () => {
-    const formattedPayload: Omit<EmployeeOnboardingDetailsPayload, "applicationId"> = {
+    const formattedPayload: Omit<
+      EmployeeOnboardingDetailsPayload,
+      "applicationId"
+    > = {
       personalInfo: {
         fullLegalName: formData.fullLegalName,
         preferredName: formData.preferredName,
@@ -90,7 +93,9 @@ export function HiredApplicationStage({
       identificationInfo: {
         governmentIdType: formData.governmentIdType,
         governmentIdNumber: formData.governmentIdNumber,
-        governmentIdExpiryDate: new Date(formData.governmentIdExpiryDate).toISOString(),
+        governmentIdExpiryDate: new Date(
+          formData.governmentIdExpiryDate,
+        ).toISOString(),
         governmentIdDocument: formData.governmentIdDocument,
       },
       placeholderInfo: {
@@ -177,6 +182,7 @@ export function HiredApplicationStage({
                 value={formData.phoneNumber}
                 onChange={(value) => updateField("phoneNumber", value)}
                 colors={colors}
+                type="tel"
               />
 
               <InputField
@@ -299,9 +305,7 @@ export function HiredApplicationStage({
               <InputField
                 label="Government ID Document Reference / URL"
                 value={formData.governmentIdDocument}
-                onChange={(value) =>
-                  updateField("governmentIdDocument", value)
-                }
+                onChange={(value) => updateField("governmentIdDocument", value)}
                 colors={colors}
               />
             </div>
@@ -353,15 +357,29 @@ function InputField({
   colors,
   type = "text",
 }: InputFieldProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    if (type === "tel") {
+      // Allow only digits
+      value = value.replace(/\D/g, "");
+    }
+
+    onChange(value);
+  };
+
   return (
     <div>
       <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
         {label}
       </label>
+
       <input
         type={type}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
+        inputMode={type === "tel" ? "numeric" : undefined}
+        pattern={type === "tel" ? "[0-9]*" : undefined}
         className="w-full px-4 py-3 rounded-lg border border-gray-700"
         style={{
           backgroundColor: colors.textInputBgColor,
