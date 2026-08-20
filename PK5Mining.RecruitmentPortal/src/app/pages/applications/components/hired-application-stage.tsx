@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useTenant } from "@/tenants/useTenant";
 import { EmployeeOnboardingDetailsPayload } from "@/app/interfaces";
-import { parseDecisionDateTime } from "@/app/utils/helper";
+import { formatDateTime, parseDecisionDateTime } from "@/app/utils/helper";
+import { DatePicker } from "@/app/components/ui/date-picker";
 
 interface HiredFormPayload {
   fullLegalName: string;
@@ -62,16 +63,8 @@ export function HiredApplicationStage({
     loading ||
     !formData.fullLegalName.trim() ||
     !formData.preferredName.trim() ||
-    !formData.homeAddress.trim() ||
     !formData.phoneNumber.trim() ||
-    !formData.emailAddress.trim() ||
-    !formData.dateOfBirth ||
-    !formData.emergencyContactName.trim() ||
-    !formData.relationship.trim() ||
-    !formData.emergencyContactPhoneNumber.trim() ||
-    !formData.governmentIdType ||
-    !formData.governmentIdNumber.trim() ||
-    !formData.governmentIdExpiryDate;
+    !formData.emailAddress.trim();
 
   const submitForm = () => {
     const formattedPayload: Omit<
@@ -198,12 +191,15 @@ export function HiredApplicationStage({
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Date of Birth
                 </label>
-                <input
-                  type="date"
-                  value={formData.dateOfBirth}
-                  onChange={(e) => updateField("dateOfBirth", e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-700"
-                  style={inputStyles}
+                <DatePicker
+                  name="dateOfBirth"
+                  value={
+                    formData?.dateOfBirth
+                      ? formatDateTime(formData.dateOfBirth, false)
+                      : ""
+                  }
+                  onChange={(value) => updateField("dateOfBirth", value)}
+                  minDate={new Date()}
                 />
               </div>
             </div>
@@ -292,14 +288,17 @@ export function HiredApplicationStage({
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Government ID Expiry Date
                 </label>
-                <input
-                  type="date"
-                  value={formData.governmentIdExpiryDate}
-                  onChange={(e) =>
-                    updateField("governmentIdExpiryDate", e.target.value)
+                <DatePicker
+                  name="governmentIdExpiryDate"
+                  value={
+                    formData?.governmentIdExpiryDate
+                      ? formatDateTime(formData.governmentIdExpiryDate, false)
+                      : ""
                   }
-                  className="w-full px-4 py-3 rounded-lg border border-gray-700"
-                  style={inputStyles}
+                  onChange={(value) =>
+                    updateField("governmentIdExpiryDate", value)
+                  }
+                  minDate={new Date()}
                 />
               </div>
 
