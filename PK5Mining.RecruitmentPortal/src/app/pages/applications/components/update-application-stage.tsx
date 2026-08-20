@@ -18,6 +18,9 @@ import {
 interface UpdateApplicationStageProps {
   loading: boolean;
   candidateStatus: string;
+  jobDepartment?: string;
+  jobLocation?: string;
+  jobEmploymentType?: string;
   handleNewApplicationStage: (
     payload: Omit<NewApplicationStagePayload, "applicationId">,
   ) => void;
@@ -39,11 +42,16 @@ interface UpdateApplicationStageProps {
   handleOnboardingApplicationStage: (
     payload: Omit<EmployeeOnboardingDetailsPayload, "applicationId">,
   ) => void;
+  employeeId?: number | string | null | undefined;
 }
 
 export function UpdateApplicationStage({
   loading,
   candidateStatus,
+  jobDepartment,
+  jobLocation,
+  jobEmploymentType,
+  employeeId,
   handleInReviewApplication,
   handleNewApplicationStage,
   handleShortlistedApplicationStage,
@@ -93,6 +101,9 @@ export function UpdateApplicationStage({
         return (
           <InterviewCompletedApplicationStage
             loading={loading}
+            jobDepartment={jobDepartment}
+            jobLocation={jobLocation}
+            employmentType={jobEmploymentType}
             handleSendOffer={handleInterviewCompletedApplicationStage}
           />
         );
@@ -109,6 +120,7 @@ export function UpdateApplicationStage({
         return (
           <HiredApplicationStage
             loading={loading}
+            employeeId={employeeId}
             handleOnboardingApplicationStage={handleOnboardingApplicationStage}
           />
         );

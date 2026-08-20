@@ -2,8 +2,6 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useTenant } from "@/tenants/useTenant";
 import { EmployeeOnboardingDetailsPayload } from "@/app/interfaces";
-import { formatDateTime, parseDecisionDateTime } from "@/app/utils/helper";
-import { DatePicker } from "@/app/components/ui/date-picker";
 
 interface HiredFormPayload {
   fullLegalName: string;
@@ -24,6 +22,7 @@ interface HiredFormPayload {
 interface HiredApplicationStageProps {
   loading: boolean;
   startDate?: string;
+  employeeId?: number | string | null | undefined;
   handleOnboardingApplicationStage: (
     payload: Omit<EmployeeOnboardingDetailsPayload, "applicationId">,
   ) => void;
@@ -32,6 +31,7 @@ interface HiredApplicationStageProps {
 export function HiredApplicationStage({
   loading,
   startDate = "2026-03-01", // fallback if not supplied via props
+  employeeId,
   handleOnboardingApplicationStage,
 }: HiredApplicationStageProps) {
   const { colors } = useTenant();
@@ -59,66 +59,60 @@ export function HiredApplicationStage({
     }));
   };
 
+  const formatDateOnly = (value: string) => {
+    if (!value) return "";
+    const date = new Date(`${value}T00:00:00`);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatTimeOnly = (value: string) => {
+    if (!value) return "00:00:00";
+
+    const [hours, minutes] = value.split(":");
+    if (!hours || !minutes) return "00:00:00";
+
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:00`;
+  };
+
   const isSubmitDisabled =
     loading ||
     !formData.fullLegalName.trim() ||
     !formData.preferredName.trim() ||
+    !formData.homeAddress.trim() ||
     !formData.phoneNumber.trim() ||
     !formData.emailAddress.trim();
 
   const submitForm = () => {
-    const formattedPayload: Omit<
-      EmployeeOnboardingDetailsPayload,
-      "applicationId"
-    > = {
+    const formattedPayload: Omit<EmployeeOnboardingDetailsPayload, "applicationId"> = {
+      employeeId: Number(employeeId),
       personalInfo: {
-        ...(formData.fullLegalName && {
-          fullLegalName: formData.fullLegalName,
-        }),
-        ...(formData.preferredName && {
-          preferredName: formData.preferredName,
-        }),
-        ...(formData.homeAddress && {
-          homeAddress: formData.homeAddress,
-        }),
-        ...(formData.phoneNumber && {
-          phoneNumber: formData.phoneNumber,
-        }),
-        ...(formData.emailAddress && {
-          emailAddress: formData.emailAddress,
-        }),
-        ...(formData.dateOfBirth && {
-          dateOfBirth: parseDecisionDateTime(formData.dateOfBirth),
-        }),
+        fullLegalName: formData.fullLegalName,
+        preferredName: formData.preferredName,
+        homeAddress: formData.homeAddress,
+        phoneNumber: formData.phoneNumber,
+        emailAddress: formData.emailAddress,
+        dateOfBirth: formatDateOnly(formData.dateOfBirth),
       },
-
       emergencyContactInfo: {
-        ...(formData.emergencyContactName && {
-          fullName: formData.emergencyContactName,
-        }),
-        ...(formData.relationship && {
-          relationship: formData.relationship,
-        }),
-        ...(formData.emergencyContactPhoneNumber && {
-          phoneNumber: formData.emergencyContactPhoneNumber,
-        }),
+        fullName: formData.emergencyContactName,
+        relationship: formData.relationship,
+        phoneNumber: formData.emergencyContactPhoneNumber,
       },
-
       identificationInfo: {
-        ...(formData.governmentIdType && {
-          governmentIdType: formData.governmentIdType,
-        }),
-        ...(formData.governmentIdNumber && {
-          governmentIdNumber: formData.governmentIdNumber,
-        }),
-        ...(formData.governmentIdExpiryDate && {
-          governmentIdExpiryDate: parseDecisionDateTime(
-            formData.governmentIdExpiryDate,
-          ),
-        }),
-        ...(formData.governmentIdDocument && {
-          governmentIdDocument: formData.governmentIdDocument,
-        }),
+        governmentIdType: formData.governmentIdType,
+        governmentIdNumber: formData.governmentIdNumber,
+        governmentIdExpiryDate: formatDateOnly(formData.governmentIdExpiryDate),
+        governmentIdDocument: formData.governmentIdDocument,
+      },
+      placeholderInfo: {
+        reportingTime: formatTimeOnly("08:00"),
+        startDate: formatDateOnly(startDate),
+        contactPerson: "Operations Manager",
+        contactPhone: formData.phoneNumber,
+        contactEmail: formData.emailAddress,
       },
     };
 
@@ -197,7 +191,6 @@ export function HiredApplicationStage({
                 value={formData.phoneNumber}
                 onChange={(value) => updateField("phoneNumber", value)}
                 colors={colors}
-                type="tel"
               />
 
               <InputField
@@ -212,15 +205,12 @@ export function HiredApplicationStage({
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Date of Birth
                 </label>
-                <DatePicker
-                  name="dateOfBirth"
-                  value={
-                    formData?.dateOfBirth
-                      ? formatDateTime(formData.dateOfBirth, false)
-                      : ""
-                  }
-                  onChange={(value) => updateField("dateOfBirth", value)}
-                  minDate={new Date()}
+                <input
+                  type="date"
+                  value={formData.dateOfBirth}
+                  onChange={(e) => updateField("dateOfBirth", e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-700"
+                  style={inputStyles}
                 />
               </div>
             </div>
@@ -267,7 +257,6 @@ export function HiredApplicationStage({
                   updateField("emergencyContactPhoneNumber", value)
                 }
                 colors={colors}
-                type="tel"
               />
             </div>
           </section>
@@ -310,24 +299,23 @@ export function HiredApplicationStage({
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Government ID Expiry Date
                 </label>
-                <DatePicker
-                  name="governmentIdExpiryDate"
-                  value={
-                    formData?.governmentIdExpiryDate
-                      ? formatDateTime(formData.governmentIdExpiryDate, false)
-                      : ""
+                <input
+                  type="date"
+                  value={formData.governmentIdExpiryDate}
+                  onChange={(e) =>
+                    updateField("governmentIdExpiryDate", e.target.value)
                   }
-                  onChange={(value) =>
-                    updateField("governmentIdExpiryDate", value)
-                  }
-                  minDate={new Date()}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-700"
+                  style={inputStyles}
                 />
               </div>
 
               <InputField
                 label="Government ID Document Reference / URL"
                 value={formData.governmentIdDocument}
-                onChange={(value) => updateField("governmentIdDocument", value)}
+                onChange={(value) =>
+                  updateField("governmentIdDocument", value)
+                }
                 colors={colors}
               />
             </div>
@@ -379,29 +367,15 @@ function InputField({
   colors,
   type = "text",
 }: InputFieldProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-
-    if (type === "tel") {
-      // Allow only digits
-      value = value.replace(/\D/g, "");
-    }
-
-    onChange(value);
-  };
-
   return (
     <div>
       <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
         {label}
       </label>
-
       <input
         type={type}
         value={value}
-        onChange={handleChange}
-        inputMode={type === "tel" ? "numeric" : undefined}
-        pattern={type === "tel" ? "[0-9]*" : undefined}
+        onChange={(e) => onChange(e.target.value)}
         className="w-full px-4 py-3 rounded-lg border border-gray-700"
         style={{
           backgroundColor: colors.textInputBgColor,

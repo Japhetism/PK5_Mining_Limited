@@ -67,6 +67,10 @@ export function ApplicationDetail() {
   );
 
   const status = appStatus?.toLowerCase();
+  const jobDepartment = app?.jobs?.department ?? app?.job?.department ?? "";
+  const jobLocation = app?.jobs?.location ?? app?.job?.location ?? "";
+  const jobEmploymentType =
+    app?.jobs?.jobType ?? app?.job?.jobType ?? "";
 
   const header =
     status === "interview completed"
@@ -276,6 +280,10 @@ export function ApplicationDetail() {
               <UpdateApplicationStage
                 candidateStatus={appStatus ?? ""}
                 loading={updating}
+                jobDepartment={jobDepartment}
+                jobLocation={jobLocation}
+                jobEmploymentType={jobEmploymentType}
+                employeeId={app?.employeeId ?? null}
                 handleNewApplicationStage={handleNewApplicationStage}
                 handleInReviewApplication={handleInReviewApplicationStage}
                 handleShortlistedApplicationStage={
