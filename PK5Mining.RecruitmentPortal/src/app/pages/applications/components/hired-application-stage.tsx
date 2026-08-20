@@ -72,32 +72,53 @@ export function HiredApplicationStage({
       "applicationId"
     > = {
       personalInfo: {
-        fullLegalName: formData.fullLegalName,
-        preferredName: formData.preferredName,
-        homeAddress: formData.homeAddress,
-        phoneNumber: formData.phoneNumber,
-        emailAddress: formData.emailAddress,
-        dateOfBirth: parseDecisionDateTime(formData.dateOfBirth),
+        ...(formData.fullLegalName && {
+          fullLegalName: formData.fullLegalName,
+        }),
+        ...(formData.preferredName && {
+          preferredName: formData.preferredName,
+        }),
+        ...(formData.homeAddress && {
+          homeAddress: formData.homeAddress,
+        }),
+        ...(formData.phoneNumber && {
+          phoneNumber: formData.phoneNumber,
+        }),
+        ...(formData.emailAddress && {
+          emailAddress: formData.emailAddress,
+        }),
+        ...(formData.dateOfBirth && {
+          dateOfBirth: parseDecisionDateTime(formData.dateOfBirth),
+        }),
       },
+
       emergencyContactInfo: {
-        fullName: formData.emergencyContactName,
-        relationship: formData.relationship,
-        phoneNumber: formData.emergencyContactPhoneNumber,
+        ...(formData.emergencyContactName && {
+          fullName: formData.emergencyContactName,
+        }),
+        ...(formData.relationship && {
+          relationship: formData.relationship,
+        }),
+        ...(formData.emergencyContactPhoneNumber && {
+          phoneNumber: formData.emergencyContactPhoneNumber,
+        }),
       },
+
       identificationInfo: {
-        governmentIdType: formData.governmentIdType,
-        governmentIdNumber: formData.governmentIdNumber,
-        governmentIdExpiryDate: parseDecisionDateTime(
-          formData.governmentIdExpiryDate,
-        ),
-        governmentIdDocument: formData.governmentIdDocument,
-      },
-      placeholderInfo: {
-        reportingTime: "08:00 AM",
-        startDate: startDate,
-        contactPerson: "Operations Manager",
-        contactPhone: formData.phoneNumber,
-        contactEmail: formData.emailAddress,
+        ...(formData.governmentIdType && {
+          governmentIdType: formData.governmentIdType,
+        }),
+        ...(formData.governmentIdNumber && {
+          governmentIdNumber: formData.governmentIdNumber,
+        }),
+        ...(formData.governmentIdExpiryDate && {
+          governmentIdExpiryDate: parseDecisionDateTime(
+            formData.governmentIdExpiryDate,
+          ),
+        }),
+        ...(formData.governmentIdDocument && {
+          governmentIdDocument: formData.governmentIdDocument,
+        }),
       },
     };
 
