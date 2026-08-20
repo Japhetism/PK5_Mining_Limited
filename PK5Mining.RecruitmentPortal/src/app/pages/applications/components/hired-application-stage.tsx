@@ -191,6 +191,7 @@ export function HiredApplicationStage({
                 value={formData.phoneNumber}
                 onChange={(value) => updateField("phoneNumber", value)}
                 colors={colors}
+                type="tel"
               />
 
               <InputField
@@ -257,6 +258,7 @@ export function HiredApplicationStage({
                   updateField("emergencyContactPhoneNumber", value)
                 }
                 colors={colors}
+                type="tel"
               />
             </div>
           </section>
@@ -367,15 +369,29 @@ function InputField({
   colors,
   type = "text",
 }: InputFieldProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    if (type === "tel") {
+      // Allow only digits
+      value = value.replace(/\D/g, "");
+    }
+
+    onChange(value);
+  };
+
   return (
     <div>
       <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
         {label}
       </label>
+
       <input
         type={type}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
+        inputMode={type === "tel" ? "numeric" : undefined}
+        pattern={type === "tel" ? "[0-9]*" : undefined}
         className="w-full px-4 py-3 rounded-lg border border-gray-700"
         style={{
           backgroundColor: colors.textInputBgColor,
