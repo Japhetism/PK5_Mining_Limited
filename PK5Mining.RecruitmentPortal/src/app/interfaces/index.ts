@@ -440,42 +440,42 @@ export interface OfferSentApplicationStagePayload {
 }
 
 export interface OnboardingPersonalInfoPayload {
-  fullLegalName: string;
-  preferredName: string;
-  homeAddress: string;
-  phoneNumber: string;
-  emailAddress: string;
-  dateOfBirth: string;
+  fullLegalName?: string;
+  preferredName?: string;
+  homeAddress?: string;
+  phoneNumber?: string;
+  emailAddress?: string;
+  dateOfBirth?: string;
 }
 
 export interface OnboardingEmergencyContactInfoPayload {
-  fullName: string;
-  relationship: string;
-  phoneNumber: string;
+  fullName?: string;
+  relationship?: string;
+  phoneNumber?: string;
 }
 
 export interface OnboardingIdentificationInfoPayload {
-  governmentIdType: string;
-  governmentIdNumber: string;
-  governmentIdExpiryDate: string;
-  governmentIdDocument: string;
+  governmentIdType?: string;
+  governmentIdNumber?: string;
+  governmentIdExpiryDate?: string;
+  governmentIdDocument?: string;
 }
 
 export interface OnboardingPlaceholderInfoPayload {
-  reportingTime: string;
-  startDate: string;
-  contactPerson: string;
-  contactPhone: string;
-  contactEmail: string;
+  reportingTime?: string;
+  startDate?: string;
+  contactPerson?: string;
+  contactPhone?: string;
+  contactEmail?: string;
 }
 
 export type EmployeeOnboardingDetailsPayload = {
   applicationId: number;
   employeeId: number;
-  personalInfo: OnboardingPersonalInfoPayload;
-  emergencyContactInfo: OnboardingEmergencyContactInfoPayload;
-  identificationInfo: OnboardingIdentificationInfoPayload;
-  placeholderInfo: OnboardingPlaceholderInfoPayload;
+  personalInfo?: OnboardingPersonalInfoPayload;
+  emergencyContactInfo?: OnboardingEmergencyContactInfoPayload;
+  identificationInfo?: OnboardingIdentificationInfoPayload;
+  placeholderInfo?: OnboardingPlaceholderInfoPayload;
 };
 
 export type OnboardingApplicationStagePayload = EmployeeOnboardingDetailsPayload;

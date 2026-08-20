@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useTenant } from "@/tenants/useTenant";
 import { EmployeeOnboardingDetailsPayload } from "@/app/interfaces";
+import { formatDateTime, parseDecisionDateTime } from "@/app/utils/helper";
+import { DatePicker } from "@/app/components/ui/date-picker";
 
 interface HiredFormPayload {
   fullLegalName: string;
@@ -86,33 +88,59 @@ export function HiredApplicationStage({
     !formData.emailAddress.trim();
 
   const submitForm = () => {
-    const formattedPayload: Omit<EmployeeOnboardingDetailsPayload, "applicationId"> = {
+    const formattedPayload: Omit<
+      EmployeeOnboardingDetailsPayload,
+      "applicationId"
+    > = {
       employeeId: Number(employeeId),
       personalInfo: {
-        fullLegalName: formData.fullLegalName,
-        preferredName: formData.preferredName,
-        homeAddress: formData.homeAddress,
-        phoneNumber: formData.phoneNumber,
-        emailAddress: formData.emailAddress,
-        dateOfBirth: formatDateOnly(formData.dateOfBirth),
+        ...(formData.fullLegalName && {
+          fullLegalName: formData.fullLegalName,
+        }),
+        ...(formData.preferredName && {
+          preferredName: formData.preferredName,
+        }),
+        ...(formData.homeAddress && {
+          homeAddress: formData.homeAddress,
+        }),
+        ...(formData.phoneNumber && {
+          phoneNumber: formData.phoneNumber,
+        }),
+        ...(formData.emailAddress && {
+          emailAddress: formData.emailAddress,
+        }),
+        ...(formData.dateOfBirth && {
+          dateOfBirth: parseDecisionDateTime(formData.dateOfBirth),
+        }),
       },
+
       emergencyContactInfo: {
-        fullName: formData.emergencyContactName,
-        relationship: formData.relationship,
-        phoneNumber: formData.emergencyContactPhoneNumber,
+        ...(formData.emergencyContactName && {
+          fullName: formData.emergencyContactName,
+        }),
+        ...(formData.relationship && {
+          relationship: formData.relationship,
+        }),
+        ...(formData.emergencyContactPhoneNumber && {
+          phoneNumber: formData.emergencyContactPhoneNumber,
+        }),
       },
+
       identificationInfo: {
-        governmentIdType: formData.governmentIdType,
-        governmentIdNumber: formData.governmentIdNumber,
-        governmentIdExpiryDate: formatDateOnly(formData.governmentIdExpiryDate),
-        governmentIdDocument: formData.governmentIdDocument,
-      },
-      placeholderInfo: {
-        reportingTime: formatTimeOnly("08:00"),
-        startDate: formatDateOnly(startDate),
-        contactPerson: "Operations Manager",
-        contactPhone: formData.phoneNumber,
-        contactEmail: formData.emailAddress,
+        ...(formData.governmentIdType && {
+          governmentIdType: formData.governmentIdType,
+        }),
+        ...(formData.governmentIdNumber && {
+          governmentIdNumber: formData.governmentIdNumber,
+        }),
+        ...(formData.governmentIdExpiryDate && {
+          governmentIdExpiryDate: parseDecisionDateTime(
+            formData.governmentIdExpiryDate,
+          ),
+        }),
+        ...(formData.governmentIdDocument && {
+          governmentIdDocument: formData.governmentIdDocument,
+        }),
       },
     };
 
@@ -206,12 +234,15 @@ export function HiredApplicationStage({
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Date of Birth
                 </label>
-                <input
-                  type="date"
-                  value={formData.dateOfBirth}
-                  onChange={(e) => updateField("dateOfBirth", e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-700"
-                  style={inputStyles}
+                <DatePicker
+                  name="dateOfBirth"
+                  value={
+                    formData?.dateOfBirth
+                      ? formatDateTime(formData.dateOfBirth, false)
+                      : ""
+                  }
+                  onChange={(value) => updateField("dateOfBirth", value)}
+                  minDate={new Date()}
                 />
               </div>
             </div>
@@ -301,23 +332,24 @@ export function HiredApplicationStage({
                 <label className="block font-medium text-[13px] text-[#6B7280] mb-[6px]">
                   Government ID Expiry Date
                 </label>
-                <input
-                  type="date"
-                  value={formData.governmentIdExpiryDate}
-                  onChange={(e) =>
-                    updateField("governmentIdExpiryDate", e.target.value)
+                <DatePicker
+                  name="governmentIdExpiryDate"
+                  value={
+                    formData?.governmentIdExpiryDate
+                      ? formatDateTime(formData.governmentIdExpiryDate, false)
+                      : ""
                   }
-                  className="w-full px-4 py-3 rounded-lg border border-gray-700"
-                  style={inputStyles}
+                  onChange={(value) =>
+                    updateField("governmentIdExpiryDate", value)
+                  }
+                  minDate={new Date()}
                 />
               </div>
 
               <InputField
                 label="Government ID Document Reference / URL"
                 value={formData.governmentIdDocument}
-                onChange={(value) =>
-                  updateField("governmentIdDocument", value)
-                }
+                onChange={(value) => updateField("governmentIdDocument", value)}
                 colors={colors}
               />
             </div>
