@@ -106,7 +106,7 @@ export function InterviewScheduledApplicationStage({
         }),
         ...(scheduledTime != null && scheduledTime !== "" && { scheduledTime }),
         ...(deadlineDate && {
-          deadlineDate: parseDecisionDateTime(deadlineDate, deadlineTime),
+          deadlineDate: parseDecisionDateTime(deadlineDate),
         }),
         ...(deadlineTime != null && deadlineTime !== "" && { deadlineTime }),
         ...(venueAddress != null && venueAddress !== "" && { venueAddress }),
