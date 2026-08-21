@@ -102,7 +102,7 @@ export function InterviewScheduledApplicationStage({
         ...(onlineAssessmentLink != null &&
           onlineAssessmentLink !== "" && { onlineAssessmentLink }),
         ...(scheduledDate && {
-          scheduledDate: parseDecisionDateTime(scheduledDate, scheduledTime),
+          scheduledDate: parseDecisionDateTime(scheduledDate),
         }),
         ...(scheduledTime != null && scheduledTime !== "" && { scheduledTime }),
         ...(deadlineDate && {
